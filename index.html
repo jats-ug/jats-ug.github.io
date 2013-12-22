@@ -62,16 +62,15 @@
                             (例えば、明示的なポインタ演算や明示的なメモリの取得/解放などです)
                             これはATSを使った実用的な低レイヤーのシステムプログラミングを可能にします。</li>
 			  <li><strong>並列プログラミング</strong>:
-			    ATS, equipped with a multicore-safe implementation of garbage collection,
-			    can support multithreaded programming through the use of pthreads. The
-			    availability of linear types for tracking and safely manipulating resources
-			    provides an effective means to constructing reliable programs that can take
-			    advantage of multicore architectures.
+                            マルチコアセーフなGC実装を備えているため、
+                            ATSはpthreadを使ったマルチスレッドプログラミングをサポートできます。
+                            リソースに対する追跡と安全な操作に線形型を利用することで、
+                            マルチコアアーキティクチャを生かした信頼のあるプログラムを作成できます。
 			  </li>
 			  <li><strong>モジュラープログラミング</strong>:
-			    The module system of ATS is largely
-			    infuenced by that of Modula-3, which is both simple and general as well as
-			    effective in supporting large scale programming.
+			    ATSのモジュールシステムはModula-3の影響を大きく受けています。
+                            それはシンプルで総称的で、
+                            同時に大規模なプログラミングをサポートするのに効果的です。
 			  </li></ul>
 			<p>
 			  In addition, ATS contains a subsystem ATS/LF that supports a form of (interactive) theorem-proving, where proofs are constructed as total functions.
