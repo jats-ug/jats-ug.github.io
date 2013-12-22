@@ -6,8 +6,8 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
+        <title>JATS-UG - Japan ATS User Group</title>
+        <meta name="description" content="日本語でATS言語の利用促進や情報交換のためのユーザーグループです">
         <meta name="viewport" content="width=device-width">
 
         <link rel="stylesheet" href="css/normalize.min.css">
@@ -22,12 +22,11 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">h1.title</h1>
+                <h1 class="title">JATS-UG - Japan ATS User Group</h1>
                 <nav>
                     <ul>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
+                        <li><a href="#about">ATS言語とは</a></li>
+                        <li><a href="#document">ドキュメント</a></li>
                     </ul>
                 </nav>
             </header>
@@ -38,26 +37,80 @@
 
                 <article>
                     <header>
-                        <h1>article header h1</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec.</p>
+                        <h1 id="about">ATS言語とは</h1>
+                        <p>ATS is a statically typed programming language that unifies implementation with formal specification. It is equipped with a highly expressive type system rooted in the framework Applied Type System, which gives the language its name. In particular, both dependent types and linear types are available in ATS.</p>
+			<p>The current implementation of ATS2 (ATS/Postiats) is written in ATS1 (ATS/Anairiats). ATS can be as efficient as C/C++ both time-wise and memory-wise (see The Computer Language Benchmarks Game for concrete evidence) and supports a variety of programming paradigms that include:</p>
+
+
+
+<ul><li><strong>Functional programming</strong>.
+The core of ATS is a functional language based on eager
+(aka. call-by-value) evaluation, which can also accommodate lazy
+(aka. call-by-need) evaluation. The availability of linear types in ATS
+often makes functional programs written in it run not only with
+surprisingly high efficiency (when compared to C) but also with
+surprisingly small (memory) footprint (when compared to C as well).
+</li>
+
+<li><strong>Imperative programming</strong>.
+The novel and unique approach to imperative programming in ATS is firmly
+rooted in the paradigm of <em>programming with theorem-proving</em>. The
+type system of ATS allows many features considered dangerous in other
+languages (e.g., explicit pointer arithmetic and explicit memory
+allocation/deallocation) to be safely supported in ATS, making ATS a viable
+programming language for low-level systems programming.
+</li>
+
+<li>
+<strong>Concurrent programming</strong>.
+ATS, equipped with a multicore-safe implementation of garbage collection,
+can support multithreaded programming through the use of pthreads. The
+availability of linear types for tracking and safely manipulating resources
+provides an effective means to constructing reliable programs that can take
+advantage of multicore architectures.
+</li>
+
+<li>
+<strong>Modular programming</strong>. The module system of ATS is largely
+infuenced by that of Modula-3, which is both simple and general as well as
+effective in supporting large scale programming.
+</li>
+</ul>
+
+In addition, ATS contains a subsystem ATS/LF that supports a form of (interactive) theorem-proving, where proofs are constructed as total functions. With this component, ATS advocates a programmer-centric approach to program verification that combines programming with theorem-proving in a syntactically intertwined manner. Furthermore, this component can serve as a logical framework for encoding deduction systems and their (meta-)properties.
+</p>
                     </header>
                     <section>
-                        <h2>article section h2</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                        <h2>What is ATS good for?</h2>
+			<ul>
+			  <li>ATS can enforce great precision in practical programming.</li>
+			  <li>ATS allows the programmer to write efficient functional programs that
+			    directly manipulate native unboxed data representation.</li>
+			  <li>ATS allows the programmer to reduce the memory footprint of a program
+			    by making use of linear types.</li>
+			  <li>ATS allows the programmer to enhance the safety (and efficiency) of a
+			    program by making use of theorem-proving.</li>
+			  <li>ATS allows the programmer to write safe low-level code that runs in OS kernels.</li>
+			  <li>ATS can help teach type theory, demonstrating concretely
+			    the power and potential of types in constructing high-quality software.</li>
+			</ul>
                     </section>
+                    <header>
+                        <h1 id="document">ドキュメント</h1>
+                        <p>JATS-UGではATS言語に関するドキュメントを公開しています。</p>
+                    </header>
                     <section>
-                        <h2>article section h2</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                        <h2>翻訳</h2>
+                        <p>ATS言語に関する英語記事の翻訳です。
+			  <a href="https://github.com/jats-ug/translate/blob/master/index.md">https://github.com/jats-ug/translate/blob/master/index.md</a>
+			  からお読み下さい。また、翻訳作業に参加していただけるボランティアも募集しています。</p>
                     </section>
-                    <footer>
-                        <h3>article footer h3</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor.</p>
-                    </footer>
                 </article>
 
                 <aside>
-                    <h3>aside</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+                    <h3>ATSについてツイートしましょう</h3>
+		    <a class="twitter-timeline" href="https://twitter.com/jats_ug" data-widget-id="414592426720772096">@jats_ug からのツイート</a>
+		    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                 </aside>
 
             </div> <!-- #main -->
@@ -65,7 +118,7 @@
 
         <div class="footer-container">
             <footer class="wrapper">
-                <h3>footer</h3>
+                <h3>Powered by Metasepi Project.</h3>
             </footer>
         </div>
 
@@ -75,7 +128,7 @@
         <script src="js/main.js"></script>
 
         <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            var _gaq=[['_setAccount','UA-158383-12'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src='//www.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
