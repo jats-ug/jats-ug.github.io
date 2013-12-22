@@ -38,11 +38,17 @@
                 <article>
                     <header>
                         <h1 id="about">ATS言語とは</h1>
-                        <p>ATS is a statically typed programming language that unifies implementation with formal specification. It is equipped with a highly expressive type system rooted in the framework Applied Type System, which gives the language its name. In particular, both dependent types and linear types are available in ATS.</p>
-			<p>The current implementation of ATS2 (ATS/Postiats) is written in ATS1 (ATS/Anairiats). ATS can be as efficient as C/C++ both time-wise and memory-wise (see The Computer Language Benchmarks Game for concrete evidence) and supports a variety of programming paradigms that include:</p>
-
-
-
+                        <p>以下はATS本家 <a href="http://www.ats-lang.org/">http://www.ats-lang.org/</a>
+                         のトップページの翻訳です。</p>
+                        <p>ATS言語は静的型付けのプログラグラミング言語です。
+ATS is a statically typed programming language that unifies implementation with formal specification.
+ It is equipped with a highly expressive type system rooted in the framework Applied Type System,
+ which gives the language its name.
+ In particular, both dependent types and linear types are available in ATS.</p>
+			<p>The current implementation of ATS2 (ATS/Postiats) is written in ATS1 (ATS/Anairiats).
+ ATS can be as efficient as C/C++ both time-wise and memory-wise
+ (see The Computer Language Benchmarks Game for concrete evidence)
+ and supports a variety of programming paradigms that include:</p>
 <ul><li><strong>Functional programming</strong>.
 The core of ATS is a functional language based on eager
 (aka. call-by-value) evaluation, which can also accommodate lazy
@@ -51,7 +57,6 @@ often makes functional programs written in it run not only with
 surprisingly high efficiency (when compared to C) but also with
 surprisingly small (memory) footprint (when compared to C as well).
 </li>
-
 <li><strong>Imperative programming</strong>.
 The novel and unique approach to imperative programming in ATS is firmly
 rooted in the paradigm of <em>programming with theorem-proving</em>. The
@@ -60,7 +65,6 @@ languages (e.g., explicit pointer arithmetic and explicit memory
 allocation/deallocation) to be safely supported in ATS, making ATS a viable
 programming language for low-level systems programming.
 </li>
-
 <li>
 <strong>Concurrent programming</strong>.
 ATS, equipped with a multicore-safe implementation of garbage collection,
@@ -69,30 +73,25 @@ availability of linear types for tracking and safely manipulating resources
 provides an effective means to constructing reliable programs that can take
 advantage of multicore architectures.
 </li>
-
 <li>
 <strong>Modular programming</strong>. The module system of ATS is largely
 infuenced by that of Modula-3, which is both simple and general as well as
 effective in supporting large scale programming.
 </li>
 </ul>
-
 In addition, ATS contains a subsystem ATS/LF that supports a form of (interactive) theorem-proving, where proofs are constructed as total functions. With this component, ATS advocates a programmer-centric approach to program verification that combines programming with theorem-proving in a syntactically intertwined manner. Furthermore, this component can serve as a logical framework for encoding deduction systems and their (meta-)properties.
 </p>
                     </header>
                     <section>
-                        <h2>What is ATS good for?</h2>
+                        <h2>メリット</h2>
 			<ul>
-			  <li>ATS can enforce great precision in practical programming.</li>
-			  <li>ATS allows the programmer to write efficient functional programs that
-			    directly manipulate native unboxed data representation.</li>
-			  <li>ATS allows the programmer to reduce the memory footprint of a program
-			    by making use of linear types.</li>
-			  <li>ATS allows the programmer to enhance the safety (and efficiency) of a
-			    program by making use of theorem-proving.</li>
-			  <li>ATS allows the programmer to write safe low-level code that runs in OS kernels.</li>
-			  <li>ATS can help teach type theory, demonstrating concretely
-			    the power and potential of types in constructing high-quality software.</li>
+			  <li>ATSは現実的なプログラミングの正確さを強化できます。</li>
+			  <li>ATSでは効率的な関数型プログラミングをすることができます。
+			    にかかわらず生のアンボックス化されたデータ表現を直接操作できます。</li>
+			  <li>ATSの線形型を使うことでプログラムのメモリのフットプリントを削減できます。</li>
+			  <li>ATSでは証明器を使うことでプログラマがプログラムの安全性と効率を向上させることができます。</li>
+			  <li>ATSを使えばOSのkernelのような低レイヤーレベルのコードを安全に書くことができます。</li>
+			  <li>ATSは型理論を教えたり、高品質なソフトウェアを構築する際のの型の力と可能性を教えるのを助けます。</li>
 			</ul>
                     </section>
                     <header>
@@ -121,6 +120,8 @@ In addition, ATS contains a subsystem ATS/LF that supports a form of (interactiv
                 <h3>Powered by Metasepi Project.</h3>
             </footer>
         </div>
+
+<a href="https://github.com/jats-ug/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
