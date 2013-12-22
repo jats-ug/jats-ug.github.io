@@ -38,6 +38,10 @@ img {
     vertical-align: middle;
 }
 
+.logoimg {
+    vertical-align: text-bottom;
+}
+
 fieldset {
     border: 0;
     margin: 0;
