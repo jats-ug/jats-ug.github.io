@@ -47,43 +47,36 @@
 			  具体的には依存型と線形型をATSでは使うことができます。</p>
 			<p>ATS2 (ATS/Postiats) の今の実装は ATS1 (ATS/Anairiats) で設計されています。
 			  ATSは時間効率と空間効率についてC/C++言語と同じくらい効率的です。
-			  (<a href="http://shootout.alioth.debian.org/">
-			    The Computer Language Benchmarks Game for concrete evidence</a> を見てください)
+			  (具体的には <a href="http://shootout.alioth.debian.org/">
+			    The Computer Language Benchmarks Game</a> を見てください)
                           また多様なプログラミングパラダイムをサポートしています。</p>
                         <ul><li><strong>関数型プログラミング</strong>:
 			    ATSのコアは即時評価(call-by-value)の関数型言語です。
 			    遅延評価(call-by-need)も提供しています。
-                            ATSにおいて線形型の
-
-The availability of linear types in ATS
-often makes functional programs written in it run not only with
-surprisingly high efficiency (when compared to C) but also with
-surprisingly small (memory) footprint (when compared to C as well).
-</li>
-<li><strong>命令型プログラミング</strong>:
-The novel and unique approach to imperative programming in ATS is firmly
-rooted in the paradigm of <em>programming with theorem-proving</em>.
- The type system of ATS allows many features considered dangerous in other
-languages (e.g., explicit pointer arithmetic and explicit memory
-allocation/deallocation) to be safely supported in ATS, making ATS a viable
-programming language for low-level systems programming.
-</li>
-<li>
-<strong>Concurrent programming</strong>.
-ATS, equipped with a multicore-safe implementation of garbage collection,
-can support multithreaded programming through the use of pthreads. The
-availability of linear types for tracking and safely manipulating resources
-provides an effective means to constructing reliable programs that can take
-advantage of multicore architectures.
-</li>
-<li>
-<strong>Modular programming</strong>. The module system of ATS is largely
-infuenced by that of Modula-3, which is both simple and general as well as
-effective in supporting large scale programming.
-</li>
-</ul>
-In addition, ATS contains a subsystem ATS/LF that supports a form of (interactive) theorem-proving, where proofs are constructed as total functions. With this component, ATS advocates a programmer-centric approach to program verification that combines programming with theorem-proving in a syntactically intertwined manner. Furthermore, this component can serve as a logical framework for encoding deduction systems and their (meta-)properties.
-</p>
+                            ATSにおける線形型は主にC言語と比較しても遜色ない効率な関数型のプログラムを書くことに利用されますが、
+                            同様にC言語と比較しても遜色なく小さなフットプリントを実現するためにも利用されます。</li>
+                          <li><strong>命令型プログラミング</strong>:
+                            ATSの命令型プログラミングに対するユニークなアプローチは
+                            <em>定理証明によるプログラミング</em> のパラダイムを基礎としています。
+                            ATSの型システムは他の言語では危険であると考えらえている多くの機能を安全に提供します。
+                            (例えば、明示的なポインタ演算や明示的なメモリの取得/解放などです)
+                            これはATSを使った実用的な低レイヤーのシステムプログラミングを可能にします。</li>
+			  <li><strong>並列プログラミング</strong>:
+			    ATS, equipped with a multicore-safe implementation of garbage collection,
+			    can support multithreaded programming through the use of pthreads. The
+			    availability of linear types for tracking and safely manipulating resources
+			    provides an effective means to constructing reliable programs that can take
+			    advantage of multicore architectures.
+			  </li>
+			  <li><strong>モジュラープログラミング</strong>:
+			    The module system of ATS is largely
+			    infuenced by that of Modula-3, which is both simple and general as well as
+			    effective in supporting large scale programming.
+			  </li></ul>
+			<p>
+			  In addition, ATS contains a subsystem ATS/LF that supports a form of (interactive) theorem-proving, where proofs are constructed as total functions.
+			  With this component, ATS advocates a programmer-centric approach to program verification that combines programming with theorem-proving in a syntactically intertwined manner.
+			  Furthermore, this component can serve as a logical framework for encoding deduction systems and their (meta-)properties.</p>
                     </header>
                     <section>
                         <h2>メリット</h2>
@@ -112,7 +105,7 @@ In addition, ATS contains a subsystem ATS/LF that supports a form of (interactiv
                         <p><ul>
 			    <li><a href="http://www.ats-lang.org/">ATS言語公式サイト</a></li>
                             <li><a href="http://bluishcoder.co.nz/">BLUISH CODER</a>
-                                - ATSユーザのChris Doubleさんのブログ</li>
+                                - ATSユーザであるChris Doubleさんのブログ</li>
                             <li><a href="https://github.com/xlq/aos">AOS - Applied Operating System</a>
                                 - ATSで書かれたOS</li>
                         </ul></p>
