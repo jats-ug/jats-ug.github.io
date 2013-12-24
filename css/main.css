@@ -92,6 +92,15 @@ body {
     background: #f16529;
 }
 
+.sidebar-links {
+    color: black;
+    background: white;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+}
+
 .title {
     color: white;
 }
