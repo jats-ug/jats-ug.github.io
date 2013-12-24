@@ -137,6 +137,8 @@ nav a:hover {
 
 .main article h1 {
     font-size: 2em;
+    border-left: 10px solid #e44d26;
+    padding-left: 0.5em;
 }
 
 .main aside {

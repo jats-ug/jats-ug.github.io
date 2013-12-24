@@ -26,8 +26,8 @@
                 <nav>
                     <ul>
                         <li><a href="#about">ATS言語とは</a></li>
+                        <li><a href="#install">最初の一歩</a></li>
                         <li><a href="#document">ドキュメント</a></li>
-                        <li><a href="#links">リンク集</a></li>
                     </ul>
                 </nav>
             </header>
@@ -91,6 +91,42 @@
 			</ul>
                     </section>
                     <header>
+                        <h1 id="install">最初の一歩</h1>
+			<p>なにはともあれ使ってみましょう。</p>
+		    </header>
+		    <section>
+		      <h2>1. ダウンロード</h2>
+		      <p><a href="http://sourceforge.net/projects/ats2-lang/files/">http://sourceforge.net/projects/ats2-lang/files/</a>
+			から最新バージョンのATS2-Postiatsをダウンロードしてください。</p>
+		    </section>
+		    <section>
+		      <h2>2. インストール</h2>
+		      <p>ダウンロードしたATS2-Postiatsをコンパイルして、/usr/local以下にインストールします。</p>
+<pre><code>$ tar xfz ATS2-Postiats-0.0.4.tgz
+$ cd ATS2-Postiats-0.0.4
+$ ./configure
+$ make
+$ sudo make install
+$ which patscc
+/usr/local/bin/patscc
+</code></pre>
+                    </section>
+		    <section>
+		      <h2>3. コンパイル</h2>
+<p>Hello Worldプログラムをコンパイルして動かしましょう。</p>
+<pre><code>$ vi hello.dats
+implement
+main0 () = {
+  val () = println! ("Hello world!")
+}
+$ patscc -o hello hello.dats
+$ ls
+hello*  hello.dats  hello_dats.c
+$ ./hello
+Hello world!
+</code></pre>
+		    </section>
+                    <header>
                         <h1 id="document">ドキュメント</h1>
                         <p>JATS-UGではATS言語に関するドキュメントを公開しています。</p>
                     </header>
@@ -100,18 +136,6 @@
 			  <a href="https://github.com/jats-ug/translate/blob/master/index.md">https://github.com/jats-ug/translate/blob/master/index.md</a>
 			  からお読み下さい。また、翻訳作業に参加していただけるボランティアも募集しています。</p>
                     </section>
-                    <header>
-                        <h1 id="links">リンク集</h1>
-                        <ul>
-			    <li><a href="http://www.ats-lang.org/">ATS言語公式サイト</a></li>
-                            <li><a href="http://bluishcoder.co.nz/">BLUISH CODER</a>
-                                - ATSユーザであるChris Doubleさんのブログ</li>
-                            <li><a href="https://github.com/xlq/aos">AOS - Applied Operating System</a>
-                                - ATSで書かれたOS</li>
-                            <li><a href="https://github.com/jats-ug/">Japan ATS User Group のgithubリポジトリ</a></li>
-			    <li><a href="http://groups.google.com/group/jats-ug">Japan ATS User Group のメーリングリスト</a></li>
-                        </ul>
-                    </header>
 
                 </article>
 
@@ -122,6 +146,16 @@
 		    <a class="twitter-timeline" href="https://twitter.com/jats_ug" data-widget-id="414592426720772096">@jats_ug からのツイート</a>
 		    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		    <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/QA/Tools/I_heart_validator_lg" alt="Valid HTML"></a></p>
+		  <h3>リンク集</h3>
+		  <ul>
+		    <li><a href="http://www.ats-lang.org/">ATS言語公式サイト</a></li>
+                    <li><a href="http://bluishcoder.co.nz/">BLUISH CODER</a>
+                      - ATSユーザChris Doubleさんのブログ</li>
+                    <li><a href="https://github.com/xlq/aos">AOS - Applied Operating System</a>
+                      - ATSで書かれたOS</li>
+                    <li><a href="https://github.com/jats-ug/">Japan ATS User Group のgithubリポジトリ</a></li>
+		    <li><a href="http://groups.google.com/group/jats-ug">Japan ATS User Group のメーリングリスト</a></li>
+                  </ul>
                 </aside>
 
             </div> <!-- #main -->
