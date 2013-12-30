@@ -1,0 +1,753 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ATSプログラミング入門</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="NEXT"
+TITLE="前書き"
+HREF="f32.html"><META
+NAME="KEYWORD"
+CONTENT="ATS"><META
+NAME="KEYWORD"
+CONTENT="Programming"><META
+NAME="KEYWORD"
+CONTENT="Theorem-Proving"><META
+NAME="KEYWORD"
+CONTENT="Programmer-centric"><META
+NAME="KEYWORD"
+CONTENT="Verification"><META
+NAME="KEYWORD"
+CONTENT="Dependent Types"><META
+NAME="KEYWORD"
+CONTENT="Linear Types"><META
+NAME="KEYWORD"
+CONTENT="Functional Templates"></HEAD
+><BODY
+CLASS="book"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="proginats"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="title"
+><A
+NAME="AEN2"
+>ATSプログラミング入門</A
+></H1
+><H2
+CLASS="subtitle"
+></H2
+><H3
+CLASS="author"
+><A
+NAME="AEN6"
+></A
+>Hongwei Xi</H3
+><DIV
+CLASS="affiliation"
+><DIV
+CLASS="address"
+><P
+CLASS="address"
+><CODE
+CLASS="email"
+>&#60;<A
+HREF="mailto:gmhwxiATgmailDOTcom"
+>gmhwxiATgmailDOTcom</A
+>&#62;</CODE
+></P
+></DIV
+></DIV
+><P
+CLASS="copyright"
+>&#35069;&#20316;&#33879;&#20316; &copy; 2010-201? Hongwei Xi</P
+><DIV
+><DIV
+CLASS="abstract"
+><P
+></P
+><A
+NAME="AEN14"
+></A
+><P
+>&#13;</P
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="legalnotice"
+><P
+></P
+><A
+NAME="AEN19"
+></A
+><P
+>&#13;All rights are reserved. Permission is granted to print this document for personal use.
+</P
+><P
+></P
+></DIV
+><HR></DIV
+><H1
+><A
+NAME="AEN30"
+></A
+>&#35613;&#36766;</H1
+><P
+>&#13;
+To Jinning, Zoe and Chloe.
+</P
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>&#30446;&#27425;</B
+></DT
+><DT
+><A
+HREF="f32.html"
+>前書き</A
+></DT
+><DT
+>I. <A
+HREF="p42.html"
+>関数型プログラミングの基本</A
+></DT
+><DD
+><DL
+><DT
+>1&#31456;<A
+HREF="c44.html"
+>Preparation for Starting</A
+></DT
+><DD
+><DL
+><DT
+>1.1. <A
+HREF="c44.html#a_running_program"
+>A Running Program</A
+></DT
+><DT
+>1.2. <A
+HREF="x81.html"
+>A Template for Single-File Programs</A
+></DT
+><DT
+>1.3. <A
+HREF="x89.html"
+>A Makefile Template</A
+></DT
+></DL
+></DD
+><DT
+>2&#31456;<A
+HREF="c96.html"
+>Elements of Programming</A
+></DT
+><DD
+><DL
+><DT
+>2.1. <A
+HREF="c96.html#expressions_and_values"
+>Expressions and Values</A
+></DT
+><DT
+>2.2. <A
+HREF="x162.html"
+>Names and Bindings</A
+></DT
+><DT
+>2.3. <A
+HREF="x187.html"
+>Scopes for Bindings</A
+></DT
+><DT
+>2.4. <A
+HREF="x214.html"
+>Environments for Evaluation</A
+></DT
+><DT
+>2.5. <A
+HREF="x230.html"
+>Static Semantics</A
+></DT
+><DT
+>2.6. <A
+HREF="x240.html"
+>Primitive Types</A
+></DT
+><DT
+>2.7. <A
+HREF="x298.html"
+>Tuples and Tuple Types</A
+></DT
+><DT
+>2.8. <A
+HREF="x318.html"
+>Records and Record Types</A
+></DT
+><DT
+>2.9. <A
+HREF="x346.html"
+>Conditional Expressions</A
+></DT
+><DT
+>2.10. <A
+HREF="x374.html"
+>Sequence Expressions</A
+></DT
+><DT
+>2.11. <A
+HREF="x390.html"
+>Comments in Code</A
+></DT
+></DL
+></DD
+><DT
+>3&#31456;<A
+HREF="c408.html"
+>Functions</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="c408.html#functions-as-a-simple-form-of-abstraction"
+>Functions as a Simple Form of Abstraction</A
+></DT
+><DT
+>3.2. <A
+HREF="x460.html"
+>Function Arity</A
+></DT
+><DT
+>3.3. <A
+HREF="x485.html"
+>Function Interface</A
+></DT
+><DT
+>3.4. <A
+HREF="x494.html"
+>Evaluation of Function Calls</A
+></DT
+><DT
+>3.5. <A
+HREF="x514.html"
+>Recursive Functions</A
+></DT
+><DT
+>3.6. <A
+HREF="x552.html"
+>Evaluation of Recursive Function Calls</A
+></DT
+><DT
+>3.7. <A
+HREF="x588.html"
+>Example: Coin Changes for Fun</A
+></DT
+><DT
+>3.8. <A
+HREF="x611.html"
+>Tail-Call and Tail-Recursion</A
+></DT
+><DT
+>3.9. <A
+HREF="x622.html"
+>Example: The Eight-Queens Puzzle</A
+></DT
+><DT
+>3.10. <A
+HREF="x684.html"
+>Mutually Recursive Functions</A
+></DT
+><DT
+>3.11. <A
+HREF="x705.html"
+>Mutual Tail-Recursion</A
+></DT
+><DT
+>3.12. <A
+HREF="x736.html"
+>Envless Functions and Closure Functions</A
+></DT
+><DT
+>3.13. <A
+HREF="x790.html"
+>Higher-Order Functions</A
+></DT
+><DT
+>3.14. <A
+HREF="x835.html"
+>Example: Binary Search for Fun</A
+></DT
+><DT
+>3.15. <A
+HREF="x849.html"
+>Example: A Higher-Order Fun Puzzle</A
+></DT
+><DT
+>3.16. <A
+HREF="x882.html"
+>Currying and Uncurrying</A
+></DT
+></DL
+></DD
+><DT
+>4&#31456;<A
+HREF="c899.html"
+>Datatypes</A
+></DT
+><DD
+><DL
+><DT
+>4.1. <A
+HREF="c899.html#patterns"
+>Patterns</A
+></DT
+><DT
+>4.2. <A
+HREF="x940.html"
+>Pattern-Matching</A
+></DT
+><DT
+>4.3. <A
+HREF="x961.html"
+>Matching Clauses and Case-Expressions</A
+></DT
+><DT
+>4.4. <A
+HREF="x968.html"
+>Enumerative Datatypes</A
+></DT
+><DT
+>4.5. <A
+HREF="x1004.html"
+>Recursively Defined Datatypes</A
+></DT
+><DT
+>4.6. <A
+HREF="x1021.html"
+>Exhaustiveness of Pattern-Matching</A
+></DT
+><DT
+>4.7. <A
+HREF="x1067.html"
+>Example: Binary Search Tree</A
+></DT
+><DT
+>4.8. <A
+HREF="x1090.html"
+>Example: Evaluating Integer Expressions</A
+></DT
+></DL
+></DD
+><DT
+>5&#31456;<A
+HREF="c1116.html"
+>Parametric Polymorphism</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="c1116.html#function_templates"
+>Function Templates</A
+></DT
+><DT
+>5.2. <A
+HREF="x1165.html"
+>Polymorphic Functions</A
+></DT
+><DT
+>5.3. <A
+HREF="x1205.html"
+>Polymorphic Datatypes</A
+></DT
+><DT
+>5.4. <A
+HREF="x1240.html"
+>Example: Function Templates on Lists</A
+></DT
+><DT
+>5.5. <A
+HREF="x1307.html"
+>Example: Mergesort on Lists</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>II. <A
+HREF="p1341.html"
+>現実のプログラミングに対するサポート</A
+></DT
+><DD
+><DL
+><DT
+>6&#31456;<A
+HREF="c1343.html"
+>Effectful Programming Features</A
+></DT
+><DD
+><DL
+><DT
+>6.1. <A
+HREF="c1343.html#exceptions"
+>Exceptions</A
+></DT
+><DT
+>6.2. <A
+HREF="x1420.html"
+>Example: Testing for Braun Trees</A
+></DT
+><DT
+>6.3. <A
+HREF="x1455.html"
+>References</A
+></DT
+><DT
+>6.4. <A
+HREF="x1478.html"
+>Example: A Counter Implementation</A
+></DT
+><DT
+>6.5. <A
+HREF="x1489.html"
+>Arrays</A
+></DT
+><DT
+>6.6. <A
+HREF="x1529.html"
+>Example: Ordering Permutations</A
+></DT
+><DT
+>6.7. <A
+HREF="x1565.html"
+>Matrices</A
+></DT
+><DT
+>6.8. <A
+HREF="x1606.html"
+>Example: Estimating the Constant Pi</A
+></DT
+><DT
+>6.9. <A
+HREF="x1614.html"
+>Simple Input and Output</A
+></DT
+></DL
+></DD
+><DT
+>7&#31456;<A
+HREF="c1672.html"
+>Modularity</A
+></DT
+><DD
+><DL
+><DT
+>7.1. <A
+HREF="c1672.html#types_as_a_form_of_specification"
+>Types as a Form of Specification</A
+></DT
+><DT
+>7.2. <A
+HREF="x1748.html"
+>Static and Dynamic ATS Files</A
+></DT
+><DT
+>7.3. <A
+HREF="x1804.html"
+>Generic Template Implementation</A
+></DT
+><DT
+>7.4. <A
+HREF="x1821.html"
+>Specific Template Implementation</A
+></DT
+><DT
+>7.5. <A
+HREF="x1864.html"
+>Abstract Types</A
+></DT
+><DT
+>7.6. <A
+HREF="x1898.html"
+>Example: A Package for Rationals</A
+></DT
+><DT
+>7.7. <A
+HREF="x1938.html"
+>Example: A Functorial Package for Rationals</A
+></DT
+></DL
+></DD
+><DT
+>8&#31456;<A
+HREF="c1966.html"
+>Interaction with C</A
+></DT
+><DD
+><DL
+><DT
+>8.1. <A
+HREF="c1966.html#external_name"
+>External Global Names</A
+></DT
+><DT
+>8.2. <A
+HREF="x2030.html"
+>External Types and Values in ATS</A
+></DT
+><DT
+>8.3. <A
+HREF="x2045.html"
+>Inclusion of External Code in ATS</A
+></DT
+><DT
+>8.4. <A
+HREF="x2066.html"
+>Calling External Functions in ATS</A
+></DT
+><DT
+>8.5. <A
+HREF="x2078.html"
+>Unsafe C-style programming in ATS</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>III. <A
+HREF="p2129.html"
+>依存型を使ったプログラミング</A
+></DT
+><DD
+><DL
+><DT
+>9&#31456;<A
+HREF="c2131.html"
+>Introduction to Dependent Types</A
+></DT
+><DD
+><DL
+><DT
+>9.1. <A
+HREF="c2131.html#enhanced_expressiveness_for_specification"
+>Enhanced Expressiveness for Specification</A
+></DT
+><DT
+>9.2. <A
+HREF="x2291.html"
+>Constraint-Solving during Typechecking</A
+></DT
+><DT
+>9.3. <A
+HREF="x2316.html"
+>Example: String Processing</A
+></DT
+><DT
+>9.4. <A
+HREF="x2363.html"
+>Example: Binary Search on Arrays</A
+></DT
+><DT
+>9.5. <A
+HREF="x2388.html"
+>Termination-Checking for Recursive Functions</A
+></DT
+><DT
+>9.6. <A
+HREF="x2438.html"
+>Example: Dependent Types for Debugging</A
+></DT
+></DL
+></DD
+><DT
+>10&#31456;<A
+HREF="c2471.html"
+>Datatype Refinement</A
+></DT
+><DD
+><DL
+><DT
+>10.1. <A
+HREF="c2471.html#dependent_datatypes"
+>Dependent Datatypes</A
+></DT
+><DT
+>10.2. <A
+HREF="x2581.html"
+>Example: Function Templates on Lists (Redux)</A
+></DT
+><DT
+>10.3. <A
+HREF="x2653.html"
+>Example: Mergesort on Lists (Redux)</A
+></DT
+><DT
+>10.4. <A
+HREF="x2681.html"
+>Sequentiality of Pattern Matching</A
+></DT
+><DT
+>10.5. <A
+HREF="x2710.html"
+>Example: Functional Red-Black Trees</A
+></DT
+></DL
+></DD
+><DT
+>11&#31456;<A
+HREF="c2753.html"
+>Theorem-Proving in ATS/LF</A
+></DT
+><DD
+><DL
+><DT
+>11.1. <A
+HREF="c2753.html#encoding_relations_as_dataprops"
+>Encoding Relations as Dataprops</A
+></DT
+><DT
+>11.2. <A
+HREF="x2815.html"
+>Constructing Proofs as Total Functions</A
+></DT
+><DT
+>11.3. <A
+HREF="x2869.html"
+>Example: Proving Distributivity of Multiplication</A
+></DT
+><DT
+>11.4. <A
+HREF="x2884.html"
+>Datasorts</A
+></DT
+><DT
+>11.5. <A
+HREF="x2927.html"
+>Example: Proving Properties on Braun Trees</A
+></DT
+></DL
+></DD
+><DT
+>12&#31456;<A
+HREF="c2967.html"
+>Programming with Theorem-Proving</A
+></DT
+><DD
+><DL
+><DT
+>12.1. <A
+HREF="c2967.html#circumventing_nonlinear_constraints"
+>Circumventing Nonlinear Constraints</A
+></DT
+><DT
+>12.2. <A
+HREF="x3009.html"
+>Example: Safe Matrix Subscripting</A
+></DT
+><DT
+>12.3. <A
+HREF="x3028.html"
+>Specifying with Enhanced Precision</A
+></DT
+><DT
+>12.4. <A
+HREF="x3054.html"
+>Example: Another Verified Factorial</A
+></DT
+><DT
+>12.5. <A
+HREF="x3077.html"
+>Example: Verified Fast Exponentiation</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>IV. <A
+HREF="p3131.html"
+>Programming with Linear Views and Types</A
+></DT
+><DD
+><DL
+><DT
+>13&#31456;<A
+HREF="c3133.html"
+>Introduction to Views and Viewtypes</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="f32.html"
+ACCESSKEY="N"
+>&#27425;&#12398;&#12506;&#12540;&#12472;</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>前書き</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
