@@ -16,8 +16,8 @@ REL="PREVIOUS"
 TITLE="関数型プログラミングの基本"
 HREF="p45.html"><LINK
 REL="NEXT"
-TITLE="A Template for Single-File Programs"
-HREF="x84.html"></HEAD
+TITLE="1つのファイルで構成されたプログラムのひな形"
+HREF="x85.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -59,7 +59,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x84.html"
+HREF="x85.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -76,11 +76,10 @@ NAME="preparation_for_starting"
 ></A
 >Chapter 1. はじめる前に</H1
 ><P
->&#13;It is likely that you want to write programs in the programming language
-you are learning.  You may also want to try some of the examples included
-in this book and see what really happens. So I will first show you how to
-write in ATS a single-file program, that is, a program contained in a
-single file, and compile it and then execute it.
+>&#13;おそらく、あなたはプログラミング言語を学習する際に何かプログラムを書きたくなるでしょう。
+また、この本の見本のいくつかを試して、実際に起きることを目にしたいでしょう。
+そこで、はじめにたった1つのファイルで構成されたプログラムをATSで書く方法を説明します。
+その後、コンパイル方法と実行手順を説明します。
 </P
 ><DIV
 CLASS="sect1"
@@ -88,11 +87,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="a_running_program"
->1.1. A Running Program</A
+>1.1. 実行可能なプログラム</A
 ></H1
 ><P
->The following example is a program in ATS that prints out (onto the
-console) the string "Hello, world!" plus a newline before it terminates:
+>&#13;次の例は"Hello, world!"という文字列と改行をコンソールに印字するプログラムです。
 
 <DIV
 CLASS="informalexample"
@@ -105,7 +103,7 @@ NAME="AEN53"
 CLASS="programlisting"
 >val _ = print ("Hello, world!\n")
 
-implement main0 () = () // a dummy for [main]
+implement main0 () = () // [main] のダミー実装
 </PRE
 ><P
 ></P
@@ -113,47 +111,44 @@ implement main0 () = () // a dummy for [main]
 >
 
 
-The keyword <FONT
-COLOR="RED"
->val</FONT
-> initiates a binding between the variable
 <FONT
 COLOR="RED"
->_</FONT
-> (underscore) and the function call <FONT
+>val</FONT
+> キーワードは変数 <FONT
 COLOR="RED"
->print ("Hello,
-world!\n")</FONT
->.  However, this binding is never used after it is
-introduced; its sole purpose is for the call to the <FONT
+>_</FONT
+> (アンダースコア)に、
+関数呼び出し <FONT
+COLOR="RED"
+>print ("Hello, world!\n")</FONT
+> を束縛する。
+この束縛は作られた後に使われるのではありません。
+評価された時に、 <FONT
 COLOR="RED"
 >print</FONT
->
-function to get evaluated.  </P
+> 関数を呼び出すことが唯一の目的です。  </P
 ><P
->&#13;The function <FONT
+>&#13;<FONT
 COLOR="RED"
 >main0</FONT
-> is a slight variant of another function
-named <FONT
+> 関数はATSにおいて特殊な意味を持っていて <FONT
 COLOR="RED"
 >main</FONT
->, which is of certain special meaning in ATS. For a
-programmer who knows the C or Java programming language, I simply point out
-that the role of <FONT
+> 関数の変形です。
+CやJava言語を知っているプログラマにとっては、
+<FONT
 COLOR="RED"
 >main</FONT
-> is essentially the same as its
-counterpart of the same name in C or Java.  The keyword
+> の役目はCやJavaにおける同じ名前の関数と本質的に同等であると言えるでしょう。
 <FONT
 COLOR="RED"
 >implement</FONT
-> initiates the implementation of a function whose
-interface has already been declared elsewhere. Following is the declared
-interface for <FONT
+> キーワードは既に別の箇所でインターフェイスが宣言された関数の実装を作成します。
+
+次に示すATSのソースコードは <FONT
 COLOR="RED"
 >main0</FONT
-> in ATS:
+> に対するインターフェイスの宣言です。
 
 <DIV
 CLASS="informalexample"
@@ -172,24 +167,23 @@ CLASS="programlisting"
 >
 
 
-which indicates that <FONT
+このコードは <FONT
 COLOR="RED"
 >main0</FONT
-> is a nullary function, that is, a
-function taking no arguments, and it returns no value (or it returns the
-void value). The double slash symbol (<FONT
+> が引数を取らず返値がない関数であることを示しています。
+返値がない、ということはvoid値を返すと言いかえることもできます。
+<FONT
 COLOR="RED"
 >//</FONT
->) initiates a comment
-that terminates at the end of the current line.
+> から行末まではコメントです。 
 </P
 ><P
->Suppose that you have already installed the ATS programming language
-system. You can issue the following command-line to generate an executable
-named <TT
+>ATSプログラミング言語は既にインストール済みであると仮定します。
+次のコマンドを実行すれば作業中ディレクトリに <TT
 CLASS="filename"
 >hello</TT
-> in the current working directory:
+>
+という名前で実行ファイルが作られます。
 
 <DIV
 CLASS="informalexample"
@@ -210,52 +204,54 @@ CLASS="command"
 ></DIV
 >
 
-where <TT
+<TT
 CLASS="filename"
 >hello.dats</TT
-> refers to a file containing the above
-program.  The command <B
+> は先程のプログラムを含んだファイルです。
+<B
 CLASS="command"
 >atscc</B
-> is essentially a convenience
-wrapper around the command <B
+> コマンドは <B
 CLASS="command"
 >atsopt</B
->, which triggers the process
-of typechecking and compiling ATS programs. Note that <B
-CLASS="command"
->atscc</B
-> and
+> コマンドの便利なラッパーです。
 <B
 CLASS="command"
 >atsopt</B
-> may actually be given the names <B
+> はATSプログラムの型検査とコンパイルを実行します。
+ATSのインストール時の設定によっては、
+<B
+CLASS="command"
+>atscc</B
+> と <B
+CLASS="command"
+>atsopt</B
+> はそれぞれ実際には
+<B
 CLASS="command"
 >patscc</B
-> and
-<B
+> と <B
 CLASS="command"
 >patsopt</B
->, respectively, in certain installations of ATS.  The filename
-extension <SPAN
+> という名前が付けられているかもしれないことに注意してください。
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.dats</I
 ></SPAN
-> should not be altered as it has already been
-assigned a special meaning that the compilation command <B
+> という拡張子は <B
 CLASS="command"
 >atscc</B
 >
-recognizes. Another special filename extension is <SPAN
+コマンドが特別な意味に解釈するため変更してはいけません。
+別の特別な意味を持つ拡張子として <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.sats</I
 ></SPAN
->, which
-we will soon encounter.
+> があり、この後すぐに出会うことになります。
 </P
 ></DIV
 ></DIV
@@ -293,7 +289,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x84.html"
+HREF="x85.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -317,7 +313,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->A Template for Single-File Programs</TD
+>1つのファイルで構成されたプログラムのひな形</TD
 ></TR
 ></TABLE
 ></DIV

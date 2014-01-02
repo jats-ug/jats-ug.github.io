@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->A Template for Single-File Programs</TITLE
+>1つのファイルで構成されたプログラムのひな形</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -10,13 +10,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Preparation for Starting"
-HREF="c48.html"><LINK
+TITLE="はじめる前に"
+HREF="c47.html"><LINK
 REL="PREVIOUS"
-TITLE="Preparation for Starting"
-HREF="c48.html"><LINK
+TITLE="はじめる前に"
+HREF="c47.html"><LINK
 REL="NEXT"
-TITLE="A Makefile Template"
+TITLE="Makefileのひな形"
 HREF="x93.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -45,15 +45,15 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="c48.html"
+HREF="c47.html"
 ACCESSKEY="P"
->&#21069;&#12398;&#12506;&#12540;&#12472;</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->&#31532; 1&#31456;Preparation for Starting</TD
+>Chapter 1. はじめる前に</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -61,7 +61,7 @@ VALIGN="bottom"
 ><A
 HREF="x93.html"
 ACCESSKEY="N"
->&#27425;&#12398;&#12506;&#12540;&#12472;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -74,16 +74,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="a_template_for_single-file_programs"
->1.2. A Template for Single-File Programs</A
+>1.2. 1つのファイルで構成されたプログラムのひな形</A
 ></H1
 ><P
->&#13;The following code template, which is available
+>&#13;次に示すコードは1つのファイルで構成されたATSプログラムのひな形です。
+またこのひな形は
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_START/mytest.dats"
 TARGET="_top"
->on-line</A
->, is designed for constructing a
-single-file program in ATS:
+>オンライン</A
+>
+からも取得できます。
 
 <DIV
 CLASS="informalexample"
@@ -96,7 +97,7 @@ NAME="AEN89"
 CLASS="programlisting"
 >(*
 **
-** A template for single-file ATS programs
+** 1つのファイルで構成されたATSプログラムのひな形
 **
 *)
 
@@ -108,12 +109,12 @@ CLASS="programlisting"
 (* ****** ****** *)
 
 //
-// please write you program in this section
+// この部分にプログラムを書いてください
 //
 
 (* ****** ****** *)
 
-implement main0 () = () // a dummy implementation for [main]
+implement main0 () = () // [main] のダミー実装
 
 </PRE
 ><P
@@ -122,16 +123,15 @@ implement main0 () = () // a dummy implementation for [main]
 >
 
 
-The line starting with the keyword <FONT
+<FONT
 COLOR="RED"
 >#include</FONT
-> enables the ATS
-compiler <B
+> キーワードではじまる行はATSコンパイラ <B
 CLASS="command"
 >atsopt</B
-> to gain access to certain external library
-packages and the definitions of various library functions. I will cover
-elsewhere in the book the topic on making use of library in ATS.
+> に対して、
+指定した外部ライブラリパッケージと様々なライブラリ関数へのアクセスを可能にします。
+ATSのライブラリの使用方法はこの本の別の章で説明します。 
 </P
 ></DIV
 ><DIV
@@ -150,9 +150,9 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="c48.html"
+HREF="c47.html"
 ACCESSKEY="P"
->&#21069;&#12398;&#12506;&#12540;&#12472;</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
@@ -161,7 +161,7 @@ VALIGN="top"
 ><A
 HREF="index.html"
 ACCESSKEY="H"
->&#12507;&#12540;&#12512;</A
+>Home</A
 ></TD
 ><TD
 WIDTH="33%"
@@ -170,7 +170,7 @@ VALIGN="top"
 ><A
 HREF="x93.html"
 ACCESSKEY="N"
->&#27425;&#12398;&#12506;&#12540;&#12472;</A
+>Next</A
 ></TD
 ></TR
 ><TR
@@ -178,21 +178,21 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Preparation for Starting</TD
+>はじめる前に</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c48.html"
+HREF="c47.html"
 ACCESSKEY="U"
->&#19978;&#12395;&#25147;&#12427;</A
+>Up</A
 ></TD
 ><TD
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->A Makefile Template</TD
+>Makefileのひな形</TD
 ></TR
 ></TABLE
 ></DIV
