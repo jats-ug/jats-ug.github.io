@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>束縛のスコープ</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="プログラミングの構成要素"
+HREF="c100.html"><LINK
+REL="PREVIOUS"
+TITLE="名前と束縛"
+HREF="x166.html"><LINK
+REL="NEXT"
+TITLE="評価のための環境"
+HREF="x219.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x166.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. プログラミングの構成要素</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x219.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="scopes_for_bindings"
+>2.3. 束縛のスコープ</A
+></H1
+><P
+>&#13;それぞれの束縛は、それが有効である固定のスコープを持っています。
+ファイルの中にあるトップレベルの束縛のスコープは束縛が作られた場所からファイルの終端までです。
+次の例では <FONT
+COLOR="RED"
+>let</FONT
+> と <FONT
+COLOR="RED"
+>in</FONT
+> キーワードの間で束縛が作られていて、
+その束縛は <FONT
+COLOR="RED"
+>end</FONT
+> キーワードまで有効です。 
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN198"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;val area = let
+  val PI = 3.14 and radius = 10.0 in PI * radius * radius
+end // end of [let]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;このような束縛はローカル束縛と呼ばれていて、
+<FONT
+COLOR="RED"
+>PI</FONT
+> や <FONT
+COLOR="RED"
+>radius</FONT
+> のような名前はローカル名と呼ばれています。
+この例は以下のようなスタイルでも書くことができます。 
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN203"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;val area =
+  PI * radius * radius where {
+  val PI = 3.14 and radius = 10.0 // simultaneous bindings
+} // end of [where] // end of [val]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;式の直後に現われるキーワード <FONT
+COLOR="RED"
+>where</FONT
+> は、
+その式に含まれている名前を評価するためのみ有効な束縛を表わしています。
+しばしば、キーワード <FONT
+COLOR="RED"
+>let</FONT
+> と <FONT
+COLOR="RED"
+>where</FONT
+>
+を使って構成された式は、それぞれlet式とwhere式と呼ばれます。
+前者はかならず後者に変換でき、また逆にもかならず変換できます。
+どちらがより良いスタイルなのでしょうか？
+私はまだ自分の意見を持っていません。
+その答はプログラマの好みに完全に依存していると思われます。 
+</P
+><P
+>&#13;次の例はローカル束縛を作るまた別のアプローチを示しています。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN210"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;local
+
+val PI = 3.14 and radius = 10.0
+
+in (* in of [local] *)
+
+val area = PI * radius * radius
+
+end // end of [local]
+</PRE
+><P
+></P
+></DIV
+>
+
+キーワード <FONT
+COLOR="RED"
+>local</FONT
+> と <FONT
+COLOR="RED"
+>in</FONT
+> の間で作られた束縛は、
+キーワード <FONT
+COLOR="RED"
+>end</FONT
+> に逹っするまで有効です。
+<FONT
+COLOR="RED"
+>in</FONT
+> と <FONT
+COLOR="RED"
+>end</FONT
+>の間で作られた束縛は、
+トップレベルの束縛になることに注意してください。
+<FONT
+COLOR="RED"
+>let</FONT
+> と <FONT
+COLOR="RED"
+>local</FONT
+> の違いは明確です。
+前者は式を構成するのに使い、後者は宣言を列挙するのに使います。 
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x166.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x219.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>名前と束縛</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c100.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>評価のための環境</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

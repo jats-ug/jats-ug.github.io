@@ -16,8 +16,8 @@ REL="PREVIOUS"
 TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="NEXT"
-TITLE="Scopes for Bindings"
-HREF="x191.html"></HEAD
+TITLE="束縛のスコープ"
+HREF="x192.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -59,7 +59,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x191.html"
+HREF="x192.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -77,24 +77,28 @@ NAME="names_and_bindings"
 >2.2. 名前と束縛</A
 ></H1
 ><P
->&#13;A crucial aspect of a programming language is the mechanism it provides for
-binding names, which are themselves expressions, to expressions. For
-instance, a declaration is introduced by the following syntax that declares
-a binding between the name <FONT
-COLOR="RED"
->x</FONT
->, which is also referred to as a
-variable, and the expression <FONT
+>&#13;プログラミング言語の決定的な側面は名前を式に束縛するためのしくみです。
+さらにその名前自身が式になります。
+
+例えば次の構文で表わされるのは、
+式 <FONT
 COLOR="RED"
 >1+2</FONT
->:
+> を名前 <FONT
+COLOR="RED"
+>x</FONT
+> に束縛すする宣言です。
+また <FONT
+COLOR="RED"
+>x</FONT
+> も値として参照されます。
 </P
 ><DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN171"
+NAME="AEN172"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -104,51 +108,52 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;Note that <FONT
+>&#13;ATSでは  <FONT
 COLOR="RED"
 >val</FONT
-> is a keyword in ATS, and the declaration is
-classified as a val-declaration. Conceptually, what happens at run-time in
-a call-by-value language such as ATS is that the expression <FONT
+> はキーワードであることに注意してください。
+またその宣言はval宣言として分類されます。
+
+概念上、ATSのような即時評価(call-by-value)の言語において実行時に起きることは、
+まずはじめに式 <FONT
 COLOR="RED"
 >1+2</FONT
->
-is first evaluated to the value <FONT
+> が値 <FONT
 COLOR="RED"
 >3</FONT
->, and then the binding between
+> に評価されます。
+次に <FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>1+2</FONT
+> の間に束縛ができ、
 <FONT
 COLOR="RED"
 >x</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
->1+2</FONT
-> is <SPAN
+>3</FONT
+> の間に束縛が <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->finalized</I
+>決着</I
 ></SPAN
-> into a binding
-between <FONT
-COLOR="RED"
->x</FONT
-> and <FONT
-COLOR="RED"
->3</FONT
->. Essentially, call-by-value means
-that a binding between a name and an expression needs to be finalized into
-one between the name and the value of the expression before it can be used
-in evaluation subsequently. As another example, the following syntax
-declares three bindings, two of which are formed simultaneously in the
-first line:
+> します。
+本質的に即時評価とは、
+名前と式の束縛はそれ以降の評価で使われる前に、
+その名前とその式の値の束縛に決着されなければならないことを意味します。
+別の例としては、次の構文では3つの束縛を宣言しています。
+最初の行ではその内2つが同時に宣言されています。 
 </P
 ><DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN182"
+NAME="AEN183"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -159,21 +164,20 @@ val area = PI * radius * radius
 ></P
 ></DIV
 ><P
->&#13;Note that it is unspecified in ATS as to which of the first two bindings
-(connected by the keyword <FONT
+>&#13;<FONT
 COLOR="RED"
 >and</FONT
->) is finalized ahead of the other
-at run-time. However, it is guaranteed that the third binding is finalized
-after the first two are done. To see this issue from a different angle, we
-can try to typecheck the following code:
+> キーワードで繋がっている最初の2つの束縛のどちらが先に実行時に決着されるかは、
+ATSにおいては未定義であることに注意してください。
+けれども3つ目の束縛は最初の2つが完了した後に決着されることは保証されています。
+この論点を別の角度から見るために、次のコードを型検査してみましょう。
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN186"
+NAME="AEN187"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -184,19 +188,18 @@ CLASS="programlisting"
 ></DIV
 >
 
-The error message reported in this case indicates that the name (or dynamic
-identifier) <FONT
-COLOR="RED"
->x</FONT
-> in the expression <FONT
+この場合、エラーメッセージは式 <FONT
 COLOR="RED"
 >x + 1</FONT
-> is unbound.
-In particular, the two occurrences of <FONT
+>
+の中にある名前(もしくは動的な識別子) <FONT
 COLOR="RED"
 >x</FONT
-> in the above code are
-unrelated.
+> が束縛されていないことを示しています。
+具体的には上記のコードの中にある2つの <FONT
+COLOR="RED"
+>x</FONT
+> 同士に関係がないのです。
 
 </P
 ></DIV
@@ -234,7 +237,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x191.html"
+HREF="x192.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -258,7 +261,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Scopes for Bindings</TD
+>束縛のスコープ</TD
 ></TR
 ></TABLE
 ></DIV
