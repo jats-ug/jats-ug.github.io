@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Tuples and Tuple Types</TITLE
+>タプルとタプル型</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -13,7 +13,7 @@ REL="UP"
 TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="Primitive Types"
+TITLE="プリミティブ型"
 HREF="x245.html"><LINK
 REL="NEXT"
 TITLE="Records and Record Types"
@@ -74,39 +74,40 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="tuples_and_tuple_types"
->2.7. Tuples and Tuple Types</A
+>2.7. タプルとタプル型</A
 ></H1
 ><P
->&#13;Given two types T1 and T2, we can form a tuple type (T1, T2), which can
-also be written as @(T1, T2).  Assume that exp1 and exp2 are two
-expressions of the types T1 and T2, respectively. Then the expression
-(exp1, exp2), which can also be written as @(exp1, exp2), refers to a tuple
-of the tuple type (T1, T2). Accordingly, we can form tuples and tuple types
-of more components. In order for a tuple type to be assigned to a tuple,
-the tuple and the tuple type must have the equal number of components.
+>&#13;2つの型T1とT2が与えられた時、タプル型である (T1, T2) を作ることがきます。
+これは @(T1, T2) のように書くこともできます。
+exp1とexp2がそれぞれT1とT2型の式であるとしましょう。
+すると式 (exp1, exp2) または @(exp1, exp2) は (T1, T2) 型のタプルであることになります。
+さらに、より多くの要素を持つタプルとタプル型を作ることもできます。
+タプルにタプル型を割り振るために、
+そのタプルとそのタプル型は持っている要素が同じ数でなければなりません。 
 </P
 ><P
->&#13;When evaluating a tuple expression, we evaluate all of its components
-<SPAN
+>&#13;タプルの式を評価する時、その要素すべてを <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->sequentially</I
+>連続して(sequentially)</I
 ></SPAN
->. Suppose that the expression contains n
-components, then the value of the expression is the tuple consisting of the
-n values of the n components listed in the order as the components
-themselves.
+> 評価します。
+その式がn個の要素を持っていたと想像してみましょう。
+するとその式の値は、
+要素の順に列挙されたn個の要素の値によって構成されているタプルであることになります。 
 </P
 ><P
->&#13;A tuple of length n for n &#62;= 2 is just a record of field names ranging from
-0 until n-1, inclusive. Given an expression exp of some tuple type (T1,
-T2), we can form expressions (exp).0 and (exp).1, which are of types T1 and
-T2, respectively. Note that the expression exp does not have to be a tuple
-expression. For instance, exp may be a name or a function application. If
-exp evaluates to a tuple of two values, then exp.0 evaluates to the first
-value and exp.1 the second value. Clearly, if the tuple type of exp
-contains more components, what is stated can be generalized accordingly.
+>&#13;2以上の長さnのタプルは、フィールド名は0からn-1までの範囲を取る単なるレコードです。
+タプル型 (T1, T2) の式 exp が与えられた時、
+(exp).0 や (exp).1 のような式を作ることができます。
+これらはそれぞれT1型とT2型を取ります。
+式expは必ずしもタプルの式である必要はないことに注意してください。
+例えば、expは名前や関数適用であってもかまいません。
+もしexpを評価して2つの値を持つタプルになった場合、
+exp.0は1番目の値に評価され、exp.1は二番目の値に評価されることになります。
+expのタプル型がより多くの要素を持っていた場合、
+当然このような式は一般化できます。 
 </P
 ><P
 >&#13;In the following example, we first construct a tuple of length 3 and then
@@ -256,7 +257,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Primitive Types</TD
+>プリミティブ型</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

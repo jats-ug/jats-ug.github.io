@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Primitive Types</TITLE
+>プリミティブ型</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -16,7 +16,7 @@ REL="PREVIOUS"
 TITLE="静的な意味論"
 HREF="x235.html"><LINK
 REL="NEXT"
-TITLE="Tuples and Tuple Types"
+TITLE="タプルとタプル型"
 HREF="x303.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -74,37 +74,36 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="primitive_types"
->2.6. Primitive Types</A
+>2.6. プリミティブ型</A
 ></H1
 ><P
->&#13;The simplest types in ATS are primitive types, which are used to classify
-primitive values. For instance, we have the primitive types <FONT
+>&#13;ATSにおいて最も単純な型は、プリミティブな値を分類するのに使われるプリミティブ型です。
+例えば <FONT
 COLOR="RED"
 >int</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >double</FONT
->, which classify integers (in a fixed range) and
-floating point numbers (of double precision), respectively.
+> というプリミティブ型があります。
+
+これらはそれぞれ固定長の整数の整数と倍精度の浮動小数点数を分類しています。 
 </P
 ><P
->&#13;In the current implementation of ATS (Postiats), a program in ATS is first
-compiled into one in C (conforming to the C99 standard), which can then be
-compiled to object code by a compiler for C such as gcc. In the compilation
-from ATS to C, the type <FONT
+>&#13;ATS (Postiats)の現時点でも実装では、ATSプログラムはまずC99に従ったC言語にコンパイルされます。
+それからgccのようなC言語コンパイラによってオブジェクトコードにコンパイルすることができます。
+ATSからC言語へのコンパイルにおいて、
+ATSの <FONT
 COLOR="RED"
 >int</FONT
-> in ATS is translated to the type of
-the same name in C. Similarly, the type <FONT
+> 型はC言語の同名の型に変換されます。
+同様にATSの <FONT
 COLOR="RED"
 >double</FONT
-> in ATS is
-translated to the type of the same name in C.
+> 型はC言語の同名の型に変換されます。 
 </P
 ><P
->&#13;There are many other primitive types in ATS, and I will introduce
-them gradually.  Some commonly used primitive types are listed as follows:
+>&#13;ATSでは他にも多くのプリミティブ型がありますが、少しづつ解説します。
+一般的に使われるいくつかのプリミティブ型を次に示します。
 
 <P
 ></P
@@ -115,14 +114,13 @@ them gradually.  Some commonly used primitive types are listed as follows:
 COLOR="RED"
 >bool</FONT
 >:
-This type is for boolean values <FONT
+この型は真理値の <FONT
 COLOR="RED"
 >true</FONT
-> and <FONT
+> か <FONT
 COLOR="RED"
 >false</FONT
->,
-and it is translated into the int type in C.</P
+> を取り、C言語のint型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -130,7 +128,7 @@ and it is translated into the int type in C.</P
 COLOR="RED"
 >char</FONT
 >:
-This type is translated into the type in C for characters.</P
+この型はC言語の文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -138,7 +136,7 @@ This type is translated into the type in C for characters.</P
 COLOR="RED"
 >schar</FONT
 >:
-This type is translated into the type in C for signed characters.</P
+この型はC言語の符号付き文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -146,7 +144,7 @@ This type is translated into the type in C for signed characters.</P
 COLOR="RED"
 >uchar</FONT
 >:
-This type is translated into the type in C for unsigned characters.</P
+この型はC言語の符号無し文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -154,8 +152,7 @@ This type is translated into the type in C for unsigned characters.</P
 COLOR="RED"
 >float</FONT
 >:
-This type is translated into the type in C for floating point numbers of
-single precision.</P
+この型はC言語の単精度浮動小数点型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -163,7 +160,7 @@ single precision.</P
 COLOR="RED"
 >uint</FONT
 >:
-This type is translated into the type in C for unsigned integers.</P
+この型はC言語の符号無し整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -171,7 +168,7 @@ This type is translated into the type in C for unsigned integers.</P
 COLOR="RED"
 >lint</FONT
 >:
-This type is translated into the type in C for long integers.</P
+この型はC言語の長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -179,7 +176,7 @@ This type is translated into the type in C for long integers.</P
 COLOR="RED"
 >ulint</FONT
 >:
-This type is translated into the type in C for unsigned long integers.</P
+この型はC言語の符号無し長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -187,7 +184,7 @@ This type is translated into the type in C for unsigned long integers.</P
 COLOR="RED"
 >llint</FONT
 >:
-This type is translated into the type in C for long long integers.</P
+この型はC言語の長長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -195,7 +192,7 @@ This type is translated into the type in C for long long integers.</P
 COLOR="RED"
 >ullint</FONT
 >:
-This type is translated into the type in C for unsigned long long integers.</P
+この型はC言語の符号無し長長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -203,15 +200,15 @@ This type is translated into the type in C for unsigned long long integers.</P
 COLOR="RED"
 >size_t</FONT
 >:
-This type is translated into the type in C of the same name, which is for
-unsigned integers of certain precision. Usually, the type <FONT
+この型はC言語の同名の型に変換されます。
+これは符号無し整数型と同じ精度です。
+通常 <FONT
 COLOR="RED"
 >size_t</FONT
->
-can be treated as the type <FONT
+> 型は <FONT
 COLOR="RED"
 >ulint</FONT
-> and vice versa.</P
+> 型と等価に扱われます。 </P
 ></LI
 ><LI
 ><P
@@ -219,15 +216,15 @@ COLOR="RED"
 COLOR="RED"
 >ssize_t</FONT
 >:
-This type is translated into the type in C of the same name, which is for
-signed integers of certain precision. Usually, the type <FONT
+この型はC言語の同名の型に変換されます。
+これは符号無し整数型と同じ精度です。
+通常 <FONT
 COLOR="RED"
 >ssize_t</FONT
->
-can be treated as the type <FONT
+> 型は <FONT
 COLOR="RED"
 >lint</FONT
-> and vice versa.</P
+> 型と等価に扱われます。 </P
 ></LI
 ><LI
 ><P
@@ -235,8 +232,8 @@ COLOR="RED"
 COLOR="RED"
 >string</FONT
 >:
-This type is for strings, and its translation in C is the type for
-pointers. I will explain this translation elsewhere.</P
+この型は文字列のためのもので、C言語のポインタ型に変換されます。
+この変換については別の章で解説します。 </P
 ></LI
 ><LI
 ><P
@@ -244,16 +241,14 @@ pointers. I will explain this translation elsewhere.</P
 COLOR="RED"
 >void</FONT
 >:
-This type is for the void value, and its translation in C is the type of
-the same name. It should be noted that the void value is unspecified in
-ATS. I often say that a function returns no value if it returns the void
-value, and vice versa.</P
+この型はvoid値のためのもので、C言語の同名の型に変換されます。
+ATSにおいてvoid値が未定義であることに注意すべきでしょう。
+関数がvoid値を返す場合には、しばしば関数が値を返さないと言うことがあります。 </P
 ></LI
 ></UL
 >
 
-I will gradually present programming examples involving various primitive types and
-values.
+様々なプリミティブ型と値を含むプログラム例を徐々に紹介します。 
 </P
 ></DIV
 ><DIV
@@ -314,7 +309,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Tuples and Tuple Types</TD
+>タプルとタプル型</TD
 ></TR
 ></TABLE
 ></DIV
