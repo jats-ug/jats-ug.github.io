@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Conditional Expressions</TITLE
+>条件式</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -13,7 +13,7 @@ REL="UP"
 TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="Records and Record Types"
+TITLE="レコードとレコード型"
 HREF="x323.html"><LINK
 REL="NEXT"
 TITLE="Sequence Expressions"
@@ -74,11 +74,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="conditional_expressions"
->2.9. Conditional Expressions</A
+>2.9. 条件式</A
 ></H1
 ><P
->A conditional expression consists of a test and two branches. For instance,
-the following expression is conditional:
+>条件式は比較と2つの分岐から構成されています。
+例えば次の式は条件式です。
 
 <DIV
 CLASS="informalexample"
@@ -96,66 +96,63 @@ CLASS="programlisting"
 ></DIV
 >
 
-where <FONT
+<FONT
 COLOR="RED"
 >if</FONT
 >, <FONT
 COLOR="RED"
 >then</FONT
-> and <FONT
+>, <FONT
 COLOR="RED"
 >else</FONT
-> are keywords
-in ATS. In a conditional expression, the expression following
-<FONT
+> はATSのキーワードです。
+条件式では<FONT
 COLOR="RED"
 >if</FONT
-> is the test and the expressions following <FONT
-COLOR="RED"
->then</FONT
->
-and <FONT
-COLOR="RED"
->else</FONT
-> are referred to as the then-branch and the
-else-branch (of the conditional expression), respectively.
-</P
-><P
->&#13;In order to assign a type T to a conditional expression, we need to assign
-the type <FONT
-COLOR="RED"
->bool</FONT
-> to the test and the type T to both of the
-then-branch and the else-branch. For instance, the type <FONT
-COLOR="RED"
->int</FONT
-> can
-be assigned to the above conditional expression if the name <FONT
-COLOR="RED"
->x</FONT
->
-is given the type <FONT
-COLOR="RED"
->int</FONT
->.  </P
-><P
->&#13;Suppose that we have a conditional expression that is well-typed. When
-evaluating it, we first evaluate the test to a value, which is guaranteed
-to be either <FONT
-COLOR="RED"
->true</FONT
-> or <FONT
-COLOR="RED"
->false</FONT
->; if the value is
+> 直後の式が比較式、
 <FONT
 COLOR="RED"
->true</FONT
->, then we continue to evaluate the then-branch; otherwise,
-we continue to evaluate the else-branch.  </P
+>then</FONT
+> と <FONT
+COLOR="RED"
+>else</FONT
+> 直後の式はそれぞれthen分岐とelse分岐と呼ばれます。
+</P
 ><P
->&#13;It is also allowed to form a conditional expression where the else-branch
-is missing or truncated. For instance, we can form an expression as follows:
+>&#13;型Tを条件式に割り振るために、 <FONT
+COLOR="RED"
+>bool</FONT
+> 型をその比較に割り振り、
+型Tをthen分岐とelse分岐の両方に割り振る必要があります。
+例えば名前 <FONT
+COLOR="RED"
+>x</FONT
+> が <FONT
+COLOR="RED"
+>int</FONT
+> 型であれば、
+先の例の条件式には <FONT
+COLOR="RED"
+>int</FONT
+> 型を割り振ることができます。 </P
+><P
+>&#13;条件式が正しく型付けできていることを想像してみましょう。
+その条件式が評価されるとまずはじめに比較を評価して値を得ることになります。
+この値は <FONT
+COLOR="RED"
+>true</FONT
+> もしくは <FONT
+COLOR="RED"
+>false</FONT
+> であることが保証されています。
+値が <FONT
+COLOR="RED"
+>true</FONT
+> であればthen分岐が評価されます。
+そうでなければelse分岐が評価されることになるわけです。 </P
+><P
+>&#13;else分岐を省略した条件式を作ることもできます。
+例えば次のような式を作ることができます。
 
 <DIV
 CLASS="informalexample"
@@ -173,7 +170,7 @@ CLASS="programlisting"
 ></DIV
 >
 
-which is equivalent to the following conditional expression:
+これは次の条件式と等価です。
 
 <DIV
 CLASS="informalexample"
@@ -191,18 +188,17 @@ CLASS="programlisting"
 ></DIV
 >
 
-Note that <FONT
-COLOR="RED"
->()</FONT
-> stands for the void value (of the type
 <FONT
 COLOR="RED"
->void</FONT
->). If a type can be assigned to a conditional expression
-in the truncated form, then the type must be <FONT
+>()</FONT
+> は <FONT
 COLOR="RED"
 >void</FONT
->.</P
+> 型であるvoid値を表わすことに注意してください。
+省略された形の条件式に割り当てる型は <FONT
+COLOR="RED"
+>void</FONT
+> でなければなりません。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -248,7 +244,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Records and Record Types</TD
+>レコードとレコード型</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

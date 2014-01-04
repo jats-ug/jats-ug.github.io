@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Records and Record Types</TITLE
+>レコードとレコード型</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -16,7 +16,7 @@ REL="PREVIOUS"
 TITLE="タプルとタプル型"
 HREF="x303.html"><LINK
 REL="NEXT"
-TITLE="Conditional Expressions"
+TITLE="条件式"
 HREF="x351.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -74,16 +74,16 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="records_and_record_types"
->2.8. Records and Record Types</A
+>2.8. レコードとレコード型</A
 ></H1
 ><P
->A record is just like a tuple except that each field name of the
-record is chosen by the programmer (instead of being fixed). Similarly, a
-record type is just like a tuple type.  For instance, a record type
-<FONT
+>レコードそれぞれのフィールド名をプログラマによって決定できるという点を除けば、
+レコードはタプルと良く似ています。
+同様にレコード型もタプル型と良く似ています。
+例えばレコード型 <FONT
 COLOR="RED"
 >point2D</FONT
-> is defined as follows:
+> は以下のように定義できます。
 
 <DIV
 CLASS="informalexample"
@@ -101,27 +101,27 @@ CLASS="programlisting"
 ></DIV
 >
 
-where <FONT
+<FONT
 COLOR="RED"
 >x</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >y</FONT
-> are the names of the two fields in
-a record value of this type. We also refer to a field in a record as a
-component. The special symbol <FONT
+> はこの型のレコード値における2つのフィールドの名前です。
+またレコードのフィールドのことを要素と呼ぶことがあります。
+
+特殊な記号である <FONT
 COLOR="RED"
 >@{</FONT
-> indicates that the formed
-type is for flat/native/unboxed records. A value of the type
-<FONT
+> はその型が
+フラット/ネイティブ/アンボックス化 レコードであることを表わします。
+型 <FONT
 COLOR="RED"
 >point2D</FONT
-> is constructed as follows and given the name
-<FONT
+> の値は次のように <FONT
 COLOR="RED"
 >theOrigin</FONT
->:
+> という名前で生成することができます。
 
 <DIV
 CLASS="informalexample"
@@ -140,8 +140,8 @@ CLASS="programlisting"
 >
 </P
 ><P
->We can use the standard dot notation to extract out a selected component in
-a record, and this is shown in the next line of code:
+>レコードから要素を選択するために一般的なドット表記を使うことができます。
+次のようなコードになります。
 
 <DIV
 CLASS="informalexample"
@@ -159,8 +159,8 @@ CLASS="programlisting"
 ></DIV
 >
 
-Alternatively, we can use pattern matching for doing component extraction
-as is done in the next line of code:
+あるいは要素の選択にパターンマッチを使うこともできます。
+これは次のようなコードになります。
 
 <DIV
 CLASS="informalexample"
@@ -178,27 +178,24 @@ CLASS="programlisting"
 ></DIV
 >
 
-In this case, the names <FONT
+この例では <FONT
 COLOR="RED"
 >theOrigin_x</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >theOrigin_y</FONT
-> are bound to the components in
+> の名前はそれぞれ、
 <FONT
 COLOR="RED"
 >theOrgin</FONT
-> that are named <FONT
+> の中にある <FONT
 COLOR="RED"
 >x</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >y</FONT
->,
-respectively. If we only need to extract out a selected few of components
-(instead of all the available ones), we can make use of the following
-kind of patterns:
+> という名前の要素に束縛されています。
+もし要素全てではなく一部を選択したい場合には、次のようなパターンマッチを使うことができます。
 
 <DIV
 CLASS="informalexample"
@@ -217,21 +214,19 @@ val @{ y= theOrigin_y, ... } = theOrigin // the y-component only
 ></DIV
 >
 
-If you find all this syntax for component extraction to be confusing, then
-I suggest that you stick to the dot notation. I myself rarely use pattern
-matching on record values.
+もしもこの文法に混乱するようであれば、ドット表記を使うことをおすすめします。
+レコード値のパターンマッチは私自身あまり使いません。
 </P
 ><P
->Compared with handling native/flat/unboxed records, the only change
-needed for handling boxed records is to replace the special symbol
-<FONT
+>ネイティブ/フラット/アンボックス化 レコードと比較してボックス化レコードを扱うのに必要なことは、
+特殊記号を代えるだけです。
+つまり <FONT
 COLOR="RED"
 >@{</FONT
-> with another one: <FONT
+> を <FONT
 COLOR="RED"
 >'{</FONT
->, which is a quote
-followed immediately by a left curly brace.</P
+> に代えるだけです。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -291,7 +286,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Conditional Expressions</TD
+>条件式</TD
 ></TR
 ></TABLE
 ></DIV

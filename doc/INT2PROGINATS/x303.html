@@ -16,7 +16,7 @@ REL="PREVIOUS"
 TITLE="プリミティブ型"
 HREF="x245.html"><LINK
 REL="NEXT"
-TITLE="Records and Record Types"
+TITLE="レコードとレコード型"
 HREF="x323.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -110,9 +110,8 @@ expのタプル型がより多くの要素を持っていた場合、
 当然このような式は一般化できます。 
 </P
 ><P
->&#13;In the following example, we first construct a tuple of length 3 and then
-introduce bindings between 3 names and all of the 3 components of the
-tuple:
+>&#13;次に占めす例では、はじめに長さが3のタプルを作り、
+そのタプルの3つの要素全てに3つの名前を束縛しています。
 
 <DIV
 CLASS="informalexample"
@@ -131,13 +130,11 @@ val x = xyz.0 and y = xyz.1 and z = xyz.2
 ></DIV
 >
 
-Note that the constructed tuple can be assigned the tuple type
-<FONT
+作られたタプルには <FONT
 COLOR="RED"
 >(char, int, double)</FONT
->. Another method for selecting components in
-a given tuple is based on pattern matching, which is employed in the
-following example:
+> というタプル型が割り振られることに注意してください。
+タプルの要素を選択する他の方法には、次の例に示すパターンマッチがあります。
 
 <DIV
 CLASS="informalexample"
@@ -156,27 +153,27 @@ val (x, y, z) = xyz // x = 'A'; y = 1; z = 2.0
 ></DIV
 >
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >(x, y, z)</FONT
-> is a pattern that can match any tuples of
-exact 3 components. I will say more about pattern matching elsewhere.
+>
+は、ぴったり3要素のタプルにマッチするパターンであることに注意してください。
+その他のパターンマッチについては別の章で説明します。
 </P
 ><P
->&#13;The tuples introduced above are often referred to as flat tuples, native
-tuples or unboxed tuples. There is another kind of tuples supported in ATS,
-which are called boxed tuples. A boxed tuple is essentially a pointer
-pointing to some heap location where a flat tuple is stored.
+>&#13;ここまで紹介してきたタプルはしばしば
+フラットタプル、ネイティブタプル、アンボックス化タプルなどと呼ばれます。
+ATSはまた別の種類のタプルをサポートしており、それはボックス化タプルと呼ばれています。
+ボックス化タプルは本質的に、フラットタプルが配置されたヒープを指すポインタです。 
 </P
 ><P
->&#13;Assume that exp1 and exp2 are two expressions of the types T1 and T2,
-respectively. Then the expression '(exp1, exp2), refers to a tuple of the
-tuple type '(T1, T2). Accordingly, we can form boxed tuples and boxed tuple
-types of fewer or more components. What should be noted immediately is that
-every boxed tuple is of the size of a pointer, and can thus be stored in
-any place where a pointer can. Using boxed tuples is rather similar to
-using unboxed ones. For instance, the meaning of the following code should
-be evident:
+>&#13;またexp1とexp2がそれぞれ型T1とT2の式であるとします。
+式 '(exp1, exp2) はタプル型 '(T1, T2) のタプルになります。
+結果的に、異なる要素数のボックス化タプルとボックス化タプル型も作ることができます。
+注意するべきなのは、全てのボックス化タプルのサイズはポインタのものと同じであるということです。
+そのためポインタが格納できる場所であれば、ボックス化タプルも格納することができます。
+ボックス化タプルの使い方はアンボックス化タプルの使い方とよく似ています。
+例えば、次のコードの意味はすぐにわかります。
 
 <DIV
 CLASS="informalexample"
@@ -195,22 +192,22 @@ val x = xyz.0 and y = xyz.1 and z = xyz.2
 ></DIV
 >
 
-Note that a space is needed between <FONT
+<FONT
 COLOR="RED"
 >'(</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >'A'</FONT
->
-for otherwise the current parser (for ATS/Postiats) would be confused.
+> の間に空白を入れないと、
+ATS/Postiats の今のパーサが混乱してしまうことに注意してください。 
 </P
 ><P
->&#13;Given the availability of flat and boxed tuples, one naturally wants to
-know whether there is a simple way to determine which kind is preferred
-over the other. Unfortunately, there is no simple way to do this as far as
-I can tell. In order to be certain, some kind of profiling is often
-needed. However, if we want to run code with no support of garbage
-collection (GC), then we should definitely avoid using boxed tuples.
+>&#13;フラットタプルとボックス化タプルの可用性があると、
+どちらの種類がより良いのか決める手掛かりを当然知りたくなるでしょう。
+残念ながら私の知るかぎり、そのような方法はありません。
+確実に言えることは、プロファイリングすることがしばしば必要になるということです。
+けれども、もしGCを含まないコードを実行したいのであれば、
+明らかにボックス化タプルを使うべきではありません。 
 </P
 ></DIV
 ><DIV
@@ -271,7 +268,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Records and Record Types</TD
+>レコードとレコード型</TD
 ></TR
 ></TABLE
 ></DIV
