@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->��Ｐ</TITLE
+>条件式</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="�쥳���ɤȥ쥳���ɷ�"
+TITLE="レコードとレコード型"
 HREF="x323.html"><LINK
 REL="NEXT"
-TITLE="Sequence Expressions"
+TITLE="シーケンス式(逐次実行)"
 HREF="x379.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,11 +74,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="conditional_expressions"
->2.9. ��Ｐ</A
+>2.9. 条件式</A
 ></H1
 ><P
->��Ｐ����Ӥ�2�Ĥ�ʬ�����鹽������Ƥ��ޤ���
-�㤨�м��μ��Ͼ�Ｐ�Ǥ���
+>条件式は比較と2つの分岐から構成されています。
+例えば次の式は条件式です。
 
 <DIV
 CLASS="informalexample"
@@ -105,54 +105,54 @@ COLOR="RED"
 >, <FONT
 COLOR="RED"
 >else</FONT
-> ��ATS�Υ�����ɤǤ���
-��Ｐ�Ǥ�<FONT
+> はATSのキーワードです。
+条件式では<FONT
 COLOR="RED"
 >if</FONT
-> ľ��μ�����Ӽ���
+> 直後の式が比較式、
 <FONT
 COLOR="RED"
 >then</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >else</FONT
-> ľ��μ��Ϥ��줾��thenʬ����elseʬ���ȸƤФ�ޤ���
+> 直後の式はそれぞれthen分岐とelse分岐と呼ばれます。
 </P
 ><P
->&#13;��T���Ｐ�˳�꿶�뤿��ˡ� <FONT
+>&#13;型Tを条件式に割り振るために、 <FONT
 COLOR="RED"
 >bool</FONT
-> ���򤽤���Ӥ˳�꿶�ꡢ
-��T��thenʬ����elseʬ����ξ���˳�꿶��ɬ�פ�����ޤ���
-�㤨��̾�� <FONT
+> 型をその比較に割り振り、
+型Tをthen分岐とelse分岐の両方に割り振る必要があります。
+例えば名前 <FONT
 COLOR="RED"
 >x</FONT
-> �� <FONT
+> が <FONT
 COLOR="RED"
 >int</FONT
-> ���Ǥ���С�
-�����ξ�Ｐ�ˤ� <FONT
+> 型であれば、
+先の例の条件式には <FONT
 COLOR="RED"
 >int</FONT
-> �����꿶�뤳�Ȥ��Ǥ��ޤ��� </P
+> 型を割り振ることができます。 </P
 ><P
->&#13;��Ｐ�����������դ��Ǥ��Ƥ��뤳�Ȥ��������Ƥߤޤ��礦��
-���ξ�Ｐ��ɾ�������Ȥޤ��Ϥ������Ӥ�ɾ�������ͤ����뤳�Ȥˤʤ�ޤ���
-�����ͤ� <FONT
+>&#13;条件式が正しく型付けできていることを想像してみましょう。
+その条件式が評価されるとまずはじめに比較を評価して値を得ることになります。
+この値は <FONT
 COLOR="RED"
 >true</FONT
-> �⤷���� <FONT
+> もしくは <FONT
 COLOR="RED"
 >false</FONT
-> �Ǥ��뤳�Ȥ��ݾڤ���Ƥ��ޤ���
-�ͤ� <FONT
+> であることが保証されています。
+値が <FONT
 COLOR="RED"
 >true</FONT
-> �Ǥ����thenʬ����ɾ������ޤ���
-�����Ǥʤ����elseʬ����ɾ������뤳�Ȥˤʤ�櫓�Ǥ��� </P
+> であればthen分岐が評価されます。
+そうでなければelse分岐が評価されることになるわけです。 </P
 ><P
->&#13;elseʬ�����ά������Ｐ���뤳�Ȥ�Ǥ��ޤ���
-�㤨�м��Τ褦�ʼ����뤳�Ȥ��Ǥ��ޤ���
+>&#13;else分岐を省略した条件式を作ることもできます。
+例えば次のような式を作ることができます。
 
 <DIV
 CLASS="informalexample"
@@ -170,7 +170,7 @@ CLASS="programlisting"
 ></DIV
 >
 
-����ϼ��ξ�Ｐ�������Ǥ���
+これは次の条件式と等価です。
 
 <DIV
 CLASS="informalexample"
@@ -191,14 +191,14 @@ CLASS="programlisting"
 <FONT
 COLOR="RED"
 >()</FONT
-> �� <FONT
+> は <FONT
 COLOR="RED"
 >void</FONT
-> ���Ǥ���void�ͤ�ɽ�魯���Ȥ����դ��Ƥ���������
-��ά���줿���ξ�Ｐ�˳�����Ƥ뷿�� <FONT
+> 型であるvoid値を表わすことに注意してください。
+省略された形の条件式に割り当てる型は <FONT
 COLOR="RED"
 >void</FONT
-> �Ǥʤ���Фʤ�ޤ��� </P
+> でなければなりません。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -244,7 +244,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->�쥳���ɤȥ쥳���ɷ�</TD
+>レコードとレコード型</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -258,7 +258,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Sequence Expressions</TD
+>シーケンス式(逐次実行)</TD
 ></TR
 ></TABLE
 ></DIV

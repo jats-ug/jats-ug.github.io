@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->�쥳���ɤȥ쥳���ɷ�</TITLE
+>レコードとレコード型</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="���ץ�ȥ��ץ뷿"
+TITLE="タプルとタプル型"
 HREF="x303.html"><LINK
 REL="NEXT"
-TITLE="��Ｐ"
+TITLE="条件式"
 HREF="x351.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,16 +74,16 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="records_and_record_types"
->2.8. �쥳���ɤȥ쥳���ɷ�</A
+>2.8. レコードとレコード型</A
 ></H1
 ><P
->�쥳���ɤ��줾��Υե������̾��ץ�����ޤˤ�äƷ���Ǥ���Ȥ�����������С�
-�쥳���ɤϥ��ץ���ɤ����Ƥ��ޤ���
-Ʊ�ͤ˥쥳���ɷ��⥿�ץ뷿���ɤ����Ƥ��ޤ���
-�㤨�Х쥳���ɷ� <FONT
+>レコードそれぞれのフィールド名をプログラマによって決定できるという点を除けば、
+レコードはタプルと良く似ています。
+同様にレコード型もタプル型と良く似ています。
+例えばレコード型 <FONT
 COLOR="RED"
 >point2D</FONT
-> �ϰʲ��Τ褦������Ǥ��ޤ���
+> は以下のように定義できます。
 
 <DIV
 CLASS="informalexample"
@@ -104,24 +104,24 @@ CLASS="programlisting"
 <FONT
 COLOR="RED"
 >x</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >y</FONT
-> �Ϥ��η��Υ쥳�����ͤˤ�����2�ĤΥե�����ɤ�̾���Ǥ���
-�ޤ��쥳���ɤΥե�����ɤΤ��Ȥ����ǤȸƤ֤��Ȥ�����ޤ���
+> はこの型のレコード値における2つのフィールドの名前です。
+またレコードのフィールドのことを要素と呼ぶことがあります。
 
-�ü�ʵ���Ǥ��� <FONT
+特殊な記号である <FONT
 COLOR="RED"
 >@{</FONT
-> �Ϥ��η���
-�ե�å�/�ͥ��ƥ���/����ܥå����� �쥳���ɤǤ��뤳�Ȥ�ɽ�路�ޤ���
-�� <FONT
+> はその型が
+フラット/ネイティブ/アンボックス化 レコードであることを表わします。
+型 <FONT
 COLOR="RED"
 >point2D</FONT
-> ���ͤϼ��Τ褦�� <FONT
+> の値は次のように <FONT
 COLOR="RED"
 >theOrigin</FONT
-> �Ȥ���̾�����������뤳�Ȥ��Ǥ��ޤ���
+> という名前で生成することができます。
 
 <DIV
 CLASS="informalexample"
@@ -140,8 +140,8 @@ CLASS="programlisting"
 >
 </P
 ><P
->�쥳���ɤ������Ǥ����򤹤뤿��˰���Ū�ʥɥå�ɽ����Ȥ����Ȥ��Ǥ��ޤ���
-���Τ褦�ʥ����ɤˤʤ�ޤ���
+>レコードから要素を選択するために一般的なドット表記を使うことができます。
+次のようなコードになります。
 
 <DIV
 CLASS="informalexample"
@@ -159,8 +159,8 @@ CLASS="programlisting"
 ></DIV
 >
 
-���뤤�����Ǥ�����˥ѥ�����ޥå���Ȥ����Ȥ�Ǥ��ޤ���
-����ϼ��Τ褦�ʥ����ɤˤʤ�ޤ���
+あるいは要素の選択にパターンマッチを使うこともできます。
+これは次のようなコードになります。
 
 <DIV
 CLASS="informalexample"
@@ -178,24 +178,24 @@ CLASS="programlisting"
 ></DIV
 >
 
-������Ǥ� <FONT
+この例では <FONT
 COLOR="RED"
 >theOrigin_x</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >theOrigin_y</FONT
-> ��̾���Ϥ��줾�졢
+> の名前はそれぞれ、
 <FONT
 COLOR="RED"
 >theOrgin</FONT
-> ����ˤ��� <FONT
+> の中にある <FONT
 COLOR="RED"
 >x</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >y</FONT
-> �Ȥ���̾�������Ǥ�«������Ƥ��ޤ���
-�⤷�������ƤǤϤʤ����������򤷤������ˤϡ����Τ褦�ʥѥ�����ޥå���Ȥ����Ȥ��Ǥ��ޤ���
+> という名前の要素に束縛されています。
+もし要素全てではなく一部を選択したい場合には、次のようなパターンマッチを使うことができます。
 
 <DIV
 CLASS="informalexample"
@@ -214,19 +214,19 @@ val @{ y= theOrigin_y, ... } = theOrigin // the y-component only
 ></DIV
 >
 
-�⤷�⤳��ʸˡ�˺��𤹤�褦�Ǥ���С��ɥå�ɽ����Ȥ����Ȥ򤪤����ᤷ�ޤ���
-�쥳�����ͤΥѥ�����ޥå��ϻ伫�Ȥ��ޤ�Ȥ��ޤ���
+もしもこの文法に混乱するようであれば、ドット表記を使うことをおすすめします。
+レコード値のパターンマッチは私自身あまり使いません。
 </P
 ><P
->�ͥ��ƥ���/�ե�å�/����ܥå����� �쥳���ɤ���Ӥ��ƥܥå������쥳���ɤ򰷤��Τ�ɬ�פʤ��Ȥϡ�
-�ü쵭����夨������Ǥ���
-�Ĥޤ� <FONT
+>ネイティブ/フラット/アンボックス化 レコードと比較してボックス化レコードを扱うのに必要なことは、
+特殊記号を代えるだけです。
+つまり <FONT
 COLOR="RED"
 >@{</FONT
-> �� <FONT
+> を <FONT
 COLOR="RED"
 >'{</FONT
-> ���夨������Ǥ��� </P
+> に代えるだけです。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -272,7 +272,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->���ץ�ȥ��ץ뷿</TD
+>タプルとタプル型</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -286,7 +286,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->��Ｐ</TD
+>条件式</TD
 ></TR
 ></TABLE
 ></DIV

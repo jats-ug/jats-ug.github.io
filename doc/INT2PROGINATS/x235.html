@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->��Ū�ʰ�̣��</TITLE
+>静的な意味論</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="ɾ���Τ���δĶ�"
+TITLE="評価のための環境"
 HREF="x219.html"><LINK
 REL="NEXT"
-TITLE="�ץ�ߥƥ��ַ�"
+TITLE="プリミティブ型"
 HREF="x245.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,59 +74,59 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="static_semantics"
->2.5. ��Ū�ʰ�̣��</A
+>2.5. 静的な意味論</A
 ></H1
 ><P
->ATS�� <SPAN
+>ATSは <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >Applied Type System</I
 ></SPAN
-> �ե졼�����򺬸��Ȥ��롢
-���٤�ɽ���ϤΤ��뷿�����ƥ��������ץ�����ߥ󥰸���Ǥ���
-����Ϥޤ�ATS�Ȥ��������̾���ˤ�ʤäƤ��ޤ���
-ATS�η������ƥ��������������ޤ���
-�����餯�����ܤǺǤ��ͽФ��Ƥ��ƶ�̣������ʬ�Ǥ��礦�� </P
+> フレームワークを根源とする、
+高度に表現力のある型システム備えたプログラミング言語です。
+それはまたATSという言語の名前にもなっています。
+ATSの型システムを徐々に説明します。
+おそらくこの本で最も突出していて興味深い部分でしょう。 </P
 ><P
->���̤ˤϡ�����ʬ�व�줿�ͤν���Τ褦�˰����ޤ���
-����ɤ⡢��Ϸ����̣�η��Ȥ��ư����������Ŭ�ڤǤ��뤳�Ȥ򸫤Ĥ��ޤ�����
-���˷����꿶�����Ū�ʵ�§�����ꡢ����Ϸ��դ���§�ȸƤФ�Ƥ��ޤ���
-�⤷���˷�T���꿶�뤳�Ȥ��Ǥ���Ȥ��ޤ���
-����Ȥ��μ��Ϸ�T��ɽ�����줿��Ū�ʰ�̣(��̣��)����Ĥȸ�����ΤǤ���
-��Ĥμ��ˤ�ʣ���ΰۤʤ���Ū�ʰ�̣�����꿶�����ǽ�������뤳�Ȥ����դ��Ƥ���������
-�⤷���˳�꿶���ǽ�ʷ�T��ͣ��1�Ĥ���¸�ߤ���ʤ顢���μ������������դ��򤵤�Ƥ��뤳�Ȥˤʤ�ޤ��� </P
+>一般には、型を分類された値の集合のように扱います。
+けれども、私は型を意味の形として扱う方がより適切であることを見つけました。
+式に型を割り振る形式的な規則があり、それは型付け規則と呼ばれています。
+もし式に型Tを割り振ることができるとします。
+するとその式は型Tで表現された静的な意味(意味論)を持つと言えるのです。
+一つの式には複数の異なる静的な意味論を割り振られる可能性があることに注意してください。
+もし式に割り振り可能な型Tが唯一1つだけ存在するなら、その式は正しい型付けをされていることになります。 </P
 ><P
->�⤷��T����ļ���̾���Ȥ�Ҥ�«����¸�ߤ���ʤ顢
-«����ͭ���ʥ������פˤ����Ƥ���̾���Ϸ�T�Ǥ���ȸ��ʤ���ޤ���
-���������夨��ȡ�����̾�����б����뼰�λ�����Ū�ʰ�̣����Ȥ������Ȥˤʤ�ޤ��� </P
+>もし型Tを持つ式と名前とを繋ぐ束縛が存在するなら、
+束縛が有効なスコープにおいてその名前は型Tであると見なされます。
+言い方を代えると、その名前は対応する式の持つ静的な意味を取るということになります。 </P
 ><P
->&#13;exp0����T�μ��Ǥ���Ȥ��ޤ��礦��
-�Ĥޤ귿T��exp0�˷��դ���§�ˤ�äƳ�꿶��줿�Ȥ��ޤ���
-exp0��exp1��ɾ���Ǥ���ʤ顢exp1��ޤ���T����꿶��뤳�Ȥˤʤ�ޤ���
-�̤θ������򤹤�ȡ���Ū�ʰ�̣��ɾ����������ѤǤ���ȸ�����櫓�Ǥ���
-���������Ϥ��Ф��� <SPAN
+>&#13;exp0が型Tの式であるとしましょう。
+つまり型Tがexp0に型付け規則によって割り振られたとします。
+exp0をexp1に評価できるなら、exp1もまた型Tが割り振れることになります。
+別の言い方をすると、静的な意味は評価の中で不変であると言えるわけです。
+この特性はしばしば <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->����¸(type preservation)</I
+>型保存(type preservation)</I
 ></SPAN
-> �ȸƤФ�ޤ���
-�����ATS�η������ƥ�ˤ�����������ΰ����Ǥ���
-���������˴�Ť��ȡ���ã��exp0�������Ĥ��Υ��ƥåפ�ɾ��������ͤ�ˤʤ�Ȥ��Ƥ⡢
-��T�μ�ꤦ���ͤ򤿤䤹���仡���뤳�Ȥ��Ǥ���ΤǤ��� 
+> と呼ばれます。
+これはATSの型システムにおける健全性の一部です。
+この特性に基づくと、私達はexp0がいくつかのステップで評価されて値をになるとしても、
+型Tの取りうる値をたやすく推察することができるのです。 
 </P
 ><P
->&#13;exp0����T�μ��Ǥ��ꡢ�ޤ�exp0���ͤǤϤʤ��Ȥ��ޤ���
-�����exp0��1���ƥåפ��̤μ��Ǥ���exp1��ɾ�����뤳�Ȥ����ĤǤ��ǽ�Ǥ���
-���������Ϥ��Ф��� <SPAN
+>&#13;exp0が型Tの式であり、またexp0は値ではないとします。
+するとexp0は1ステップで別の式であるexp1に評価することがいつでも可能です。
+この特性はしばしば <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->�ץ����쥹(progress)</I
+>プログレス(progress)</I
 ></SPAN
-> �ȸƤФ�ޤ���
-�����Ƥ����ATS�η������ƥ�ˤ�����������Τ⤦��Ĥ���ʬ�Ǥ��� 
+> と呼ばれます。
+そしてこれはATSの型システムにおける健全性のもう一つの部分です。 
 </P
 ></DIV
 ><DIV
@@ -173,7 +173,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->ɾ���Τ���δĶ�</TD
+>評価のための環境</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -187,7 +187,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->�ץ�ߥƥ��ַ�</TD
+>プリミティブ型</TD
 ></TR
 ></TABLE
 ></DIV

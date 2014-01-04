@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->Makefile�ΤҤʷ�</TITLE
+>Makefileのひな形</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�Ϥ��������"
+TITLE="はじめる前に"
 HREF="c47.html"><LINK
 REL="PREVIOUS"
-TITLE="1�ĤΥե�����ǹ������줿�ץ������ΤҤʷ�"
+TITLE="1つのファイルで構成されたプログラムのひな形"
 HREF="x85.html"><LINK
 REL="NEXT"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 1. �Ϥ��������</TD
+>Chapter 1. はじめる前に</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,20 +74,20 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="a_makefile_template"
->1.3. Makefile�ΤҤʷ�</A
+>1.3. Makefileのひな形</A
 ></H1
 ><P
->&#13;���˼���Makefile�ΤҤʷ���ATS�ץ������򥳥�ѥ��뤹���ȼ���Makefile����Τ���Ω�ĤǤ��礦��
-�ޤ����ΤҤʷ��� <A
+>&#13;次に示すMakefileのひな形はATSプログラムをコンパイルする独自のMakefileを作るのに役立つでしょう。
+またこのひな形は <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_START/Makefile_template"
 TARGET="_top"
->����饤��</A
-> ��������Ǥ��ޤ���
-���ʤ��� <B
+>オンライン</A
+> から取得できます。
+あなたが <B
 CLASS="command"
 >make</B
-> �桼�ƥ���ƥ��˽��Ϥ��Ƥ��ʤ��ä��Ȥ��Ƥ⡢
-����饤�󤫤餽�γؽ��Τ���ξ�����¿�����Ĥ�����Ǥ��礦��
+> ユーティリティに習熟していなかったとしても、
+オンラインからその学習のための情報を数多く見つけられるでしょう。
 
 <DIV
 CLASS="informalexample"
@@ -100,7 +100,7 @@ NAME="AEN98"
 CLASS="programlisting"
 >######
 #
-# ���󥹥ȡ���Ķ��ˤ�äƤϰʲ��Τ褦���ɤߤ�����ɬ�פ�����ޤ���
+# インストール環境によっては以下のように読みかえる必要があります。
 #
 # atscc -&#62; patscc
 # atsopt -&#62; patsopt
@@ -118,12 +118,12 @@ ATSOPT=$(ATSHOMEQ)/bin/atsopt
 ######
 
 #
-# HX: �ɤ줫�ιԤΥ����Ȥ򳰤��Ƥ����������⤷�����ɤ����Ф����Ȥ�Ǥ��ޤ���
+# HX: どれかの行のコメントを外してください。もしくは読み飛ばすこともできます。
 #
 ATSCCFLAGS=
 #ATSCCFLAGS=-O2
 #
-# '-flto' �ϥ�󥯻���Ŭ����ͭ���ˤ��ޤ����饤�֥��ؿ��Υ���饤��Ÿ���ʤɤ�Ԥʤ��ޤ���
+# '-flto' はリンク時最適化を有効にします。ライブラリ関数のインライン展開などを行ないます。
 #
 #ATSCCFLAGS=-O2 -flto
 #
@@ -135,8 +135,8 @@ cleanall::
 ######
 
 #
-# ����3�ԤΥ����Ȥ򳰤��Ƥ���������
-# ����� [foo] �Ȥ���̾���򤢤ʤ�������ѥ��뤷����̾�����ѹ����Ƥ���������
+# 次の3行のコメントを外してください。
+# さらに [foo] という名前をあなたがコンパイルしたい名前に変更してください。
 #
 
 # foo: foo.dats
@@ -146,7 +146,7 @@ cleanall::
 ######
 
 #
-# �⤷������ȡ������Υ롼������Ω�Ĥ��⤷��ޤ���
+# もしかすると、これらのルールも役に立つかもしれません。
 #
 
 # %_sats.o: %.sats ; $(ATSCC) $(ATSCCFLAGS) -c $&#60; || echo $@ ": ERROR!!!"
@@ -217,7 +217,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->1�ĤΥե�����ǹ������줿�ץ������ΤҤʷ�</TD
+>1つのファイルで構成されたプログラムのひな形</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -231,7 +231,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->�ץ�����ߥ󥰤ι�������</TD
+>プログラミングの構成要素</TD
 ></TR
 ></TABLE
 ></DIV

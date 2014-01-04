@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->ɾ���Τ���δĶ�</TITLE
+>評価のための環境</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="«���Υ�������"
+TITLE="束縛のスコープ"
 HREF="x192.html"><LINK
 REL="NEXT"
-TITLE="��Ū�ʰ�̣��"
+TITLE="静的な意味論"
 HREF="x235.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,14 +74,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="environments_for_evaluation"
->2.4. ɾ���Τ���δĶ�</A
+>2.4. 評価のための環境</A
 ></H1
 ><P
->ɾ���Ȥϼ����ͤˤʤ�ޤ�ñ�㲽����׻������Ǥ���
-ɾ����¹Ԥ���ˤϡ�ɾ������뼰�����ǤϤʤ���
-���μ�����ˤ���̾�����ͤ��Ѵ����뤿���«���ν����ɬ�פǤ���
-����«���ν����ñ�ʤ�Ϣ������ǡ����Ф���(ɾ���Τ����)�Ķ��ȸƤФ�ޤ���
-�㤨�м��μ���ɾ�����뤳�Ȥ�ͤ��Ƥߤޤ��礦��
+>評価とは式を値になるまで単純化する計算過程です。
+評価を実行するには、評価される式だけではなく、
+その式の中にある名前を値に変換するために束縛の集合も必要です。
+この束縛の集合は単なる連想配列で、しばしば(評価のための)環境と呼ばれます。
+例えば次の式を評価することを考えてみましょう。
 
 <DIV
 CLASS="informalexample"
@@ -101,48 +101,48 @@ end
 ></DIV
 >
 
-���δĶ��Ǥ���ENV0���鳫�Ϥ��ޤ���
-�ޤ��Ķ�ENV0�ˤ����� <FONT
+空の環境であるENV0から開始します。
+まず環境ENV0において <FONT
 COLOR="RED"
 >3.14</FONT
-> �򤽤켫�Ȥˡ�
+> をそれ自身に、
 <FONT
 COLOR="RED"
 >10.0 * 10.0</FONT
-> �� <FONT
+> を <FONT
 COLOR="RED"
 >100.0</FONT
-> ��ɾ�����ޤ���
-����ENV0��ĥ���ơ�
+> に評価します。
+次にENV0拡張して、
 <FONT
 COLOR="RED"
 >PI</FONT
-> ���� <FONT
+> から <FONT
 COLOR="RED"
 >3.14</FONT
-> �� <FONT
+> に <FONT
 COLOR="RED"
 >radius2</FONT
-> ���� <FONT
+> から <FONT
 COLOR="RED"
 >100.0</FONT
 >
-���Ѵ�����2�Ĥ�«����Ȥ�ʤ�ENV1����ޤ���
-���줫��ENV1�ˤ����� <FONT
+に変換する2つの束縛をともなうENV1を作ります。
+それからENV1において <FONT
 COLOR="RED"
 >PI * radius2</FONT
-> �� <FONT
+> を <FONT
 COLOR="RED"
 >3.14 * radius2</FONT
-> ��ɾ������
-����� <FONT
+> に評価し、
+さらに <FONT
 COLOR="RED"
 >3.14 * 100.0</FONT
-> ��ɾ�����ޤ���
-�Ǹ�� <FONT
+> に評価します。
+最後に <FONT
 COLOR="RED"
 >314.0</FONT
-> �������ơ����줬let�����ͤˤʤ�ޤ��� </P
+> が得られて、これがlet式の値になります。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -188,7 +188,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->«���Υ�������</TD
+>束縛のスコープ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -202,7 +202,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->��Ū�ʰ�̣��</TD
+>静的な意味論</TD
 ></TR
 ></TABLE
 ></DIV

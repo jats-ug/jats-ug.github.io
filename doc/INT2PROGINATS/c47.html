@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->�Ϥ��������</TITLE
+>はじめる前に</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ؿ����ץ�����ߥ󥰤δ���"
+TITLE="関数型プログラミングの基本"
 HREF="p45.html"><LINK
 REL="PREVIOUS"
-TITLE="�ؿ����ץ�����ߥ󥰤δ���"
+TITLE="関数型プログラミングの基本"
 HREF="p45.html"><LINK
 REL="NEXT"
-TITLE="1�ĤΥե�����ǹ������줿�ץ������ΤҤʷ�"
+TITLE="1つのファイルで構成されたプログラムのひな形"
 HREF="x85.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -74,12 +74,12 @@ CLASS="chapter"
 ><A
 NAME="preparation_for_starting"
 ></A
->Chapter 1. �Ϥ��������</H1
+>Chapter 1. はじめる前に</H1
 ><P
->&#13;�����餯�����ʤ��ϥץ�����ߥ󥰸����ؽ�����ݤ˲����ץ�������񤭤����ʤ�Ǥ��礦��
-�ޤ��������ܤθ��ܤΤ����Ĥ����ơ��ºݤ˵����뤳�Ȥ��ܤˤ������Ǥ��礦��
-�����ǡ��Ϥ���ˤ��ä�1�ĤΥե�����ǹ������줿�ץ�������ATS�ǽ���ˡ���������ޤ���
-���θ塢����ѥ�����ˡ�ȼ¹Լ����������ޤ���
+>&#13;おそらく、あなたはプログラミング言語を学習する際に何かプログラムを書きたくなるでしょう。
+また、この本の見本のいくつかを試して、実際に起きることを目にしたいでしょう。
+そこで、はじめにたった1つのファイルで構成されたプログラムをATSで書く方法を説明します。
+その後、コンパイル方法と実行手順を説明します。
 </P
 ><DIV
 CLASS="sect1"
@@ -87,10 +87,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="a_running_program"
->1.1. �¹Բ�ǽ�ʥץ������</A
+>1.1. 実行可能なプログラム</A
 ></H1
 ><P
->&#13;�������"Hello, world!"�Ȥ���ʸ����Ȳ��Ԥ򥳥󥽡���˰�������ץ������Ǥ���
+>&#13;次の例は"Hello, world!"という文字列と改行をコンソールに印字するプログラムです。
 
 <DIV
 CLASS="informalexample"
@@ -103,7 +103,7 @@ NAME="AEN53"
 CLASS="programlisting"
 >val _ = print ("Hello, world!\n")
 
-implement main0 () = () // [main] �Υ��ߡ�����
+implement main0 () = () // [main] のダミー実装
 </PRE
 ><P
 ></P
@@ -114,41 +114,41 @@ implement main0 () = () // [main] �Υ��ߡ�����
 <FONT
 COLOR="RED"
 >val</FONT
-> ������ɤ��ѿ� <FONT
+> キーワードは変数 <FONT
 COLOR="RED"
 >_</FONT
-> (�������������)�ˡ�
-�ؿ��ƤӽФ� <FONT
+> (アンダースコア)に、
+関数呼び出し <FONT
 COLOR="RED"
 >print ("Hello, world!\n")</FONT
-> ��«�����롣
-����«���Ϻ��줿��˻Ȥ���ΤǤϤ���ޤ���
-ɾ�����줿���ˡ� <FONT
+> を束縛する。
+この束縛は作られた後に使われるのではありません。
+評価された時に、 <FONT
 COLOR="RED"
 >print</FONT
-> �ؿ���ƤӽФ����Ȥ�ͣ�����Ū�Ǥ���  </P
+> 関数を呼び出すことが唯一の目的です。  </P
 ><P
 >&#13;<FONT
 COLOR="RED"
 >main0</FONT
-> �ؿ���ATS�ˤ������ü�ʰ�̣����äƤ��� <FONT
+> 関数はATSにおいて特殊な意味を持っていて <FONT
 COLOR="RED"
 >main</FONT
-> �ؿ����ѷ��Ǥ���
-C��Java������ΤäƤ���ץ�����ޤˤȤäƤϡ�
+> 関数の変形です。
+CやJava言語を知っているプログラマにとっては、
 <FONT
 COLOR="RED"
 >main</FONT
-> �����ܤ�C��Java�ˤ�����Ʊ��̾���δؿ����ܼ�Ū��Ʊ���Ǥ���ȸ�����Ǥ��礦��
+> の役目はCやJavaにおける同じ名前の関数と本質的に同等であると言えるでしょう。
 <FONT
 COLOR="RED"
 >implement</FONT
-> ������ɤϴ����̤βս�ǥ��󥿡��ե�������������줿�ؿ��μ�����������ޤ���
+> キーワードは既に別の箇所でインターフェイスが宣言された関数の実装を作成します。
 
-���˼���ATS�Υ����������ɤ� <FONT
+次に示すATSのソースコードは <FONT
 COLOR="RED"
 >main0</FONT
-> ���Ф��륤�󥿡��ե�����������Ǥ���
+> に対するインターフェイスの宣言です。
 
 <DIV
 CLASS="informalexample"
@@ -167,23 +167,23 @@ CLASS="programlisting"
 >
 
 
-���Υ����ɤ� <FONT
+このコードは <FONT
 COLOR="RED"
 >main0</FONT
-> ���������餺���ͤ��ʤ��ؿ��Ǥ��뤳�Ȥ򼨤��Ƥ��ޤ���
-���ͤ��ʤ����Ȥ������Ȥ�void�ͤ��֤��ȸ��������뤳�Ȥ�Ǥ��ޤ���
+> が引数を取らず返値がない関数であることを示しています。
+返値がない、ということはvoid値を返すと言いかえることもできます。
 <FONT
 COLOR="RED"
 >//</FONT
-> ��������ޤǤϥ����ȤǤ��� 
+> から行末まではコメントです。 
 </P
 ><P
->ATS�ץ�����ߥ󥰸���ϴ��˥��󥹥ȡ���ѤߤǤ���Ȳ��ꤷ�ޤ���
-���Υ��ޥ�ɤ�¹Ԥ���к����ǥ��쥯�ȥ�� <TT
+>ATSプログラミング言語は既にインストール済みであると仮定します。
+次のコマンドを実行すれば作業中ディレクトリに <TT
 CLASS="filename"
 >hello</TT
 >
-�Ȥ���̾���Ǽ¹ԥե����뤬����ޤ���
+という名前で実行ファイルが作られます。
 
 <DIV
 CLASS="informalexample"
@@ -207,51 +207,51 @@ CLASS="command"
 <TT
 CLASS="filename"
 >hello.dats</TT
-> �������Υץ�������ޤ���ե�����Ǥ���
+> は先程のプログラムを含んだファイルです。
 <B
 CLASS="command"
 >atscc</B
-> ���ޥ�ɤ� <B
+> コマンドは <B
 CLASS="command"
 >atsopt</B
-> ���ޥ�ɤ������ʥ�åѡ��Ǥ���
+> コマンドの便利なラッパーです。
 <B
 CLASS="command"
 >atsopt</B
-> ��ATS�ץ������η������ȥ���ѥ����¹Ԥ��ޤ���
-ATS�Υ��󥹥ȡ����������ˤ�äƤϡ�
+> はATSプログラムの型検査とコンパイルを実行します。
+ATSのインストール時の設定によっては、
 <B
 CLASS="command"
 >atscc</B
-> �� <B
+> と <B
 CLASS="command"
 >atsopt</B
-> �Ϥ��줾��ºݤˤ�
+> はそれぞれ実際には
 <B
 CLASS="command"
 >patscc</B
-> �� <B
+> と <B
 CLASS="command"
 >patsopt</B
-> �Ȥ���̾�����դ����Ƥ��뤫�⤷��ʤ����Ȥ����դ��Ƥ���������
+> という名前が付けられているかもしれないことに注意してください。
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.dats</I
 ></SPAN
-> �Ȥ�����ĥ�Ҥ� <B
+> という拡張子は <B
 CLASS="command"
 >atscc</B
 >
-���ޥ�ɤ����̤ʰ�̣�˲�᤹�뤿���ѹ����ƤϤ����ޤ���
-�̤����̤ʰ�̣����ĳ�ĥ�ҤȤ��� <SPAN
+コマンドが特別な意味に解釈するため変更してはいけません。
+別の特別な意味を持つ拡張子として <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.sats</I
 ></SPAN
-> �����ꡢ���θ夹���˽в񤦤��Ȥˤʤ�ޤ���
+> があり、この後すぐに出会うことになります。
 </P
 ></DIV
 ></DIV
@@ -299,7 +299,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->�ؿ����ץ�����ߥ󥰤δ���</TD
+>関数型プログラミングの基本</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -313,7 +313,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->1�ĤΥե�����ǹ������줿�ץ������ΤҤʷ�</TD
+>1つのファイルで構成されたプログラムのひな形</TD
 ></TR
 ></TABLE
 ></DIV

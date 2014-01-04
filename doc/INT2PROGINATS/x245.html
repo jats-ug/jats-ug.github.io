@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->�ץ�ߥƥ��ַ�</TITLE
+>プリミティブ型</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="��Ū�ʰ�̣��"
+TITLE="静的な意味論"
 HREF="x235.html"><LINK
 REL="NEXT"
-TITLE="���ץ�ȥ��ץ뷿"
+TITLE="タプルとタプル型"
 HREF="x303.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,36 +74,36 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="primitive_types"
->2.6. �ץ�ߥƥ��ַ�</A
+>2.6. プリミティブ型</A
 ></H1
 ><P
->&#13;ATS�ˤ����ƺǤ�ñ��ʷ��ϡ��ץ�ߥƥ��֤��ͤ�ʬ�ह��Τ˻Ȥ���ץ�ߥƥ��ַ��Ǥ���
-�㤨�� <FONT
+>&#13;ATSにおいて最も単純な型は、プリミティブな値を分類するのに使われるプリミティブ型です。
+例えば <FONT
 COLOR="RED"
 >int</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >double</FONT
-> �Ȥ����ץ�ߥƥ��ַ�������ޤ���
+> というプリミティブ型があります。
 
-�����Ϥ��줾�����Ĺ�������������������٤���ư����������ʬ�ष�Ƥ��ޤ��� 
+これらはそれぞれ固定長の整数の整数と倍精度の浮動小数点数を分類しています。 
 </P
 ><P
->&#13;ATS (Postiats)�θ������Ǥ�����Ǥϡ�ATS�ץ������Ϥޤ�C99�˽��ä�C����˥���ѥ��뤵��ޤ���
-���줫��gcc�Τ褦��C���쥳��ѥ���ˤ�äƥ��֥������ȥ����ɤ˥���ѥ��뤹�뤳�Ȥ��Ǥ��ޤ���
-ATS����C����ؤΥ���ѥ���ˤ����ơ�
-ATS�� <FONT
+>&#13;ATS (Postiats)の現時点でも実装では、ATSプログラムはまずC99に従ったC言語にコンパイルされます。
+それからgccのようなC言語コンパイラによってオブジェクトコードにコンパイルすることができます。
+ATSからC言語へのコンパイルにおいて、
+ATSの <FONT
 COLOR="RED"
 >int</FONT
-> ����C�����Ʊ̾�η����Ѵ�����ޤ���
-Ʊ�ͤ�ATS�� <FONT
+> 型はC言語の同名の型に変換されます。
+同様にATSの <FONT
 COLOR="RED"
 >double</FONT
-> ����C�����Ʊ̾�η����Ѵ�����ޤ��� 
+> 型はC言語の同名の型に変換されます。 
 </P
 ><P
->&#13;ATS�Ǥ�¾�ˤ�¿���Υץ�ߥƥ��ַ�������ޤ����������ŤĲ��⤷�ޤ���
-����Ū�˻Ȥ��뤤���Ĥ��Υץ�ߥƥ��ַ��򼡤˼����ޤ���
+>&#13;ATSでは他にも多くのプリミティブ型がありますが、少しづつ解説します。
+一般的に使われるいくつかのプリミティブ型を次に示します。
 
 <P
 ></P
@@ -114,13 +114,13 @@ COLOR="RED"
 COLOR="RED"
 >bool</FONT
 >:
-���η��Ͽ����ͤ� <FONT
+この型は真理値の <FONT
 COLOR="RED"
 >true</FONT
-> �� <FONT
+> か <FONT
 COLOR="RED"
 >false</FONT
-> ���ꡢC�����int�����Ѵ�����ޤ��� </P
+> を取り、C言語のint型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -128,7 +128,7 @@ COLOR="RED"
 COLOR="RED"
 >char</FONT
 >:
-���η���C�����ʸ�������Ѵ�����ޤ��� </P
+この型はC言語の文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -136,7 +136,7 @@ COLOR="RED"
 COLOR="RED"
 >schar</FONT
 >:
-���η���C���������դ�ʸ�������Ѵ�����ޤ��� </P
+この型はC言語の符号付き文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -144,7 +144,7 @@ COLOR="RED"
 COLOR="RED"
 >uchar</FONT
 >:
-���η���C��������̵��ʸ�������Ѵ�����ޤ��� </P
+この型はC言語の符号無し文字型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -152,7 +152,7 @@ COLOR="RED"
 COLOR="RED"
 >float</FONT
 >:
-���η���C�����ñ������ư�����������Ѵ�����ޤ��� </P
+この型はC言語の単精度浮動小数点型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -160,7 +160,7 @@ COLOR="RED"
 COLOR="RED"
 >uint</FONT
 >:
-���η���C��������̵�����������Ѵ�����ޤ��� </P
+この型はC言語の符号無し整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -168,7 +168,7 @@ COLOR="RED"
 COLOR="RED"
 >lint</FONT
 >:
-���η���C�����Ĺ���������Ѵ�����ޤ��� </P
+この型はC言語の長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -176,7 +176,7 @@ COLOR="RED"
 COLOR="RED"
 >ulint</FONT
 >:
-���η���C��������̵��Ĺ���������Ѵ�����ޤ��� </P
+この型はC言語の符号無し長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -184,7 +184,7 @@ COLOR="RED"
 COLOR="RED"
 >llint</FONT
 >:
-���η���C�����ĹĹ���������Ѵ�����ޤ��� </P
+この型はC言語の長長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -192,7 +192,7 @@ COLOR="RED"
 COLOR="RED"
 >ullint</FONT
 >:
-���η���C��������̵��ĹĹ���������Ѵ�����ޤ��� </P
+この型はC言語の符号無し長長整数型に変換されます。 </P
 ></LI
 ><LI
 ><P
@@ -200,15 +200,15 @@ COLOR="RED"
 COLOR="RED"
 >size_t</FONT
 >:
-���η���C�����Ʊ̾�η����Ѵ�����ޤ���
-��������̵����������Ʊ�����٤Ǥ���
-�̾� <FONT
+この型はC言語の同名の型に変換されます。
+これは符号無し整数型と同じ精度です。
+通常 <FONT
 COLOR="RED"
 >size_t</FONT
-> ���� <FONT
+> 型は <FONT
 COLOR="RED"
 >ulint</FONT
-> ���������˰����ޤ��� </P
+> 型と等価に扱われます。 </P
 ></LI
 ><LI
 ><P
@@ -216,15 +216,15 @@ COLOR="RED"
 COLOR="RED"
 >ssize_t</FONT
 >:
-���η���C�����Ʊ̾�η����Ѵ�����ޤ���
-��������̵����������Ʊ�����٤Ǥ���
-�̾� <FONT
+この型はC言語の同名の型に変換されます。
+これは符号無し整数型と同じ精度です。
+通常 <FONT
 COLOR="RED"
 >ssize_t</FONT
-> ���� <FONT
+> 型は <FONT
 COLOR="RED"
 >lint</FONT
-> ���������˰����ޤ��� </P
+> 型と等価に扱われます。 </P
 ></LI
 ><LI
 ><P
@@ -232,8 +232,8 @@ COLOR="RED"
 COLOR="RED"
 >string</FONT
 >:
-���η���ʸ����Τ���Τ�Τǡ�C����Υݥ��󥿷����Ѵ�����ޤ���
-�����Ѵ��ˤĤ��Ƥ��̤ξϤǲ��⤷�ޤ��� </P
+この型は文字列のためのもので、C言語のポインタ型に変換されます。
+この変換については別の章で解説します。 </P
 ></LI
 ><LI
 ><P
@@ -241,14 +241,14 @@ COLOR="RED"
 COLOR="RED"
 >void</FONT
 >:
-���η���void�ͤΤ���Τ�Τǡ�C�����Ʊ̾�η����Ѵ�����ޤ���
-ATS�ˤ�����void�ͤ�̤����Ǥ��뤳�Ȥ����դ��٤��Ǥ��礦��
-�ؿ���void�ͤ��֤����ˤϡ����Ф��дؿ����ͤ��֤��ʤ��ȸ������Ȥ�����ޤ��� </P
+この型はvoid値のためのもので、C言語の同名の型に変換されます。
+ATSにおいてvoid値が未定義であることに注意すべきでしょう。
+関数がvoid値を返す場合には、しばしば関数が値を返さないと言うことがあります。 </P
 ></LI
 ></UL
 >
 
-�͡��ʥץ�ߥƥ��ַ����ͤ�ޤ�ץ�������������˾Ҳ𤷤ޤ��� 
+様々なプリミティブ型と値を含むプログラム例を徐々に紹介します。 
 </P
 ></DIV
 ><DIV
@@ -295,7 +295,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->��Ū�ʰ�̣��</TD
+>静的な意味論</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -309,7 +309,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->���ץ�ȥ��ץ뷿</TD
+>タプルとタプル型</TD
 ></TR
 ></TABLE
 ></DIV

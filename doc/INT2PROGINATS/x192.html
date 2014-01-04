@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->«���Υ�������</TITLE
+>束縛のスコープ</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="̾����«��"
+TITLE="名前と束縛"
 HREF="x166.html"><LINK
 REL="NEXT"
-TITLE="ɾ���Τ���δĶ�"
+TITLE="評価のための環境"
 HREF="x219.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,22 +74,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="scopes_for_bindings"
->2.3. «���Υ�������</A
+>2.3. 束縛のスコープ</A
 ></H1
 ><P
->&#13;���줾���«���ϡ����줬ͭ���Ǥ������Υ������פ���äƤ��ޤ���
-�ե��������ˤ���ȥåץ�٥��«���Υ������פ�«�������줿��꤫��ե�����ν�ü�ޤǤǤ���
-������Ǥ� <FONT
+>&#13;それぞれの束縛は、それが有効である固定のスコープを持っています。
+ファイルの中にあるトップレベルの束縛のスコープは束縛が作られた場所からファイルの終端までです。
+次の例では <FONT
 COLOR="RED"
 >let</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >in</FONT
-> ������ɤδ֤�«��������Ƥ��ơ�
-����«���� <FONT
+> キーワードの間で束縛が作られていて、
+その束縛は <FONT
 COLOR="RED"
 >end</FONT
-> ������ɤޤ�ͭ���Ǥ��� 
+> キーワードまで有効です。 
 </P
 ><DIV
 CLASS="informalexample"
@@ -108,15 +108,15 @@ end // end of [let]
 ></P
 ></DIV
 ><P
->&#13;���Τ褦��«���ϥ�������«���ȸƤФ�Ƥ��ơ�
+>&#13;このような束縛はローカル束縛と呼ばれていて、
 <FONT
 COLOR="RED"
 >PI</FONT
-> �� <FONT
+> や <FONT
 COLOR="RED"
 >radius</FONT
-> �Τ褦��̾���ϥ�������̾�ȸƤФ�Ƥ��ޤ���
-������ϰʲ��Τ褦�ʥ�������Ǥ�񤯤��Ȥ��Ǥ��ޤ��� 
+> のような名前はローカル名と呼ばれています。
+この例は以下のようなスタイルでも書くことができます。 
 </P
 ><DIV
 CLASS="informalexample"
@@ -136,26 +136,26 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;����ľ��˸����륭����� <FONT
+>&#13;式の直後に現われるキーワード <FONT
 COLOR="RED"
 >where</FONT
-> �ϡ�
-���μ��˴ޤޤ�Ƥ���̾����ɾ�����뤿��Τ�ͭ����«����ɽ�路�Ƥ��ޤ���
-���Ф��С�������� <FONT
+> は、
+その式に含まれている名前を評価するためのみ有効な束縛を表わしています。
+しばしば、キーワード <FONT
 COLOR="RED"
 >let</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >where</FONT
 >
-��Ȥäƹ������줿���ϡ����줾��let����where���ȸƤФ�ޤ���
-���ԤϤ��ʤ餺��Ԥ��Ѵ��Ǥ����ޤ��դˤ⤫�ʤ餺�Ѵ��Ǥ��ޤ���
-�ɤ��餬����ɤ���������ʤΤǤ��礦����
-��Ϥޤ���ʬ�ΰո�����äƤ��ޤ���
-�������ϥץ�����ޤι��ߤ˴����˰�¸���Ƥ���Ȼפ��ޤ��� 
+を使って構成された式は、それぞれlet式とwhere式と呼ばれます。
+前者はかならず後者に変換でき、また逆にもかならず変換できます。
+どちらがより良いスタイルなのでしょうか？
+私はまだ自分の意見を持っていません。
+その答はプログラマの好みに完全に依存していると思われます。 
 </P
 ><P
->&#13;������ϥ�������«������ޤ��̤Υ��ץ������򼨤��Ƥ��ޤ���
+>&#13;次の例はローカル束縛を作るまた別のアプローチを示しています。
 
 <DIV
 CLASS="informalexample"
@@ -181,33 +181,33 @@ end // end of [local]
 ></DIV
 >
 
-������� <FONT
+キーワード <FONT
 COLOR="RED"
 >local</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >in</FONT
-> �δ֤Ǻ��줿«���ϡ�
-������� <FONT
+> の間で作られた束縛は、
+キーワード <FONT
 COLOR="RED"
 >end</FONT
-> �����ä���ޤ�ͭ���Ǥ���
+> に逹っするまで有効です。
 <FONT
 COLOR="RED"
 >in</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >end</FONT
->�δ֤Ǻ��줿«���ϡ�
-�ȥåץ�٥��«���ˤʤ뤳�Ȥ����դ��Ƥ���������
+>の間で作られた束縛は、
+トップレベルの束縛になることに注意してください。
 <FONT
 COLOR="RED"
 >let</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >local</FONT
-> �ΰ㤤�����ΤǤ���
-���Ԥϼ���������Τ˻Ȥ�����Ԥ��������󤹤�Τ˻Ȥ��ޤ��� 
+> の違いは明確です。
+前者は式を構成するのに使い、後者は宣言を列挙するのに使います。 
 </P
 ></DIV
 ><DIV
@@ -254,7 +254,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->̾����«��</TD
+>名前と束縛</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -268,7 +268,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->ɾ���Τ���δĶ�</TD
+>評価のための環境</TD
 ></TR
 ></TABLE
 ></DIV

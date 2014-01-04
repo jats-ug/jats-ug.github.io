@@ -2,18 +2,18 @@
 <HTML
 ><HEAD
 ><TITLE
->Comments in Code</TITLE
+>コード中のコメント</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="Sequence Expressions"
+TITLE="シーケンス式(逐次実行)"
 HREF="x379.html"><LINK
 REL="NEXT"
 TITLE="Functions"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,58 +74,56 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="comments_in_code"
->2.11. Comments in Code</A
+>2.11. コード中のコメント</A
 ></H1
 ><P
->ATS currently supports four forms of comments: line comment, block
-comment of ML-style, block comment of C-style, and rest-of-file comment.
+>ATSは現時点で4つのコメント形式をサポートしています。
+ラインコメント、MLスタイルのブロックコメント、C言語スタイルのブロックコメント、ファイル末尾のコメント
+です。
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->A line comment starts with the double slash symbol
-(<FONT
+>ラインコメントは2重スラッシュ記号 (<FONT
 COLOR="RED"
 >//</FONT
->) and extends until the end of the current line.</P
+>) から始まり、その行の終端で終わります。 </P
 ></LI
 ><LI
 ><P
->&#13;A block comment of ML-style starts and closes with the tokens
-<FONT
+>&#13;MLスタイルのブロックコメントの始まりと終わりは、それぞれトークン <FONT
 COLOR="RED"
 >(*</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >*)</FONT
->, respectively. Note that nested block
-comments of ML-style are allowed, that is, one block comment of ML-style
-can occur within another one of the same style.</P
+> です。
+ネストされたMLスタイルのブロックコメントが許されていることに注意してください。
+すなわちMLスタイルのブロックコメントはもう一つの同じスタイルのコメントの中に書くことができるのです。 </P
 ></LI
 ><LI
 ><P
->A block comment of C-style starts and closes with the tokens
+>C言語スタイルのブロックコメントの始まりと終わりは、それぞれトークン
 <FONT
 COLOR="RED"
 >/*</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >*/</FONT
->, respectively. Note that block comments
-of C-style cannot be nested.  The use of block comments of C-style is
-primarily in code that is supposed to be shared by ATS and C. In other
-cases, block comments of ML-style should be the preferred choice.</P
+> です。
+C言語スタイルのブロックコメントはネストできないことに注意してください。
+C言語スタイルのブロックコメントは、ATSとC言語で共有されるコードで主に使われます。
+その他の場合にはMLスタイルのブロックコメントを選ぶべきでしょう。 </P
 ></LI
 ><LI
 ><P
->A rest-of-file comment starts with the quadruple slash
-symbol (<FONT
+>ファイル末尾のコメントは4重スラッシュ記号 (<FONT
 COLOR="RED"
 >////</FONT
->) and extends until the end of the file. Comments
-of this style of are primarily useful for developing or debugging programs.</P
+>) で始まり、ファイル終端まで続きます。
+このスタイルのコメントは開発途中やプログラムのデバッグに便利です。 </P
 ></LI
 ></UL
 >
@@ -176,7 +174,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Sequence Expressions</TD
+>シーケンス式(逐次実行)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

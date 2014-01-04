@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->̾����«��</TITLE
+>名前と束縛</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="NEXT"
-TITLE="«���Υ�������"
+TITLE="束縛のスコープ"
 HREF="x192.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,24 +74,24 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="names_and_bindings"
->2.2. ̾����«��</A
+>2.2. 名前と束縛</A
 ></H1
 ><P
->&#13;�ץ�����ߥ󥰸���η���Ū��¦�̤�̾���򼰤�«�����뤿��Τ����ߤǤ���
-����ˤ���̾�����Ȥ����ˤʤ�ޤ���
+>&#13;プログラミング言語の決定的な側面は名前を式に束縛するためのしくみです。
+さらにその名前自身が式になります。
 
-�㤨�м��ι�ʸ��ɽ�蘆���Τϡ�
-�� <FONT
+例えば次の構文で表わされるのは、
+式 <FONT
 COLOR="RED"
 >1+2</FONT
-> ��̾�� <FONT
+> を名前 <FONT
 COLOR="RED"
 >x</FONT
-> ��«������������Ǥ���
-�ޤ� <FONT
+> に束縛すする宣言です。
+また <FONT
 COLOR="RED"
 >x</FONT
-> ���ͤȤ��ƻ��Ȥ���ޤ���
+> も値として参照されます。
 </P
 ><DIV
 CLASS="informalexample"
@@ -108,45 +108,45 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;ATS�Ǥ�  <FONT
+>&#13;ATSでは  <FONT
 COLOR="RED"
 >val</FONT
-> �ϥ�����ɤǤ��뤳�Ȥ����դ��Ƥ���������
-�ޤ����������val����Ȥ���ʬ�व��ޤ���
+> はキーワードであることに注意してください。
+またその宣言はval宣言として分類されます。
 
-��ǰ�塢ATS�Τ褦��¨��ɾ��(call-by-value)�θ���ˤ����Ƽ¹Ի��˵����뤳�Ȥϡ�
-�ޤ��Ϥ���˼� <FONT
+概念上、ATSのような即時評価(call-by-value)の言語において実行時に起きることは、
+まずはじめに式 <FONT
 COLOR="RED"
 >1+2</FONT
-> ���� <FONT
+> が値 <FONT
 COLOR="RED"
 >3</FONT
-> ��ɾ������ޤ���
-���� <FONT
+> に評価されます。
+次に <FONT
 COLOR="RED"
 >x</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >1+2</FONT
-> �δ֤�«�����Ǥ���
+> の間に束縛ができ、
 <FONT
 COLOR="RED"
 >x</FONT
-> �� <FONT
+> と <FONT
 COLOR="RED"
 >3</FONT
-> �δ֤�«���� <SPAN
+> の間に束縛が <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->����(finalized)</I
+>決着(finalized)</I
 ></SPAN
-> ���ޤ���
-�ܼ�Ū��¨��ɾ���Ȥϡ�
-̾���ȼ���«���Ϥ���ʹߤ�ɾ���ǻȤ������ˡ�
-����̾���Ȥ��μ����ͤ�«���˷��夵��ʤ���Фʤ�ʤ����Ȥ��̣���ޤ���
-�̤���Ȥ��Ƥϡ����ι�ʸ�Ǥ�3�Ĥ�«����������Ƥ��ޤ���
-�ǽ�ιԤǤϤ�����2�Ĥ�Ʊ�����������Ƥ��ޤ��� 
+> します。
+本質的に即時評価とは、
+名前と式の束縛はそれ以降の評価で使われる前に、
+その名前とその式の値の束縛に決着されなければならないことを意味します。
+別の例としては、次の構文では3つの束縛を宣言しています。
+最初の行ではその内2つが同時に宣言されています。 
 </P
 ><DIV
 CLASS="informalexample"
@@ -167,10 +167,10 @@ val area = PI * radius * radius
 >&#13;<FONT
 COLOR="RED"
 >and</FONT
-> ������ɤǷҤ��äƤ���ǽ��2�Ĥ�«���Τɤ��餬��˼¹Ի��˷��夵��뤫�ϡ�
-ATS�ˤ����Ƥ�̤����Ǥ��뤳�Ȥ����դ��Ƥ���������
-����ɤ�3���ܤ�«���Ϻǽ��2�Ĥ���λ������˷��夵��뤳�Ȥ��ݾڤ���Ƥ��ޤ���
-�����������̤γ��٤��鸫�뤿��ˡ����Υ����ɤ򷿸������Ƥߤޤ��礦��
+> キーワードで繋がっている最初の2つの束縛のどちらが先に実行時に決着されるかは、
+ATSにおいては未定義であることに注意してください。
+けれども3つ目の束縛は最初の2つが完了した後に決着されることは保証されています。
+この論点を別の角度から見るために、次のコードを型検査してみましょう。
 
 <DIV
 CLASS="informalexample"
@@ -188,18 +188,18 @@ CLASS="programlisting"
 ></DIV
 >
 
-���ξ�硢���顼��å������ϼ� <FONT
+この場合、エラーメッセージは式 <FONT
 COLOR="RED"
 >x + 1</FONT
 >
-����ˤ���̾��(�⤷����ưŪ�ʼ��̻�) <FONT
+の中にある名前(もしくは動的な識別子) <FONT
 COLOR="RED"
 >x</FONT
-> ��«������Ƥ��ʤ����Ȥ򼨤��Ƥ��ޤ���
-����Ū�ˤϾ嵭�Υ����ɤ���ˤ���2�Ĥ� <FONT
+> が束縛されていないことを示しています。
+具体的には上記のコードの中にある2つの <FONT
 COLOR="RED"
 >x</FONT
-> Ʊ�Τ˴ط����ʤ��ΤǤ���
+> 同士に関係がないのです。
 
 </P
 ></DIV
@@ -247,7 +247,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->�ץ�����ߥ󥰤ι�������</TD
+>プログラミングの構成要素</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -261,7 +261,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->«���Υ�������</TD
+>束縛のスコープ</TD
 ></TR
 ></TABLE
 ></DIV

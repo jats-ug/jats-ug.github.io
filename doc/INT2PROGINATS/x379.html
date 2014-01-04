@@ -2,21 +2,21 @@
 <HTML
 ><HEAD
 ><TITLE
->Sequence Expressions</TITLE
+>シーケンス式(逐次実行)</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="ATS�ץ�����ߥ�����"
+TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="�ץ�����ߥ󥰤ι�������"
+TITLE="プログラミングの構成要素"
 HREF="c100.html"><LINK
 REL="PREVIOUS"
-TITLE="��Ｐ"
+TITLE="条件式"
 HREF="x351.html"><LINK
 REL="NEXT"
-TITLE="Comments in Code"
+TITLE="コード中のコメント"
 HREF="x395.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -37,7 +37,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->ATS�ץ�����ߥ�����: </TH
+>ATSプログラミング入門: </TH
 ></TR
 ><TR
 ><TD
@@ -53,7 +53,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 2. �ץ�����ߥ󥰤ι�������</TD
+>Chapter 2. プログラミングの構成要素</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -74,25 +74,25 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="sequence_expressions"
->2.10. Sequence Expressions</A
+>2.10. シーケンス式(逐次実行)</A
 ></H1
 ><P
->&#13;Assume that exp1 and exp2 are expressions of types T1 and T2 respectively,
-where T1 is <FONT
+>&#13;exp1とexp2がそれぞれ型T1とT2であり、T1は <FONT
 COLOR="RED"
 >void</FONT
->. Then a sequence expression (exp1; exp2) can
-be formed that is of the type T2.  When evaluating the sequence expression
-(exp1; exp2), we first evaluate exp1 to the void value and then evaluate
-exp2 to some value, which is also the value of the sequence expression.
-When more expressions are sequenced, all of them but the last one need to
-be of the type <FONT
+> 型であったとしましょう。
+このときシーケンス式 (exp1; exp2) を作ることができ、その型は T2 になります。
+シーケンス式 (exp1; exp2) を評価すると、まずはじめにexp1をvoid値に評価し、
+さらにexp2を評価してなんらかの値を得ます。
+またこの値はシーケンス式全体の値になります。
+
+より多くの式を列にする場合、最後以外の式は全て <FONT
 COLOR="RED"
 >void</FONT
-> and the type of the last expression is also
-the type of the sequence expression being formed.  Evaluating a sequence of
-more expressions is analogous to evaluating a sequence of two. The
-following example is a sequence expression:
+> 型であるべきで、
+やはり最後の式はシーケンス式の型になります。
+より多くの式からなるシーケンス式を評価するのは、2つの式からなるシーケンス式を評価するのと似ています。
+次の例はシーケンス式です。
  
 <DIV
 CLASS="informalexample"
@@ -110,16 +110,15 @@ CLASS="programlisting"
 ></DIV
 >
 
-Evaluating this sequence expression prints out (onto the console) the
-5-letter string "Hello". Instead of parentheses, we can also use the
-keywords <FONT
+このシーケンス式を評価するとコンソールに5つの文字 "Hello" が印字されます。
+小括弧のかわりにキーワード <FONT
 COLOR="RED"
 >begin</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >end</FONT
-> to form a sequence
-expression:
+>
+を使ってシーケンス式を作ることもできます。
 
 <DIV
 CLASS="informalexample"
@@ -139,13 +138,12 @@ end // end of [begin]
 ></DIV
 >
 
-If we like, we may also add a semicolon immediately after the last
-expression in a sequence as long as the last expression is of the type
-<FONT
+好みによっては最後の式の直後にセミコロンを付けることもできます。
+その場合、最後の式は <FONT
 COLOR="RED"
 >void</FONT
->. For instance, the above example can also be written as
-follows:
+> 型でなければなりません。
+例えば、先の例は次のようにも書けます。
 
 <DIV
 CLASS="informalexample"
@@ -165,7 +163,7 @@ end // end of [begin]
 ></DIV
 >
 
-I also want to point out the following style of sequencing:
+また次のようなスタイルのシーケンスにも注目してください。
 
 <DIV
 CLASS="informalexample"
@@ -191,7 +189,7 @@ end // end of [begin]
 ></DIV
 >
 
-which is rather common in functional programming.</P
+これは関数型プログラミングで幾分一般的なものです。 </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -237,7 +235,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->��Ｐ</TD
+>条件式</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -251,7 +249,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Comments in Code</TD
+>コード中のコメント</TD
 ></TR
 ></TABLE
 ></DIV
