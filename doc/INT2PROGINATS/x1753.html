@@ -21,7 +21,7 @@ REL="NEXT"
 TITLE="
 Generic Template Implementation
 "
-HREF="x1809.html"></HEAD
+HREF="x1817.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x1809.html"
+HREF="x1817.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -238,7 +238,7 @@ COLOR="RED"
 >$ACKER.</FONT
 > (the dollar sign followed by ACKER followed by the dot
 symbol) must be attached to any name that refers an entity (a function, a
-value, a datatype, the constructors associated with a datatype, a type
+value, a datatype, a constructor (associated with a datatype), a type
 definition, etc.) declared in <TT
 CLASS="filename"
 >acker.sats</TT
@@ -427,6 +427,83 @@ CLASS="command"
 >make</B
 > utility.
 </P
+><P
+>If we want to, we can also merge <TT
+CLASS="filename"
+>acker.sats</TT
+> and
+<TT
+CLASS="filename"
+>acker.dats</TT
+> into a single filename of the following content:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1812"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun acker (m: int, m: int): int
+
+implement
+acker (m, n) =
+  if m &#62; 0 then
+    if n &#62; 0 then acker (m-1, acker (m, n-1))
+    else acker (m-1, 1)
+  else n+1
+// end of [acker]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Suppose that this single file is given the name <TT
+CLASS="filename"
+>acker3.dats</TT
+>.
+Then the testing code can be written as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1815"
+></A
+><PRE
+CLASS="programlisting"
+>//
+#include
+"share/atspre_staload.hats"
+//
+staload "acker3.dats"
+dynload "acker3.dats"
+
+implement
+main0 () = () where {
+//
+// acker (3, 3) should return 61
+//
+  val () = assertloc (acker (3, 3) = 61)
+} // end of [main0]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that it is perfectly fine for a dynamic ATS file to be statically
+loaded. Actually, a static ATS file is really just a special case of
+dynamic ATS file in which there is no implementation (of either functions
+or values).
+</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -462,7 +539,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x1809.html"
+HREF="x1817.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
