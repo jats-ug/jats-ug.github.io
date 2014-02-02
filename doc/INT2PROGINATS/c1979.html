@@ -117,10 +117,10 @@ NAME="external_name"
 ><P
 >&#13;ATSで宣言された関数にはC言語スタイルのグローバル名が与えれらます。
 その関数はATSコードからもC言語コードからも呼び出すことができます。
-つまり、関数はATSで実装してC言語から呼び出すことができ、その逆も可能なのです。
+つまり、関数はATSで実装してC言語から呼び出すことができ、その逆もまた可能なのです。
 </P
 ><P
->&#13;In the following code, we see that two functions are declared:
+>&#13;次のコードでは2つの関数を宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -142,56 +142,54 @@ fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
 >
 
 
-The first function <FONT
+最初の関数 <FONT
 COLOR="RED"
 >fact</FONT
-> does not have a global name while the
-second function <FONT
+> はグローバル名を持たないのに対し、
+二番目の関数 <FONT
 COLOR="RED"
 >fact2</FONT
-> is assigned a global name
-<FONT
+> にはグローバル名 <FONT
 COLOR="RED"
 >fact2_in_c</FONT
->.  The symbol <FONT
+> が割り当てられます。
+<FONT
 COLOR="RED"
 >ext#</FONT
-> indicates that
-<FONT
+> シンボルは <FONT
 COLOR="RED"
 >fact2_in_c</FONT
-> is treated as a global function in C and its
-prototype needs to be declared (via the <FONT
+> をC言語のグローバル関数のように扱います。
+そして <FONT
 COLOR="RED"
 >extern</FONT
-> keyword) before
-it can be called. If <FONT
-COLOR="RED"
->ext#</FONT
-> is written in place of
-<FONT
+> キーワードによるプロトタイプ宣言が呼び出される前に必要です。
+もし先の宣言 <FONT
 COLOR="RED"
 >ext#fact2_in_c</FONT
-> in the above declaration, then the global name
-for the function <FONT
-COLOR="RED"
->fact2</FONT
-> in ATS is assumed to be same as the name
-of the function in ATS. In other words, writing <FONT
+> の代わりに <FONT
 COLOR="RED"
 >ext#</FONT
-> in the
-above declaration is equivalent to writing <FONT
+> が使われた場合、
+ATSの <FONT
+COLOR="RED"
+>fact2</FONT
+> 関数へのグローバル名はATSの関数名と同じになります。
+言いかえれば、先の例で <FONT
+COLOR="RED"
+>ext#</FONT
+> という宣言を書くことは、
+<FONT
 COLOR="RED"
 >ext#fact2</FONT
->.
+> と書くことと同じです。
 
 </P
 ><P
->&#13;Let us assume that <FONT
+>&#13;次のように <FONT
 COLOR="RED"
 >fact</FONT
-> can be implemented as follows:
+> の実装が与えられたとしましょう:
 
 <DIV
 CLASS="informalexample"
@@ -210,26 +208,23 @@ CLASS="programlisting"
 >
 
 
-When compiling this implementation, the ATS compiler needs to form function
-names in the generated C code to refer to <FONT
+この実装をコンパイルするには <FONT
 COLOR="RED"
 >fact</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >fact2</FONT
->.  For the former, the function name in the C code is
-determined by a set of rules (which take into account the issue of
-namespace).  For the latter, the function name is simply chosen to be the
-assigned global name <FONT
+> を参照する関数名を、
+ATSコンパイラは生成するC言語コード中に作らなければなりません。
+前者のC言語での関数名はあるルール(名前空間の問題を考慮します)によって決定されます。
+後者の関数名は単純に <FONT
 COLOR="RED"
 >fact2_in_c</FONT
->. As is suggested by the name of
+> グローバル名が割り当てられます。
 <FONT
 COLOR="RED"
 >fact2_in_c</FONT
->, this function can be directly implemented in C as
-follows:
+> という名前の通り、この関数は次のように直接C言語で実装されていることでしょう:
 
 <DIV
 CLASS="informalexample"
