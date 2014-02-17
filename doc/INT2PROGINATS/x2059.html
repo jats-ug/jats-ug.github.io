@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Inclusion of External Code in ATS</TITLE
+>External Types and Values in ATS</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="C言語との相互呼び出し"
-HREF="c1979.html"><LINK
+HREF="c1995.html"><LINK
 REL="PREVIOUS"
-TITLE="External Types and Values in ATS"
-HREF="x2044.html"><LINK
+TITLE="C言語との相互呼び出し"
+HREF="c1995.html"><LINK
 REL="NEXT"
-TITLE="Calling External Functions in ATS"
-HREF="x2080.html"></HEAD
+TITLE="Inclusion of External Code in ATS"
+HREF="x2074.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2044.html"
+HREF="c1995.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x2080.html"
+HREF="x2074.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,37 +74,39 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="inclusion_of_external_code"
->8.3. Inclusion of External Code in ATS</A
+NAME="external_types_and_values"
+>8.2. External Types and Values in ATS</A
 ></H1
 ><P
->&#13;Just like including assembly code inside C code, it is straightforward to
-include C code inside ATS code. For instance, the example appearing at the
-beginning of this chapter can be written as follows in a single file:
+>&#13;External types and values can be readily formed in ATS to refer to types
+and values declared in C.
+
+</P
+><P
+>&#13;Suppose that there is a type in C of the name <FONT
+COLOR="RED"
+>some_type_in_c</FONT
+>,
+then this type can be referred to in ATS as
+<FONT
+COLOR="RED"
+>$extype"some_type_in_c"</FONT
+>. For instance, type definitions are
+introduced in the following code for some external types in C:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2062"
+NAME="AEN2065"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun fact (n: int): int
-extern
-fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
-
-implement fact (n) = fact2 (n, 1)
-
-%{
-int
-fact2_in_c (int n, int res)
-{
-  while (n &#62; 0) { res *= n ; n -= 1 ; } ; return res ;
-}
-%}
+>typedef Cint = $extype"int"
+typedef Clint = $extype"long int"
+typedef Cllint = $extype"long long int"
+typedef Cint2 = $extype"struct{ int x; int y; }"
 </PRE
 ><P
 ></P
@@ -112,69 +114,66 @@ fact2_in_c (int n, int res)
 >
 
 
-For C code to appear inside ATS code, it needs to enclosed by the symbols
-<FONT
+Suppose that there is a value in C of the name <FONT
 COLOR="RED"
->%{</FONT
-> (opening) and <FONT
+>some_value_in_c</FONT
+>,
+then this value can be referred to in ATS as <FONT
 COLOR="RED"
->%}</FONT
-> (closing). Essentially,
-whatever code appearing between these two symbols is pasted into the
-generated C code at an unspecified position. If the enclosed code is
-intended to be put at the beginning of the generated C code, then the
-symbol <FONT
+>$extval(<FONT
 COLOR="RED"
->%{^</FONT
-> should be used in place of <FONT
-COLOR="RED"
->%{</FONT
->.  If the
-enclosed code is intended to be put at the bottom of the generated C code,
-then the symbol <FONT
-COLOR="RED"
->%{$</FONT
-> should be used in place of <FONT
-COLOR="RED"
->%{</FONT
->.
+>T</FONT
+>, "some_value_in_c")</FONT
+>,
+where T is a type in ATS assigned to this value.  For instance, macro
+definitions are introduced in the following code for some external values
+in C:
 
-</P
+<DIV
+CLASS="informalexample"
 ><P
->&#13;It is also allowed to put C code between the symbols
-<FONT
-COLOR="RED"
->%{#</FONT
-> and <FONT
-COLOR="RED"
->%}</FONT
->. Suppose that there is a file of the
-name <TT
-CLASS="filename"
->foo.sats</TT
-> that contains C code included in this manner.
-If <TT
-CLASS="filename"
->foo.sats</TT
-> is staloaded in another file of the name
-<TT
-CLASS="filename"
->foo.dats</TT
->, then the lines between <FONT
-COLOR="RED"
->%{#</FONT
-> and
-<FONT
-COLOR="RED"
->%}</FONT
-> in <TT
-CLASS="filename"
->foo.sats</TT
-> are pasted into the C code
-generated from compiling <TT
-CLASS="filename"
->foo.dats</TT
->.
+></P
+><A
+NAME="AEN2070"
+></A
+><PRE
+CLASS="programlisting"
+>macdef NULL = $extype(ptr, "0")
+macdef stdin_ref = $extype(FILEref, "stdin")
+macdef stdout_ref = $extype(FILEref, "stdout")
+</PRE
+><P
+></P
+></DIV
+>
+
+
+External value can also be formed to refer to functions in C as done
+in the following code:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2072"
+></A
+><PRE
+CLASS="programlisting"
+>macdef atoi = $extype(string -&#62; int, "atoi")
+macdef atol = $extype(string -&#62; lint, "atol")
+macdef atof = $extype(string -&#62; double, "atof")
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that there are other ways in ATS that are often more approriate for
+directly referring to functions in C.  Typically, the primary purpose of
+forming an external value in ATS is to allow a constant declared in C to be
+directly referred to in ATS code.
 
 </P
 ></DIV
@@ -194,7 +193,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2044.html"
+HREF="c1995.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -212,7 +211,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x2080.html"
+HREF="x2074.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -222,13 +221,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->External Types and Values in ATS</TD
+>C言語との相互呼び出し</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1979.html"
+HREF="c1995.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -236,7 +235,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Calling External Functions in ATS</TD
+>Inclusion of External Code in ATS</TD
 ></TR
 ></TABLE
 ></DIV

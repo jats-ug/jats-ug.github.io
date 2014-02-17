@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->&#13;Specific Template Implementation
+>&#13;Generic Template Implementation
 </TITLE
 ><META
 CHARSET="UTF-8"><META
@@ -13,17 +13,17 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Modularity"
-HREF="c1676.html"><LINK
+HREF="c1693.html"><LINK
 REL="PREVIOUS"
 TITLE="
-Generic Template Implementation
+Static and Dynamic ATS Files
 "
-HREF="x1816.html"><LINK
+HREF="x1769.html"><LINK
 REL="NEXT"
 TITLE="
-Abstract Types
+Specific Template Implementation
 "
-HREF="x1876.html"></HEAD
+HREF="x1850.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -51,7 +51,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x1816.html"
+HREF="x1769.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -65,7 +65,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x1876.html"
+HREF="x1850.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -79,16 +79,15 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="specific_template_implementation"
->7.4. Specific Template Implementation</A
+NAME="generic_template_implementation"
+>7.3. Generic Template Implementation</A
 ></H1
 ><P
->&#13;Implementing an interface for a function template specifically means to
-give an implementation for a fixed instance of the template. For instance,
-the following interface is for a function template of the name
-<FONT
+>&#13;Interfaces for function templates are mostly similar to those for
+functions.  For example, the following syntax declares an interface in a
+dynamic file for a function template of the name <FONT
 COLOR="RED"
->eq_elt_elt</FONT
+>list0_fold_left</FONT
 >:
 
 <DIV
@@ -100,40 +99,11 @@ NAME="AEN1837"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t0p}
-eq_elt_elt (x: a, y: a): bool // a generic equality
-</PRE
-><P
-></P
-></DIV
->
-
-
-There is no meaningful generic implementation for <FONT
-COLOR="RED"
->eq_elt_elt</FONT
-> as
-equality test for values of a type T depends on T.  Two specific template
-implementations are given as follows for the instances
-<FONT
-COLOR="RED"
->eq_elt_elt&#60;int&#62;</FONT
-> and <FONT
-COLOR="RED"
->eq_elt_elt&#60;double&#62;</FONT
->:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1842"
-></A
-><PRE
-CLASS="programlisting"
->implement eq_elt_elt&#60;int&#62; (x, y) = g0int_eq (x, y)
-implement eq_elt_elt&#60;double&#62; (x, y) = g0float_eq (x, y)
+>extern
+fun{
+a:t0p}{b:t0p
+} list0_fold_left
+  (xs: list0 b, f: (a, b) -&#60;cloref1&#62; a, init: a): a
 </PRE
 ><P
 ></P
@@ -143,82 +113,50 @@ implement eq_elt_elt&#60;double&#62; (x, y) = g0float_eq (x, y)
 
 where <FONT
 COLOR="RED"
->eq_int_int</FONT
-> and <FONT
+>t0p</FONT
+> is a shorthand for <FONT
 COLOR="RED"
->eq_double_double</FONT
-> are equality
-functions for values of the type <FONT
-COLOR="RED"
->int</FONT
-> and <FONT
-COLOR="RED"
->double</FONT
->,
-respectively. It is also possible to give the implementations as follows:
-
-<DIV
-CLASS="informalexample"
+>t@ype</FONT
+>.</P
 ><P
-></P
-><A
-NAME="AEN1848"
-></A
-><PRE
-CLASS="programlisting"
->implement eq_elt_elt&#60;int&#62; (x, y) = (x = y)
-implement eq_elt_elt&#60;double&#62; (x, y) = (x = y)
-</PRE
-><P
-></P
-></DIV
->
-
-
-This is allowed as the symbol <FONT
-COLOR="RED"
->=</FONT
-> is already overloaded with
+>&#13;If the same interface is declared in a static file, the keyword
 <FONT
 COLOR="RED"
->g0int_eq</FONT
-> and <FONT
+>extern</FONT
+> should be dropped. Implementing an interface for a
+function template is also mostly similar to implementing one for a
+function. The above interface for <FONT
 COLOR="RED"
->g0float_eq</FONT
-> (in addition to many other
-functions).
-</P
-><P
->&#13;Let us now see a typical use of specific template implementation.  The
-following defined function template <FONT
-COLOR="RED"
->listeq</FONT
-> implements an
-equality function on lists:
+>list0_fold_left</FONT
+> is given an
+implementation in the following code:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1855"
+NAME="AEN1844"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{
-a:t0p
-} listeq
+>implement{a}{b}
+list0_fold_left
+  (xs, f, init) = let
+//
+fun loop
 (
-  xs: list0 a
-, ys: list0 a
-) : bool = (
-  case+ (xs, ys) of
-  | (list0_cons (x, xs),
-     list0_cons (y, ys)) =&#62; 
-      if eq_elt_elt&#60;a&#62; (x, y) then listeq (xs, ys) else false
-  | (list0_nil (), list0_nil ()) =&#62; true
-  | (_, _) =&#62; false
-) (* end of [listeq] *)
+  xs: list0 b, res: a
+) : a =
+(
+  case+ xs of
+  | list0_nil () =&#62; res
+  | list0_cons (x, xs) =&#62; loop (xs, f (res, x))
+) (* end of [loop] *)
+//
+in
+  loop (xs, init)
+end // end of [list0_fold_left]
 </PRE
 ><P
 ></P
@@ -226,76 +164,29 @@ a:t0p
 >
 
 
-Given two lists xs and ys, <FONT
+Note that template parameters are required to appear immediately after the
+keyword <FONT
 COLOR="RED"
->listeq</FONT
-> returns <FONT
-COLOR="RED"
->true</FONT
-> if
-and only if xs and ys are of the same length and each element in xs equals
-the corresponding one in ys (according to <FONT
-COLOR="RED"
->eq_elt_elt</FONT
->).
-Given a type T, it is clear that the instance
-<FONT
-COLOR="RED"
->eq_elt_elt&#60;T&#62;</FONT
-> is needed if <FONT
-COLOR="RED"
->listeq</FONT
-> is called
-on two lists of the type <FONT
-COLOR="RED"
->list0(T)</FONT
->. In other words, a specific
-implementation for <FONT
-COLOR="RED"
->eq_elt_elt&#60;T&#62;</FONT
-> should be given if a
-call to <FONT
-COLOR="RED"
->listeq</FONT
-> is to be made on two lists of the type
-<FONT
-COLOR="RED"
->list0(T)</FONT
->. Note that the implementation for an instance of a
-function template is required to be accessible from the file where the
-instance is called.
-</P
-><P
->As a comparison, the following defined function template
-<FONT
-COLOR="RED"
->listeqf</FONT
-> also implements equality test on two given lists:
+>implement</FONT
+>, and they cannot be omitted.  Template
+parameters can also be passed sequentially as is shown in the following
+short example:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1868"
+NAME="AEN1847"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{
-a:t0p
-} listeqf
-(
-  xs: list0 a
-, ys: list0 a
-, eq: (a, a) -&#62; bool
-) : bool = (
-  case+ (xs, ys) of
-  | (list0_cons (x, xs),
-     list0_cons (y, ys)) =&#62; 
-      if eq (x, y) then listeqf (xs, ys, eq) else false
-  | (list0_nil (), list0_nil ()) =&#62; true
-  | (_, _) =&#62; false
-) (* end of [listeqf] *)
+>extern
+fun
+{a,b:t0p}{c:t0p}
+app2 (f: (a, b) -&#60;cloref1&#62; c, x: a, y: b): c
+
+implement{a,b}{c} app2 (f, x, y) = f (x, y)
 </PRE
 ><P
 ></P
@@ -303,33 +194,12 @@ a:t0p
 >
 
 
-In this case, <FONT
-COLOR="RED"
->listeqf</FONT
-> takes an additional argument
-<FONT
-COLOR="RED"
->eq</FONT
-> that tests whether two list elements are equal.  As
-<FONT
-COLOR="RED"
->listeq</FONT
-> is a first-order function while <FONT
-COLOR="RED"
->listeqf</FONT
-> is a
-higher-order one, it is likely for the former to be compiled into more
-efficient object code. I would like to point out that the library of ATS
-makes pervasive use of specifically implemented templates.
-
 </P
 ><P
->Please find the code presented in this section plus some additional
-testing code available <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/listeq.dats"
-TARGET="_top"
->on-line</A
->.
+>&#13;The style of template implementation presented in this section is
+referred to as generic template implementation. I will later present a
+different style of template implementation, which is often referred to as
+specific template implementation.
 </P
 ></DIV
 ><DIV
@@ -348,7 +218,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x1816.html"
+HREF="x1769.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -366,7 +236,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x1876.html"
+HREF="x1850.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -376,13 +246,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Generic Template Implementation</TD
+>Static and Dynamic ATS Files</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1676.html"
+HREF="c1693.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -390,7 +260,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Abstract Types</TD
+>Specific Template Implementation</TD
 ></TR
 ></TABLE
 ></DIV
