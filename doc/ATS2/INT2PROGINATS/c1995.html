@@ -246,11 +246,10 @@ fact2_in_c (int n, int res)
 ></DIV
 >
 
-It is also allowed to implement <FONT
+そして次のような <FONT
 COLOR="RED"
 >fact2</FONT
-> in ATS
-directly as is shown below:
+> をATSで直接実装することもできます:
 
 <DIV
 CLASS="informalexample"
@@ -270,34 +269,33 @@ fact2 (n, res) = if n &#62; 0 then fact2 (n-1, n*res) else res
 >
 
 
-This implementation of <FONT
+この <FONT
 COLOR="RED"
 >fact2</FONT
-> can be called in C
-through the name <FONT
+> の実装は <FONT
 COLOR="RED"
 >fact2_in_c</FONT
->.
+> という名前を通してC言語から呼び出すことができます。
 </P
 ><P
->&#13;If both <FONT
+>&#13;もし <FONT
 COLOR="RED"
 >fact2</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >fact2_in_c</FONT
-> are implemented (the
-former in ATS and the latter in C), then a link-time error is to be
-issued to indicate that <FONT
+> が両方とも実装されていたら
+(前者はATSで後者はC言語で実装しました)、
+<FONT
 COLOR="RED"
 >fact2_in_c</FONT
-> is implemented repeatedly.
+> が二重に実装されていることを示すリンク時エラーが発生するでしょう。
 </P
 ><P
->&#13;One can also declare <FONT
+>&#13;また <FONT
 COLOR="RED"
 >fact2</FONT
-> as follows:
+> を次のように宣言することもできます:
 
 <DIV
 CLASS="informalexample"
@@ -317,32 +315,31 @@ fun fact2 (n: int, res: int): int = "mac#fact2_in_c"
 >
 
 
-The symbol <FONT
-COLOR="RED"
->mac#</FONT
-> indicates that <FONT
-COLOR="RED"
->fact2_in_c</FONT
-> is
-treated like a macro in C. In particular, <FONT
-COLOR="RED"
->fact2_in_c</FONT
-> can be
-called without its prototype being declared first. As a matter of fact, it
-may not even have a prototype. This style of declaration naturally expects
 <FONT
 COLOR="RED"
+>mac#</FONT
+> シンボルは <FONT
+COLOR="RED"
 >fact2_in_c</FONT
-> to be implemented in C directly.
+> をC言語のマクロのように扱うことを示しています。
+特に <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> はそのプロトタイプ宣言を最初に宣言しなくても呼び出すことができます。
+実際のところ、プロトタイプ宣言がなくても問題ありません。
+このスタイルの宣言は当然 <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> がC言語で直接実装されることを期待しています。
 </P
 ><P
->&#13;It is also allowed to use <FONT
-COLOR="RED"
->sta#</FONT
-> in place of <FONT
+>&#13;また <FONT
 COLOR="RED"
 >mac#</FONT
->:
+> のかわりに <FONT
+COLOR="RED"
+>sta#</FONT
+> を使うこともできます:
 
 <DIV
 CLASS="informalexample"
@@ -362,15 +359,14 @@ fun fact2 (n: int, res: int): int = "sta#fact2_in_c"
 >
 
 
-If declared in this style, which only occurs rarely in practice,
-then <FONT
+このスタイルの宣言すると <FONT
 COLOR="RED"
 >fact2_in_c</FONT
-> is treated like a static function in C.
+> がC言語のstatic関数のように扱われます。
+しかし実際にはあまり使うことはないでしょう。
 </P
 ><P
->&#13;For the sake of completeness, I mention as follows another way of declaring
-a static function:
+>&#13;完全を期すために、static関数を宣言する他の方法を紹介します:
 
 <DIV
 CLASS="informalexample"
@@ -389,7 +385,7 @@ CLASS="programlisting"
 >
 
 
-This style of declaration is automatically translated into the following one:
+このスタイルの宣言は自動的に次のように変換されます:
 
 <DIV
 CLASS="informalexample"
@@ -408,17 +404,17 @@ CLASS="programlisting"
 >
 
 
-where the use of <FONT
+<FONT
 COLOR="RED"
 >sta#</FONT
-> means that the name referring to <FONT
+> のように使うと、C言語における <FONT
 COLOR="RED"
 >fact2</FONT
->
-in C is simply <FONT
+> という名前が単純に
+<FONT
 COLOR="RED"
 >fact2</FONT
->.
+> を意味するようになります。
 </P
 ></DIV
 ></DIV
