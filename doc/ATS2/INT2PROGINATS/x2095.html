@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Calling External Functions in ATS</TITLE
+>ATSにおける外部関数呼び出し</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,11 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="calling_external_functions"
->8.4. Calling External Functions in ATS</A
+>8.4. ATSにおける外部関数呼び出し</A
 ></H1
 ><P
->&#13;It is straightforward to make calls to external functions in ATS.
-For instance, the following code demonstrates a typical way to do so:
+>&#13;ATSから外部関数を呼び出すことは簡単です。
+例えば、次のコードはその典型的な例です:
 
 <DIV
 CLASS="informalexample"
@@ -107,24 +107,23 @@ end // end of [local]
 >
 
 
-where the function <FONT
+この <FONT
 COLOR="RED"
 >fprintf</FONT
-> (declared in <TT
+> 関数は <TT
 CLASS="filename"
 >stdio.h</TT
->)
-is given a (local) name <FONT
+> で宣言されており
+<FONT
 COLOR="RED"
 >__fprintf</FONT
-> and an interface appropriate
-for the call to be made.
+> というローカルな名前が与えられています。
+また外部関数呼び出しにふさわしいインターフェイスになっています。
 
 </P
 ><P
->&#13;There is also built-in support for calling external functions in ATS directly.
-For instance, the following code does essentially the same as the code
-presented above:
+>&#13;またATSから外部関数を直接呼び出すビルトインのしくみもあります。
+例えば、次のコードは上記で示したコードと本質的に同じです:
 
 <DIV
 CLASS="informalexample"
@@ -144,13 +143,13 @@ val _ = $extfcall(int, "fprintf", stdout_ref, "fact(%i) = %i\n", N, fact(N))
 >
 
 
-When <FONT
+<FONT
 COLOR="RED"
 >$extfcall</FONT
-> is employed to make an external function call,
-its first argument is the return type of the call, and its second argument
-is the name of the called function (represented as a string), and its rest
-of arguments are the arguments of the called function.
+> は外部関数呼び出しを作るために使われます。
+その最初の引数は関数呼び出しの返値の型です。
+2番目の引数には呼び出す関数の名前を文字列で指定します。
+残りの引数群は呼び出す関数への引数群になります。
 
 </P
 ></DIV
