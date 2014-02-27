@@ -1,0 +1,422 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="関数型プログラミングの基本"
+HREF="p45.html"><LINK
+REL="PREVIOUS"
+TITLE="コード中のコメント"
+HREF="x395.html"><LINK
+REL="NEXT"
+TITLE="Function Arity"
+HREF="x465.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x395.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x465.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="functions"
+></A
+>Chapter 3. 関数</H1
+><P
+>&#13;関数はプログラミングの基盤です。
+理論上、関数を使わずループを使ってプログラムを作ることは可能です。
+けれどそのようなプログラミングスタイルは現実的ではないでしょう。
+ATSは他の言語と同様にforループやwhileループを直接実装できます。
+けれども私としては、再帰呼出もしくはよりよい末尾再帰呼出によって、
+プログラマにループを実装してほしいと考えています。
+このプログラミングスタイルはATSのより進んだプログラミングの特徴とうまく調査できるからです。
+そのような特徴はより先のページで紹介します。
+</P
+><P
+>&#13;この章に出てくるコードとテストのための追加コードは
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/"
+TARGET="_top"
+>オンライン</A
+>
+から得られます。
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="functions-as-a-simple-form-of-abstraction"
+>3.1. 簡単な形式の関数</A
+></H1
+><P
+><FONT
+COLOR="RED"
+>double</FONT
+> 型である式が与えられた時、
+その式を自分自身と掛け合わせれることで二乗を計算することができます。
+もしその式が複雑な式であるなら、その評価を一度きりにするためにその式に名前を付けることができます。
+例えば次のような例です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN422"
+></A
+><PRE
+CLASS="programlisting"
+>let val x = 3.14 * (10.0 - 1.0 / 1.4142) in x * x end
+</PRE
+><P
+></P
+></DIV
+>
+
+
+二乗を取るもっと良い方法が見つかったと想像してみましょう。
+この方法の恩恵を受けるには、
+プログラム中の二乗しているコードをそれぞれ修正しなければなりません。
+このようなプログラミングスタイルは明らかにモジュラリティを欠いています。
+この問題に対処するために、
+次のような関数を実装することで任意の浮動小数点数の二乗を計算できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN424"
+></A
+><PRE
+CLASS="programlisting"
+>fn square (x: double): double = x * x
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>fn</FONT
+> キーワードは再帰をしない関数を定義の開始します。
+そしてキーワードに続く名前は関数名です。
+先の例の場合、 <FONT
+COLOR="RED"
+>square</FONT
+> 関数は <FONT
+COLOR="RED"
+>x</FONT
+> という名前の引数を一つ取ります。
+この引数の型は <FONT
+COLOR="RED"
+>double</FONT
+> で、返値の型も <FONT
+COLOR="RED"
+>double</FONT
+> です。
+シンボル <FONT
+COLOR="RED"
+>=</FONT
+> の右辺(right-hand side - RHS)の式が関数の中身です。
+この場合は <FONT
+COLOR="RED"
+>x * x</FONT
+> になります。
+二乗を取るより良い方法が見つかったら、
+<FONT
+COLOR="RED"
+>square</FONT
+> 関数の中身を再実装するだけで済みます。
+それ以外の修正は不要です。
+(二乗を取るときには単に <FONT
+COLOR="RED"
+>square</FONT
+> を呼び出しているからです。)
+</P
+><P
+>&#13;If <FONT
+COLOR="RED"
+>square</FONT
+> is a name, what is the expression it refers to? It
+turns out that the above function definition can also be written as
+follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN437"
+></A
+><PRE
+CLASS="programlisting"
+>val square = lam (x: double): double =&#62; x * x
+</PRE
+><P
+></P
+></DIV
+>
+
+
+where the RHS of the symbol <FONT
+COLOR="RED"
+>=</FONT
+> is a lambda-expression
+representing an anonymous function that takes one argument of the type
+<FONT
+COLOR="RED"
+>double</FONT
+> and returns a value of the type <FONT
+COLOR="RED"
+>double</FONT
+>,
+and the expression following the symbol <FONT
+COLOR="RED"
+>=&#62;</FONT
+> is the body of the
+function. If we wish, we can change the name of the function argument as
+follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN443"
+></A
+><PRE
+CLASS="programlisting"
+>val square = lam (y: double): double =&#62; y * y
+</PRE
+><P
+></P
+></DIV
+>
+
+
+This is called alpha-renaming (of function arguments), and the new
+lambda-expression is said to be alpha-equivalent to the original one.
+</P
+><P
+>&#13;A lambda-expression is a (function) value. Suppose we have a
+lambda-expression representing a binary function, that is, a function
+taking two arguments. In order to assign a type of the form (T1, T2) -&#62; T
+to the lambda-expression, we need to verify that the body of the function
+can be given the type T if the two arguments of the function are assumed to
+have the types T1 and T2.  What is stated also applies, <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>mutatis
+mutandis</I
+></SPAN
+>, to lambda-expressions representing functions of fewer
+or more arguments. For instance, the lambda-expression <FONT
+COLOR="RED"
+>lam (x:
+double): double =&#62; x * x</FONT
+> can be assigned the function type
+<FONT
+COLOR="RED"
+>(double) -&#62; double</FONT
+>, which may also be written as
+<FONT
+COLOR="RED"
+>double -&#62; double</FONT
+>.
+</P
+><P
+>&#13;Assume that exp is an expression of some function type (T1, T2) -&#62; T. Note
+that exp is not necessarily a name or a lambda-expression. If expressions
+exp<SUB
+>1</SUB
+> and exp<SUB
+>2</SUB
+> can be assigned
+the types T1 and T2, then the function application
+exp(exp<SUB
+>1</SUB
+>, exp<SUB
+>2</SUB
+>), which may
+also be referred to as a function call, can be assigned the type T.  Typing
+a function application of fewer or more arguments is handled similarly.
+</P
+><P
+>Let us now see an example that builds on the previously defined
+function <FONT
+COLOR="RED"
+>square</FONT
+>. The boundary of a ring consists of two
+circles centered at the same point. If the radii of the outer and inner
+circles are R and r, respectively, then the area of the ring can be
+computed by the following function <FONT
+COLOR="RED"
+>area_of_ring</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN458"
+></A
+><PRE
+CLASS="programlisting"
+>fn area_of_ring
+  (R: double, r: double): double = 3.1416 * (square(R) - square(r))
+// end of [area_of_ring]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Given that the subtraction and multiplication functions (on floating point
+numbers) are of the type <FONT
+COLOR="RED"
+>(double, double) -&#62; double</FONT
+> and
+<FONT
+COLOR="RED"
+>square</FONT
+> is of the type <FONT
+COLOR="RED"
+>(double) -&#62; double</FONT
+>, it is a
+simple routine to verify that the body of <FONT
+COLOR="RED"
+>area_of_ring</FONT
+> can be
+assigned the type <FONT
+COLOR="RED"
+>double</FONT
+>.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x395.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x465.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>コード中のコメント</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p45.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Function Arity</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
