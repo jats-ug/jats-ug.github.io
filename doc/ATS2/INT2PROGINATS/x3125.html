@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Specifying with Enhanced Precision</TITLE
+>Example: Another Verified Factorial</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Programming with Theorem-Proving"
-HREF="c3064.html"><LINK
+HREF="c3038.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Safe Matrix Subscripting"
-HREF="x3106.html"><LINK
+TITLE="Specifying with Enhanced Precision"
+HREF="x3099.html"><LINK
 REL="NEXT"
-TITLE="Example: Another Verified Factorial"
-HREF="x3151.html"></HEAD
+TITLE="Example: Verified Fast Exponentiation"
+HREF="x3148.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x3106.html"
+HREF="x3099.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3151.html"
+HREF="x3148.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,176 +74,66 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="specifying_with_precision"
->12.3. Specifying with Enhanced Precision</A
+NAME="example_another_verified_factorial"
+>12.4. Example: Another Verified Factorial</A
 ></H1
 ><P
->&#13;The integer addition function can be assigned the following
-(dependent) type in ATS to indicate that it returns the sum of
-its two integer arguments:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3128"
-></A
-><PRE
-CLASS="programlisting"
->{i,j:int} (int (i), int (j)) -&#62; int (i+j)
-</PRE
-><P
-></P
-></DIV
->
-
-
-This type gives a full specification of integer addition as the only
-(terminating) function that can be given the type is the integer addition
-function. However, the factorial function, which yields the product of the
-first n positive integers when applied to a natural number n, cannot be
-given the following type:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3130"
-></A
-><PRE
-CLASS="programlisting"
->{n:nat} int (n) -&#62; int (fact(n))
-</PRE
-><P
-></P
-></DIV
->
-
-
-as <FONT
+>&#13;The function <FONT
 COLOR="RED"
->fact</FONT
->, which refers to the factorial function, does not exist in
-the statics of ATS. Evidently, a highly interesting and relevant question is
-whether a type can be formed in ATS that fully captures the functional
-relation specified by <FONT
+>ifact</FONT
+> presented in the section on <A
+HREF="x3099.html"
+>specifying with enhanced precision</A
+> is a verified implementation of
+the factorial function as its type guarantees that <FONT
 COLOR="RED"
->fact</FONT
->? The answer is affirmative. We can not
-only construct such a type but also assign it to a (terminating) function
-implemented in ATS.
-</P
-><P
->Let us recall that the factorial function can be defined by the following
-two equations:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3135"
-></A
-><PRE
-CLASS="programlisting"
->fact(0) = 1
-fact(n) = n * fact(n-1) (for all n &#62; 0)
-</PRE
-><P
-></P
-></DIV
+>ifact</FONT
 >
-
-
-Naturally, these equations can be encoded by the constructors associated
-with the dataprop <FONT
+implements the specification of factorial encoded by the dataprop
+<FONT
 COLOR="RED"
 >FACT</FONT
-> declared as follows:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3138"
-></A
-><PRE
-CLASS="programlisting"
->dataprop FACT (int, int) =
-  | FACTbas (0, 1)
-  | {n:nat}{r1,r:int}
-    FACTind (n, r) of (FACT (n-1, r1), MUL (n, r1, r))
-// end of [FACT]
-</PRE
-><P
-></P
-></DIV
->
-
-
-Note that for any given natural number n and integer r, <FONT
-COLOR="RED"
->FACT(n,
-r)</FONT
-> can be assigned to a proof if and only if <FONT
-COLOR="RED"
->fact(n)</FONT
-> equals
-r. Therefore, the following type:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3142"
-></A
-><PRE
-CLASS="programlisting"
->{n:nat} int (n) -&#62; [r:int] (FACT (n, r) | int (r))
-</PRE
-><P
-></P
-></DIV
->
-
-
-can only be assigned to a function that, if applied to a natural number n,
-returns a proof and an integer such that the proof attests to the integer
-being equal to <FONT
-COLOR="RED"
->fact(n)</FONT
->. For instance, the following defined
-function <FONT
+>. Clearly, the implementation of <FONT
 COLOR="RED"
 >ifact</FONT
-> is assigned this type:
+> closely
+follows the declaration of <FONT
+COLOR="RED"
+>FACT</FONT
+>. If we think of the latter as a
+logic program, then the former is essentially a functional version
+extracted from the logic program. However, the implementation of a
+specification in practice can often digress far from the specification
+algorithmically. For instance, we may want to have a verified
+implementation of factorial that is also tail-recursive. This can be done
+as follows:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3146"
+NAME="AEN3134"
 ></A
 ><PRE
 CLASS="programlisting"
->fun ifact
-  {n:nat} .&#60;n&#62;.
-  (n: int (n)):&#60;&#62; [r:int] (FACT (n, r) | int r) =
+>fun ifact2
+  {n:nat} .&#60;&#62;.
 (
-  if n &#62; 0 then let
-    val (pf1 | r1) = ifact (n-1) // pf1: FACT (n-1, r1)
-    val (pfmul | r) = imul2 (n, r1) // pfmul: FACT (n, r1, r)
-  in (
-    FACTind (pf1, pfmul) | r
-  ) end else (
-    FACTbas () | 1 // the base case
-  ) // end of [if]
-) (* end of [ifact] *)
+  n: int (n)
+) :&#60;&#62; [r:int] (FACT (n, r) | int r) = let
+  fun loop
+    {i:nat | i &#60;= n}{r:int} .&#60;n-i&#62;.
+  (
+    pf: FACT (i, r) | n: int n, i: int i, r: int r
+  ) :&#60;&#62; [r:int] (FACT (n, r) | int r) =
+    if n - i &#62; 0 then let
+      val (pfmul | r1) = (i+1) imul2 r in loop (FACTind (pf, pfmul) | n, i+1, r1)
+    end else (pf | r) // end of [if]
+  // end of [loop]
+in
+  loop (FACTbas () | n, 0, 1)
+end // end of [ifact2]
 </PRE
 ><P
 ></P
@@ -251,21 +141,76 @@ CLASS="programlisting"
 >
 
 
-After proof erasure, <FONT
+The function <FONT
 COLOR="RED"
->ifact</FONT
-> precisely implements the factorial
-function.
+>ifact2</FONT
+> is assigned a type indicating that
+<FONT
+COLOR="RED"
+>ifact2</FONT
+> is a verified implementation of factorial, and it is
+defined as a call to the inner function <FONT
+COLOR="RED"
+>loop</FONT
+> that is clearly
+tail-recursive.  If we erase types and proofs, the function <FONT
+COLOR="RED"
+>ifact2</FONT
+>
+is essentially defined as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3140"
+></A
+><PRE
+CLASS="programlisting"
+>fun ifact2 (n) = let
+  fun loop (n, i, r) =
+    if n - i &#62; 0 then let
+      val r1 = (i+1) * r in loop (n, i+1, r1)
+    end else r
+  // end of [loop]
+in
+  loop (n, 0, 1)
+end // end of [ifact2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+When the inner function <FONT
+COLOR="RED"
+>loop</FONT
+> is called on three arguments n, i
+and r, the precondition for this call is that i is natural number less than
+or equal to n and r equals fact(i), that is, the value of the factorial
+function on i. This precondition is captured by the type assigned to
+<FONT
+COLOR="RED"
+>loop</FONT
+> and thus enforced at each call site of <FONT
+COLOR="RED"
+>loop</FONT
+> in
+the implementation of <FONT
+COLOR="RED"
+>ifact2</FONT
+>.
 
 </P
 ><P
->&#13;Please find the entirety of the above presented code plus some testing code
-<A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/ifact.dats"
+>&#13;Please find <A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/ifact23.dats"
 TARGET="_top"
 >on-line</A
->.
-
+>
+the entirety of the above presented code plus some testing code.
 </P
 ></DIV
 ><DIV
@@ -284,7 +229,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x3106.html"
+HREF="x3099.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -302,7 +247,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3151.html"
+HREF="x3148.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -312,13 +257,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Safe Matrix Subscripting</TD
+>Specifying with Enhanced Precision</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c3064.html"
+HREF="c3038.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -326,7 +271,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Another Verified Factorial</TD
+>Example: Verified Fast Exponentiation</TD
 ></TR
 ></TABLE
 ></DIV
