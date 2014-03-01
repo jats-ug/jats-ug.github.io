@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="安全ではないC言語スタイルのATSプログラミング"
 HREF="x2107.html"><LINK
 REL="NEXT"
-TITLE="Example: Constructing a Statically Allocated List"
+TITLE="例: 静的に確保されたリストをコンストラクトする"
 HREF="x2201.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -219,17 +219,15 @@ vtypedef "cons2_node" = cons2_pstruct(int, double)
 >
 
 
-Implicitly,
-a typedef in C of the name <FONT
-COLOR="RED"
->cons2_node_</FONT
-> is also
-introduced for the unboxed portion of a value constructed with the data
-constructor <FONT
+また <FONT
 COLOR="RED"
 >cons2</FONT
->.
-Essentially, we have the following generated code in C:
+> データコンストラクタによってコンストラクトされる値のアンボックス部分のために、
+<FONT
+COLOR="RED"
+>cons2_node_</FONT
+> という名前でC言語のtypedefが暗黙のうちに導入されます。
+結果として次のようなC言語コードが生成されるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -253,10 +251,10 @@ typedef cons2_node_ *cons2_node ;
 >
 
 
-It is now straightforward to create a value of the form <FONT
+これでC言語中で直接 <FONT
 COLOR="RED"
 >cons2(i,d)</FONT
-> in C directly:
+> の値を作るのは簡単でしょう:
 
 <DIV
 CLASS="informalexample"
@@ -286,35 +284,35 @@ cons2_make
 >
 
 
-Note that the tags for <FONT
+<FONT
 COLOR="RED"
 >cons1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2</FONT
-> are 0 and 1,
-respectively, as <FONT
+> のconstructor tagはそれぞれ0と1であることに注意してください。
+<FONT
 COLOR="RED"
 >cons1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2</FONT
-> are the first and
-second constructors associated with the datatype <FONT
+> は datatype <FONT
 COLOR="RED"
 >abc</FONT
->.
+>
+に関連した1番目と2番目のコンストラクタであることがその理由です。
 
 </P
 ><P
->&#13;By assigning an interface to <FONT
+>&#13;ATS側で <FONT
 COLOR="RED"
 >cons2_make</FONT
-> in ATS, we can readily
-check whether <FONT
+> にインターフェイスを割り当てることで、
+<FONT
 COLOR="RED"
 >cons2_make</FONT
-> behaves as expected:
+> の挙動が意図したものかどうかチェックできます:
 
 <DIV
 CLASS="informalexample"
@@ -337,12 +335,10 @@ val-cons2 (1, 2.34) = cons2_make (1, 2.34)
 
 </P
 ><P
->&#13;In general, it is essential for a pragrammer to acquire a solid
-understanding of low-level data representation of a programming language in
-order to use that language in low-level systems programming. The low-level
-data representation of ATS can be readily explained in terms of types in C,
-making it straightforward, if needed, to construct and manipulate
-ATS-values in C directly.
+>&#13;一般に、低レイヤーのシステムプログラミングにおいてプログラミング言語を使うために、
+その言語の低レベルのデータ表現をしっかり理解することはプログラマにとって不可欠です。
+ATSの低レベルデータ表現はC言語の型の項を使って簡単に解釈できます。
+そのため必要であればC言語の中でATSの値を直接コンストラクトし操作することは容易なのです。
 
 </P
 ></DIV
@@ -404,7 +400,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Constructing a Statically Allocated List</TD
+>例: 静的に確保されたリストをコンストラクトする</TD
 ></TR
 ></TABLE
 ></DIV
