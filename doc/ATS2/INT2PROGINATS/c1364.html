@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Effectful Programming Features</TITLE
+>効果(effect)を持つプログラミングの機能</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,41 +75,37 @@ CLASS="chapter"
 ><A
 NAME="effecftul_programming_features"
 ></A
->Chapter 6. Effectful Programming Features</H1
+>Chapter 6. 効果(effect)を持つプログラミングの機能</H1
 ><P
->&#13;Effectful programming features are those that can generate effects at
-run-time. But what is really an effect? The answer to this question is
-rather complex as it depends on the model of evaluation. I will gradually
-introduce various kinds of effects in this book. In sequential programming,
-that is, constructing programs to be evaluated sequentially (in contrast to
-concurrently), an expression is effectless if there exists a value such
-that the expression and the value cannot be distinguished as far as
-evaluation is concerned. For instance, the expression <FONT
-COLOR="RED"
->1+2</FONT
-> is
-effectless as it cannot be distinguished from the value <FONT
+>&#13;効果を持つプログラミングの機能を使うことで実行時に効果(effect)を生成することができます。
+ところで効果とは一体何でしょうか？
+その答はいくぶん込み入っていて、評価モデルに依存しています。
+この本では様々な種類の効果を徐々に説明します。
+並行ではなく順番に評価がなされるようなプログラムを作る場合、
+評価に関してある式とその値が見分けがつかない時、その式は効果を持ちません。
+例えば、値 <FONT
 COLOR="RED"
 >3</FONT
->. An
-effectless expression is also said to be pure.  On the other hand, an
-effectful expression is one that can be distinguished from any given
-values. For instance, the expression <FONT
+> と見分けがつかないので、式 <FONT
+COLOR="RED"
+>1+2</FONT
+> は効果を持ちません。
+効果を持たない式は純粋であるとも言えます。
+他方、効果を持つ式はいかなる値とも区別ができます。
+例えば、式 <FONT
 COLOR="RED"
 >print("Hello")</FONT
-> is
-effectful as its evaluation results in an observable behavior that
-distinguishes the expression from any values.  In this case,
-<FONT
+> は効果を持ちます。
+というのもその評価の結果、観測可能な振舞をひきおこすので、式はいかなる値とも見分けがつくからです。
+この例では <FONT
 COLOR="RED"
 >print("Hello")</FONT
-> is said to certain I/O effect.  If the
-evaluation of an expression never terminates, then the expression is also
-effectul. For instance, let us define a function <FONT
+> はI/Oに対するある効果を持つと言えます。
+もし式の評価が終了しない場合、その式もまた効果を持ちます。
+例えば、次のような <FONT
 COLOR="RED"
 >loop</FONT
-> as
-follows:
+> 関数を定義してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -128,11 +124,10 @@ CLASS="programlisting"
 >
 
 
-Then the expression <FONT
+すると次のような文脈で、式 <FONT
 COLOR="RED"
 >loop()</FONT
-> can be distinguished from
-any values in the following context:
+> はいかなる値とも区別ができます:
 
 <DIV
 CLASS="informalexample"
@@ -151,36 +146,34 @@ CLASS="programlisting"
 >
 
 
-If the hole <FONT
+この文脈の空欄 <FONT
 COLOR="RED"
 >[]</FONT
-> in the context is replaced with
-<FONT
+> を <FONT
 COLOR="RED"
 >loop()</FONT
->, then the evaluation of the resulting expression
-continues forever.  If the hole <FONT
+> で置き換えると、式の評価は完了しません。
+空欄 <FONT
 COLOR="RED"
 >[]</FONT
-> is replaced with any value,
-then the evaluation leads to the string "Terminated" being printed out.
-The expression <FONT
+> をなんらかの値に置き換えると、その評価は文字列 "Terminated" を印字するでしょう。
+式 <FONT
 COLOR="RED"
 >loop</FONT
-> is said to contain non-termination effect.
+> はある非低姿勢の効果を持つを言えます。
 </P
 ><P
->&#13;I will cover programming features related to exceptional control-flow,
-persistent memory storage and simple I/O in this chapter, which are all of
-common use in practical programming.
+>&#13;この章では、例外コントロールフローと永続化メモリ記憶、シンプルなI/Oに関連するプログラミングの機能を説明します。
+これらは実際のプログラミングで一般的に使われるものです。
 </P
 ><P
->&#13;The code employed for illustration in this chapter plus some additional
-code for testing is available <A
+>&#13;この章に出てくるコードとテストのための追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_EFFECTFUL/"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から得られます。
 </P
 ><DIV
 CLASS="sect1"
@@ -188,25 +181,23 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="exceptions"
->6.1. Exceptions</A
+>6.1. 例外</A
 ></H1
 ><P
->&#13;The exception mechanism provides an efficient means for reporting a special
-condition encountered during program evaluation. Often such a special
-condition indicates an error, but it is not uncommon to employ exceptions
-to address issues that are not related to errors.
+>&#13;例外機構は、プログラムの評価中に発生した特殊な状態を通知するための効果的な方法です。
+しばしばそのような特殊な状態はエラーを指しますが、
+エラーに関連しない事柄を指す例外を使うこともあります。
 </P
 ><P
->&#13;The type <FONT
+>&#13;ATSでは <FONT
 COLOR="RED"
 >exn</FONT
-> is predefined in ATS. One may think of
+> 型があらかじめ定義されています。
 <FONT
 COLOR="RED"
 >exn</FONT
-> as an extensible datatype for which new constructors can
-always be declared. For instance, two exception constructors are declared
-as follows:
+> は、新しいコンストラクタによって宣言する拡張datatypeであると思うかもしれません。
+例えば次のように2つの例外コンストラクタを宣言します:
 
 <DIV
 CLASS="informalexample"
