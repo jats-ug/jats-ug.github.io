@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Binary Search on Arrays</TITLE
+>Termination-Checking for Recursive Functions</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Introduction to Dependent Types"
-HREF="c2215.html"><LINK
+HREF="c2190.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: String Processing"
-HREF="x2400.html"><LINK
+TITLE="Example: Binary Search on Arrays"
+HREF="x2422.html"><LINK
 REL="NEXT"
-TITLE="Termination-Checking for Recursive Functions"
-HREF="x2472.html"></HEAD
+TITLE="Example: Dependent Types for Debugging"
+HREF="x2497.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2400.html"
+HREF="x2422.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x2472.html"
+HREF="x2497.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,132 +74,134 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="example_binary_search_on_arrays"
->9.4. Example: Binary Search on Arrays</A
+NAME="termination-checking_for_recursive_functions"
+>9.5. Termination-Checking for Recursive Functions</A
 ></H1
 ><P
->&#13;Given a type T of the sort <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->t@ype</I
-></SPAN
-> and a static integer I (i.e.,
-a static term of the sort <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->int</I
-></SPAN
->), <FONT
+>&#13;There is a mechanism in ATS that allows the programmer to supply
+termination metrics for checking whether recursively defined functions are
+terminating.  It will soon become clear that this mechanism of
+termination-checking plays a fundamental role in the design of ATS/LF, a
+theorem-proving subsystem of ATS, where proofs are constructed as total
+functional programs.
+</P
+><P
+>&#13;A termination metric is just a tuple of natural numbers and the standard
+lexicographic ordering on natural numbers is used to order such tuples. In
+the following example, a singleton metric <FONT
 COLOR="RED"
->arrayref(T, I)</FONT
+>n</FONT
+> is supplied to
+verify that the recursive function <FONT
+COLOR="RED"
+>fact</FONT
+> is terminating, where
+<FONT
+COLOR="RED"
+>n</FONT
+> is the value of the integer argument of <FONT
+COLOR="RED"
+>fact</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2455"
+></A
+><PRE
+CLASS="programlisting"
+>fun fact {n:nat} .&#60;n&#62;.
+  (x: int n): int = if x &#62; 0 then x * fact (x-1) else 1
+// end of [fact]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the metric attached to the recursive call <FONT
+COLOR="RED"
+>fact(x-1)</FONT
+>
+is <FONT
+COLOR="RED"
+>n-1</FONT
+>, which is strictly less than the initial metric
+<FONT
+COLOR="RED"
+>n</FONT
+>. Essentially, termination-checking in ATS verifies that the
+metric attached to each recursive call in the body of a function is
+strictly less that the initial metric attached to the function.
+</P
+><P
+>&#13;A more difficult and also more interesting example is given as follows,
+where the MacCarthy's 91-function is implemented:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2461"
+></A
+><PRE
+CLASS="programlisting"
+>fun f91 {i:int} .&#60;max(101-i,0)&#62;. (x: int i)
+  : [j:int | (i &#60; 101 &#38;&#38; j==91) || (i &#62;= 101 &#38;&#38; j==i-10)] int (j) =
+  if x &#62;= 101 then x-10 else f91 (f91 (x+11))
+// end of [f91]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The metric supplied to verify the termination of <FONT
+COLOR="RED"
+>f91</FONT
 > is
-a boxed type for arrays of size I in which each stored element is of the
-type T. Note that such arrays have no size information attached to them.
-The following interface is for a function template
 <FONT
 COLOR="RED"
->array_make_elt</FONT
-> that can be called to create an array (with no
-size information attached to it):
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN2454"
-></A
-><PRE
-CLASS="programlisting"
->fun{a:t@ype}
-array_make_elt{n:int} (asz: size_t n, elt: a): arrayref (a, n)
-</PRE
-><P
-></P
-></DIV
->
-
-
-Given a static integer I, the type <FONT
+>max(101-i,0)</FONT
+>, where <FONT
 COLOR="RED"
->size_t(I)</FONT
-> is a singleton
-type for a value of the type size_t in C that represents the integer equal
-to I. The function templates for reading from and writing to an array cell
-have the following interfaces:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN2457"
-></A
-><PRE
-CLASS="programlisting"
->fun{a:t@ype}
-arrayref_get_at
-  {n:int}{i:nat | i &#60; n} (A: arrayref (a, n), i: size_t i): a
-overload [] with arrayref_get_at
-
-fun{a:t@ype}
-arrayref_set_at
-  {n:int}{i:nat | i &#60; n} (A: arrayref (a, n), i: size_t i, x: a): void
-overload [] with arrayref_set_at
-</PRE
-><P
-></P
-></DIV
->
-
-
-Note that these two function templates do not incur any run-time
-array-bounds checking: The types assigned to them guarantee that each index
-used for array subscripting is always legal, that is, within the bounds of
-the array being subscripted.
+>i</FONT
+>. is the value of the
+integer argument of <FONT
+COLOR="RED"
+>f91</FONT
+>. Please try to verify manually that
+this metric suffices for verifying the termination of <FONT
+COLOR="RED"
+>f91</FONT
+>.
 </P
 ><P
->&#13;As a convincing example of practical programming with dependent types, the
-following code implements the standard binary search algorithms on an ordered
-array:
+>&#13;As another example, the following code implements the Ackermann's function,
+which is well-known for being recursive but not primitive recursive:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2460"
+NAME="AEN2469"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{
-a:t@ype
-} bsearch_arr{n:nat}
-(
-  A: arrayref (a, n), n: int n, x0: a, cmp: (a, a) -&#62; int
-) : int = let
-//
-fun loop
-  {i,j:int |
-   0 &#60;= i; i &#60;= j+1; j+1 &#60;= n}
-(
-  A: arrayref (a, n), l: int i, u: int j
-) :&#60;cloref1&#62; int =
-(
-  if l &#60;= u then let
-    val m = l + half (u - l)
-    val x = A[m]
-    val sgn = cmp (x0, x)
-  in
-    if sgn &#62;= 0 then loop (A, m+1, u) else loop (A, l, m-1)
-  end else u // end of [if]
-) (* end of [loop] *)
-//
-in
-  loop (A, 0, n-1)
-end // end of [bsearch_arr]
+>fun acker
+  {m,n:nat} .&#60;m,n&#62;.
+  (x: int m, y: int n): Nat =
+  if x &#62; 0 then
+    if y &#62; 0 then acker (x-1, acker (x, y-1)) else acker (x-1, 1)
+  else y + 1
+// end of [acker]
 </PRE
 ><P
 ></P
@@ -207,49 +209,121 @@ end // end of [bsearch_arr]
 >
 
 
-The function <FONT
+The metric supplied for verifying the termination of <FONT
 COLOR="RED"
->loop</FONT
-> defined in the body of
+>acker</FONT
+> is a
+pair <FONT
+COLOR="RED"
+>(m,n)</FONT
+>, where <FONT
+COLOR="RED"
+>m</FONT
+> and <FONT
+COLOR="RED"
+>n</FONT
+> are values of
+the two integer arguments of <FONT
+COLOR="RED"
+>acker</FONT
+>. The metrics attached to the
+three recursive calls to <FONT
+COLOR="RED"
+>acker</FONT
+> are, from left to right,
 <FONT
 COLOR="RED"
->bsearch_arr</FONT
-> searches the segment of the array <FONT
+>(m-1,k)</FONT
+> for some natural number k, <FONT
 COLOR="RED"
->A</FONT
->
-between the indices <FONT
+>(m,n-1)</FONT
+>, and
+<FONT
 COLOR="RED"
->l</FONT
-> and <FONT
+>(m-1,1)</FONT
+>. Clearly, these metrics are all strictly less than the
+initial metric <FONT
 COLOR="RED"
->u</FONT
->, inclusive.  Clearly,
-the type assigned to <FONT
-COLOR="RED"
->loop</FONT
-> indicates that the integer values i
-and j of the arguments <FONT
-COLOR="RED"
->l</FONT
-> and <FONT
-COLOR="RED"
->u</FONT
-> must satisfy the
-precondition consisting of the constraints 0 &#60;= i, i &#60;= j+1, and j+1 &#60;= n,
-where n is the size of the array being searched.  The progress we have made
-by introducing dependent types into ATS should be evident in this example:
-We can not only specify much more precisely than before but also enforce
-effectively the enhanced precision in specification.
+>(m,n)</FONT
+> according to the lexicographic ordering on
+pairs of natural numbers.
 </P
 ><P
->&#13;Please find <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPTYPES/bsearch_arr.dats"
-TARGET="_top"
->on-line</A
-> the
-code employed for illustration in this section plus some additional code
-for testing.
+>&#13;Termination-checking for mutually recursive functions is similar.  In the
+following example, <FONT
+COLOR="RED"
+>isevn</FONT
+> and <FONT
+COLOR="RED"
+>isodd</FONT
+> are defined
+mutually recursively:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2484"
+></A
+><PRE
+CLASS="programlisting"
+>fun isevn
+  {n:nat} .&#60;2*n&#62;.
+  (n: int n) : bool =
+  if n = 0 then true else isodd (n-1)
+and isodd
+  {n:nat} .&#60;2*n+1&#62;.
+  (n: int n) : bool = not (isevn (n))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The metrics supplied for verifying the termination of <FONT
+COLOR="RED"
+>isevn</FONT
+> and
+<FONT
+COLOR="RED"
+>isodd</FONT
+> are <FONT
+COLOR="RED"
+>2*n</FONT
+> and <FONT
+COLOR="RED"
+>2*n+1</FONT
+>, respectively,
+where <FONT
+COLOR="RED"
+>n</FONT
+> is the value of the integer argument of
+<FONT
+COLOR="RED"
+>isevn</FONT
+> and also the value of the integer argument of
+<FONT
+COLOR="RED"
+>isodd</FONT
+>.  Clearly, if the metrics <FONT
+COLOR="RED"
+>(n, 0)</FONT
+> and
+<FONT
+COLOR="RED"
+>(n, 1)</FONT
+> are supplied for <FONT
+COLOR="RED"
+>isevn</FONT
+> and
+<FONT
+COLOR="RED"
+>isodd</FONT
+>, respectively, the termination of these two functions can
+also be verified.  Note that it is required that the metrics for mutually
+recursively defined functions be tuples of the same length.
 </P
 ></DIV
 ><DIV
@@ -268,7 +342,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2400.html"
+HREF="x2422.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -286,7 +360,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x2472.html"
+HREF="x2497.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -296,13 +370,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: String Processing</TD
+>Example: Binary Search on Arrays</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c2215.html"
+HREF="c2190.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -310,7 +384,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Termination-Checking for Recursive Functions</TD
+>Example: Dependent Types for Debugging</TD
 ></TR
 ></TABLE
 ></DIV

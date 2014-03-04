@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Unsafe C-style Programming in ATS</TITLE
+>安全ではないC言語スタイルのATSプログラミング</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="C言語との相互呼び出し"
-HREF="c1995.html"><LINK
+HREF="c1998.html"><LINK
 REL="PREVIOUS"
 TITLE="ATSにおける外部関数呼び出し"
-HREF="x2095.html"><LINK
+HREF="x2098.html"><LINK
 REL="NEXT"
-TITLE="Exporting Types in ATS for Use in C"
-HREF="x2161.html"></HEAD
+TITLE="ATSの型をエクスポートしてC言語から使う"
+HREF="x2160.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2095.html"
+HREF="x2098.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x2161.html"
+HREF="x2160.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -75,38 +75,35 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="unsafe_c-style_programming_in_ats"
->8.5. Unsafe C-style Programming in ATS</A
+>8.5. 安全ではないC言語スタイルのATSプログラミング</A
 ></H1
 ><P
->&#13;ATS is probably not a programming language easy for one to write code in.
-While ATS provides many features to support safe (low-level) programming,
-it may take a long time and some great efforts for a programmer to learn
-and then master these features before he or she can make effective use of
-them.  In this section, I would like to present some ATS code written in
-C-style that makes typical use of certan unsafe programming features in
-ATS. This is a programming style that should be familiar to any programmer
-who can write C code competently.
+>&#13;おそらく、ATSはコードを書き下すことが簡単なプログラミング言語ではないでしょう。
+ATSは安全な低レイヤープログラミングをサポートするために多くの機能を提供しています。
+プログラマがそれらの機能を学習して使いこなせるようになるまでに、
+長い時間とある程度の努力を費やす必要があるかもしれません。
+この章では、C言語スタイルで書かれたATSコードをいくつか紹介します。
+これは、ATSプログラミングにおける安全ではない機能の典型的な使い方で、
+C言語コードを書き慣れたプログラマにとってなじみ深いプログラミングスタイルです。
 
 </P
 ><P
->&#13;There are always occasions where one may find it sensible to program in
-unsafe C-style. Sometimes, one just wants to get a running implementation
-and then relies on testing to detect and fix bugs. Sometimes, one simply
-does not know enough of ATS needed to implement a function in a safe
-programming manner. This list of occasions can be readily extended as one
-wishes. I myself do unsafe C-style programming in ATS frequently, and I see
-it as a necessary skill for anyone who not just only wants to be able to
-write code in ATS but also wants to do it highly productively. Let us now
-see a concrete example of unsafe C-style programming in ATS.
+>&#13;安全でないC言語スタイルプログラミングが懸命である場合があります。
+ときには単に実行できる実装を手に入れて、バグを見つけて修正するためにテストを信頼しようとするかもしれません。
+ときには安全に関数を実装するATSプログラミングの作法を、熟知していない場合もあるでしょう。
+またそれは単に個人の要望であるかもしれません。
+私自身しばしば安全ではないC言語スタイルのATSプログラミングをすることがありますし、
+ただATSでコードを書きたいのではなく高い生産性が欲しい人にとって、
+それが必要なスキルであることも理解できます。
+安全ではないC言語スタイルのATSプログラミングの具体例を見てみましょう。
 
 </P
 ><P
->&#13;Suppose that we want to implement a function for comparing two given
-strings according to the standard lexicographic ordering. Let us name
-the function <FONT
+>&#13;2つの文字列を標準辞書式順序によって比較する関数を実装したくなったとします。
+その関数に <FONT
 COLOR="RED"
 >strcmp</FONT
-> and give it the following interface:
+> という名前を付けて、次のようなインターフェイスを与えましょう:
 
 <DIV
 CLASS="informalexample"
@@ -125,28 +122,29 @@ CLASS="programlisting"
 >
 
 
-Given two strings <FONT
+2つの文字列 <FONT
 COLOR="RED"
 >str1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >str2</FONT
->,
+> が与えられると、
 <FONT
 COLOR="RED"
 >strcmp(str1, str2)</FONT
-> is expected to return 1, -1, and 0 if
-<FONT
+> は 1, -1, 0 のいずれかを返します。
+それぞれ <FONT
 COLOR="RED"
 >str1</FONT
-> is greater than, less than, and equal to <FONT
+> が <FONT
 COLOR="RED"
 >str2</FONT
->,
-respectively. An implementation of <FONT
+> と比較して、
+より大きいか、より小さいか、等しいことを表わしています。
+<FONT
 COLOR="RED"
 >strcmp</FONT
-> is given as follows:
+> の実装は次のようになるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -193,76 +191,73 @@ end (* end of [strcmp] *)
 >
 
 
-For a programmer familar with C, the above implementation of
-<FONT
+C言語になじみのあるプログラマにとって、
+上記の <FONT
 COLOR="RED"
 >strcmp</FONT
-> should be easily accessible.  There are a variety of
-unsafe functions declared in <A
+> の実装は理解しやすいでしょう。
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/unsafe.sats"
 TARGET="_top"
 >unsafe.sats</A
->. Given a type T and a pointer p, <FONT
+>
+には安全でない関数群が各種宣言されています。
+型Tとポインタpが与えられた時、 <FONT
 COLOR="RED"
->ptr0_get&#60;T&#62;
-(p)</FONT
-> fetches the value of the type T stored at the location to which p
-points.  Note that <FONT
+>ptr0_get&#60;T&#62; (p)</FONT
+>
+はpが指し示す位置に配置されたT型の値を取得します。
+<FONT
 COLOR="RED"
 >ptr0_get</FONT
-> is inherently unsafe as there is
-simply no guarantee that p actually points to a valid memory location where
-a value of the type T is stored.  The function <FONT
+> は本質的に安全ではないことに注意してください。
+実際にpが型Tの値が配置されたメモリ領域を指し示しているかどうか、なんの保証もないのです。
+<FONT
 COLOR="RED"
 >cast</FONT
->, which is
-also inherently unsafe, casts the type of a given value into any chosen
-type.  The function template <FONT
-COLOR="RED"
->ptr0_succ</FONT
->, which is declared in
+> 関数は与えられた値の型を指定した型でキャストします。
+この関数もまた本質的に安全ではありません。
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/pointer.sats"
 TARGET="_top"
 >pointer.sats</A
->, is
-type-safe. Given a type T, <FONT
+>
+で宣言されている <FONT
 COLOR="RED"
->ptr0_succ&#60;T&#62; (p)</FONT
-> returns the
-pointer that is n bytes after p, where n equals the size of T.
+>ptr0_succ</FONT
+> テンプレート関数は型安全です。
+型Tが与えられた時、pよりも型Tのサイズだけ後ろのポインタを返します。
 
 </P
 ><P
->&#13;Please find the entire code for this example
-<A
+>&#13;この例の完全なコードは <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/strcmp.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> にあります。
 
 </P
 ><P
->&#13;For a function like <FONT
+>&#13;<FONT
 COLOR="RED"
 >strcmp</FONT
->, one can readily implement it in C
-directly. For instance, an implementation of <FONT
+> のような関数を、
+人によってはC言語で直接実装するかもしれません。
+例えば、上記のATSによる <FONT
 COLOR="RED"
 >strcmp</FONT
-> in C, which
-is essentially a translation of the above implementation of <FONT
+> 実装を翻訳すると、
+<FONT
 COLOR="RED"
 >strcmp</FONT
->
-in ATS, is given as follows:
+> のC言語による実装は次のようになるでしょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2140"
+NAME="AEN2139"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -286,29 +281,28 @@ CLASS="programlisting"
 >
 
 
-However, writing ATS code in C-style can often have advantages over writing
-C code directly. For instance, there is direct support in ATS but not in C
-for implementing function templates.  In C, one is essentially forced to
-rely on rather involved use of macros to implement function templates,
-which makes the code not only difficult to follow but also notoriously
-error-prone. Let us now see as follows a function template implementation
-in ATS that is partly type-unsafe.
+けれども、C言語スタイルのATSコードは、直接C言語を書くよりもしばしば利点があります。
+例えば、C言語にはサポートがありませんが、ATSは関数テンプレートを直接サポートしています。
+C言語では、複雑なマクロを使った関数テンプレート実装を信頼するしかありません。
+そのようなコードは理解することが困難であるだけでなく周知の通りエラーを誘発します。
+次にATSにおける関数テンプレートの実装を見てみましょう。
+これは部分的には型安全ではありません。
 
 </P
 ><P
->&#13;Suppose we want a function for copying into a given array the elements
-stored in a list. Let us name the function <FONT
+>&#13;リストに保存されている要素群を与えられた配列の中にコピーするような関数を作りたいとしましょう。
+その関数に <FONT
 COLOR="RED"
 >array_copy_from_list</FONT
->
-and give it the following interface:
+> という名前を付けて、
+次のようなインターフェイスを与えます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2144"
+NAME="AEN2143"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -321,40 +315,39 @@ array_copy_from_list (A: array0(a), xs: list0(a)): void
 >
 
 
-Given a type T, <FONT
+型Tが与えられた時、 <FONT
 COLOR="RED"
 >array0(T)</FONT
-> is for an array0-value containing a
-pointer p and a size n such that p points to a C-style array storing n
-elements of the type T.
+> はポインタpとサイズnを内包するarray0の値を作り、
+そのpは型Tの要素をn個保持するC言語スタイルの配列を指し示します。
 
 </P
 ><P
->&#13;For the moment, let us require that the size of the array A equals the
-length of the list xs when <FONT
+>&#13;差し当り、 <FONT
 COLOR="RED"
 >array_copy_from_list(A, xs)</FONT
-> is
-called.  Following is an implementation of <FONT
+> が呼び出されたら、
+リストxsの長さに等しい配列Aのサイズを要求しましょう。
+ATSにおける <FONT
 COLOR="RED"
 >array_copy_from_list</FONT
->
-in ATS that makes use of an unsafe function (<FONT
-COLOR="RED"
->ptr0_set</FONT
->) declared
-in <A
+> の実装を次に示します。
+この関数は、 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/unsafe.sats"
 TARGET="_top"
 >unsafe.sats</A
->:
+>
+で宣言されている安全でない関数 <FONT
+COLOR="RED"
+>ptr0_set</FONT
+> を使っています:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2152"
+NAME="AEN2151"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -388,39 +381,39 @@ end // end of [array_copy_from_list]
 >
 
 
-Given a type T, a pointer p, and a value x of the type T,
+型Tとポインタp、そして型Tの値xが与えられた時、
 <FONT
 COLOR="RED"
 >ptr0_set&#60;T&#62; (p, x)</FONT
-> stores the value x at the location to
-which p points.  Like <FONT
+> は値xをpによって指し示された位置に保存します。
+<FONT
 COLOR="RED"
 >ptr0_get</FONT
->, <FONT
+> と同様に <FONT
 COLOR="RED"
 >ptr0_set</FONT
-> is
-inherently unsafe as there is simply no guarantee that p actually points to
-a valid memory location where a value of the type T can be stored.  The
-function <FONT
-COLOR="RED"
->array0_get_ref</FONT
->, which is declared in
+> は本質的に安全ではありません。
+実際にpが型Tの値が配置されたメモリ領域を指し示しているかどうか、
+なんの保証もありません。
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/libats/ML/SATS/array0.sats"
 TARGET="_top"
 >array0.sats</A
->, returns the
-pointer to the C-style array associated with a given array0-value.
+>
+で宣言されている <FONT
+COLOR="RED"
+>array0_get_ref</FONT
+>
+関数は与えられたarray0値と関連付けられたC言語スタイルの配列のポインタを返します。
 
 </P
 ><P
->&#13;Please find the entire code for this example
-<A
+>&#13;この例の完全なコードは <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/ArrayCopyFromList.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+にあります。
 
 </P
 ></DIV
@@ -440,7 +433,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2095.html"
+HREF="x2098.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -458,7 +451,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x2161.html"
+HREF="x2160.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -474,7 +467,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1995.html"
+HREF="c1998.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -482,7 +475,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Exporting Types in ATS for Use in C</TD
+>ATSの型をエクスポートしてC言語から使う</TD
 ></TR
 ></TABLE
 ></DIV

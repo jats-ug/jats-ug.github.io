@@ -217,28 +217,28 @@ exception FatalError1 of (string)
 >
 
 
-The constructor <FONT
+<FONT
 COLOR="RED"
 >FatalError0</FONT
-> is nullary while the constructor
+> コンストラクタは引数を取らず、
 <FONT
 COLOR="RED"
 >FatalError1</FONT
-> is unary.  Exception values, that is, values of
-the type <FONT
+> コンストラクタは引数を一つ取ります。
+例外の値は <FONT
 COLOR="RED"
 >exn</FONT
-> can be formed by applying exception constructors
-to proper arguments. For instance, <FONT
+> 型の値で、
+例外コンストラクタを適切な引数に適用することで作られます。
+例えば、 <FONT
 COLOR="RED"
 >FatalError0()</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >FatalError1("division-by-zero")</FONT
-> are two exception values (or
-simply exceptions). In the following program, a function for integer
-division is implemented:
+>
+は2つとも例外の値です(もしくは単に例外と呼ぶこともあります)。
+次のプログラムでは、整数の割り算を関数として実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -260,64 +260,59 @@ fun divexn (x: int, y: int): int =
 >
 
 
-When the function call <FONT
+関数呼び出し <FONT
 COLOR="RED"
 >divexn(1, 0)</FONT
-> is evaluated, the exception
-<FONT
+> が評価されると、例外 <FONT
 COLOR="RED"
 >DivisionByZero()</FONT
-> is raised. The keyword <FONT
+> が発生します。
+ATSにおける <FONT
 COLOR="RED"
 >$raise</FONT
-> in ATS
-is solely for raising exceptions.
+> キーワードは例外を発生させます。
 </P
 ><P
->&#13;A raise-expression is of the form (<FONT
+>&#13;なんらかの式expが与えられとき (<FONT
 COLOR="RED"
 >$raise</FONT
-> exp) for some
-expression exp.  Clearly, if the evaluation of exp returns a value, then
-the evaluation of (<FONT
+> exp) はraise式です。
+式expは値を返しますが、
+(<FONT
 COLOR="RED"
 >$raise</FONT
-> exp) leads to a raised
-exception. Therefore, the evaluation of a raise-expression can never return
-a value, and this justifies that a raise-expression can be given any type.
+> exp) を評価すると当然、例外が発生してしまいます。
+したがって、raise式は評価されると値を返しません。つまりraise式はいかなる型も取りうるのです。
 </P
 ><P
->&#13;A raised exception can be captured. If it is not captured, the raised
-exception aborts the program evaluation that issued it in the first
-place. In ATS, a try-expression (or try-with-expression) is of the form
+>&#13;発生した例外は捕捉することができます。
+もし例外が捕捉されない場合、発生した例外はプログラムの評価を実行開始した地点で停止させます。
+ATSでは、try式(もしくはtry-with式)は
 (<FONT
 COLOR="RED"
 >try</FONT
 > exp <FONT
 COLOR="RED"
 >with</FONT
-> clseq), where <FONT
+> clseq) のように作られます。
+この式では <FONT
 COLOR="RED"
 >try</FONT
-> is a
-keyword, exp is an expression, <FONT
+> キーワード、expは任意の式、 <FONT
 COLOR="RED"
 >with</FONT
-> is also a keyword, and
-clseq is a sequence of matching clauses. When evaluating such a
-try-expression, we first evaluate exp. If the evaluation of exp leads to a
-value, then the value is also the value of the try-expression. If the
-evaluation of exp leads to a raised exception, then we match the exception
-against the guards of the matching clauses in clseq. If there is a match,
-the raised exception is caught and we continue to evaluate the body of the
-first clause whose guard is matched. If there is no match, the raised
-exception is uncaught. In a try-expression, the with-part is often referred
-to as an exception-handler.
+>
+もキーワード、そしてclseqはマッチング節の列です。
+try式を評価すると、最初にexpが評価されます。
+もしexpの評価が値を返したら、その値がtry式の値となります。
+もしexpの評価が例外を発生させたら、clseqに列挙されたマッチング節のガードに対してその例外をマッチさせます。
+もしマッチすれば、発生した例外は捕捉され、マッチしたガード最初の節の中身から評価が続行します。
+もしマッチしなかったら、発生した例外は捕捉されません。
+try式ではしばしばwith部は例外ハンドラと呼ばれます。
 </P
 ><P
->Let us now see an example that involves raising and capturing an
-exception. In the following program, three functions are defined to compute
-the product of the integers in a given list:
+>例外の発生と捕捉をともなう例を見てみましょう。
+次のプログラムでは、与えられたリスト中の整数の積を計算する3つの関数が定義されています:
 
 <DIV
 CLASS="informalexample"
@@ -371,73 +366,68 @@ end // end of [listprod3]
 >
 
 
-While these functions can all be defined tail-recursively, they are not so
-as to make a point that should be clear shortly. Undoubtedly, we all know the
-following simple fact:
+これらの関数は末尾再帰で定義されていますが、ここで主張したいポイントは明確ではありません。
+次の事実に疑う余地はないでしょう:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->If the integer 0 occurs in a given list, then the product
-of the integers in the list is 0 regardless what other integers are.
+>与えられたリスト中に整数0があった場合、
+その他の整数値によらずリスト中の整数の積は0である。
 </P
 ></LI
 ></UL
 >
 
-The function <FONT
+<FONT
 COLOR="RED"
 >listprod1</FONT
-> is defined in a standard manner, and it
-does not make any use of the stated fact.  The function
+> 関数は通常の作法で定義されていて、先の定理を使っていません。
 <FONT
 COLOR="RED"
 >listprod2</FONT
-> is defined in a manner that makes only partial use of
-the stated fact. To see the reason, let us evaluate a call to
-<FONT
+> 関数は先の定理を部分的に使っています。
+試しに <FONT
 COLOR="RED"
 >listprod2</FONT
-> on <FONT
+> を7つの整数からなるリストである <FONT
 COLOR="RED"
 >[1, 2, 3, 0, 4, 5, 6]</FONT
->, which denotes a
-list consisting of the 7 mentioned integers. The evaluation of this call
-eventually leads to the evaluation of
-<FONT
+>
+に対して呼び出してみましょう。
+この呼び出しの評価は結局のところ <FONT
 COLOR="RED"
 >1*(2*(3*(listprod([0,4,5,6]))))</FONT
->, which then leads to
-<FONT
+> の評価を導きます。
+それから <FONT
 COLOR="RED"
 >1*(2*(3*0))</FONT
->, and then to <FONT
+> が得られ、 <FONT
 COLOR="RED"
 >1*(2*0)</FONT
->, and then to
-<FONT
+> が、さらに <FONT
 COLOR="RED"
 >1*0</FONT
->, and finally to <FONT
+>
+が、そして最終的に <FONT
 COLOR="RED"
 >0</FONT
->. However, what we really want
-is for the evaluation to return 0 immediately once the integer 0 is
-encountered in the list, and this is accomplished by the function
+> が得られます。
+けれども、リスト中に整数0を見つけたら、即座に0を返すように評価したいと思うでしょう。
+このような評価は <FONT
+COLOR="RED"
+>listprod3</FONT
+> 関数であれば実現できます。
 <FONT
 COLOR="RED"
 >listprod3</FONT
->. When evaluating a call to <FONT
-COLOR="RED"
->listprod3</FONT
-> on
-<FONT
+> を <FONT
 COLOR="RED"
 >[1, 2, 3, 0, 4, 5, 6]</FONT
->, we eventually reach the evaluation of
-the following expression:
+> に呼び出した場合、
+最終的に次の式を評価することになります:
 
 <DIV
 CLASS="informalexample"
@@ -456,52 +446,50 @@ CLASS="programlisting"
 >
 
 
-Evaluating <FONT
+<FONT
 COLOR="RED"
 >aux([0,4,5,6])</FONT
-> leads to the exception
-<FONT
+> の評価は <FONT
 COLOR="RED"
 >ZERO()</FONT
-> being raised, and this raised exception is caught and
-<FONT
+> 例外の発生を引き起します。
+そしてこの例外は捕捉されて <FONT
 COLOR="RED"
 >0</FONT
-> is returned as the value of the call to
-<FONT
+> が <FONT
 COLOR="RED"
 >listprod3</FONT
->.  Note that the pattern guard of the matching clause
-following the keyword <FONT
+> 呼び出しの値として返ります。
+<FONT
 COLOR="RED"
 >with</FONT
-> is <FONT
+> キーワードに続くマッチング節のパターンガードは <FONT
 COLOR="RED"
 >~ZERO()</FONT
->.  I will
-explain the need for the tilde symbol <FONT
+>
+であることに注意してください。
+別の章でチルダシンボル <FONT
 COLOR="RED"
 >~</FONT
-> elsewhere. For now, it
-suffices to say that <FONT
+> が必要になる理由を説明します。
+ここでは、 <FONT
 COLOR="RED"
 >exn</FONT
-> is a linear type and each exception
-value is a linear value, which must be consumed or re-raised. The tilde
-symbol <FONT
+> は線形型で、例外の値は線形値であり、
+その値は消費されるか再度raiseしなければならないということだけ覚えておいてください。
+チルダシンボル <FONT
 COLOR="RED"
 >~</FONT
-> indicates that the value matching the pattern
-following <FONT
+> は、 <FONT
 COLOR="RED"
 >~</FONT
-> is consumed (and the memory for holding the value
-is freed).
+> に続くパターンにマッチした値が消費されることを示しています。
+つまり値を保持しているメモリは解放されるということです。
 </P
 ><P
->&#13;Exceptions are not a programming feature that is easy to master, and
-misusing exceptions is abundant in practice. So please be patient when
-learning the feature and be cautious when using it.
+>&#13;例外は簡単に使いこなせるようなプログラミングの機能ではありません。
+また実際、例外の誤用はたくさんあります。
+そのため例外を根気強く学び、注意深く使用してください。
 </P
 ></DIV
 ></DIV

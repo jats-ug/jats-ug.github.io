@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Inclusion of External Code in ATS</TITLE
+>ATSに外部コードを含める</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="C言語との相互呼び出し"
 HREF="c1999.html"><LINK
 REL="PREVIOUS"
-TITLE="External Types and Values in ATS"
+TITLE="ATSにおける外部の型と値"
 HREF="x2063.html"><LINK
 REL="NEXT"
-TITLE="Calling External Functions in ATS"
+TITLE="ATSにおける外部関数呼び出し"
 HREF="x2099.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,12 +75,12 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="inclusion_of_external_code"
->8.3. Inclusion of External Code in ATS</A
+>8.3. ATSに外部コードを含める</A
 ></H1
 ><P
->&#13;Just like including assembly code inside C code, it is straightforward to
-include C code inside ATS code. For instance, the example appearing at the
-beginning of this chapter can be written as follows in a single file:
+>&#13;C言語コード中にアセンブラコードを埋め込むのと同様に、
+ATSコード中にC言語コードを埋め込むことも簡単です。
+例えば、この章の最初で示した例は、次のような一つのファイルに書くことができます:
 
 <DIV
 CLASS="informalexample"
@@ -112,69 +112,66 @@ fact2_in_c (int n, int res)
 >
 
 
-For C code to appear inside ATS code, it needs to enclosed by the symbols
+ATSコード中にC言語コードを書くためには、
 <FONT
 COLOR="RED"
 >%{</FONT
-> (opening) and <FONT
+> と <FONT
 COLOR="RED"
 >%}</FONT
-> (closing). Essentially,
-whatever code appearing between these two symbols is pasted into the
-generated C code at an unspecified position. If the enclosed code is
-intended to be put at the beginning of the generated C code, then the
-symbol <FONT
+> のシンボルで囲まなければなりません。
+本質的には、これら2つのシンボルの間にあるコードは、生成されるC言語コードの不定の位置に配置されます。
+もし囲まれたコードを生成されるC言語コードの先頭に配置したいのであれば、
+<FONT
+COLOR="RED"
+>%{</FONT
+> シンボルの代わりに <FONT
 COLOR="RED"
 >%{^</FONT
-> should be used in place of <FONT
+> シンボルを使うべきです。
+もし囲まれたコードを生成されるC言語コードの末尾に配置したいのであれば、
+<FONT
 COLOR="RED"
 >%{</FONT
->.  If the
-enclosed code is intended to be put at the bottom of the generated C code,
-then the symbol <FONT
+> シンボルの代わりに <FONT
 COLOR="RED"
 >%{$</FONT
-> should be used in place of <FONT
-COLOR="RED"
->%{</FONT
->.
+> シンボルを使うべきです。
 
 </P
 ><P
->&#13;It is also allowed to put C code between the symbols
-<FONT
+>&#13;<FONT
 COLOR="RED"
 >%{#</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >%}</FONT
->. Suppose that there is a file of the
-name <TT
+> シンボルの間にC言語コードを配置することもできます。
+<TT
 CLASS="filename"
 >foo.sats</TT
-> that contains C code included in this manner.
-If <TT
+> という名前のファイルがこの方法でC言語コードを含んでいる場合を考えてみましょう。
+もし <TT
 CLASS="filename"
 >foo.sats</TT
-> is staloaded in another file of the name
+> が <TT
+CLASS="filename"
+>foo.dats</TT
+> という名前の別のファイルに staload されると、
+<TT
+CLASS="filename"
+>foo.sats</TT
+> の <FONT
+COLOR="RED"
+>%{#</FONT
+> と <FONT
+COLOR="RED"
+>%}</FONT
+> の間のコードは
 <TT
 CLASS="filename"
 >foo.dats</TT
->, then the lines between <FONT
-COLOR="RED"
->%{#</FONT
-> and
-<FONT
-COLOR="RED"
->%}</FONT
-> in <TT
-CLASS="filename"
->foo.sats</TT
-> are pasted into the C code
-generated from compiling <TT
-CLASS="filename"
->foo.dats</TT
->.
+> をコンパイルして生成されたC言語コード中に配置されます。
 
 </P
 ></DIV
@@ -222,7 +219,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->External Types and Values in ATS</TD
+>ATSにおける外部の型と値</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -236,7 +233,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Calling External Functions in ATS</TD
+>ATSにおける外部関数呼び出し</TD
 ></TR
 ></TABLE
 ></DIV

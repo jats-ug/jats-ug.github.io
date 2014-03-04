@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Introduction to Views and Viewtypes"
-HREF="c3224.html"><LINK
+HREF="c3218.html"><LINK
 REL="PREVIOUS"
 TITLE="Left-Values and Call-by-Reference"
-HREF="x3350.html"><LINK
+HREF="x3344.html"><LINK
 REL="NEXT"
-TITLE="Dataviews as Linear Dataprops"
-HREF="c3411.html"></HEAD
+TITLE="Heap-Allocated Linear Closure-Functions"
+HREF="x3430.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x3350.html"
+HREF="x3344.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c3411.html"
+HREF="x3430.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -272,6 +272,154 @@ reclaimed as no linear proof of the at-view associated with the variable is
 ever available from that point on.
 
 </P
+><P
+>&#13;Arrays in ATS can also be stack-allocated. For instance, the following code
+allocates two arrays of doubles in the frame of the function
+<FONT
+COLOR="RED"
+>main0</FONT
+> and then passes them to <FONT
+COLOR="RED"
+>dotprod</FONT
+> to compute
+their dot product:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3414"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+main0 () =
+{
+//
+var A = @[double][3](1.0) // initialized with 1.0, 1.0, 1.0
+var B = @[double](1.0, 2.0, 3.0) // initialized with 1.0, 2.0, 3.0
+//
+val () = println! ("A * B = ", dotprod (A, B)) // A * B = 6.0
+//
+} (* end of [main0] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The at-view associated with the variable A is <FONT
+COLOR="RED"
+>(@[double][3])@A</FONT
+>,
+where A also refers to the address of the variable A. Similarly, the
+at-view associated with the variable B is <FONT
+COLOR="RED"
+>(@[double][3])@B</FONT
+>.
+
+For the sake of completeness, I mention the syntax for uninitialized arrays
+as follows: Given a type T and an integer N, the syntax
+<FONT
+COLOR="RED"
+>@[T][N]()</FONT
+> is for an array consisting of N uninitialized values
+of type T.
+
+</P
+><P
+>&#13;Note that allocating large arrays in the call frame of a function may not
+be a good practice as doing so can greatly increase the likelihood of
+stack-overflow at run-time.
+
+</P
+><P
+>&#13;It is also allowed in ATS to allocate a closure in the call frame of a
+function. For instance, the following code implements a function named
+<FONT
+COLOR="RED"
+>foo</FONT
+> that stores a flat closure-function in a stack-allocated
+variable named <FONT
+COLOR="RED"
+>bar</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3423"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo
+(
+  x: int, y: int
+) : int = let
+//
+var bar = lam@ (): int =&#62; x * y
+//
+in
+  bar ()
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the special keyword <FONT
+COLOR="RED"
+>lam@</FONT
+> should be used to form a
+flat closure-function. For the sake of completeness, I present another example
+as follows to show that a recursive closure-function can also be stored in
+a stack-allocated variable:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3426"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo2
+(
+  x: int, y: int
+) : int = let
+//
+var bar2 = fix@ f (x: int): int =&#62; if x &#62; 0 then y + f(x-1) else 0
+//
+in
+  bar2 (x)
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the special keyword <FONT
+COLOR="RED"
+>fix@</FONT
+> should be used to form
+a flat recursive closure-function.
+
+</P
+><P
+>&#13;In a setting where dynamic memory allocation is not
+allowed, stack-allocated closures can play a pivotal role in supporting
+programming with higher-order functions.
+
+</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -289,7 +437,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x3350.html"
+HREF="x3344.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -307,7 +455,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c3411.html"
+HREF="x3430.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -323,7 +471,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c3224.html"
+HREF="c3218.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -331,7 +479,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Dataviews as Linear Dataprops</TD
+>Heap-Allocated Linear Closure-Functions</TD
 ></TR
 ></TABLE
 ></DIV

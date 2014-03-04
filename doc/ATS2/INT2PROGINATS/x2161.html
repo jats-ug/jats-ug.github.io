@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Exporting Types in ATS for Use in C</TITLE
+>ATSの型をエクスポートしてC言語から使う</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,12 +12,12 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="C言語との相互呼び出し"
-HREF="c1995.html"><LINK
+HREF="c1999.html"><LINK
 REL="PREVIOUS"
 TITLE="安全ではないC言語スタイルのATSプログラミング"
-HREF="x2107.html"><LINK
+HREF="x2111.html"><LINK
 REL="NEXT"
-TITLE="Example: Constructing a Statically Allocated List"
+TITLE="例: 静的に確保されたリストをコンストラクトする"
 HREF="x2205.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2107.html"
+HREF="x2111.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -75,19 +75,19 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="exporting_types_and_values"
->8.6. Exporting Types in ATS for Use in C</A
+>8.6. ATSの型をエクスポートしてC言語から使う</A
 ></H1
 ><P
->&#13;There is also support in ATS for exporting types to make them available for
-use in C directly. In the following example, a typedef of the name
-<FONT
-COLOR="RED"
->int_and_string</FONT
-> is expected to be declared in the generated C
-code for values that are assigned the type <FONT
+>&#13;ATSでは、ATSの型をエクスポートしてC言語から直接使うこともできます。
+次の例では、ATSの <FONT
 COLOR="RED"
 >(int, string)</FONT
-> in ATS:
+> 型が割り当てられた値のために、
+生成されたC言語コード中で <FONT
+COLOR="RED"
+>int_and_string</FONT
+>
+の名前のtypedefが宣言されることを期待しています:
 
 <DIV
 CLASS="informalexample"
@@ -108,10 +108,10 @@ typedef
 >
 
 
-Essentially, <FONT
+本質的に <FONT
 COLOR="RED"
 >int_and_string</FONT
-> is defined in C as follows:
+> はC言語の中で次のように定義されます:
 
 <DIV
 CLASS="informalexample"
@@ -135,20 +135,19 @@ struct {
 
 </P
 ><P
->&#13;Sometimes, we want to construct in C values of a datatype declared in ATS.
-For instance, let us try to construct a value of the form
+>&#13;ときどき、ATSにおけるdatatype宣言の値をC言語でコンストラクトしたいことがあります。
+例えば、iが整数でdが倍精度実浮動小数点数であるような
 <FONT
 COLOR="RED"
 >cons2(i, d)</FONT
-> in C for an integer i and a double d, where
+> の値をC言語でコンストラクトしてみましょう。
 <FONT
 COLOR="RED"
 >cons2</FONT
-> is a data constructor associated with the following
-declared datatype <FONT
+> は次で宣言されたdatatype <FONT
 COLOR="RED"
 >abc</FONT
->:
+> に関連したデータコンストラクタです:
 
 <DIV
 CLASS="informalexample"
@@ -168,40 +167,39 @@ CLASS="programlisting"
 >
 
 
-Whenever a data constructor is declared, a corresponding (linear) type
-constructor is created whose name equals the concatenation of the name of
-the data constructor and the string "_pstruct". So in the case of the above
-declared datatype <FONT
+データコンストラクタを宣言すると必ず対応する(線形の)型コンストラクタが作られます。
+そのコンストラクタには元のデータコンストラクタの名前と文字列
+"_pstruct" を連結した名前が付けられます。
+そのため上記で宣言したdatatype <FONT
 COLOR="RED"
 >abc</FONT
->, the type constructors
-<FONT
+> の場合は、
+型コンストラクタ <FONT
 COLOR="RED"
 >cons1_pstruct</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2_pstruct</FONT
-> are created, and
-these type constructors can be used to form types for boxed values
-constructed with the data constructors <FONT
+> が作られます。
+これらの型コンストラクタはデータコンストラクタ <FONT
 COLOR="RED"
 >cons1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2</FONT
->.
+>
+でコンストラクトされるボックス化された値の型を形成するために使われます。
 
 </P
 ><P
->&#13;In the following declaration,
-the type <FONT
+>&#13;次の宣言でATSの <FONT
 COLOR="RED"
 >cons2_pstruct(int, double)</FONT
-> in ATS
-is exported to C under the name <FONT
+> 型が
+<FONT
 COLOR="RED"
 >cons2_node</FONT
->:
+> の名前でC言語にエクスポートされます:
 
 <DIV
 CLASS="informalexample"
@@ -221,16 +219,15 @@ vtypedef "cons2_node" = cons2_pstruct(int, double)
 >
 
 
-Implicitly, a typedef in C of the name <FONT
-COLOR="RED"
->cons2_node_</FONT
-> is also
-introduced for the unboxed portion of a value constructed with the data
-constructor <FONT
+また <FONT
 COLOR="RED"
 >cons2</FONT
->. Essentially, we have the following generated
-code in C:
+> データコンストラクタによってコンストラクトされる値のアンボックス部分のために、
+<FONT
+COLOR="RED"
+>cons2_node_</FONT
+> という名前でC言語のtypedefが暗黙のうちに導入されます。
+結果として次のようなC言語コードが生成されるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -254,10 +251,10 @@ typedef cons2_node_ *cons2_node ;
 >
 
 
-It is now straightforward to create a value of the form <FONT
+これでC言語中で直接 <FONT
 COLOR="RED"
 >cons2(i,d)</FONT
-> in C directly:
+> の値を作るのは簡単でしょう:
 
 <DIV
 CLASS="informalexample"
@@ -287,35 +284,35 @@ cons2_make
 >
 
 
-Note that the tags for <FONT
+<FONT
 COLOR="RED"
 >cons1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2</FONT
-> are 0 and 1,
-respectively, as <FONT
+> のconstructor tagはそれぞれ0と1であることに注意してください。
+<FONT
 COLOR="RED"
 >cons1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cons2</FONT
-> are the first and
-second constructors associated with the datatype <FONT
+> は datatype <FONT
 COLOR="RED"
 >abc</FONT
->.
+>
+に関連した1番目と2番目のコンストラクタであることがその理由です。
 
 </P
 ><P
->&#13;By assigning an interface to <FONT
+>&#13;ATS側で <FONT
 COLOR="RED"
 >cons2_make</FONT
-> in ATS, we can readily
-check whether <FONT
+> にインターフェイスを割り当てることで、
+<FONT
 COLOR="RED"
 >cons2_make</FONT
-> behaves as expected:
+> の挙動が意図したものかどうかチェックできます:
 
 <DIV
 CLASS="informalexample"
@@ -338,12 +335,10 @@ val-cons2 (1, 2.34) = cons2_make (1, 2.34)
 
 </P
 ><P
->&#13;In general, it is essential for a pragrammer to acquire a solid
-understanding of low-level data representation of a programming language in
-order to use that language in low-level systems programming. The low-level
-data representation of ATS can be readily explained in terms of types in C,
-making it straightforward, if needed, to construct and manipulate
-ATS-values in C directly.
+>&#13;一般に、低レイヤーのシステムプログラミングにおいてプログラミング言語を使うために、
+その言語の低レベルのデータ表現をしっかり理解することはプログラマにとって不可欠です。
+ATSの低レベルデータ表現はC言語の型の項を使って簡単に解釈できます。
+そのため必要であればC言語の中でATSの値を直接コンストラクトし操作することは容易なのです。
 
 </P
 ></DIV
@@ -363,7 +358,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2107.html"
+HREF="x2111.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -397,7 +392,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1995.html"
+HREF="c1999.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -405,7 +400,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Constructing a Statically Allocated List</TD
+>例: 静的に確保されたリストをコンストラクトする</TD
 ></TR
 ></TABLE
 ></DIV

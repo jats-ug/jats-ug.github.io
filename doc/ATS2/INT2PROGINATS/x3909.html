@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Quick-Sort on Linear Lists</TITLE
+>Example: Insertion Sort on Linear Lists</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Dataviewtypes as Linear Datatypes"
-HREF="c3657.html"><LINK
+HREF="c3690.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Insertion Sort on Linear Lists"
-HREF="x3876.html"><LINK
+TITLE="Example: Merge-Sort on Linear Lists"
+HREF="x3872.html"><LINK
 REL="NEXT"
-TITLE="Linear Binary Search Trees"
-HREF="x3946.html"></HEAD
+TITLE="Example: Quick-Sort on Linear Lists"
+HREF="x3942.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x3876.html"
+HREF="x3872.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3946.html"
+HREF="x3942.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,14 +74,12 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="example_quickSort_lin"
->15.5. Example: Quick-Sort on Linear Lists</A
+NAME="example_insertionSort_lin"
+>15.4. Example: Insertion Sort on Linear Lists</A
 ></H1
 ><P
->&#13;In this section, I give an implementation of quick-sort on linear
-lists. While list-based quick-sort may not be a preferred sorting method in
-practice, its implementation is nonetheless interesting.
-The interface for quick-sort is given as follows:
+>&#13;I present a standard implementation of insertion sort on linear lists in
+this section.  The interface for insertion sort is given as follows:
 
 <DIV
 CLASS="informalexample"
@@ -92,8 +90,11 @@ NAME="AEN3912"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t@ype}
-quickSort{n:nat} (xs: list_vt (a, n), cmp: cmp a): list_vt (a, n)
+>fun{
+a:t@ype
+} insertionSort{n:nat}
+  (xs: list_vt (a, n), cmp: cmp a): list_vt (a, n)
+// end of [insertionSort]
 </PRE
 ><P
 ></P
@@ -101,26 +102,27 @@ quickSort{n:nat} (xs: list_vt (a, n), cmp: cmp a): list_vt (a, n)
 >
 
 
-Like the implementation of <FONT
+Like <FONT
 COLOR="RED"
 >mergeSort</FONT
-> and
-<FONT
+>, <FONT
 COLOR="RED"
 >insertionSort</FONT
->, the implementation of <FONT
+> is implemented in a
+manner that makes no use of memory allocation and deallocation.  Given a
+linear list, <FONT
 COLOR="RED"
->quickSort</FONT
->
-given as follows makes no use of memory allocation and deallocation.
+>insertionSort</FONT
+> essentially shuffles the nodes in
+the list to form a sorted list.
 
 </P
 ><P
 >&#13;The following code implements a function <FONT
 COLOR="RED"
->takeout_node_at</FONT
-> that
-takes out a node from a linear list at a given position:
+>insord</FONT
+> that inserts a
+given list-node into a sorted linear list to form another sorted linear list:
 
 <DIV
 CLASS="informalexample"
@@ -131,139 +133,46 @@ NAME="AEN3919"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t@ype}
-takeout_node_at
-  {n:int}{k:nat | k &#60; n}
-(
-  xs: &#38;list_vt (a, n) &#62;&#62; list_vt (a, n-1), k: int(k)
-) : list_vt_cons_pstruct (a, ptr?) =
-(
-//
-if k &#62; 0 then let
-  val+@list_vt_cons (x, xs1) = xs
-  val res = takeout_node_at&#60;a&#62; (xs1, k-1)
-  prval () = fold@ (xs)
-in
-  res
-end else let
-  val+@list_vt_cons (x, xs1) = xs
-  val nx = xs
-  val () = xs := xs1
-in
-  $UNSAFE.castvwtp0 ((view@x, view@xs1 | nx)) // HX: this is a safe cast
-end // end of [if]
-//
-) (* end of [takeout_node_at] *)
-</PRE
-><P
-></P
-></DIV
->
-
-
-Assume that a data constructor named <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->foo</I
-></SPAN
-> is associated with a
-dataviewtype.  Then there is a corresponding viewtype construtor of the
-name <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->foo_pstruct</I
-></SPAN
-> that takes n types to form a viewtype, where
-n is the arity of <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->foo</I
-></SPAN
->. For instance, there is a viewtype
-constructor <FONT
-COLOR="RED"
->list_vt_cons_pstruct</FONT
-> that takes 2 types T1 and T2
-to form a viewtype <FONT
-COLOR="RED"
->list_vt_cons_pstruct(T1, T2)</FONT
->. This viewtype
-is for a list-node created by a call to <FONT
-COLOR="RED"
->list_vt_cons</FONT
-> such that
-the two arguments of <FONT
-COLOR="RED"
->list_vt_cons</FONT
-> are of types T1 and T2.
-Essentially, <FONT
-COLOR="RED"
->list_vt_cons_pstruct(T1, T2)</FONT
-> stands for
-<FONT
-COLOR="RED"
->list_vt_cons_unfold(L0, L1, L2)</FONT
-> for some addresses L0, L1 and
-L2 plus two views <FONT
-COLOR="RED"
->T1@L1</FONT
-> and <FONT
-COLOR="RED"
->T2@L2</FONT
->.
-
-</P
-><P
->&#13;A key step in quick-sort lies in partitioning a linear list based on a
-given pivot. This step is fulfilled by the following code that implements a
-function template named <FONT
-COLOR="RED"
->partition</FONT
->:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3934"
-></A
-><PRE
-CLASS="programlisting"
 >fun{
 a:t@ype
-} partition{n,r1,r2:nat}
+} insord
+  {l0,l1,l2:addr}{n:nat}
 (
-  xs: list_vt (a, n), pvt: &#38;a
-, r1: int(r1), res1: list_vt (a, r1), res2: list_vt (a, r2)
+  pf1: a @ l1
+, pf2: list_vt (a, 0)? @ l2
+| xs0: &#38;list_vt (a, n) &#62;&#62; list_vt (a, n+1)
+, nx0: list_vt_cons_unfold (l0, l1, l2), p1: ptr (l1), p2: ptr (l2)
 , cmp: cmp (a)
-) : [n1,n2:nat | n1+n2==n+r1+r2]
-  (int(n1), list_vt (a, n1), list_vt (a, n2)) =
+) : void =
 (
-  case+ xs of
+  case+ xs0 of
   | @list_vt_cons
-      (x, xs_tail) =&#62; let
-      val xs_tail_ = xs_tail
-      val sgn = compare&#60;a&#62; (x, pvt, cmp)
+      (x0, xs1) =&#62; let
+      val sgn = compare&#60;a&#62; (x0, !p1, cmp)
     in
-      if sgn &#60;= 0 then let
-        val r1 = r1 + 1
-        val () = xs_tail := res1
-        prval () = fold@ (xs)
-      in
-        partition&#60;a&#62; (xs_tail_, pvt, r1, xs, res2, cmp)
-      end else let
-        val () = xs_tail := res2
-        prval () = fold@ (xs)
-      in
-        partition&#60;a&#62; (xs_tail_, pvt, r1, res1, xs, cmp)
-      end // end of [if]
-    end (* end of [list_vt_cons] *)
-  | ~list_vt_nil ((*void*)) =&#62; (r1, res1, res2)
-) (* end of [partition] *)
+      if sgn &#60;= 0 // HX: for stableness: [&#60;=] instead of [&#60;]
+        then let
+          val () = insord&#60;a&#62; (pf1, pf2 | xs1, nx0, p1, p2, cmp)
+          prval () = fold@ (xs0)
+        in
+          // nothing
+        end // end of [then]
+        else let
+          prval () = fold@ (xs0)
+          val () = (!p2 := xs0; xs0 := nx0)
+          prval () = fold@ (xs0)
+        in
+          // nothing
+        end // end of [else]
+      // end of [if]
+    end // end of [list_vt_cons]
+  | ~list_vt_nil () =&#62;
+    {
+      val () = xs0 := nx0
+      val () = !p2 := list_vt_nil ()
+      prval () = fold@ (xs0)
+    }
+) (* end of [insord] *)
 </PRE
 ><P
 ></P
@@ -273,69 +182,80 @@ a:t@ype
 
 The implementation of <FONT
 COLOR="RED"
->partition</FONT
-> is tail-recursive.  Given a
-linear list and a pivot, <FONT
+>insord</FONT
+> is tail-recursive.  The type
+assigned to <FONT
 COLOR="RED"
->partition</FONT
-> returns a tuple (r1, res1,
-res2) such that res1 contains every element in the list that is less than
-or equal to the pivot, res2 contains the rest, and r1 is the length of
-res1. The way in which the nodes of the given linear list are moved into
-res1 and res2 is quite an interesting aspect of this implementation.
+>insord</FONT
+> indicates that the argument xs0 of
+<FONT
+COLOR="RED"
+>insord</FONT
+> is call-by-reference. If xs0 stores a list of length n
+when <FONT
+COLOR="RED"
+>insord</FONT
+> is called, then it stores a list of length n+1 when
+<FONT
+COLOR="RED"
+>insord</FONT
+> returns. The arguments nx0, p1 and p2 are call-by-value,
+and they should be bound to a list-node and the first and second fields in
+the list-node, respectively, when a call to <FONT
+COLOR="RED"
+>insord</FONT
+>
+initiates. The proof arguments pf1 and pf2 are needed so that the pointers
+bound to p1 and p2 can be accessed and updated.
 
 </P
 ><P
->&#13;By making use of <FONT
+>&#13;The function template <FONT
 COLOR="RED"
->takeout_node_at</FONT
-> and <FONT
+>insertionSort</FONT
+> can now be readily
+implemented based <FONT
 COLOR="RED"
->partition</FONT
->,
-we can readily implement <FONT
-COLOR="RED"
->quickSort</FONT
-> as follows:
+>insord</FONT
+>:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3942"
+NAME="AEN3930"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
-{a}(*tmp*)
-quickSort
+>implement{a}
+insertionSort
   (xs, cmp) = let
 //
-fun sort{n:nat}
+fun loop{m,n:nat}
 (
-  xs: list_vt (a, n), n: int n
-) : list_vt (a, n) =
-(
-  if n &#62; 10 then let
-    val n2 = half (n)
-    var xs = xs
-    val nx = takeout_node_at&#60;a&#62; (xs, n2)
-    val+list_vt_cons (pvt, nx_next) = nx
-    val (n1, xs1, xs2) =
-    partition&#60;a&#62; (xs, pvt, 0, list_vt_nil, list_vt_nil, cmp)
-    val xs1 = sort (xs1, n1)
-    val xs2 = sort (xs2, n - 1 - n1)
-    val () = nx_next := xs2
-    prval () = fold@ (nx)
-  in
-    list_vt_append (xs1, nx)
-  end else insertionSort&#60;a&#62; (xs, cmp)
-) (* end of [sort] *)
+  xs: list_vt (a, m)
+, ys: &#38;list_vt (a, n) &#62;&#62; list_vt (a, m+n)
+, cmp: cmp (a)
+) : void =
+  case+ xs of
+  | @list_vt_cons
+      (x, xs1) =&#62; let
+      val xs1_ = xs1
+      val ((*void*)) =
+        insord&#60;a&#62; (view@x, view@xs1 | ys, xs, addr@x, addr@xs1, cmp)
+      // end of [va]
+    in
+      loop (xs1_, ys, cmp)
+    end // end of [list_vt_cons]
+  | ~list_vt_nil ((*void*)) =&#62; ()
+//
+var ys = list_vt_nil{a}()
+val () = loop (xs, ys, cmp)
 //
 in
-  sort (xs, list_vt_length (xs))
-end // end of [quickSort]
+  ys
+end // end of [insertionSort]
 </PRE
 ><P
 ></P
@@ -343,17 +263,79 @@ end // end of [quickSort]
 >
 
 
-Note that the pivot for each round is taken from the middle of the list
-being sorted, which can be time-consuming as taking out a node from the
-middle of a list is O(n)-time. This issue can be addressed by always
-choosing the first element to be the pivot. However, doing so can
-often lead to degenerated O(n^2)-time performance of quick-sort in practice.
+Clearly, this implementation of <FONT
+COLOR="RED"
+>insertionSort</FONT
+> is
+tail-recursive.  While insertion sort is of O(n^2)-time complexity, it is
+often more efficient than merge-sort or quick-sort when sorting very short
+lists.  For instance, we may implement <FONT
+COLOR="RED"
+>msort</FONT
+> (which is called
+by <FONT
+COLOR="RED"
+>mergeSort</FONT
+>) as follows by taking advantage of the efficiency
+of <FONT
+COLOR="RED"
+>insertionSort</FONT
+> on short lists:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3936"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} msort{n:nat} .&#60;n&#62;.
+(
+  xs: list_vt (a, n)
+, n: int n, cmp: cmp(a)
+) : list_vt (a, n) = let
+//
+// cutoff is selected to be 10
+//
+in
+  if n &#62; 10 then let
+    val n2 = half(n)
+    val n3 = n - n2
+    var xs = xs // lvalue for [xs]
+    val ys = split&#60;a&#62; (xs, n3)
+    val xs = msort&#60;a&#62; (xs, n3, cmp)
+    val ys = msort&#60;a&#62; (ys, n2, cmp)
+    var res: List_vt (a) // uninitialized
+    val () = merge&#60;a&#62; (xs, ys, res(*cbr*), cmp)
+  in
+    res
+  end else insertionSort&#60;a&#62; (xs, cmp)
+end // end of [msort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the stableness of <FONT
+COLOR="RED"
+>mergeSort</FONT
+> is maintained as
+<FONT
+COLOR="RED"
+>insertionSort</FONT
+> also performs stable sorting.
 
 </P
 ><P
 >&#13;Please find the entire code in this section plus some additional
 code for testing <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/quickSort.dats"
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/insertionSort.dats"
 TARGET="_top"
 >on-line</A
 >.
@@ -376,7 +358,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x3876.html"
+HREF="x3872.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -394,7 +376,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3946.html"
+HREF="x3942.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -404,13 +386,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Insertion Sort on Linear Lists</TD
+>Example: Merge-Sort on Linear Lists</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c3657.html"
+HREF="c3690.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -418,7 +400,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Linear Binary Search Trees</TD
+>Example: Quick-Sort on Linear Lists</TD
 ></TR
 ></TABLE
 ></DIV

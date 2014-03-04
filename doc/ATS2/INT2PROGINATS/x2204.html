@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Constructing a Statically Allocated List</TITLE
+>例: 静的に確保されたリストをコンストラクトする</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,10 +12,10 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="C言語との相互呼び出し"
-HREF="c1995.html"><LINK
+HREF="c1998.html"><LINK
 REL="PREVIOUS"
 TITLE="ATSの型をエクスポートしてC言語から使う"
-HREF="x2157.html"><LINK
+HREF="x2160.html"><LINK
 REL="NEXT"
 TITLE="依存型を使ったプログラミング"
 HREF="p2222.html"></HEAD
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2157.html"
+HREF="x2160.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -75,25 +75,24 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example-constructing_a_statically_allocated_list"
->8.7. Example: Constructing a Statically Allocated List</A
+>8.7. 例: 静的に確保されたリストをコンストラクトする</A
 ></H1
 ><P
->&#13;In embedded programming, static memory allocation is often preferred
-due to dynamic memory allocation being less predictable.  I present as
-follows an example in which a list is constructed with statically allocated
-memory. This example also strongly attests to ATS and C being intimately
-related.
+>&#13;組み込みプログラミングにおいて、
+静的なメモリ確保は挙動を予測しにくい動的なメモリ確保よりもしばしば好まれます。
+静的に確保されたメモリにコンストラクトされたリストの例を次に示します。
+この例はまた、ATSとC言語の親和性を実証しています。
 
 </P
 ><P
->&#13;In order to statically allocate memory for list-nodes, we need to first
-form a type for list-nodes so that we can inform the C compiler how
-much memory is needed for each list-node. In the following code, the type
-<FONT
+>&#13;リストの要素のメモリを静的に確保するためには、
+それぞれのリストの要素にどれぐらいのメモリサイズが必要になるのかC言語コンパイラに報せるために、
+リストの要素の型をまず始めに作る必要があります。
+次のコードでは、ATSにおける <FONT
 COLOR="RED"
 >list_node</FONT
-> in ATS is for boxed list-nodes, and this type is
-exported to C under the same name:
+> 型がボックス化リスト要素であり、
+この型はC言語へ同じ名前でエクスポートされています:
 
 <DIV
 CLASS="informalexample"
@@ -117,19 +116,19 @@ extern vtypedef "list_node" = list_node // exporting [list_node] to C
 >
 
 
-Exporting <FONT
+<FONT
 COLOR="RED"
 >list_node</FONT
-> to C also introduces (implicitly) a
+> をC言語へエクスポートすると、アンボックス化リスト要素のための
 typedef <FONT
 COLOR="RED"
 >list_node_</FONT
-> in C for unboxed list-nodes. So the
-following type <FONT
+> が暗黙的にC言語へ導入されます。
+そのため、ATSにおける次の型 <FONT
 COLOR="RED"
 >list_node_</FONT
-> in ATS is precisely what we want
-(for unboxed list-nodes):
+> は、
+アンボックス化リスト要素のために私達が望んだものでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -150,8 +149,8 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;The following code statically allocates an array of list-nodes and then
-initialize these nodes, turning the array into a list:
+>&#13;次のコードはリスト要素の配列を静的に確保した後、
+それらの要素を初期化して、その配列をリストに変換します:
 
 <DIV
 CLASS="informalexample"
@@ -209,21 +208,18 @@ end // end of [local]
 >
 
 
-The implementation of <FONT
+<FONT
 COLOR="RED"
 >loop</FONT
-> makes extensive use of
-unsafe C-style programming in ATS. For someone familiar with C, it
-should be straightforward to visualize the C code that corresponds to
-this implementation directly.
+> の実装は、ATSにおける安全でないC言語スタイルプログラミングを多用しています。
+C言語に馴染んだプログラマであれば、この実装に対応するC言語コードが想像できると思います。
 </P
 ><P
->&#13;Please find the entire code for this example
-<A
+>&#13;この例の完全なコードは <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/StaticAllocList.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> にあります。
 
 </P
 ></DIV
@@ -243,7 +239,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2157.html"
+HREF="x2160.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -277,7 +273,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1995.html"
+HREF="c1998.html"
 ACCESSKEY="U"
 >Up</A
 ></TD

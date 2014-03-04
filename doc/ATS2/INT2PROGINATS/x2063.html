@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->External Types and Values in ATS</TITLE
+>ATSにおける外部の型と値</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="C言語との相互呼び出し"
 HREF="c1999.html"><LINK
 REL="NEXT"
-TITLE="Inclusion of External Code in ATS"
+TITLE="ATSに外部コードを含める"
 HREF="x2078.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,24 +75,23 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="external_types_and_values"
->8.2. External Types and Values in ATS</A
+>8.2. ATSにおける外部の型と値</A
 ></H1
 ><P
->&#13;External types and values can be readily formed in ATS to refer to types
-and values declared in C.
+>&#13;外部の型や値を簡単にATS言語に取り込むことができます。
+また、それはC言語で宣言された型や値に関連付けさせることができます。
 
 </P
 ><P
->&#13;Suppose that there is a type in C of the name <FONT
+>&#13;<FONT
 COLOR="RED"
 >some_type_in_c</FONT
->,
-then this type can be referred to in ATS as
-<FONT
+> とう名前でC言語の型が定義されていると想像してください。
+この型は <FONT
 COLOR="RED"
 >$extype"some_type_in_c"</FONT
->. For instance, type definitions are
-introduced in the following code for some external types in C:
+> のようにATS言語から参照することができます。
+例えば次のコードのように、C言語でのいくつかの型をATS言語に取り込んで型定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -114,20 +113,19 @@ typedef Cint2 = $extype"struct{ int x; int y; }"
 >
 
 
-Suppose that there is a value in C of the name <FONT
+<FONT
 COLOR="RED"
 >some_value_in_c</FONT
->,
-then this value can be referred to in ATS as <FONT
+> という名前のC言語の値があった場合、
+この値を <FONT
 COLOR="RED"
 >$extval(<FONT
 COLOR="RED"
 >T</FONT
 >, "some_value_in_c")</FONT
->,
-where T is a type in ATS assigned to this value.  For instance, macro
-definitions are introduced in the following code for some external values
-in C:
+> のようにATSから参照することができます。
+この T はこの値に割り当てるATSの型です。
+例えば次のコードのように、C言語でのいくつかの外部定義の値をATS言語に取り込んでマクロ定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -148,8 +146,7 @@ macdef stdout_ref = $extype(FILEref, "stdout")
 >
 
 
-External value can also be formed to refer to functions in C as done
-in the following code:
+また次のコードのように、C言語の関数を参照する外部定義の値を作ることができます:
 
 <DIV
 CLASS="informalexample"
@@ -170,10 +167,8 @@ macdef atof = $extype(string -&#62; double, "atof")
 >
 
 
-Note that there are other ways in ATS that are often more approriate for
-directly referring to functions in C.  Typically, the primary purpose of
-forming an external value in ATS is to allow a constant declared in C to be
-directly referred to in ATS code.
+C言語の関数を直接参照するために、より適切な方法がATSにはあることに注意してください。
+一般に、ATSで外部定義の値を使う主な用途は、C言語の定数宣言を直接ATSコードに関連付けることです。
 
 </P
 ></DIV
@@ -235,7 +230,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Inclusion of External Code in ATS</TD
+>ATSに外部コードを含める</TD
 ></TR
 ></TABLE
 ></DIV

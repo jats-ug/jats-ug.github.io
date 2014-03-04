@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Binary Search Trees</TITLE
+>Example: Quick-Sort on Linear Lists</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Dataviewtypes as Linear Datatypes"
-HREF="c3652.html"><LINK
+HREF="c3689.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Quick-Sort on Linear Lists"
-HREF="x3904.html"><LINK
+TITLE="Example: Insertion Sort on Linear Lists"
+HREF="x3908.html"><LINK
 REL="NEXT"
-TITLE="Transition from Datatypes to Dataviewtypes"
-HREF="x3995.html"></HEAD
+TITLE="Linear Binary Search Trees"
+HREF="x3978.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x3904.html"
+HREF="x3908.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3995.html"
+HREF="x3978.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,53 +74,26 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="linear_binary_search_trees"
->15.6. Linear Binary Search Trees</A
+NAME="example_quickSort_lin"
+>15.5. Example: Quick-Sort on Linear Lists</A
 ></H1
 ><P
->&#13;A binary search tree with respect to a given ordering is a binary tree such
-that the value stored in each node inside the tree is greater than or equal
-to those stored in the left child of the node and less than or equal to
-those stored in the right child of the node.  Binary search trees are a
-common data structure for implementing finite maps.
-
-</P
-><P
->&#13;A family of binary
-trees are said to be balanced if there is a fixed constant C (for the
-entire family) such that the ratio between the length of a longest path and
-the length of a shortest path is bounded by C for every tree in the
-family. For instance, common examples of balanced binary trees include AVL
-trees and red-black trees. Finite maps based on balanced binary search
-trees support guaranteed log-time insertion and deletion operations, that
-is, the time to complete such an operation is O(log(n)) in the worst case,
-where n is the size of the map.
-
-</P
-><P
->&#13;In this section, I am to implement several basic operations on linear
-binary search trees, further illustrating some use of dataviewtypes. Let us
-first declare as follows a dataviewtype <FONT
-COLOR="RED"
->bstree_vt</FONT
-> for linear
-binary (search) trees:
+>&#13;In this section, I give an implementation of quick-sort on linear
+lists. While list-based quick-sort may not be a preferred sorting method in
+practice, its implementation is nonetheless interesting.
+The interface for quick-sort is given as follows:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3947"
+NAME="AEN3944"
 ></A
 ><PRE
 CLASS="programlisting"
->datavtype
-bstree_vt (a:t@ype+, int) =
-  | bstree_vt_nil (a, 0) of ()
-  | {n1,n2:nat}
-    bstree_vt_cons (a, n1+n2+1) of (bstree_vt (a, n1), a, bstree_vt (a, n2))
-// end of [bstree_vt]
+>fun{a:t@ype}
+quickSort{n:nat} (xs: list_vt (a, n), cmp: cmp a): list_vt (a, n)
 </PRE
 ><P
 ></P
@@ -128,392 +101,59 @@ bstree_vt (a:t@ype+, int) =
 >
 
 
-</P
-><P
->&#13;Note that the integer index of <FONT
+Like the implementation of <FONT
 COLOR="RED"
->bstree_vt</FONT
-> captures the size
-information of a binary (search) tree.  There are two constructors
-<FONT
-COLOR="RED"
->bstree_vt_cons</FONT
-> and <FONT
-COLOR="RED"
->bstree_vt_nil</FONT
-> associated with
-<FONT
-COLOR="RED"
->bstree_vt</FONT
->. It should be pointed out that the tree created by
-<FONT
-COLOR="RED"
->bstree_vt_nil</FONT
-> is empty and thus not a leaf, which on the other
-hand is a node whose left and right children are both empty.  As a simple
-example, the following function template <FONT
-COLOR="RED"
->size</FONT
-> computes the size
-of a given tree:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3956"
-></A
-><PRE
-CLASS="programlisting"
->fun{
-a:t@ype
-} size{n:nat} .&#60;n&#62;.
-(
-  t: !bstree_vt (a, n)
-) : int (n) =
-  case+ t of
-  | bstree_vt_nil () =&#62; 0
-  | bstree_vt_cons
-     (tl, _, tr) =&#62; 1 + size (tl) + size (tr)
-// end of [size]
-</PRE
-><P
-></P
-></DIV
->
-
-
-</P
-><P
->&#13;Assume that we have a binary search tree with repect to some ordering.  If
-a predicate P on the elements stored in the tree possesses the property
-that P(x1) implies P(x2) whenever x1 is less than x2 (according to the
-ordering), then we can locate the least element in the tree that satisfies
-the predicate P by employing so-called binary search as is demonstrated in
-the following implementation of <FONT
-COLOR="RED"
->search</FONT
->:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3960"
-></A
-><PRE
-CLASS="programlisting"
->fun{
-a:t@ype
-} search
-  {n:nat} .&#60;n&#62;.
-(
-  t: !bstree_vt (a, n), P: (&#38;a) -&#60;cloref&#62; bool
-) : Option_vt (a) =
-  case+ t of
-  | @bstree_vt_cons
-      (tl, x, tr) =&#62;
-      if P (x) then let
-        val res = search (tl, P)
-        val res = (
-          case+ res of
-          | ~None_vt () =&#62; Some_vt (x) | _ =&#62; res
-        ) : Option_vt (a)
-      in
-        fold@ (t); res
-      end else let
-        val res = search (tr, P) in fold@ (t); res
-      end // end of [if]
-  | @bstree_vt_nil () =&#62; (fold@ (t); None_vt ())
-// end of [search]
-</PRE
-><P
-></P
-></DIV
->
-
-
-Clearly, if the argument <FONT
-COLOR="RED"
->t</FONT
-> of <FONT
-COLOR="RED"
->search</FONT
-> ranges over a
-family of balanced trees, then the time-complexity of <FONT
-COLOR="RED"
->search</FONT
-> is
-O(log(n)) (assuming that <FONT
-COLOR="RED"
->P</FONT
-> is O(1)).
-
-</P
-><P
->&#13;Let us next see some code implementing an operation that inserts a given
-element into a binary search tree:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3967"
-></A
-><PRE
-CLASS="programlisting"
->fun{
-a:t@ype
-} insert{n:nat} .&#60;n&#62;.
-(
-  t: bstree_vt (a, n), x0: &#38;a, cmp: cmp(a)
-) : bstree_vt (a, n+1) =
-  case+ t of
-  | @bstree_vt_cons
-      (tl, x, tr) =&#62; let
-      val sgn = compare&#60;a&#62; (x0, x, cmp)
-    in
-      if sgn &#60;= 0 then let
-        val () = tl := insert (tl, x0, cmp)
-      in
-        fold@ (t); t
-      end else let
-        val () = tr := insert (tr, x0, cmp)
-      in
-        fold@ (t); t
-      end (* end of [if] *)
-    end // end of [bstree_vt_cons]
-  | ~bstree_vt_nil () =&#62;
-      bstree_vt_cons (bstree_vt_nil, x0, bstree_vt_nil)
-    // end of [bstree_vt_nil]
-// end of [insert]
-</PRE
-><P
-></P
-></DIV
->
-
-
-</P
-><P
->&#13;When inserting an element, the function template <FONT
-COLOR="RED"
->insert</FONT
-> extends
-the given tree with a new leaf node containing the element, and this form
-of insertion is often referred to as leaf-insertion.  There is another form
-of insertion often referred to as root-insertion, which always puts at the
-root position the new node containing the inserted element. The following
-function template <FONT
-COLOR="RED"
->insertRT</FONT
-> is implemented to perform a standard
-root-insertion operation:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3972"
-></A
-><PRE
-CLASS="programlisting"
->fun{
-a:t@ype
-} insertRT{n:nat} .&#60;n&#62;.
-(
-  t: bstree_vt (a, n), x0: &#38;a, cmp: cmp(a)
-) : bstree_vt (a, n+1) =
-  case+ t of
-  | @bstree_vt_cons
-      (tl, x, tr) =&#62; let
-      val sgn = compare&#60;a&#62; (x0, x, cmp)
-    in
-      if sgn &#60;= 0 then let
-        val tl_ = insertRT (tl, x0, cmp)
-        val+@bstree_vt_cons (_, tll, tlr) = tl_
-        val () = tl := tlr
-        prval () = fold@ (t)
-        val () = tlr := t
-      in
-        fold@ (tl_); tl_
-      end else let
-        val tr_ = insertRT (tr, x0, cmp)
-        val+@bstree_vt_cons (trl, _, trr) = tr_
-        val () = tr := trl
-        prval () = fold@ (t)
-        val () = trl := t
-      in
-        fold@ (tr_); tr_
-      end
-    end // end of [bstree_vt_cons]
-  | ~bstree_vt_nil () =&#62;
-      bstree_vt_cons (bstree_vt_nil, x0, bstree_vt_nil)
-    // end of [bstree_vt_nil]
-// end of [insertRT]
-</PRE
-><P
-></P
-></DIV
->
-
-
-The code immediately following the first recursive call to
-<FONT
-COLOR="RED"
->insertRT</FONT
-> performs a right tree rotation. Let us use T(tl, x,
-tr) for a tree such that its root node contains the element x and its left
-and right children are tl and tr, respectively. Then a right rotation turns
-T(T(tll, xl, tlr), x, tr) into T(tll, xl, T(tlr, x, tr)).  The code
-immediately following the second recursive call to <FONT
-COLOR="RED"
->insertRT</FONT
->
-performs a left tree rotation, which turns T(tl, x, T(trl, xr, trr)) into
-T(T(tl, x, tlr), xr, trr).
-
-</P
-><P
->&#13;To further illustrate tree rotations, I present as follows
-two function templates <FONT
-COLOR="RED"
->lrotate</FONT
-> and <FONT
-COLOR="RED"
->rrotate</FONT
->, which
-implement the left and right tree rotations, respectively:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN3979"
-></A
-><PRE
-CLASS="programlisting"
->fn{
-a:t@ype
-} lrotate
-  {l,l_tl,l_x,l_tr:addr} 
-  {nl,nr:int | nl &#62;= 0; nr &#62; 0}
-(
-  pf_tl: bstree_vt (a, nl) @ l_tl
-, pf_x: a @ l_x
-, pf_tr: bstree_vt (a, nr) @ l_tr
-| t: bstree_vt_cons_unfold (l, l_tl, l_x, l_tr)
-, p_tl: ptr l_tl
-, p_tr: ptr l_tr
-) : bstree_vt (a, 1+nl+nr) = let
-  val tr = !p_tr
-  val+@bstree_vt_cons (trl, _, trr) = tr
-  val () = !p_tr := trl
-  prval () = fold@ (t); val () = trl := t
-in
-  fold@ (tr); tr
-end // end of [lrotate]
-
-fn{
-a:t@ype
-} rrotate
-  {l,l_tl,l_x,l_tr:addr}
-  {nl,nr:int | nl &#62; 0; nr &#62;= 0}
-(
-  pf_tl: bstree_vt (a, nl) @ l_tl
-, pf_x: a @ l_x
-, pf_tr: bstree_vt (a, nr) @ l_tr
-| t: bstree_vt_cons_unfold (l, l_tl, l_x, l_tr)
-, p_tl: ptr l_tl
-, p_tr: ptr l_tr
-) : bstree_vt (a, 1+nl+nr) = let
-  val tl = !p_tl
-  val+@bstree_vt_cons (tll, x, tlr) = tl
-  val () = !p_tl := tlr
-  prval () = fold@ (t); val () = tlr := t
-in
-  fold@ (tl); tl
-end // end of [rrotate]
-</PRE
-><P
-></P
-></DIV
->
-
-
-Given 4 addresses L0, L1, L2 and L3, the type
-<FONT
-COLOR="RED"
->bstree_vt_cons_unfold(L0, L1, L2, l3)</FONT
-> is for a tree node
-created by a call to <FONT
-COLOR="RED"
->bstree_vt_cons</FONT
-> such that the node is
-located at L0 and the three arguments of <FONT
-COLOR="RED"
->bstree_vt_cons</FONT
-> are
-located at L1, L2 and L3, and the proofs for the at-views associated with
-L1, L2 and L3 are put in the store for currently available proofs.
-
-</P
-><P
->&#13;The function template <FONT
-COLOR="RED"
->insertRT</FONT
-> for root-insertion can now be
-implemented as follows by making direct use of <FONT
-COLOR="RED"
->lrotate</FONT
+>mergeSort</FONT
 > and
 <FONT
 COLOR="RED"
->rrotate</FONT
->:
+>insertionSort</FONT
+>, the implementation of <FONT
+COLOR="RED"
+>quickSort</FONT
+>
+given as follows makes no use of memory allocation and deallocation.
+
+</P
+><P
+>&#13;The following code implements a function <FONT
+COLOR="RED"
+>takeout_node_at</FONT
+> that
+takes out a node from a linear list at a given position:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3988"
+NAME="AEN3951"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{
-a:t@ype
-} insertRT {n:nat} .&#60;n&#62;.
+>fun{a:t@ype}
+takeout_node_at
+  {n:int}{k:nat | k &#60; n}
 (
-  t: bstree_vt (a, n), x0: &#38;a, cmp: cmp(a)
-) : bstree_vt (a, n+1) =
-  case+ t of
-  | @bstree_vt_cons
-      (tl, x, tr) =&#62; let
-      prval pf_x = view@x
-      prval pf_tl = view@tl
-      prval pf_tr = view@tr
-      val sgn = compare&#60;a&#62; (x0, x, cmp)
-    in
-      if sgn &#60;= 0 then let
-        val () = tl := insertRT&#60;a&#62; (tl, x0, cmp)
-      in
-        rrotate&#60;a&#62; (pf_tl, pf_x, pf_tr | t, addr@tl, addr@tr)
-      end else let
-        val () = tr := insertRT&#60;a&#62; (tr, x0, cmp)
-      in
-        lrotate&#60;a&#62; (pf_tl, pf_x, pf_tr | t, addr@tl, addr@tr)
-      end (* end of [if] *)
-    end // end of [bstree_vt_cons]
-  | ~bstree_vt_nil () =&#62;
-      bstree_vt_cons (bstree_vt_nil, x0, bstree_vt_nil)
-    // end of [bstree_vt_nil]
-// end of [insertRT]
+  xs: &#38;list_vt (a, n) &#62;&#62; list_vt (a, n-1), k: int(k)
+) : list_vt_cons_pstruct (a, ptr?) =
+(
+//
+if k &#62; 0 then let
+  val+@list_vt_cons (x, xs1) = xs
+  val res = takeout_node_at&#60;a&#62; (xs1, k-1)
+  prval () = fold@ (xs)
+in
+  res
+end else let
+  val+@list_vt_cons (x, xs1) = xs
+  val nx = xs
+  val () = xs := xs1
+in
+  $UNSAFE.castvwtp0 ((view@x, view@xs1 | nx)) // HX: this is a safe cast
+end // end of [if]
+//
+) (* end of [takeout_node_at] *)
 </PRE
 ><P
 ></P
@@ -521,27 +161,199 @@ a:t@ype
 >
 
 
-</P
-><P
->&#13;I would like to point out that neither <FONT
+Assume that a data constructor named <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+> is associated with a
+dataviewtype.  Then there is a corresponding viewtype construtor of the
+name <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo_pstruct</I
+></SPAN
+> that takes n types to form a viewtype, where
+n is the arity of <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+>. For instance, there is a viewtype
+constructor <FONT
 COLOR="RED"
->insert</FONT
-> nor
+>list_vt_cons_pstruct</FONT
+> that takes 2 types T1 and T2
+to form a viewtype <FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+>. This viewtype
+is for a list-node created by a call to <FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> such that
+the two arguments of <FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> are of types T1 and T2.
+Essentially, <FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+> stands for
 <FONT
 COLOR="RED"
->insertRT</FONT
-> is tail-recursive. While it is straightforward to give
-the former a tail-recursive implementation, there is no direct way to do
-the same to the latter. In order to implement root-insertion in a
-tail-recursive manner, we are in need of binary search trees with parental
-pointers (so as to allow each node to gain direct access to its parent),
-which can be done with dataviews but not with dataviewtypes.
+>list_vt_cons_unfold(L0, L1, L2)</FONT
+> for some addresses L0, L1 and
+L2 plus two views <FONT
+COLOR="RED"
+>T1@L1</FONT
+> and <FONT
+COLOR="RED"
+>T2@L2</FONT
+>.
+
+</P
+><P
+>&#13;A key step in quick-sort lies in partitioning a linear list based on a
+given pivot. This step is fulfilled by the following code that implements a
+function template named <FONT
+COLOR="RED"
+>partition</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3966"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} partition{n,r1,r2:nat}
+(
+  xs: list_vt (a, n), pvt: &#38;a
+, r1: int(r1), res1: list_vt (a, r1), res2: list_vt (a, r2)
+, cmp: cmp (a)
+) : [n1,n2:nat | n1+n2==n+r1+r2]
+  (int(n1), list_vt (a, n1), list_vt (a, n2)) =
+(
+  case+ xs of
+  | @list_vt_cons
+      (x, xs_tail) =&#62; let
+      val xs_tail_ = xs_tail
+      val sgn = compare&#60;a&#62; (x, pvt, cmp)
+    in
+      if sgn &#60;= 0 then let
+        val r1 = r1 + 1
+        val () = xs_tail := res1
+        prval () = fold@ (xs)
+      in
+        partition&#60;a&#62; (xs_tail_, pvt, r1, xs, res2, cmp)
+      end else let
+        val () = xs_tail := res2
+        prval () = fold@ (xs)
+      in
+        partition&#60;a&#62; (xs_tail_, pvt, r1, res1, xs, cmp)
+      end // end of [if]
+    end (* end of [list_vt_cons] *)
+  | ~list_vt_nil ((*void*)) =&#62; (r1, res1, res2)
+) (* end of [partition] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The implementation of <FONT
+COLOR="RED"
+>partition</FONT
+> is tail-recursive.  Given a
+linear list and a pivot, <FONT
+COLOR="RED"
+>partition</FONT
+> returns a tuple (r1, res1,
+res2) such that res1 contains every element in the list that is less than
+or equal to the pivot, res2 contains the rest, and r1 is the length of
+res1. The way in which the nodes of the given linear list are moved into
+res1 and res2 is quite an interesting aspect of this implementation.
+
+</P
+><P
+>&#13;By making use of <FONT
+COLOR="RED"
+>takeout_node_at</FONT
+> and <FONT
+COLOR="RED"
+>partition</FONT
+>,
+we can readily implement <FONT
+COLOR="RED"
+>quickSort</FONT
+> as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3974"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+quickSort
+  (xs, cmp) = let
+//
+fun sort{n:nat}
+(
+  xs: list_vt (a, n), n: int n
+) : list_vt (a, n) =
+(
+  if n &#62; 10 then let
+    val n2 = half (n)
+    var xs = xs
+    val nx = takeout_node_at&#60;a&#62; (xs, n2)
+    val+list_vt_cons (pvt, nx_next) = nx
+    val (n1, xs1, xs2) =
+    partition&#60;a&#62; (xs, pvt, 0, list_vt_nil, list_vt_nil, cmp)
+    val xs1 = sort (xs1, n1)
+    val xs2 = sort (xs2, n - 1 - n1)
+    val () = nx_next := xs2
+    prval () = fold@ (nx)
+  in
+    list_vt_append (xs1, nx)
+  end else insertionSort&#60;a&#62; (xs, cmp)
+) (* end of [sort] *)
+//
+in
+  sort (xs, list_vt_length (xs))
+end // end of [quickSort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the pivot for each round is taken from the middle of the list
+being sorted, which can be time-consuming as taking out a node from the
+middle of a list is O(n)-time. This issue can be addressed by always
+choosing the first element to be the pivot. However, doing so can
+often lead to degenerated O(n^2)-time performance of quick-sort in practice.
 
 </P
 ><P
 >&#13;Please find the entire code in this section plus some additional
 code for testing <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/bstree_vt.dats"
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/quickSort.dats"
 TARGET="_top"
 >on-line</A
 >.
@@ -564,7 +376,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x3904.html"
+HREF="x3908.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -582,7 +394,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3995.html"
+HREF="x3978.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -592,13 +404,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Quick-Sort on Linear Lists</TD
+>Example: Insertion Sort on Linear Lists</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c3652.html"
+HREF="c3689.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -606,7 +418,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Transition from Datatypes to Dataviewtypes</TD
+>Linear Binary Search Trees</TD
 ></TR
 ></TABLE
 ></DIV
