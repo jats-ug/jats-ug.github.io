@@ -312,11 +312,10 @@ COLOR="RED"
 defined in a rather unwieldy fashion. This is entirely due to the use of
 tuples for representing board configurations. If we could use an array to
 represent a board configuration, then the implementation would be much
-simpler and cleaner. However, we have not yet covered arrays at this
-point.
+simpler and cleaner. However, we have not yet covered arrays at this point.
 </P
 ><P
->We now implement two testing functions <FONT
+>&#13;Let us now implement two testing functions <FONT
 COLOR="RED"
 >safety_test1</FONT
 > and
@@ -368,7 +367,7 @@ The functionalities of these two functions can be described as such:
 ><UL
 ><LI
 ><P
->The function <FONT
+>&#13;The function <FONT
 COLOR="RED"
 >safety_test1</FONT
 > tests whether a queen piece on row
@@ -390,7 +389,7 @@ COLOR="RED"
 ></LI
 ><LI
 ><P
->The function <FONT
+>&#13;The function <FONT
 COLOR="RED"
 >safety_test2</FONT
 > tests whether a queen piece on row
@@ -400,7 +399,7 @@ COLOR="RED"
 > and column <FONT
 COLOR="RED"
 >j0</FONT
-> can capture any pieces on a
+> can capture any other pieces on a
 given board with a row number less than or equal to <FONT
 COLOR="RED"
 >i</FONT
@@ -411,7 +410,7 @@ COLOR="RED"
 >
 </P
 ><P
->We are now ready to implement the following function
+>&#13;We are now ready to implement the following function
 <FONT
 COLOR="RED"
 >search</FONT
@@ -471,13 +470,12 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >search</FONT
-> is a special identifier in ATS: It takes an
-indefinite number of arguments and then applies <FONT
+> is a special identifier in ATS: It takes an indefinite
+number of arguments and then applies <FONT
 COLOR="RED"
 >print</FONT
-> to each of
-them. Here is the first solution printed out by a call to the function
-<FONT
+> to each of them. Here
+is the first solution printed out by a call to the function <FONT
 COLOR="RED"
 >search</FONT
 >:

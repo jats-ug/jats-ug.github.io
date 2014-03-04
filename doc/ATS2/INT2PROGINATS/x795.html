@@ -14,7 +14,7 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Envless Functions and Closure Functions"
+TITLE="Envless Functions and Closure-Functions"
 HREF="x741.html"><LINK
 REL="NEXT"
 TITLE="Example: Binary Search for Fun"
@@ -263,7 +263,7 @@ CLASS="programlisting"
 
 
 For someone unfamilar with the distinction between an envless function and
-a closure function, it may be a bit suprising to learn that this
+a closure-function, it may be a bit suprising to learn that this
 generalization does not actually work. The simple reason is that
 <FONT
 COLOR="RED"
@@ -327,21 +327,21 @@ this generality does come with a price. Whenever <FONT
 COLOR="RED"
 >sqrmodsum</FONT
 > is
-called, a closure function must be created on heap and then passed to
+called, a closure-function must be created on heap and then passed to
 <FONT
 COLOR="RED"
 >ifold2</FONT
->; this closure function is of no further use after the
+>; this closure-function is of no further use after the
 call returns and the memory it occupies can only be properly relcaimed
 through garbage collection (GC). Therefore, calling functions like
 <FONT
 COLOR="RED"
 >sqrmodsum</FONT
 > can readily result in memory leaks in a setting where
-no GC is available. Fortunately, there are also linear closure functions in
-ATS, which do not cause any memory leaks even in the absence of GC as they
-are required to be explicitly freed by the programmer. I will cover this
-interesting programming feature elsewhere.
+GC is not available. Fortunately, there are also linear closure-functions
+in ATS, which do not cause any memory leaks even in the absence of GC as
+they are required to be explicitly freed by the programmer. I will cover
+this interesting programming feature elsewhere.
 </P
 ><P
 >&#13;As more features of ATS are introduced, higher-order functions will become
@@ -392,7 +392,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Envless Functions and Closure Functions</TD
+>Envless Functions and Closure-Functions</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
