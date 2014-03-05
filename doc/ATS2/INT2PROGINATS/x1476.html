@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->References</TITLE
+>参照</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="効果(effect)を持つプログラミングの機能"
 HREF="c1364.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Testing for Braun Trees"
+TITLE="例: ブラウンツリー(Braun Trees)の判定"
 HREF="x1441.html"><LINK
 REL="NEXT"
 TITLE="Example: A Counter Implementation"
@@ -75,13 +75,12 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="references"
->6.3. References</A
+>6.3. 参照</A
 ></H1
 ><P
->&#13;A reference is just an array containing one element.  Given a type T, a
-reference for storing a value of the type T is given the type ref(T).  The
-following program makes use of all the essential functionalities on
-references:
+>&#13;参照はたった1つの要素を持つ配列です。
+ある型Tが与えられた時、型Tの値を保管する参照は型 ref(T) になります。
+次のプログラムは参照の本質的な機能をすべて利用しています:
 
 <DIV
 CLASS="informalexample"
@@ -101,47 +100,44 @@ val () = !intr := !intr + 1 // increase the integer at [intr] by 1
 >
 
 
-The first line creates a reference for storing an integer and initializes
-it with the value 0 and then names it <FONT
+最初の行では、1つの整数値を保存する参照を作成し、その参照を値0で初期化した後、
+その参照に <FONT
 COLOR="RED"
 >intr</FONT
->. Note that this
-style of reference creation cannot be separated from its
-initialization. The second line updates the reference <FONT
+> という名前をつけています。
+このスタイルでは、参照の生成と初期化を分離できないことに注意してください。
+2番目の行では、現状の値に1を足した値で参照 <FONT
 COLOR="RED"
 >intr</FONT
-> with
-its current value plus 1. In general, given a reference r of type ref(T)
-for some T, the expression !r means to fetch the value stored at r, which
-is of the type T. However, !r can also be used as a left-value. For
-instance, the assignment (!r := exp) means to evaluate exp into a value and
-then store the value into r. Therefore, the value stored in
-<FONT
+> を更新しています。
+一般に、型 T と r と名付けられた参照 ref(T) が与えられた時、
+式 !r は r に保存されている型 T の値を取得する意味しています。
+しかしながら !r は左辺値にも使うことができます。
+例えば (!r := exp) という代入は exp を評価して値にしてから r に保存することを意味しています。
+そのため、上記のプログラムの2行目を評価した後では、 <FONT
 COLOR="RED"
 >intr</FONT
-> is 1 after the second line in the above program is
-evaluated.
+> に保存されている値は 1 になります。
 </P
 ><P
->&#13;Various functions and function templates on references are declared in the
-file <A
+>&#13;<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/reference.sats"
 TARGET="_top"
 >reference.sats</A
->, which
-is automatically loaded by <B
+>
+ファイルでは、参照にまつわる様々な関数と関数テンプレートが宣言されています。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->. In particular, it is
-also possible to read from and write to a reference by using the function
-templates <FONT
+> によって自動的に読み込まれます。
+特に、次のインターフェイスの関数テンプレート <FONT
 COLOR="RED"
 >ref_get_elt</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ref_set_elt</FONT
-> of the following
-interfaces, respectively:
+> を使うことで、
+参照の読み書きをすることもできます:
 
 <DIV
 CLASS="informalexample"
@@ -163,16 +159,15 @@ fun{a:t@ype} ref_set_elt (r: ref a, x: a): void // !r := x
 
 </P
 ><P
->&#13;References are often misused in practice, especially, by beginners of
-functional programming who had some previous exposure to imperative
-programming languages such C and Java. Such programmers often think that
-they can just "translate" their programs in C or Java into functional
-programs. For example, the following defined function <FONT
+>&#13;実際には参照は誤用されがちです。
+とりわけC言語やJavaのような命令型プログラミング言語に成熟した関数型プログラミングの初心者に見られます。
+そのようなプログラマはしばしばC言語やJavaで書かれたプログラムを、
+関数型プログラムに単に "翻訳" しようと考えます。
+次で定義している <FONT
 COLOR="RED"
 >sumup</FONT
-> is
-such an example, which sums up all the integers between 1 and a given
-integer, inclusive:
+> はそのような例です。
+この関数1から与えられた整数までの整数値をすべて加算します:
 
 <DIV
 CLASS="informalexample"
@@ -200,34 +195,30 @@ end // end of [sumup]
 >
 
 
-This is a correct but poor implementation, and its style, though not the
-worst of its kind, is deplorable. As references are allocated in heap,
-reading from or writing to a reference can be much more time-consuming than
-reading from or writing to a register. So, this implementation of
+このプログラムは正常ですが良い実装とスタイルではありません。
+最悪とまでは言えませんが、ひどいものです。
+参照はヒープに確保されるので、参照の読み書きはレジスタの読み書きよりもより多く時間を消費します。
+そのため、この <FONT
+COLOR="RED"
+>sumup</FONT
+> の実装は時間効率が悪いことになります。
 <FONT
 COLOR="RED"
 >sumup</FONT
-> is unlikely to be time-efficient.  Every call to
-<FONT
+> が呼び出されるたびに、2つの参照がヒープに生成されて関数が返るまで放置されています。
+参照のために割り当てられたメモリはガベージコレクション(GC)によってのみ回収されます。
+つまり、この <FONT
 COLOR="RED"
 >sumup</FONT
-> creates two references in heap and leaves them there when
-it returns, and the memory allocated for such references can only be
-reclaimed through garbage collection (GC). So, this implementation of
-<FONT
-COLOR="RED"
->sumup</FONT
-> is not memory-efficient.  More importantly, a program
-making heavy use of references is often difficult to reason about.
+> の実装は空間効率も悪いことにります。
+もっと重要なことに、参照を多用するプログラムは論証することがしばしば困難です。
 </P
 ><P
->&#13;I consider references a dangerous feature in functional
-programming. If you want to run your program without GC, please do not
-create references in the body of a function (besides many other
-restrictions). If you find that you are in need of references to
-"translate" imperative programs into functional ones, then it is most
-likely that you are lost and you have not learned well to program in a
-functional style yet.
+>&#13;関数型プログラミングにおける参照は危険な機能であると、私は考えています。
+もしGCを使わないプログラムを実行したいのであれば、
+関数の中で参照を生成してはいけません(その他にも多くの制約があります)。
+もし手続型のプログラムを関数型のプログラムに "翻訳" する際に参照が必要になってしまったら、
+多くの場合あなたは迷子になっており、関数型スタイルのプログラミングをまだよく学習していないことになります。
 
 </P
 ></DIV
@@ -275,7 +266,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Testing for Braun Trees</TD
+>例: ブラウンツリー(Braun Trees)の判定</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

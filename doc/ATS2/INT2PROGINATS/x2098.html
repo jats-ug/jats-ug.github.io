@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->ATSにおける外部関数呼び出し</TITLE
+>安全ではないC言語スタイルのATSプログラミング</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="C言語との相互呼び出し"
-HREF="c1998.html"><LINK
+HREF="c1986.html"><LINK
 REL="PREVIOUS"
-TITLE="ATSに外部コードを含める"
-HREF="x2077.html"><LINK
+TITLE="ATSにおける外部関数呼び出し"
+HREF="x2086.html"><LINK
 REL="NEXT"
-TITLE="安全ではないC言語スタイルのATSプログラミング"
-HREF="x2110.html"></HEAD
+TITLE="ATSの型をエクスポートしてC言語から使う"
+HREF="x2148.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x2077.html"
+HREF="x2086.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x2110.html"
+HREF="x2148.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -74,68 +74,47 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="calling_external_functions"
->8.4. ATSにおける外部関数呼び出し</A
+NAME="unsafe_c-style_programming_in_ats"
+>8.5. 安全ではないC言語スタイルのATSプログラミング</A
 ></H1
 ><P
->&#13;ATSから外部関数を呼び出すことは簡単です。
-例えば、次のコードはその典型的な例です:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN2101"
-></A
-><PRE
-CLASS="programlisting"
->local
-extern
-fun __fprintf
-  : (FILEref, string(*fmt*), int, int) -&#62; int = "mac#fprintf"
-in (* in of [local] *)
-//
-val N = 12
-val _ = __fprintf (stdout_ref, "fact(%i) = %i\n", N, fact(N))
-//
-end // end of [local]
-</PRE
-><P
-></P
-></DIV
->
-
-
-この <FONT
-COLOR="RED"
->fprintf</FONT
-> 関数は <TT
-CLASS="filename"
->stdio.h</TT
-> で宣言されており
-<FONT
-COLOR="RED"
->__fprintf</FONT
-> というローカルな名前が与えられています。
-また外部関数呼び出しにふさわしいインターフェイスになっています。
+>&#13;おそらく、ATSはコードを書き下すことが簡単なプログラミング言語ではないでしょう。
+ATSは安全な低レイヤープログラミングをサポートするために多くの機能を提供しています。
+プログラマがそれらの機能を学習して使いこなせるようになるまでに、
+長い時間とある程度の努力を費やす必要があるかもしれません。
+この章では、C言語スタイルで書かれたATSコードをいくつか紹介します。
+これは、ATSプログラミングにおける安全ではない機能の典型的な使い方で、
+C言語コードを書き慣れたプログラマにとってなじみ深いプログラミングスタイルです。
 
 </P
 ><P
->&#13;またATSから外部関数を直接呼び出すビルトインのしくみもあります。
-例えば、次のコードは上記で示したコードと本質的に同じです:
+>&#13;安全でないC言語スタイルプログラミングが懸命である場合があります。
+ときには単に実行できる実装を手に入れて、バグを見つけて修正するためにテストを信頼しようとするかもしれません。
+ときには安全に関数を実装するATSプログラミングの作法を、熟知していない場合もあるでしょう。
+またそれは単に個人の要望であるかもしれません。
+私自身しばしば安全ではないC言語スタイルのATSプログラミングをすることがありますし、
+ただATSでコードを書きたいのではなく高い生産性が欲しい人にとって、
+それが必要なスキルであることも理解できます。
+安全ではないC言語スタイルのATSプログラミングの具体例を見てみましょう。
+
+</P
+><P
+>&#13;2つの文字列を標準辞書式順序によって比較する関数を実装したくなったとします。
+その関数に <FONT
+COLOR="RED"
+>strcmp</FONT
+> という名前を付けて、次のようなインターフェイスを与えましょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2107"
+NAME="AEN2104"
 ></A
 ><PRE
 CLASS="programlisting"
->val N = 12
-val _ = $extfcall(int, "fprintf", stdout_ref, "fact(%i) = %i\n", N, fact(N))
+>fun strcmp (str1: string, str2: string): int
 </PRE
 ><P
 ></P
@@ -143,13 +122,298 @@ val _ = $extfcall(int, "fprintf", stdout_ref, "fact(%i) = %i\n", N, fact(N))
 >
 
 
+2つの文字列 <FONT
+COLOR="RED"
+>str1</FONT
+> と <FONT
+COLOR="RED"
+>str2</FONT
+> が与えられると、
 <FONT
 COLOR="RED"
->$extfcall</FONT
-> は外部関数呼び出しを作るために使われます。
-その最初の引数は関数呼び出しの返値の型です。
-2番目の引数には呼び出す関数の名前を文字列で指定します。
-残りの引数群は呼び出す関数への引数群になります。
+>strcmp(str1, str2)</FONT
+> は 1, -1, 0 のいずれかを返します。
+それぞれ <FONT
+COLOR="RED"
+>str1</FONT
+> が <FONT
+COLOR="RED"
+>str2</FONT
+> と比較して、
+より大きいか、より小さいか、等しいことを表わしています。
+<FONT
+COLOR="RED"
+>strcmp</FONT
+> の実装は次のようになるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2112"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;staload
+UN = "prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+implement
+strcmp (str1, str2) = let
+//
+fun loop
+  (p1: ptr, p2: ptr): int = let
+//
+val c1 = $UN.ptr0_get&#60;uchar&#62; (p1)
+val c2 = $UN.ptr0_get&#60;uchar&#62; (p2)
+//
+in
+  case+ 0 of
+  | _ when c1 &#62; c2 =&#62;  1
+  | _ when c1 &#60; c2 =&#62; ~1
+  | _ (* c1 = c2 *) =&#62;
+    (
+      if $UN.cast{int}(c1) = 0
+        then 0 else loop (ptr0_succ&#60;uchar&#62; (p1), ptr0_succ&#60;uchar&#62; (p2))
+      // end of [if]
+    )
+end (* end of [loop] *)
+//
+in
+  loop (string2ptr(str1), string2ptr(str2))
+end (* end of [strcmp] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+C言語になじみのあるプログラマにとって、
+上記の <FONT
+COLOR="RED"
+>strcmp</FONT
+> の実装は理解しやすいでしょう。
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/unsafe.sats"
+TARGET="_top"
+>unsafe.sats</A
+>
+には安全でない関数群が各種宣言されています。
+型Tとポインタpが与えられた時、 <FONT
+COLOR="RED"
+>ptr0_get&#60;T&#62; (p)</FONT
+>
+はpが指し示す位置に配置されたT型の値を取得します。
+<FONT
+COLOR="RED"
+>ptr0_get</FONT
+> は本質的に安全ではないことに注意してください。
+実際にpが型Tの値が配置されたメモリ領域を指し示しているかどうか、なんの保証もないのです。
+<FONT
+COLOR="RED"
+>cast</FONT
+> 関数は与えられた値の型を指定した型でキャストします。
+この関数もまた本質的に安全ではありません。
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/pointer.sats"
+TARGET="_top"
+>pointer.sats</A
+>
+で宣言されている <FONT
+COLOR="RED"
+>ptr0_succ</FONT
+> テンプレート関数は型安全です。
+型Tが与えられた時、pよりも型Tのサイズだけ後ろのポインタを返します。
+
+</P
+><P
+>&#13;この例の完全なコードは <A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/strcmp.dats"
+TARGET="_top"
+>オンライン</A
+> にあります。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>strcmp</FONT
+> のような関数を、
+人によってはC言語で直接実装するかもしれません。
+例えば、上記のATSによる <FONT
+COLOR="RED"
+>strcmp</FONT
+> 実装を翻訳すると、
+<FONT
+COLOR="RED"
+>strcmp</FONT
+> のC言語による実装は次のようになるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2127"
+></A
+><PRE
+CLASS="programlisting"
+>int strcmp (char *p1, char *p2)
+{
+  int res ;
+  unsigned char c1, c2;
+  while (1)
+  {
+    c1 = *p1; c2 = *p2;
+    if (c1 &#62; c2) { res =  1; break; } ;
+    if (c1 &#60; c2) { res = -1; break; } ;
+    if ((int)c1==0) { res = 0 ; break ; } else { p1++; p2++; } ;
+  }
+  return res ;
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+けれども、C言語スタイルのATSコードは、直接C言語を書くよりもしばしば利点があります。
+例えば、C言語にはサポートがありませんが、ATSは関数テンプレートを直接サポートしています。
+C言語では、複雑なマクロを使った関数テンプレート実装を信頼するしかありません。
+そのようなコードは理解することが困難であるだけでなく周知の通りエラーを誘発します。
+次にATSにおける関数テンプレートの実装を見てみましょう。
+これは部分的には型安全ではありません。
+
+</P
+><P
+>&#13;リストに保存されている要素群を与えられた配列の中にコピーするような関数を作りたいとしましょう。
+その関数に <FONT
+COLOR="RED"
+>array_copy_from_list</FONT
+> という名前を付けて、
+次のようなインターフェイスを与えます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2131"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+array_copy_from_list (A: array0(a), xs: list0(a)): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+型Tが与えられた時、 <FONT
+COLOR="RED"
+>array0(T)</FONT
+> はポインタpとサイズnを内包するarray0の値を作り、
+そのpは型Tの要素をn個保持するC言語スタイルの配列を指し示します。
+
+</P
+><P
+>&#13;差し当り、 <FONT
+COLOR="RED"
+>array_copy_from_list(A, xs)</FONT
+> が呼び出されたら、
+リストxsの長さに等しい配列Aのサイズを要求しましょう。
+ATSにおける <FONT
+COLOR="RED"
+>array_copy_from_list</FONT
+> の実装を次に示します。
+この関数は、 <A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/unsafe.sats"
+TARGET="_top"
+>unsafe.sats</A
+>
+で宣言されている安全でない関数 <FONT
+COLOR="RED"
+>ptr0_set</FONT
+> を使っています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2139"
+></A
+><PRE
+CLASS="programlisting"
+>staload
+UN = "prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+implement{a}
+array_copy_from_list (A, xs) = let
+//
+fun loop
+(
+  p: ptr, xs: list0 (a)
+) : void =
+(
+case+ xs of
+| list0_nil () =&#62; ()
+| list0_cons (x, xs) =&#62; let
+    val () = $UN.ptr0_set&#60;a&#62; (p, x) in loop (ptr0_succ&#60;a&#62; (p), xs)
+  end // end of [list0_cons]
+) (* end of [loop] *)
+//
+in
+  loop (array0_get_ref(A), xs)
+end // end of [array_copy_from_list]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+型Tとポインタp、そして型Tの値xが与えられた時、
+<FONT
+COLOR="RED"
+>ptr0_set&#60;T&#62; (p, x)</FONT
+> は値xをpによって指し示された位置に保存します。
+<FONT
+COLOR="RED"
+>ptr0_get</FONT
+> と同様に <FONT
+COLOR="RED"
+>ptr0_set</FONT
+> は本質的に安全ではありません。
+実際にpが型Tの値が配置されたメモリ領域を指し示しているかどうか、
+なんの保証もありません。
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/libats/ML/SATS/array0.sats"
+TARGET="_top"
+>array0.sats</A
+>
+で宣言されている <FONT
+COLOR="RED"
+>array0_get_ref</FONT
+>
+関数は与えられたarray0値と関連付けられたC言語スタイルの配列のポインタを返します。
+
+</P
+><P
+>&#13;この例の完全なコードは <A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/ArrayCopyFromList.dats"
+TARGET="_top"
+>オンライン</A
+>
+にあります。
 
 </P
 ></DIV
@@ -169,7 +433,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x2077.html"
+HREF="x2086.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -187,7 +451,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x2110.html"
+HREF="x2148.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -197,13 +461,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->ATSに外部コードを含める</TD
+>ATSにおける外部関数呼び出し</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1998.html"
+HREF="c1986.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -211,7 +475,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->安全ではないC言語スタイルのATSプログラミング</TD
+>ATSの型をエクスポートしてC言語から使う</TD
 ></TR
 ></TABLE
 ></DIV
