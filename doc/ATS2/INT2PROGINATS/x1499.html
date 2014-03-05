@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: A Counter Implementation</TITLE
+>例: カウンタの実装</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,15 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_counter_implementation"
->6.4. Example: A Counter Implementation</A
+>6.4. 例: カウンタの実装</A
 ></H1
 ><P
->&#13;Let us see as follows the implementation of a counter-like object in the
-style of object-oriented programming (OOP).  The type <FONT
+>&#13;次のようなオブジェクト指向プログラミング(OOP)スタイルのカウンタオブジェクトの実装を見てみましょう。
+カウンタのために型 <FONT
 COLOR="RED"
 >counter</FONT
->
-for counters is defined as follows:
+> を次のように定義します:
 
 <DIV
 CLASS="informalexample"
@@ -107,18 +106,16 @@ counter = '{
 >
 
 
-The three fields of <FONT
+<FONT
 COLOR="RED"
 >counter</FONT
-> are closure functions that
-correspond to methods associated with an object: getting the count of the
-counter, increasing the count of the counter by 1 and resetting the count
-of the counter to 0. The following defined function <FONT
+> の3つのフィールドはクロージャ関数で、オブジェクトと関連したメソッドに対応しています。
+すなわち、カウンタの数値の取得、カウンタの数値を1加算、カウンタの数値を0にリセットします。
+次にカウンタオブジェクトを生成するために、関数 <FONT
 COLOR="RED"
 >newCounter</FONT
->
-is for creating a counter object (represented as a boxed record of closure
-functions):
+> を定義します。
+このオブジェクトはクロージャ関数群を格納したボックス化レコードとして表わされます:
 
 <DIV
 CLASS="informalexample"
@@ -146,17 +143,15 @@ in '{
 >
 
 
-The state of each created counter object is stored in a reference, which
-can only be accessed by the three closure functions in the record that
-represents the object. This is often referred to as state encapsulation
-in OOP.
+それぞれ生成されたカウンタオブジェクトの状態は参照に保存されます。
+その参照は対応するオブジェクトを表現するレコードの中の3つのクロージャ関数によってのみアクセスできます。
+これはOOPにおけるカプセル化に対応しています。
 </P
 ><P
->&#13;I myself think that the above counter implementation is of a rather poor
-style.  It is also possible to protect the integrity of a state by simply
-making it abstract.  I will present elsewhere another counter
-implementation based on a linear abstract type (that is, abstract viewtype
-in ATS), where counters can be created and then safely freed.
+>&#13;上記のカウンタ実装はどちらかというと良いスタイルではないと、私自身は考えています。
+単純な抽象化することで状態の整合性を保護することも可能です。
+これより後の章にて、線形抽象型(ATSでは抽象viewtypeと呼ばれます)を使った別のカウンタ実装を説明します。
+この実装で生成されたカウンタは安全に解放されます。
 
 </P
 ></DIV
