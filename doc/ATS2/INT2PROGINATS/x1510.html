@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Arrays</TITLE
+>配列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,59 +75,54 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="arrays"
->6.5. Arrays</A
+>6.5. 配列</A
 ></H1
 ><P
->&#13;I mentioned earlier that a reference is just an array of size 1.  I would
-now like to state that an array of size n is just n references allocated
-consecutively.  These references can also be called cells, and they are
-numbered from 0 until n-1, inclusive.
+>&#13;前の章で、参照はサイズが1の配列であると説明しました。
+サイズnの配列とは連続して確保されたn個の参照であると言うこともできます。
+これらの参照はセルとも呼ばれ、それらは 0 から n-1 までの番号が付けられています。
 </P
 ><P
->&#13;Given an array of size n, an integer is a valid index for this array if it
-is a natural number strictly less than n. Otherwise, the integer is out of
-the bounds of the array.  For an array named A, the expression A[i] means
-to fetch the content of the cell in A that is numbered i if i is a valid
-index for A. The expression A[i] can also be used as a left value. For
-instance, the assignment (A[i] := exp) means to evaluate exp to a value and
-then store the value into the cell in A that is numbered i if i is a valid
-index.
+>&#13;サイズnの配列が与えられた時、
+nよりも小さい自然数であれば、その整数値はこの配列に対する有効なインデックスです。
+そうでない場合、その整数値は配列の範囲の外を指すことになります。
+Aという名前のついた配列について、iがAに対する有効なインデックスである場合、
+A[i] 式はAのi番目のセルの中身を取り出します。
+A[i] 式は左辺値として使うこともできます。
+例えば (A[i] := exp) という代入は
+exp を評価して値にした後、iが有効なインデックスであればその値をAのi番目のセルに書き込みます。
 </P
 ><P
->&#13;What happens if the index i in A[i] is invalid, that is, it is out of the
-bounds of the array A?  In this case, A[i] is referred to as out-of-bounds
-array subscription and evaluating A[i] leads to a raised exception where
-the exception is <FONT
+>&#13;もしA[i]のインデックスiが有効でなかったら、つまり配列Aの範囲外であったら何が起きるのでしょうか？
+この場合、A[i]は out-of-bounds array subscription と呼ばれ、
+A[i]の評価は <FONT
 COLOR="RED"
 >ArraySubscriptExn()</FONT
->.  One simple and reliable
-way to tell whether an integer is a valid index for a given array is to
-compare it with the size of the array at run-time.  Given a type T, the
-type <FONT
+> 例外を引き起こします。
+与えられた配列に対して整数値が有効なインデックスであるかどうか判定する簡単で確実な方法の一つは、
+実行時に配列 のサイズと比較することです。
+型Tが与えられた時、型 <FONT
 COLOR="RED"
 >arrszref(T)</FONT
-> is for an array paired with its size in which
-elements of the type T are stored. I will loosely refer to values of the
-type <FONT
+> は配列と型Tの要素が収められているサイズのペアです。
+これ以降、 <FONT
 COLOR="RED"
 >arrszref(T)</FONT
-> as arrays from now on.  In case there is a
-clear need to avoid potential confusion, I may also refer to them as
-array0-values.
+> 型の値のことを漠然と配列を呼びます。
+また、混乱する可能性を避けるために、array0値と呼ぶこともあります。
 </P
 ><P
->&#13;Various functions and function templates on array0-values are declared in
-the file <A
+>&#13;array0値に関する様々な関数と関数テンプレートが
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
 TARGET="_top"
 >arrayref.sats</A
->,
-which is automatically loaded by <B
+> ファイルで宣言されています。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->. For instance,
-three function templates and one polymorphic function on arrays are
-depicted by the following interfaces:
+> によって自動的に読み込まれます。
+例えば、配列に関する3つの関数テンプレートと1つの多相関数が次のインターフェイスで表現されます:
 
 <DIV
 CLASS="informalexample"
@@ -158,92 +153,88 @@ arrszref_set_elt_at (A: arrszref a, i: size_t, x: a): void // A[i] := x
 >
 
 
-As for programming with arrays that carry no size information,
-it is a topic to be covered after dependent types are introduced.
+サイズ情報をともなわない配列を使ったプログラミングは、
+依存型が導入された後に話題にすることにします。
 
 </P
 ><P
->&#13;Like in C, there are many types of integer values in ATS. The type
+>&#13;C言語と同じように、ATS言語には多くの整数型があります。
 <FONT
 COLOR="RED"
 >size_t</FONT
-> is essentially for unsigned long integers. The functions
-for converting between the type <FONT
+> 型は本質的に unsigned long の整数です。
+<FONT
 COLOR="RED"
 >int</FONT
-> and the type
-<FONT
+> と <FONT
 COLOR="RED"
 >size_t</FONT
-> are <FONT
+> を相互に変換する関数は
+<FONT
 COLOR="RED"
 >g0int2uint_int_size</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >g0uint2int_size_int</FONT
->.  Given a type T and two values
-<FONT
-COLOR="RED"
->asz</FONT
-> and <FONT
-COLOR="RED"
->init</FONT
-> of the types <FONT
+> です。
+型 T と型 <FONT
 COLOR="RED"
 >size_t</FONT
-> and T,
-respectively, <FONT
+> と T の値としてそれぞれ <FONT
+COLOR="RED"
+>asz</FONT
+> と <FONT
+COLOR="RED"
+>init</FONT
+> が与えられたとき、
+<FONT
 COLOR="RED"
 >arrszref_make_elt&#60;T&#62; (asz, init)</FONT
-> returns an
-array of the type <FONT
+> は <FONT
 COLOR="RED"
 >arrszref(T)</FONT
-> such that the size of the array
-is <FONT
+> 型の配列を返します。
+この配列のサイズは <FONT
 COLOR="RED"
 >asz</FONT
-> and each cell in the array is initialized with the value
-<FONT
+> で、それぞれのセルは値 <FONT
 COLOR="RED"
 >init</FONT
->. Given an array A of the type <FONT
+> で初期化されます。
+型Tと型 <FONT
 COLOR="RED"
 >arrszref(T)</FONT
-> for
-some T, <FONT
+> の配列Aが与えられた時、
+<FONT
 COLOR="RED"
 >arrszref_get_size(A)</FONT
-> returns the size of A, which is of
-the type <FONT
+> はAのサイズを型 <FONT
 COLOR="RED"
 >size_t</FONT
->. For convenience,
-<FONT
+> で返します。
+利便性のために <FONT
 COLOR="RED"
 >arrszref_get_size(A)</FONT
-> can be written as <FONT
+> は <FONT
 COLOR="RED"
 >A.size</FONT
->.  As
-for array access and update, the functions <FONT
+> と書くこともできます。
+配列へのアクセスと更新のために、
+関数 <FONT
 COLOR="RED"
 >arrszref_get_elt_at</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >arrszref_set_elt_at</FONT
-> can be called. For convenience, the
-bracket notation can be used to call these functions.  
+> を呼び出すことができます。
+利便性のために、これらの関数を角括弧表記で呼び出すこともできます。
 </P
 ><P
->&#13;In the following program, the function template
-<FONT
+>&#13;次のプログラムでは、
+一般的な配列の挿入ソートを関数テンプレート <FONT
 COLOR="RED"
 >insertion_sort</FONT
-> implements the standard insertion sort on
-arrays:
+> として実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -283,21 +274,21 @@ end // end of [insertion_sort]
 >
 
 
-The comparison function <FONT
+比較関数 <FONT
 COLOR="RED"
 >cmp</FONT
-> should return 1, -1, and 0 if its
-first argument is greater than, less than and equal to its second one,
-respectively.
+> は1、-1、0のいずれかを返します。
+それぞれ1番目の引数が2番目の引数よりも大きいか、小さいか、等しいことを表わします。
 
 </P
 ><P
->&#13;Note that the entire code in this section plus some additional code
-for testing is available <A
+>&#13;この章に出てくるコードの全体とテストのための追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_EFFECTFUL/insort.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >.
+から得られます。
 </P
 ></DIV
 ><DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->&#13;Example: A Package for Rationals
+>&#13;Abstract Types
 </TITLE
 ><META
 CHARSET="UTF-8"><META
@@ -13,17 +13,17 @@ TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="Modularity"
-HREF="c1662.html"><LINK
+HREF="c1696.html"><LINK
 REL="PREVIOUS"
 TITLE="
-Abstract Types
+Specific Template Implementation
 "
-HREF="x1862.html"><LINK
+HREF="x1853.html"><LINK
 REL="NEXT"
 TITLE="
-Example: A Functorial Package for Rationals
+Example: A Package for Rationals
 "
-HREF="x1936.html"></HEAD
+HREF="x1930.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -51,7 +51,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x1862.html"
+HREF="x1853.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -65,7 +65,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x1936.html"
+HREF="x1930.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -79,26 +79,34 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="example_a_package_for_rationals"
->7.6. Example: A Package for Rationals</A
+NAME="abstract_types"
+>7.5. Abstract Types</A
 ></H1
 ><P
->&#13;Let us represent a rational number as a pair of integers.  If we declare a
-boxed abstract type <FONT
+>&#13;The name <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>abstract type</I
+></SPAN
+> refers to a type such
+that values of the type are represented in a way that is completely hidden
+from users of the type. This form of information-hiding attempts to ensure
+that changes to the implementation of an abstract type cannot introduce
+type-errors into well-typed code that makes use of the abstract type. In
+ATS as well as in many other programming languages, abstract types play a
+pivotal role in support of modular programming. I will present as follows a
+concrete example to illustrate a typical use of abstract types in
+practice.
+</P
+><P
+>&#13;Suppose that we are to implement a package to provide various
+funtionalities on finite sets of integers. We first declare an abstract
+type <FONT
 COLOR="RED"
->rat</FONT
-> for values representing rational
-numbers, then each value of the type <FONT
-COLOR="RED"
->rat</FONT
-> is stored in
-heap-allocated memory, which can only be reclaimed through garbage
-collection (GC). Instead, we follow an alternative approach by declaring
-<FONT
-COLOR="RED"
->rat</FONT
-> as an unboxed abstract type. Therefore, a declaration like
-the following one is expected:
+>intset</FONT
+> as follows for values representing finite sets of
+integers:
 
 <DIV
 CLASS="informalexample"
@@ -109,7 +117,7 @@ NAME="AEN1902"
 ></A
 ><PRE
 CLASS="programlisting"
->abst@ype rat
+>abstype intset // a boxed abstract type
 </PRE
 ><P
 ></P
@@ -117,31 +125,66 @@ CLASS="programlisting"
 >
 
 
-The problem with this declaration is that it is too abstract. As there is
-not information given about the size of the type <FONT
+The keyword <FONT
 COLOR="RED"
->rat</FONT
->, the ATS
-compiler does not even know how much memory is needed for storing a value
-of the type <FONT
+>abstype</FONT
+> indicates that the declared abstract type
+<FONT
 COLOR="RED"
->rat</FONT
->. However, the programmer should not assume that
-such a form of declaration is useless. There are realistic circumstances
-where a declaration of this form can be of great importance, and this is a
-topic I will cover elsewhere. For now, let us declare an unboxed abstract
-type as follows:
+>intset</FONT
+> is boxed, that is, the size of <FONT
+COLOR="RED"
+>intset</FONT
+> is the
+same as that of a pointer.  There is a related keyword <FONT
+COLOR="RED"
+>abst@ype</FONT
+>
+for introducing unboxed abstract types, which will be explained elsewhere.
+We next present an interface for each function or value that we want to
+implement in the package:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1906"
+NAME="AEN1908"
 ></A
 ><PRE
 CLASS="programlisting"
->abst@ype rat = (int, int)
+>// empty set
+val intset_empty : intset
+
+// singleton set of [x]
+fun intset_make_sing (x: int): intset
+
+// turning a list into a set
+fun intset_make_list (xs: list0 int): intset
+
+// turning a set into a list
+fun intset_listize (xs: intset): list0 (int)
+
+// membership test
+fun intset_ismem (xs: intset, x: int): bool
+
+// computing the size of [xs]
+fun intset_size (xs: intset): size_t
+
+// adding [x] into [xs]
+fun intset_add (xs: intset, x: int): intset
+
+// deleting [x] from [xs]
+fun intset_del (xs: intset, x: int): intset
+
+// union of [xs1] and [xs2]
+fun intset_union (xs1: intset, xs2: intset): intset
+
+// intersection of [xs1] and [xs2]
+fun intset_inter (xs1: intset, xs2: intset): intset
+
+// difference between [xs1] and [xs2]
+fun intset_differ (xs1: intset, xs2: intset): intset
 </PRE
 ><P
 ></P
@@ -149,52 +192,43 @@ CLASS="programlisting"
 >
 
 
-This declaration simply informs the ATS compiler that the representation
-for values of the type <FONT
+Let us now suppose that the declaration for <FONT
 COLOR="RED"
->rat</FONT
-> is the same as the one for values of
-the type <FONT
-COLOR="RED"
->(int, int)</FONT
->. However, this information is not made
-available to the typechecker of ATS. In particular, if a value of the type
-<FONT
-COLOR="RED"
->rat</FONT
-> is treated as a pair of integers in a program, then a
-type-error will surely occur.  </P
-><P
->The following code is contained in a file named
-<TT
+>intset</FONT
+> and the
+above interfaces are all stored in a file named <TT
 CLASS="filename"
->ratmod.sats</TT
+>intset.sats</TT
+>
+(or any other legal name for a static file).
+</P
+><P
+>&#13;Usually, a realistic implementation for finite sets is based on some kind
+of balanced trees (e.g., AVL trees, red-black trees). For the purpose of
+illustration, I hereby give an implementation in which finite sets of
+integers are represented as ordered lists of integers. This implementation
+is contained in a file named <TT
+CLASS="filename"
+>intset.dats</TT
 >, which is available
 <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratmod.sats"
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/intset.dats"
 TARGET="_top"
 >on-line</A
->.
+>.  In order to
+construct values of an abstract type, we need to concretize it temporarily
+by using the following form of declaration:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1914"
+NAME="AEN1915"
 ></A
 ><PRE
 CLASS="programlisting"
->exception Denominator
-exception DivisionByZero
-
-fun rat_make_int_int (p: int, q: int): rat
-
-fun ratneg: (rat) -&#62; rat // negation
-fun ratadd: (rat, rat) -&#62; rat // addition
-fun ratsub: (rat, rat) -&#62; rat // subtraction
-fun ratmul: (rat, rat) -&#62; rat // multiplication
-fun ratdiv: (rat, rat) -&#62; rat // division
+>assume intset = list0 (int)
 </PRE
 ><P
 ></P
@@ -202,119 +236,78 @@ fun ratdiv: (rat, rat) -&#62; rat // division
 >
 
 
-The exception <FONT
+where <FONT
 COLOR="RED"
->Denominator</FONT
-> is for reporting an erroneous
-occasion where a rational number is to be formed with a denominator equal
-to zero.  Given two integers representing the numerator and denominator of
-a rational number, the function <FONT
-COLOR="RED"
->rat_make_int_int</FONT
-> returns a
-value representing the rational number. The following implementation of
+>assume</FONT
+> is a keyword. This assume-declaration equates
 <FONT
 COLOR="RED"
->rat_make_int_int</FONT
-> can be found in a file named
+>intset</FONT
+> with the type <FONT
+COLOR="RED"
+>list0 (int)</FONT
+> and this equation is
+valid until the end of the scope in which it is introduced. As the
+assume-declaration is at the toplevel in <TT
+CLASS="filename"
+>intset.dats</TT
+>,
+the assumption that <FONT
+COLOR="RED"
+>intset</FONT
+> equals <FONT
+COLOR="RED"
+>list0 (int)</FONT
+> is valid
+until the end of the file. There is a global restriction in ATS that allows
+each abstract type to be concretized by an assume-declaration at most
+once. More specifically, if an abstract type is concretized in two files
 <TT
 CLASS="filename"
->ratmod.dats</TT
->, which is also available
-<A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratmod.dats"
-TARGET="_top"
->on-line</A
->.
+>foo1.dats</TT
+> and <TT
+CLASS="filename"
+>foo2.dats</TT
+>, then
+these two files cannot be used together to generate an executable.
+
+The rest of implementation in <FONT
+COLOR="RED"
+>intset</FONT
+> is all standard.  For
+instance, the union operation on two given sets of integers is implemented
+as follows:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1921"
+NAME="AEN1926"
 ></A
 ><PRE
 CLASS="programlisting"
 >implement
-rat_make_int_int (p, q) = let
-  fun make (
-    p: int, q: int
-  ) : rat = let
-    val r = gcd (p, q) in (p / r, q / r)
-  end // end of [make]
-//
-  val () = if q = 0 then $raise Denominator
-//
-in
-  if q &#62; 0 then make (p, q) else make (~p, ~q)
-end // end of [rat_make_int_int]
-</PRE
-><P
-></P
-></DIV
->
-
-
-Given a pair of integers p and q such that q is not zero, the function
-<FONT
-COLOR="RED"
->rat_make_int_int</FONT
-> returns another pair of integers
-p<SUB
->1</SUB
-> and q<SUB
->1</SUB
-> such that
-q<SUB
->1</SUB
-> is positive, p<SUB
->1</SUB
-> and
-q<SUB
->1</SUB
-> are coprimes, that is, their greatest common
-divisor is 1, and p<SUB
->1</SUB
->/q<SUB
->1</SUB
->
-equals p/q. With <FONT
-COLOR="RED"
->rat_make_int_int</FONT
->, it is straightforward to
-implement as follows the arithmetic operations on rational numbers:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1932"
-></A
-><PRE
-CLASS="programlisting"
->implement ratneg (x) = (~x.0, x.1)
-
-implement
-ratadd (x, y) =
-  rat_make_int_int (x.0 * y.1 + x.1 * y.0, x.1 * y.1)
-// end of [ratadd]
-
-implement
-ratsub (x, y) =
-  rat_make_int_int (x.0 * y.1 - x.1 * y.0, x.1 * y.1)
-// end of [ratsub]
-
-implement
-ratmul (x, y) = rat_make_int_int (x.0 * y.0, x.1 * y.1)
-
-implement
-ratdiv (x, y) = (
-if y.0 &#62; 0
-  then rat_make_int_int (x.0 * y.1, x.1 * y.0) else $raise DivisionByZero()
-// end of [if]
-) (* end of [ratdiv] *)
+intset_union
+  (xs1, xs2) = (
+case+ (xs1, xs2) of
+| (list0_cons (x1, xs11),
+   list0_cons (x2, xs21)) =&#62;
+  let
+    val sgn = compare (x1, x2)
+  in
+    case+ 0 of
+    | _ when sgn &#60; 0 =&#62;
+        list0_cons{int}(x1, intset_union (xs11, xs2))
+    | _ when sgn &#62; 0 =&#62;
+        list0_cons{int}(x2, intset_union (xs1, xs21))
+    | _ (* sgn = 0 *) =&#62;
+        list0_cons{int}(x1, intset_union (xs11, xs21))
+    // end of [case]
+  end // end of [(cons, cons)]
+| (list0_nil (), _) =&#62; xs2
+| (_, list0_nil ()) =&#62; xs1
+) (* end of [intset_union] *)
 </PRE
 ><P
 ></P
@@ -324,15 +317,19 @@ if y.0 &#62; 0
 
 There is also some testing code available
 <A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/test_ratmod.dats"
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/test_intset.dats"
 TARGET="_top"
 >on-line</A
-> that makes
-use of some functions declared in <TT
+>
+that makes use of some functions declared in
+<TT
 CLASS="filename"
->ratmod.sats</TT
->.
-
+>intset.sats</TT
+>.  Often testing code as such is
+constructed immediately after the interfaces for various functions and
+values in a package are declared. This allows these interfaces to be tried
+before they are actually implemented so that potential flaws can be exposed
+in a timely fashion.
 </P
 ></DIV
 ><DIV
@@ -351,7 +348,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x1862.html"
+HREF="x1853.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -369,7 +366,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x1936.html"
+HREF="x1930.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -379,13 +376,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Abstract Types</TD
+>Specific Template Implementation</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1662.html"
+HREF="c1696.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -393,7 +390,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: A Functorial Package for Rationals</TD
+>Example: A Package for Rationals</TD
 ></TR
 ></TABLE
 ></DIV
