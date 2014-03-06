@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Simple Input and Output</TITLE
+>単純な入力と出力</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="効果(effect)を持つプログラミングの機能"
 HREF="c1364.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Estimating the Constant Pi"
+TITLE="例: 定数Piの推量"
 HREF="x1627.html"><LINK
 REL="NEXT"
 TITLE="Modularity"
@@ -75,22 +75,19 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="basic_input_and_output"
->6.9. Simple Input and Output</A
+>6.9. 単純な入力と出力</A
 ></H1
 ><P
->&#13;Handling I/O in ATS properly requires the availability of both dependent
-types and linear types, which I will cover elsewhere. In this section, I
-only present a means for allowing the programmer to access certain very
-basic I/O functionalities.
+>&#13;ATS言語でI/Oを扱うには依存型と線形型を使う必要があり、これは別の章で解説します。
+この章では、プログラマが使うことのできる基本的なI/Oへのアクセス手段を解説します。
 </P
 ><P
->&#13;A file handle essentially associates a stream (of bytes) with a file
-identifier (represented as an integer).  In ATS, the type for file handles
-is <FONT
+>&#13;ファイルハンドルは本質的には(バイト列としての)ストリームと(整数値として表現される)ファイル識別子を結び付けます。
+ATSでは、ファイルハンドルの型は <FONT
 COLOR="RED"
 >FILEref</FONT
->. There are three standard file handles, which are
-listed as follows:
+> です。
+次に挙げるような3つの標準ファイルハンドルがあります:
 
 </P
 ><P
@@ -101,7 +98,7 @@ listed as follows:
 ><FONT
 COLOR="RED"
 >stdin_ref</FONT
->: standard input
+>: 標準入力
 </P
 ></LI
 ><LI
@@ -109,7 +106,7 @@ COLOR="RED"
 ><FONT
 COLOR="RED"
 >stdout_ref</FONT
->: standard output
+>: 標準出力
 </P
 ></LI
 ><LI
@@ -117,23 +114,23 @@ COLOR="RED"
 ><FONT
 COLOR="RED"
 >stderr_ref</FONT
->: standard error output
+>: 標準エラー出力
 </P
 ></LI
 ></UL
 ><P
->&#13;Various functions on file handles are declared in the file
-<A
+>&#13;ファイルハンドルに関連する様々な関数が <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/filebas.sats"
 TARGET="_top"
 >filebas.sats</A
->, which is
-automatically loaded by <B
+>
+ファイルで宣言されています。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->. For instance, the
-functions for opening and closing file handles have the following
-interfaces:
+> で自動的に読み込まれます。
+例えば、
+ファイルハンドルのオープンとクローズを行なう関数は次のようなインターフェイスを持っています:
 <DIV
 CLASS="informalexample"
 ><P
@@ -156,17 +153,16 @@ fun fileref_close (fil: FILEref): void
 >
 
 
-Note that these two functions abort immediately whenever an error occurs.
-The following function is an optional version of
-<FONT
+これらの2つの関数はエラーが発生した時点で即座に中断することに注意してください。
+次の関数は <FONT
 COLOR="RED"
 >fileref_open_exn</FONT
->, and the caller needs to inspect the value
-returned by a call to <FONT
+> の別バージョンで、
+ファイルハンドルが実際に得られたかどうか、
+<FONT
 COLOR="RED"
 >fileref_open_opt</FONT
-> to see if a file handle
-is actually obtained.
+> の呼び出し元が返値を検査する必要があります。
 <DIV
 CLASS="informalexample"
 ><P
@@ -187,11 +183,10 @@ CLASS="programlisting"
 
 </P
 ><P
->The type <FONT
+>型 <FONT
 COLOR="RED"
 >file_mode</FONT
-> is for values representing file modes,
-which are listed as follows:
+> は次に挙げるようなファイルモードを表わす値です:
 </P
 ><P
 ></P
@@ -201,8 +196,7 @@ which are listed as follows:
 ><FONT
 COLOR="RED"
 >file_mode_r</FONT
->: opening a file for reading and
-positioning the associated stream at the beginning of the file.
+>: ファイルを読み出しモードで開き、ファイル先頭にストリームを配置します。
 </P
 ></LI
 ><LI
@@ -210,8 +204,7 @@ positioning the associated stream at the beginning of the file.
 ><FONT
 COLOR="RED"
 >file_mode_rr</FONT
->: opening a file for both reading and and
-writing and positioning the associated stream at the beginning of the file.
+>: ファイルを読み書きモードで開き、ファイル先頭にストリームを配置します。
 </P
 ></LI
 ><LI
@@ -219,9 +212,8 @@ writing and positioning the associated stream at the beginning of the file.
 >&#13;<FONT
 COLOR="RED"
 >file_mode_w</FONT
->: truncating a given file to zero length or creating
-a new one for writing and positioning the associated stream at the
-beginning of the file.
+>: 与えられたファイルを長さゼロに切り詰めるか、書き込みのために新しいファイルを生成し、
+ファイル先頭にストリームを配置します。
 </P
 ></LI
 ><LI
@@ -229,9 +221,8 @@ beginning of the file.
 >&#13;<FONT
 COLOR="RED"
 >file_mode_ww</FONT
->: truncating a given file to zero length or
-creating a new one for both reading and writing and positioning the
-associated stream at the beginning of the file.
+>: 与えられたファイルを長さゼロに切り詰めるか、読み書きのために新しいファイルを生成し、
+ファイル先頭にストリームを配置します。
 </P
 ></LI
 ><LI
@@ -239,8 +230,7 @@ associated stream at the beginning of the file.
 >&#13;<FONT
 COLOR="RED"
 >file_mode_a</FONT
->: opening a file for writing and positioning the
-associated stream at the end of the file.
+>: ファイルを書き込みモードで開き、ファイル末尾にストリームを配置します。
 </P
 ></LI
 ><LI
@@ -248,16 +238,15 @@ associated stream at the end of the file.
 >&#13;<FONT
 COLOR="RED"
 >file_mode_aa</FONT
->: opening a file for both reading and writing and
-positioning the associated stream at the beginning of the file for reading
-and at the end for writing.
+>: ファイルを読み書きモードで開き、読み出しストリームをファイル先頭に、
+書き込みストリームをファイル末尾に配置します。
 </P
 ></LI
 ></UL
 ><P
->&#13;As an example, the following short program opens a file handle, outputs the
-string "Hello, world!" plus a newline into the stream associated with the
-file handle and then closes the file handle:
+>&#13;例として、次の短かいプログラムはファイルハンドルを開き、
+文字列 "Hello, world!" と改行をファイルハンドルに関連するストリームに出力し、
+最後にファイルハンドルを閉じます:
 
 <DIV
 CLASS="informalexample"
@@ -284,18 +273,17 @@ val () = fileref_close (out)
 >
 
 
-After executing the program, we obtain a file of the name "hello.txt" in
-the current working directory containing the expected content. There are
-various fprint-functions in ATS for printing out data into the stream
-associated with a given file handle. Often the programmer can simply use
-the name <FONT
+このプログラムを実行した後、
+現在のワーキングディレクトリに期待される内容を含む "hello.txt" と名前のついたファイルが得られます。
+与えられたファイルハンドル関連するストリームへデータを印字するような、様々なfprint関数がATSにはあります。
+ATSではオーバーロードがサポートされているため、
+しばしばプログラマはこれらの関数を参照するために単純に <FONT
 COLOR="RED"
 >fprint</FONT
-> to refer to these functions due to the support
-for overloading in ATS.
+> という名前を使うことができます。
 </P
 ><P
->&#13;Another common I/O function is given the following interface:
+>&#13;別の一般的なI/O関数として次のようなインターフェイスがあります:
 
 <DIV
 CLASS="informalexample"
@@ -314,19 +302,17 @@ CLASS="programlisting"
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >fileref_get_line_string</FONT
-> reads a line from the
-stream associated with a given file handle, and it returns a value of the
-type <FONT
+> は与えられたファイルハンドルに対応するストリームから1行読み込みます。
+そしてその返値は <FONT
 COLOR="RED"
 >Strptr1</FONT
->. For the moment, I will simply say that such a
-value is just like a string except that it needs to be freed explicitly. As
-an example, the following short program echos onto the standard output each
-line read from the standard input:
-
+> 型になります。
+さしあたり、このような値は明示的に解放しなければならない文字列のようなものであると、
+単純に説明することにとどめます。
+例として、次の短かいプログラムは、標準入力から一行読み込み標準出力にエコー書き出します:
 
 <DIV
 CLASS="informalexample"
@@ -366,15 +352,15 @@ end (* end of [loop] *)
 >
 
 
-Note that the function <FONT
-COLOR="RED"
->strptr_free</FONT
-> is called to free a linear
-string (of the type <FONT
+(<FONT
 COLOR="RED"
 >Strptr1</FONT
->). Often, typing the CTRL-D
-character can terminate the above program for echoing each line of input.
+> 型の)線形文字列を解放するために、
+関数 <FONT
+COLOR="RED"
+>strptr_free</FONT
+> が呼び出されていることに注意してください。
+CTRL-Dを入力することで入力の行をエコーしている上記のプログラムを終了することができます。
 </P
 ></DIV
 ><DIV
@@ -421,7 +407,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Estimating the Constant Pi</TD
+>例: 定数Piの推量</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
