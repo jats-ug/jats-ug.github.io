@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Matrices</TITLE
+>行列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="効果(effect)を持つプログラミングの機能"
 HREF="c1364.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Ordering Permutations"
+TITLE="例: 順序をつけた置換 (Ordering Permutations)"
 HREF="x1550.html"><LINK
 REL="NEXT"
 TITLE="Example: Estimating the Constant Pi"
@@ -75,45 +75,43 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="matrices"
->6.7. Matrices</A
+>6.7. 行列</A
 ></H1
 ><P
->&#13;A matrix in ATS is just a two-dimensional array but it is represented by a
-one-dimensional array and the representation is of the row-major style (in
-contrast to the column-major style).  Given a type T, the type
-<FONT
+>&#13;ATSにおける行列とは単に2次元の配列です。
+それは1次元の配列と列優先(row-major)スタイルで表現されます
+(行優先(column-major)スタイルではありません)。
+型Tが与えられたとき、型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
-> is for a matrix combined with its number of rows
-and number of columns such that each element stored in the matrix is of the
-type T. I will loosely refer to values of the type <FONT
+> は、
+固有の列と行の数によって構成された行列で、行列中の要素は型Tです。
+これ以降、型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
->
-as matrices from now on.  If there is a clear need to avoid potential
-confusion, I may also refer to them as matrix0-values.
+> の値をおおざっぱに行列を呼びます。
+混乱する可能性を明示的に避ける必要がある場合には、matrix0値と呼ぶこともあります。
 </P
 ><P
->&#13;Given a matrix M of dimension m by n, the expression M[i,j] means to
-fetch the content of the cell in M that is indexed by (i, j), where i and j
-are natural numbers strictly less than m and n, respectively.  The
-expression M[i,j] can also be used as a left value. For instance, the
-assignment (M[i,j] := exp) means to evaluate exp to a value and then store
-the value into the cell in M that is indexed by (i, j).
+>&#13;次元m,nの行列Mが与えられたとき、
+式 M[i,j] は (i, j) をインデックスとするMのセルの中身を取り出します。
+このときiとjは自然数で、それぞれmとnよりも小さい値でなければなりません。
+式 M[i,j] は左辺値としても使うことができます。
+例えば (M[i,j] := exp) という代入は、式expを評価して値にした後、
+その値をインデックス(i, j)で指し示したMのセルに書き込みます。
 </P
 ><P
->&#13;Various functions and function templates on matrix0-values are declared in
-the file <A
+>&#13;matrix0値に関する様々な関数と関数テンプレートが
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
 TARGET="_top"
 >matrixref.sats</A
->,
-which is automatically loaded by <B
+> ファイルで宣言されています。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->. For instance,
-three function templates and two polymorphic functions on matrices are
-depicted by the following interfaces:
+> によて自動的に読み込まれます。
+例えば、行列に関する3つの関数テンプレートと2つの多相関数が次のようなインターフェイスで表現されています:
 
 <DIV
 CLASS="informalexample"
@@ -146,89 +144,85 @@ mtrxszref_set_elt_at // template
 
 </P
 ><P
->&#13;Given a type T and three values <FONT
+>&#13;型Tと3つの値 <FONT
 COLOR="RED"
 >nrow</FONT
 >, <FONT
 COLOR="RED"
 >ncol</FONT
-> and
-<FONT
+>, <FONT
 COLOR="RED"
 >init</FONT
-> of the types <FONT
+> がそれぞれ
+型 <FONT
 COLOR="RED"
 >size_t</FONT
 >, <FONT
 COLOR="RED"
 >size_t</FONT
-> and T,
-respectively, <FONT
+>, T で与えられた時、
+<FONT
 COLOR="RED"
 >mtrxszref_make_elt&#60;T&#62; (row, col, init)</FONT
->
-returns a matrix of the type <FONT
+> は型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
-> such that the
-dimension of the matrix is <FONT
+> の行列を返します。
+この行列の次元は <FONT
 COLOR="RED"
 >nrow</FONT
-> by <FONT
+> x <FONT
 COLOR="RED"
 >ncol</FONT
-> and each
-cell in the matrix is initialized with the value <FONT
+> で、それぞれのセルは値 <FONT
 COLOR="RED"
 >init</FONT
->. Given a
-matrix M of the type <FONT
+> で初期化されます。
+型Tと型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
-> for some T,
+> の行列Mが与えられたとき、
 <FONT
 COLOR="RED"
 >mtrxszref_get_nrow(M)</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >mtrxszref_get_ncol(M)</FONT
 >
-return the number of rows and the number of columns of M, respectively,
-which are both of the type <FONT
+はMの列の数と行数を型 <FONT
 COLOR="RED"
 >size_t</FONT
->. For convenience,
-<FONT
+> でそれぞれ返します。
+利便性のために <FONT
 COLOR="RED"
 >mtrxszref_get_nrow(M)</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >mtrxszref_get_ncol(M)</FONT
-> can
-also be written as <FONT
+>
+はそれぞれ <FONT
 COLOR="RED"
 >M.nrow</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >M.ncol</FONT
->, respectively.
-As for matrix access and update, the function templates
-<FONT
+> と書くこともできます。
+行列へのアクセスと更新のために、 <FONT
 COLOR="RED"
 >mtrxszref_get_elt_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >mtrxszref_set_elt_at</FONT
-> can
-be called, respectively. For convenience, bracket notation can used for
-these functions.
+> 
+をそれぞれ呼び出すことができます。
+利便性のために、これらの関数のかわりに角括弧表記を使うことができます。
 </P
 ><P
->&#13;Let us now take a look at an example. The following defined function
-<FONT
+>&#13;例を見てみましょう。
+次に定義する関数 <FONT
 COLOR="RED"
 >mtrxszref_transpose</FONT
-> turns a given matrix into its transpose:
+> は与えられた行列を転置行列にします:
 
 <DIV
 CLASS="informalexample"
@@ -269,27 +263,26 @@ end // end of [mtrxszref_transpose]
 >
 
 
-The matrix M is assumed to be a square, that is, its number of rows equals
-its number of columns. Note that the two functions <FONT
+行列Mは正方形、つまり列と行の数が等しいことを仮定しています。
+2つの関数 <FONT
 COLOR="RED"
 >loop1</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >loop2</FONT
-> are defined mutually tail-recursively, and the keyword
-<FONT
+> は相互末尾再帰で定義されていて、
+キーワード <FONT
 COLOR="RED"
 >fnx</FONT
-> indicates the need to combine the bodies of
+> は
 <FONT
 COLOR="RED"
 >loop1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >loop2</FONT
-> so that mutual recursive tail-calls
-in these function bodies can be compiled into direct local jumps.
+> の中身を連結する必要があることを示していることに注意してください。
+これらの関数の中にある相互末尾再帰呼び出しを、ローカルへの直接ジャンプへコンパイルすることができます。
 </P
 ></DIV
 ><DIV
@@ -336,7 +329,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Ordering Permutations</TD
+>例: 順序をつけた置換 (Ordering Permutations)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ATSにおける外部の型と値</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="C言語との相互呼び出し"
+HREF="c2005.html"><LINK
+REL="PREVIOUS"
+TITLE="C言語との相互呼び出し"
+HREF="c2005.html"><LINK
+REL="NEXT"
+TITLE="ATSに外部コードを含める"
+HREF="x2084.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c2005.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. C言語との相互呼び出し</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2084.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="external_types_and_values"
+>8.2. ATSにおける外部の型と値</A
+></H1
+><P
+>&#13;外部の型や値を簡単にATS言語に取り込むことができます。
+また、それはC言語で宣言された型や値に関連付けさせることができます。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>some_type_in_c</FONT
+> とう名前でC言語の型が定義されていると想像してください。
+この型は <FONT
+COLOR="RED"
+>$extype"some_type_in_c"</FONT
+> のようにATS言語から参照することができます。
+例えば次のコードのように、C言語でのいくつかの型をATS言語に取り込んで型定義できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2075"
+></A
+><PRE
+CLASS="programlisting"
+>typedef Cint = $extype"int"
+typedef Clint = $extype"long int"
+typedef Cllint = $extype"long long int"
+typedef Cint2 = $extype"struct{ int x; int y; }"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>some_value_in_c</FONT
+> という名前のC言語の値があった場合、
+この値を <FONT
+COLOR="RED"
+>$extval(<FONT
+COLOR="RED"
+>T</FONT
+>, "some_value_in_c")</FONT
+> のようにATSから参照することができます。
+この T はこの値に割り当てるATSの型です。
+例えば次のコードのように、C言語でのいくつかの外部定義の値をATS言語に取り込んでマクロ定義できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2080"
+></A
+><PRE
+CLASS="programlisting"
+>macdef NULL = $extype(ptr, "0")
+macdef stdin_ref = $extype(FILEref, "stdin")
+macdef stdout_ref = $extype(FILEref, "stdout")
+</PRE
+><P
+></P
+></DIV
+>
+
+
+また次のコードのように、C言語の関数を参照する外部定義の値を作ることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2082"
+></A
+><PRE
+CLASS="programlisting"
+>macdef atoi = $extype(string -&#62; int, "atoi")
+macdef atol = $extype(string -&#62; lint, "atol")
+macdef atof = $extype(string -&#62; double, "atof")
+</PRE
+><P
+></P
+></DIV
+>
+
+
+C言語の関数を直接参照するために、より適切な方法がATSにはあることに注意してください。
+一般に、ATSで外部定義の値を使う主な用途は、C言語の定数宣言を直接ATSコードに関連付けることです。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c2005.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2084.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>C言語との相互呼び出し</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2005.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ATSに外部コードを含める</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

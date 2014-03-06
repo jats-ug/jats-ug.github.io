@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ATSに外部コードを含める</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="C言語との相互呼び出し"
+HREF="c2000.html"><LINK
+REL="PREVIOUS"
+TITLE="ATSにおける外部の型と値"
+HREF="x2064.html"><LINK
+REL="NEXT"
+TITLE="ATSにおける外部関数呼び出し"
+HREF="x2100.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2064.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. C言語との相互呼び出し</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2100.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="inclusion_of_external_code"
+>8.3. ATSに外部コードを含める</A
+></H1
+><P
+>&#13;C言語コード中にアセンブラコードを埋め込むのと同様に、
+ATSコード中にC言語コードを埋め込むことも簡単です。
+例えば、この章の最初で示した例は、次のような一つのファイルに書くことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2082"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun fact (n: int): int
+extern
+fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
+
+implement fact (n) = fact2 (n, 1)
+
+%{
+int
+fact2_in_c (int n, int res)
+{
+  while (n &#62; 0) { res *= n ; n -= 1 ; } ; return res ;
+}
+%}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ATSコード中にC言語コードを書くためには、
+<FONT
+COLOR="RED"
+>%{</FONT
+> と <FONT
+COLOR="RED"
+>%}</FONT
+> のシンボルで囲まなければなりません。
+本質的には、これら2つのシンボルの間にあるコードは、生成されるC言語コードの不定の位置に配置されます。
+もし囲まれたコードを生成されるC言語コードの先頭に配置したいのであれば、
+<FONT
+COLOR="RED"
+>%{</FONT
+> シンボルの代わりに <FONT
+COLOR="RED"
+>%{^</FONT
+> シンボルを使うべきです。
+もし囲まれたコードを生成されるC言語コードの末尾に配置したいのであれば、
+<FONT
+COLOR="RED"
+>%{</FONT
+> シンボルの代わりに <FONT
+COLOR="RED"
+>%{$</FONT
+> シンボルを使うべきです。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>%{#</FONT
+> と <FONT
+COLOR="RED"
+>%}</FONT
+> シンボルの間にC言語コードを配置することもできます。
+<TT
+CLASS="filename"
+>foo.sats</TT
+> という名前のファイルがこの方法でC言語コードを含んでいる場合を考えてみましょう。
+もし <TT
+CLASS="filename"
+>foo.sats</TT
+> が <TT
+CLASS="filename"
+>foo.dats</TT
+> という名前の別のファイルに staload されると、
+<TT
+CLASS="filename"
+>foo.sats</TT
+> の <FONT
+COLOR="RED"
+>%{#</FONT
+> と <FONT
+COLOR="RED"
+>%}</FONT
+> の間のコードは
+<TT
+CLASS="filename"
+>foo.dats</TT
+> をコンパイルして生成されたC言語コード中に配置されます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2064.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2100.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ATSにおける外部の型と値</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2000.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ATSにおける外部関数呼び出し</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
