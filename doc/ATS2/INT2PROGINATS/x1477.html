@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>参照</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="効果(effect)を持つプログラミングの機能"
+HREF="c1365.html"><LINK
+REL="PREVIOUS"
+TITLE="例: ブラウンツリー(Braun Trees)の判定"
+HREF="x1442.html"><LINK
+REL="NEXT"
+TITLE="例: カウンタの実装"
+HREF="x1500.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1442.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. 効果(effect)を持つプログラミングの機能</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1500.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="references"
+>6.3. 参照</A
+></H1
+><P
+>&#13;参照はたった1つの要素を持つ配列です。
+ある型Tが与えられた時、型Tの値を保管する参照は型 ref(T) になります。
+次のプログラムは参照の本質的な機能をすべて利用しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1480"
+></A
+><PRE
+CLASS="programlisting"
+>val intr = ref&#60;int&#62; (0) // create a ref and init. it with 0
+val () = !intr := !intr + 1 // increase the integer at [intr] by 1
+</PRE
+><P
+></P
+></DIV
+>
+
+
+最初の行では、1つの整数値を保存する参照を作成し、その参照を値0で初期化した後、
+その参照に <FONT
+COLOR="RED"
+>intr</FONT
+> という名前をつけています。
+このスタイルでは、参照の生成と初期化を分離できないことに注意してください。
+2番目の行では、現状の値に1を足した値で参照 <FONT
+COLOR="RED"
+>intr</FONT
+> を更新しています。
+一般に、型 T と r と名付けられた参照 ref(T) が与えられた時、
+式 !r は r に保存されている型 T の値を取得する意味しています。
+しかしながら !r は左辺値にも使うことができます。
+例えば (!r := exp) という代入は exp を評価して値にしてから r に保存することを意味しています。
+そのため、上記のプログラムの2行目を評価した後では、 <FONT
+COLOR="RED"
+>intr</FONT
+> に保存されている値は 1 になります。
+</P
+><P
+>&#13;<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/reference.sats"
+TARGET="_top"
+>reference.sats</A
+>
+ファイルでは、参照にまつわる様々な関数と関数テンプレートが宣言されています。
+このファイルは <B
+CLASS="command"
+>atsopt</B
+> によって自動的に読み込まれます。
+特に、次のインターフェイスの関数テンプレート <FONT
+COLOR="RED"
+>ref_get_elt</FONT
+> と <FONT
+COLOR="RED"
+>ref_set_elt</FONT
+> を使うことで、
+参照の読み書きをすることもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1490"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype} ref_get_elt (r: ref a): a // !r
+fun{a:t@ype} ref_set_elt (r: ref a, x: a): void // !r := x
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;実際には参照は誤用されがちです。
+とりわけC言語やJavaのような命令型プログラミング言語に成熟した関数型プログラミングの初心者に見られます。
+そのようなプログラマはしばしばC言語やJavaで書かれたプログラムを、
+関数型プログラムに単に "翻訳" しようと考えます。
+次で定義している <FONT
+COLOR="RED"
+>sumup</FONT
+> はそのような例です。
+この関数1から与えられた整数までの整数値をすべて加算します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1494"
+></A
+><PRE
+CLASS="programlisting"
+>fun sumup
+  (n: int): int = let
+  val i = ref&#60;int&#62; (1)
+  val res = ref&#60;int&#62; (0)
+  fun loop ():&#60;cloref1&#62; void =
+    if !i &#60;= n then (!res := !res + !i; !i := !i + 1; loop ())
+  // end of [loop]
+in
+  loop (); !res
+end // end of [sumup]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このプログラムは正常ですが良い実装とスタイルではありません。
+最悪とまでは言えませんが、ひどいものです。
+参照はヒープに確保されるので、参照の読み書きはレジスタの読み書きよりもより多く時間を消費します。
+そのため、この <FONT
+COLOR="RED"
+>sumup</FONT
+> の実装は時間効率が悪いことになります。
+<FONT
+COLOR="RED"
+>sumup</FONT
+> が呼び出されるたびに、2つの参照がヒープに生成されて関数が返るまで放置されています。
+参照のために割り当てられたメモリはガベージコレクション(GC)によってのみ回収されます。
+つまり、この <FONT
+COLOR="RED"
+>sumup</FONT
+> の実装は空間効率も悪いことにります。
+もっと重要なことに、参照を多用するプログラムは論証することがしばしば困難です。
+</P
+><P
+>&#13;関数型プログラミングにおける参照は危険な機能であると、私は考えています。
+もしGCを使わないプログラムを実行したいのであれば、
+関数の中で参照を生成してはいけません(その他にも多くの制約があります)。
+もし手続型のプログラムを関数型のプログラムに "翻訳" する際に参照が必要になってしまったら、
+多くの場合あなたは迷子になっており、関数型スタイルのプログラミングをまだよく学習していないことになります。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1442.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1500.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: ブラウンツリー(Braun Trees)の判定</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1365.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: カウンタの実装</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 順序をつけた置換 (Ordering Permutations)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="効果(effect)を持つプログラミングの機能"
+HREF="c1365.html"><LINK
+REL="PREVIOUS"
+TITLE="配列"
+HREF="x1511.html"><LINK
+REL="NEXT"
+TITLE="行列"
+HREF="x1587.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1511.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. 効果(effect)を持つプログラミングの機能</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1587.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_ordering_permutations"
+>6.6. 例: 順序をつけた置換 (Ordering Permutations)</A
+></H1
+><P
+>自然数nが与えられた時、1からnまでの整数からなる置換(permutation)をすべて印字することを考えます。
+さらに、整数列を辞書順で印字したいとしましょう。
+例えば、nが3の時次のような出力が得られることを期待しています：
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1554"
+></A
+><PRE
+CLASS="programlisting"
+>1, 2, 3
+1, 3, 2
+2, 1, 3
+2, 3, 1
+3, 1, 2
+3, 2, 1
+</PRE
+><P
+></P
+></DIV
+>
+
+</P
+><P
+>次のような整数の配列を印字する関数を定義しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1557"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;fun print_intarray
+  (A: arrszref (int)): void = let
+  val asz = g0uint2int_size_int (A.size)
+//
+// The integers are to be separated by the string [sep]
+//
+  fun loop (i: int, sep: string):&#60;cloref1&#62; void =
+    if i &#60; asz then
+      (if i &#62; 0 then print sep; print A[i]; loop (i+1, sep))
+    // end of [if]
+in
+  loop (0, ", ")
+end // end of [print_intarray]
+</PRE
+><P
+></P
+></DIV
+>
+
+</P
+><P
+>&#13;次に、与えられた配列の要素を再配置するために、
+2つの関数 <FONT
+COLOR="RED"
+>lrotate</FONT
+> と <FONT
+COLOR="RED"
+>rrotate</FONT
+> を実装します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1562"
+></A
+><PRE
+CLASS="programlisting"
+>fun lrotate (
+  A: arrszref int, i: int, j: int
+) : void = let
+  fun lshift (
+    A: arrszref int, i: int, j: int
+  ) : void =
+  if i &#60; j then (A[i] := A[i+1]; lshift (A, i+1, j))
+in
+  if i &#60; j then let
+    val tmp = A[i] in lshift (A, i, j); A[j] := tmp
+  end // end of [if]
+end // end of [lrotate]
+
+fun rrotate (
+  A: arrszref int, i: int, j: int
+) : void = let
+  fun rshift (
+    A: arrszref int, i: int, j: int
+  ) : void =
+  if i &#60; j then (A[j] := A[j-1]; rshift (A, i, j-1))
+in
+  if i &#60; j then let
+    val tmp = A[j] in rshift (A, i, j); A[i] := tmp
+  end // end of [if]
+end // end of [rrotate]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+配列と2つの有効なインデックスiとjに適用され、iがj以下であるとき、
+<FONT
+COLOR="RED"
+>lrotate</FONT
+> はいっせいにセルiの中身をセルjへ移動し、セルkの中身をセルk-1へ移動します。
+このときkはi+1からjの範囲の数値です。
+<FONT
+COLOR="RED"
+>rrotate</FONT
+> 関数は要素を反対方向に移すことを除いて、 <FONT
+COLOR="RED"
+>lrotate</FONT
+> に似ています。
+</P
+><P
+>自然数nが与えられたとき、
+次に定義する関数 <FONT
+COLOR="RED"
+>permute</FONT
+> は1からnまでの整数からなるすべての置換を印字します。
+このとき出力は整数列の辞書順で並べられます。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1569"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;fun permute
+  (n: int): void = let
+//
+  #define i2sz g0int2uint_int_size
+//
+// Creating array A of size n
+//
+  val A = arrszref_make_elt&#60;int&#62; (i2sz(n), 0)
+//
+// Initializing A with integers from 1 to n, inclusive
+//
+  val () = init (0) where
+  {
+    fun init (i: int):&#60;cloref1&#62; void =
+      if i &#60; n then (A[i] := i+1; init (i+1))
+  } // end of [where] // end of [val]
+//
+  fun aux
+    (i: int):&#60;cloref1&#62; void =
+  (
+    if i &#60;= n
+      then aux2 (i, i) else (
+      print_intarray (A); print_newline ()
+    ) // end of [if]
+  ) (* end of [aux] *)
+//
+  and aux2
+    (
+      i: int, j: int
+    ) :&#60;cloref1&#62; void =
+  (
+    if j &#60;= n then let
+      val () = (
+        rrotate (A, i-1, j-1); aux (i+1); lrotate (A, i-1, j-1)
+      ) // end of [val]
+    in
+      aux2 (i, j+1)
+    end // end of [if]
+  ) (* end of [aux2] *)
+//
+in
+  aux (1)
+end // end of [permute]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>where</FONT
+> はキーワードで、なんらかの式 exp と宣言の列 decseq があるとき
+式 (exp <FONT
+COLOR="RED"
+>where</FONT
+> <FONT
+COLOR="RED"
+>{</FONT
+> decseq <FONT
+COLOR="RED"
+>}</FONT
+>)
+はlet式 (<FONT
+COLOR="RED"
+>let</FONT
+> decseq <FONT
+COLOR="RED"
+>in</FONT
+> exp <FONT
+COLOR="RED"
+>end</FONT
+>) と等価であることに注意してください。
+関数 <FONT
+COLOR="RED"
+>aux</FONT
+> の挙動を理解するために、
+<FONT
+COLOR="RED"
+>n</FONT
+> が 4 で、配列 <FONT
+COLOR="RED"
+>A</FONT
+> の4つの要素が 1, 2, 3, 4 であるとき、
+<FONT
+COLOR="RED"
+>aux(1)</FONT
+> を評価してみましょう。
+
+この評価によって <FONT
+COLOR="RED"
+>aux(2)</FONT
+> の評価が4回起きることは簡単に理解できるでしょう:
+1度目では配列 <FONT
+COLOR="RED"
+>A</FONT
+> は (1, 2, 3, 4) を含み、
+2度目では (2, 1, 3, 4)、
+3度目では (3, 1, 2, 4)、
+4度目では (4, 1, 2, 3) を含みます。
+再帰呼び出しによって、
+<FONT
+COLOR="RED"
+>aux(1)</FONT
+> の評価が、すべての置換を整数列の辞書順で印字するのを理解するのは難しくないでしょう。
+</P
+><P
+>&#13;この章に出てくるコードの全体とテストのための追加コードは
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_EFFECTFUL/permord.dats"
+TARGET="_top"
+>オンライン</A
+>
+から得られます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1511.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1587.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>配列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1365.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>行列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
