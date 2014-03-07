@@ -17,8 +17,8 @@ REL="PREVIOUS"
 TITLE="Transition from Datatypes to Dataviewtypes"
 HREF="x4029.html"><LINK
 REL="NEXT"
-TITLE="Memory Allocation and Deallocation"
-HREF="x4083.html"></HEAD
+TITLE="Example: An Array-Based Circular Buffer"
+HREF="x4113.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x4083.html"
+HREF="x4113.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -237,7 +237,7 @@ CLASS="programlisting"
 timer_new () = let
 //
 val timer = TIMER (_)
-val+TIMER (x) = timer
+val TIMER (x) = timer
 //
 val () = x.started := false
 val () = x.running := false
@@ -252,7 +252,7 @@ end // end of [timer_new]
 
 implement
 timer_free (timer) =
-  let val+~TIMER _ = timer in (*nothing*) end
+  let val ~TIMER _ = timer in (*nothing*) end
 // end of [timer_free]
 
 </PRE
@@ -261,6 +261,294 @@ timer_free (timer) =
 ></DIV
 >
 
+
+</P
+><P
+>&#13;The function for starting a timer can be implemented as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4084"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_start
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := true
+  val () = x.running := true
+  val () = x.ntick_beg := the_current_tick_get ()
+  val () = x.ntick_acc := 0u
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_start]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+where <FONT
+COLOR="RED"
+>the_current_tick_get</FONT
+> is a function for
+reading the current time (represented as a number of ticks):
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4087"
+></A
+><PRE
+CLASS="programlisting"
+>extern fun the_current_tick_get (): uint
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;A timer can be stopped or paused. The function for stopping a timer can be
+implemented as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4090"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_finish
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := false
+  val () =
+  if x.running then
+  {
+    val () = x.running := false
+    val () = x.ntick_acc :=
+      x.ntick_acc + the_current_tick_get () - x.ntick_beg
+  } (* end of [val] *)
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_finish]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>A timer can be paused and then resumed.
+The following code implements the functions for pausing and resuming a
+timer:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4093"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;implement
+timer_pause
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () =
+  if x.running then
+  {
+    val () = x.running := false
+    val () = x.ntick_acc :=
+      x.ntick_acc + the_current_tick_get () - x.ntick_beg
+  } (* end of [val] *)
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_pause]
+
+implement
+timer_resume
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () =
+  if x.started &#38;&#38; ~(x.running) then
+  {
+    val () = x.running := true
+    val () = x.ntick_beg := the_current_tick_get ()
+  } (* end of [if] *) // end of [val]
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_resume]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+As can be expected, the amount of time between the point
+where a timer is paused and the point where the timer is resumed
+is not counted.
+
+</P
+><P
+>&#13;It is also possible to reset a timer by calling the function
+<FONT
+COLOR="RED"
+>timer_reset</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4097"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_reset
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := false
+  val () = x.running := false
+  val () = x.ntick_beg := 0u
+  val () = x.ntick_acc := 0u
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_reset]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;In order to read the time accumulated by a timer,
+the function <FONT
+COLOR="RED"
+>timer_get_ntick</FONT
+> can be called:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4101"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_get_ntick
+  (timer) = let
+  val+@TIMER(x) = timer
+  var ntick: uint = x.ntick_acc
+  val () =
+  if x.running then (
+    ntick := ntick + the_current_tick_get () - x.ntick_beg
+  ) (* end of [if] *) // end of [val]
+  prval () = fold@ (timer)
+in
+  ntick
+end // end of [timer_get_ntick]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;A straightforward approach to
+implementing <FONT
+COLOR="RED"
+>the_current_tick_get</FONT
+>
+can be based directly on the function <FONT
+COLOR="RED"
+>clock_gettime</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4106"
+></A
+><PRE
+CLASS="programlisting"
+>local
+
+staload "libc/SATS/time.sats"
+
+in (* in-of-local *)
+
+implement
+the_current_tick_get () = let
+  var tv: timespec // uninitialized
+  val err = clock_gettime (CLOCK_REALTIME, tv)
+  val ((*void*)) = assertloc (err &#62;= 0)
+  prval ((*void*)) = opt_unsome{timespec}(tv)
+in
+  $UNSAFE.cast2uint(tv.tv_sec)
+end // end of [the_current_tick_get]
+
+end // end of [local]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Note that the library flag <FONT
+COLOR="RED"
+>-lrt</FONT
+> is needed in order to
+have link-time access to <FONT
+COLOR="RED"
+>clock_gettime</FONT
+> as the function is in
+<FONT
+COLOR="RED"
+>librt</FONT
+>.
+
+</P
+><P
+>&#13;Please find <A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/timer.dats"
+TARGET="_top"
+>on-line</A
+> the
+entirety of the code presented in this section plus some testing code.
 
 </P
 ></DIV
@@ -299,7 +587,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x4083.html"
+HREF="x4113.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -323,7 +611,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Memory Allocation and Deallocation</TD
+>Example: An Array-Based Circular Buffer</TD
 ></TR
 ></TABLE
 ></DIV

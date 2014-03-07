@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->&#13;Static and Dynamic ATS Files
+>&#13;ATSの静的/動的ファイル
 </TITLE
 ><META
 CHARSET="UTF-8"><META
@@ -12,14 +12,14 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Modularity"
+TITLE="モジュール性"
 HREF="c1693.html"><LINK
 REL="PREVIOUS"
-TITLE="Modularity"
+TITLE="モジュール性"
 HREF="c1693.html"><LINK
 REL="NEXT"
 TITLE="
-Generic Template Implementation
+総称テンプレート実装
 "
 HREF="x1833.html"></HEAD
 ><BODY
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 7. Modularity</TD
+>Chapter 7. モジュール性</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,58 +78,55 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="static_and_dynamic_ats_files"
->7.2. Static and Dynamic ATS Files</A
+>7.2. ATSの静的/動的ファイル</A
 ></H1
 ><P
->&#13;The first letters in the ATS filename extensions <SPAN
+>&#13;ATSのファイル名の拡張子である <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >sats</I
 ></SPAN
-> and
-<SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >dats</I
 ></SPAN
-> refer to the words <SPAN
+> の最初の文字はそれぞれ、
+単語 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >static</I
 ></SPAN
-> and
-<SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >dynamic</I
 ></SPAN
->, respectively.  For instance, <TT
+> に由来しています。
+例えば、 <TT
 CLASS="filename"
 >foo.sats</TT
-> is
-a name for a static file while <TT
+> は静的ファイルの名前で、 <TT
 CLASS="filename"
 >bar.dats</TT
-> is for a dynamic
-one. A static file is often referred to as a SATS-file, and it usually
-contains interface declarations for functions and values, datatype
-declarations, type definitions, etc. The primary purpose of a SATS-file is
-for allowing its content to be shared among various other ATS files, either
-static or dynamic.
+> は動的ファイルの名前です。
+静的ファイルはしばしばSATSファイルと呼ばれ、
+通常は関数, 値, datatype宣言, 型定義などのインターフェイス宣言を含んでいます。
+SATSファイルの主要な目的は、
+静的/動的にかかわらず別々のATSファイルでその中身を共用することにあります。
 </P
 ><P
->&#13;Let us now go through a simple example to see a typical use of static
-files. Suppose that we want to implement the Ackermann's function, which is
-famous for being recursive but not primitive recursive.  In a static file
-named <TT
+>&#13;静的ファイルの典型的な使い方を知るために、シンプルな例を見てみましょう。
+まずアッカーマン関数を実装することになったとします。
+この関数は原始再帰ではない再帰として有名です。
+<TT
 CLASS="filename"
 >acker.sats</TT
-> (or any other legal filename), we can declare
-the following function interface:
+> という名前の静的ファイルに、次の関数インターフェイスを宣言します:
 
 <DIV
 CLASS="informalexample"
@@ -148,16 +145,15 @@ CLASS="programlisting"
 >
 
 
-Please note that one should not use the keyword <FONT
+静的ファイル内で関数や値のインターフェイス宣言をする際には、
+<FONT
 COLOR="RED"
 >extern</FONT
-> when
-declaring an interface for either a function or a value in a static file.
-Then in a dynamic file named <TT
+> キーワード を使わないことに注意してください。
+<TT
 CLASS="filename"
 >acker.dats</TT
-> (or any other legal
-filename), we can give the following implementation:
+> という名前の動的ファイルに、次ような実装を書きます:
 
 <DIV
 CLASS="informalexample"
@@ -184,23 +180,20 @@ acker (m, n) =
 >
 
 
-The keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >staload</FONT
-> indicates to the ATS typechecker that the
-file following it is to be statically loaded during
-typechecking. Essentially, statically loading a file means to put the
-content of the file in a namespace that can be accessed by the following
-code.  It is important to note that static loading is different from plain
-file inclusion. The latter is also supported in ATS, and it is a feature I
-will cover elsewhere.
+> は指定したファイルを型検査中に静的にロードするよう、ATSの型検査器に指示します。
+本質的にファイルの静的なロードは、
+後続のコードがアクセスできるようにファイルの中身を名前空間に配置することです。
+注目すべきなのは、静的なロードは単純なファイルの埋め込みとは異なるということです。
+ATSでは後者もまたサポートしています。その機能は別の章で解説します。
 </P
 ><P
->&#13;It is also possible to give the following implementation for the declared
-function <FONT
+>&#13;<FONT
 COLOR="RED"
 >acker</FONT
->:
+> 関数宣言に対して次のような実装をすることもできます:
 
 <DIV
 CLASS="informalexample"
@@ -228,31 +221,28 @@ implement $ACKER.acker
 >
 
 
-In this case, the namespace for storing the content of the file
-<TT
+この場合、ACKERという名前の名前空間が <TT
 CLASS="filename"
 >acker.sats</TT
-> is given the name ACKER, and the prefix
-<FONT
+> ファイルの中身を保持しています。
+また接頭辞 <FONT
 COLOR="RED"
 >$ACKER.</FONT
-> (the dollar sign followed by ACKER followed by the dot
-symbol) must be attached to any name that refers an entity (a function, a
-value, a datatype, a constructor (associated with a datatype), a type
-definition, etc.) declared in <TT
+> (ドル記号の後にACKERを、その後にドット記号です)
+を <TT
 CLASS="filename"
 >acker.sats</TT
->. When there are many
-static files to be loaded, it is often a good practice to assign names to
-the namespaces holding these files so that the original source of each
-declared entity can be readily tracked down.
+> で宣言されている関数, 値, datatype, コンストラクタ, 型宣言
+などの名前に付記する必要があります。
+多数の静的ファイルがロードされた時、それらのファイルの持つ名前空間に名前を割り当てるのは、
+しばしば良い習慣です。
+それぞれの要素が宣言されている元のソースコードをすぐに見つけ出せるからです。
 </P
 ><P
->&#13;In another file named <TT
+>&#13;別のファイル <TT
 CLASS="filename"
 >test_acker.dats</TT
->, let us
-write the following code:
+> に次のコードを書いてみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -284,26 +274,24 @@ main0 () = () where {
 >
 
 
-The keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >dynload</FONT
-> indicates to the ATS compiler to generate a
-call to the initializing function associated with the file
+> は
 <TT
 CLASS="filename"
 >acker.dats</TT
->. This is mandatory as an error would otherwise be
-reported at link-time. Usually, calling the initializing function
-associated with a dynamic file is necessary only if there is a value
-implemented in the file. In this case, there is only a function implemented
-in <TT
+> ファイルに関連する初期化関数呼び出しを生成するよう、ATSコンパイラに指示します。
+これは必須で、さもないとリンク時にエラーが発生してしまいます。
+通常、動的ファイルに関連するこの初期化関数は、そのファイルの中で値が実装されている時のみ必要になります。
+この例では <TT
 CLASS="filename"
 >acker.dats</TT
->. If we include the following line somewhere
-inside <TT
+> の中には関数の実装しかありません。
+もし次の行を <TT
 CLASS="filename"
 >acker.dats</TT
->:
+> の中のどこかに書けば:
 
 <DIV
 CLASS="informalexample"
@@ -322,51 +310,47 @@ CLASS="programlisting"
 >
 
 
-then the line starting with the keyword <FONT
+<TT
+CLASS="filename"
+>test_acker.dats</TT
+> 中の <FONT
 COLOR="RED"
 >dynload</FONT
-> in
-<TT
-CLASS="filename"
->test_acker.dats</TT
-> is no longer needed. The function
+> キーワード行はもはや不要です。
 <FONT
 COLOR="RED"
 >assertloc</FONT
-> verifies at run-time that its argument evaluates to
-the boolean value <FONT
+> 関数は、その引数を評価してブール値 <FONT
 COLOR="RED"
 >true</FONT
->. In the case where the argument
-evaluates to <FONT
+> になるか実行時に検証します。
+この例では引数は <FONT
 COLOR="RED"
 >false</FONT
->, the function call aborts and a message is
-reported that contains the name of the file, which is
-<TT
+> に評価されるので、
+関数呼び出しは中断されてファイル名(この例では <TT
 CLASS="filename"
 >test_acker.dats</TT
-> in this example, and the location at
-which the source code of the call is found in the file. If this sounds a
-bit confusing, please try to execute a program that contains a call to
-<FONT
+>)と
+そのファイルで呼び出したソースコードの位置を含むメッセージが表示されます。
+もし少し混乱してしまったら <FONT
+COLOR="RED"
+>false</FONT
+> に対して <FONT
 COLOR="RED"
 >assertloc</FONT
-> on <FONT
-COLOR="RED"
->false</FONT
-> and you will see clearly what
-happens.
+> を呼び出してみてください。
+何が起きるのか明確になるでしょう。
 </P
 ><P
->&#13;The simplest way to compile the two files <TT
+>&#13;次のコマンドラインを実行すれば、
+2つのファイル <TT
 CLASS="filename"
 >acker.dats</TT
-> and
-<TT
+> と <TT
 CLASS="filename"
 >test_acker.dats</TT
-> is to issue the following command-line:
+> を簡単にコンパイルできます:
 
 <DIV
 CLASS="informalexample"
@@ -387,12 +371,11 @@ CLASS="command"
 ></DIV
 >
 
-The generated excutable <TT
+現在のワーキングディレクトリに実行可能ファイル <TT
 CLASS="filename"
 >test_acker</TT
-> is in the current
-working directory.  The compilation can also be performed separately as is
-demonstrated below:
+> が生成されるはずです。
+次のように分割コンパイルをすることもできます:
 
 <DIV
 CLASS="informalexample"
@@ -421,21 +404,20 @@ CLASS="command"
 ></DIV
 >
 
-This style of separate compilation works particularly well when it is
-employed by the <B
+この分割コンパイルのスタイルは
+<B
 CLASS="command"
 >make</B
-> utility.
+> ユーティリティから呼び出す際に特に有用です。
 </P
 ><P
->If we want to, we can also merge <TT
+>望むなら <TT
 CLASS="filename"
 >acker.sats</TT
-> and
-<TT
+> と <TT
 CLASS="filename"
 >acker.dats</TT
-> into a single filename of the following content:
+> を次のような1つのファイルにまとめることも可能です:
 
 <DIV
 CLASS="informalexample"
@@ -463,11 +445,11 @@ acker (m, n) =
 >
 
 
-Suppose that this single file is given the name <TT
+<TT
 CLASS="filename"
 >acker3.dats</TT
->.
-Then the testing code can be written as follows:
+> の名前で上記のファイルを作ったとしましょう。
+するとテストコードは次のように書けます:
 
 <DIV
 CLASS="informalexample"
@@ -499,10 +481,9 @@ main0 () = () where {
 >
 
 
-Note that it is perfectly fine for a dynamic ATS file to be statically
-loaded. Actually, a static ATS file is really just a special case of
-dynamic ATS file in which there is no implementation (of either functions
-or values).
+ATSの動的ファイルを静的ロードすることが正常であることに注意してください。
+実際ATSの静的ファイルは、
+関数や値の実装を含まないATSの動的ファイルの単なる特殊形です。
 </P
 ></DIV
 ><DIV
@@ -549,7 +530,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Modularity</TD
+>モジュール性</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -563,7 +544,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Generic Template Implementation</TD
+>総称テンプレート実装</TD
 ></TR
 ></TABLE
 ></DIV

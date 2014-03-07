@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Modularity</TITLE
+>モジュール性</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -18,7 +18,7 @@ TITLE="単純な入力と出力"
 HREF="x1635.html"><LINK
 REL="NEXT"
 TITLE="
-Static and Dynamic ATS Files
+ATSの静的/動的ファイル
 "
 HREF="x1769.html"></HEAD
 ><BODY
@@ -77,21 +77,21 @@ CLASS="chapter"
 ><A
 NAME="modularity"
 ></A
->Chapter 7. Modularity</H1
+>Chapter 7. モジュール性</H1
 ><P
->&#13;Generally speaking, modularity in programming means to organize programs in
-a modular fashion so that they each can be constructed in a relatively
-isolated manner and then be combined to function coherently.  I will
-introduce in this section some features in ATS that are largely designed to
-facilitate program organization.
+>&#13;一般的に言って、プログラミングにおけるモジュール性とは、モジュールスタイルでプログラムを組織化することです。
+そのスタイルとは、モジュールそれぞれがある作法で分離されて構築されていて、
+一貫した方法で機能を形作ることです。
+この章ではATSにおける、大きなプログラムの組織化を容易にするいくつかの機能を紹介します。
 </P
 ><P
->&#13;The code employed for illustration in this chapter plus some additional
-code for testing is available <A
+>&#13;この章で紹介するコードとテストのためのいくつかの追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から取得できます。
 </P
 ><DIV
 CLASS="sect1"
@@ -99,16 +99,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="types_as_a_form_of_specification"
->7.1. Types as a Form of Specification</A
+>7.1. 仕様としての型</A
 ></H1
 ><P
->&#13;The interface for a function or value specifies a type that any
-implementation of the function or value should possess. For instance, the
-following code defines a function <FONT
+>&#13;関数や値に対するインターフェイスは、その関数や値の実装が有するべき型を特定します。
+例えば、次のコードは与えられた整数の階乗を計算する関数 <FONT
 COLOR="RED"
 >fact</FONT
-> for computing the
-factorial of a given integer:
+> を定義しています:
 
 <DIV
 CLASS="informalexample"
@@ -127,11 +125,10 @@ CLASS="programlisting"
 >
 
 
-It is also possible to first declare an interface for <FONT
+最初に考えられる <FONT
 COLOR="RED"
 >fact</FONT
-> as
-follows:
+> のインターフェイス定義は次のようなものでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -150,15 +147,14 @@ CLASS="programlisting"
 >
 
 
-where <FONT
+<FONT
 COLOR="RED"
 >extern</FONT
-> is a keyword in ATS that initiates the declaration
-of an interface. Alternative ways to declare an interface for <FONT
+> は、インターフェイスの宣言を開始するATSのキーワードです。
+<FONT
 COLOR="RED"
 >fact</FONT
->
-are given as follows:
+> のインターフェイスを宣言する別の方法は次のようなものです:
 
 <DIV
 CLASS="informalexample"
@@ -178,43 +174,41 @@ extern val fact : (int) -&#62; int
 >
 
 
-If <FONT
+もし <FONT
 COLOR="RED"
 >fact</FONT
-> is declared to be a function, then it is required to be
-applied when occurring in code. If it is declared to be a value, there is
-no such a restriction.
+> が関数として宣言されたなら、
+コード中で使うには適用させる必要があります。
+もし値として宣言されたのであれば、そのような制約はありません。
 </P
 ><P
->&#13;A function interface can be considered as a form of specification. For
-instance, the above interface for <FONT
+>&#13;関数インターフェイスは仕様だと考えることができます。
+例えば、 <FONT
 COLOR="RED"
 >fact</FONT
-> specifies that
+> に対する上記のインターフェイスは、
 <FONT
 COLOR="RED"
 >fact</FONT
-> is a function that takes one argument required to be an
-integer and returns a value guaranteed to be an integer. What is so special
-about this form of specification is that it is formally enforced in ATS
-through typechecking: Any well-typed implementation of <FONT
+> が整数の引数を1つ取り、整数であることが保証された値を返す関数であることを指定しています。
+What is so special about this form of specification is
+that it is formally enforced in ATS through typechecking:
+ATSにおける正しく型付けされた <FONT
 COLOR="RED"
 >fact</FONT
-> in
-ATS must possess the interface declared for it.  Of course, this interface
-for <FONT
+> の実装はそのような宣言のインターフェイスを持たなければなりません。
+もちろん、この <FONT
 COLOR="RED"
 >fact</FONT
-> is not a precise specification as there are
-(infinitely) many functions that can be given the same interface. This kind
-of imprecision can, however, be reduced or even eliminated,
-sometimes. After dependent types are introduced, I will present an
-interface for <FONT
+> のインターフェイスは厳格な仕様でありません。
+同じインターフェイスを持つ多くの(場合によっては無限に)関数実体が存在するからです。
+けれどもこの一種の不正確性は、時に軽減したり除去することさえできます。
+依存型を説明した後で、
+次の2つの等式で定義される階乗の関数を正確にインターフェイスの実装とすることを保証するような
+<FONT
 COLOR="RED"
 >fact</FONT
-> such that any implementation of the
-interface is guaranteed to implement precisely the factorial function as is
-defined by the following two equations:
+> のインターフェイスを紹介しようと思います:
 
 <P
 ></P
@@ -234,14 +228,13 @@ defined by the following two equations:
 
 </P
 ><P
->&#13;An implementation for <FONT
+>&#13;次に示す <FONT
 COLOR="RED"
 >fact</FONT
-> as the following one can be given at
-any point where the declared interface for <FONT
+> の実装は <FONT
 COLOR="RED"
 >fact</FONT
-> is accessible:
+> で宣言したインターフェイスを守っています:
 
 <DIV
 CLASS="informalexample"
@@ -260,12 +253,11 @@ CLASS="programlisting"
 >
 
 
-The keyword <FONT
+<FONT
 COLOR="RED"
 >implement</FONT
-> is for initiating an implementation of a
-function or value whose interface is already declared. It is fairly common
-to see the following style of coding, usually, by a beginning ATS programmer:
+> キーワードは、既にインターフェイスを宣言された関数や値の実装の開始を表わします。
+ATS初心者にとっては、次のコーディングスタイルがより一般的かもしれません:
 
 <DIV
 CLASS="informalexample"
@@ -284,23 +276,22 @@ CLASS="programlisting"
 >
 
 
-While this implementation can pass typechecking, it is nonetheless of a
-poor style: The types provided by the programmer for the argument and the
-result of <FONT
+この実装は型検査を通りますが、にもかかわらず悪いスタイルと言えます。
+<FONT
 COLOR="RED"
 >fact</FONT
-> are redundant as they can be automatically
-synthesized by the typechecker.
+> の引数と返値にプログラマが与えた型は、
+型検査器によって自動的に合成されるため、冗長です。
 </P
 ><P
->&#13;As an example of an interface for a value, <FONT
-COLOR="RED"
->fact10</FONT
-> is declared
-as follows to be a value of the type <FONT
+>&#13;値に対するインターフェイスの例として、
+型 <FONT
 COLOR="RED"
 >int</FONT
->:
+> の値である <FONT
+COLOR="RED"
+>fact10</FONT
+> を次に宣言してみます:
 
 <DIV
 CLASS="informalexample"
@@ -319,14 +310,13 @@ CLASS="programlisting"
 >
 
 
-The following implementation for <FONT
+次に示す <FONT
 COLOR="RED"
 >fact10</FONT
-> can be given at any
-point where the declared interface for <FONT
+> の実装は <FONT
 COLOR="RED"
 >fact10</FONT
-> is accessible:
+> で宣言したインターフェイスを守っています:
 
 <DIV
 CLASS="informalexample"
@@ -347,11 +337,10 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;As another example, the following code declares an interface for a
-polymorphic function named <FONT
+>&#13;別の例として、次のコードでは <FONT
 COLOR="RED"
 >swap_boxed</FONT
->:
+> という名前で多相関数のインターフェイスを宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -371,17 +360,17 @@ fun swap_boxed{a,b:type} (xy: (a, b)): (b, a)
 >
 
 
-Note that both type variables <FONT
+型変数 <FONT
 COLOR="RED"
 >a</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >b</FONT
-> are boxed.
-An implementation for <FONT
+> はボックス化されていることに注意してください。
+<FONT
 COLOR="RED"
 >swap_boxed</FONT
-> is given as follows:
+> の実装は次のようになるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -400,42 +389,41 @@ CLASS="programlisting"
 >
 
 
-The syntax <FONT
+<FONT
 COLOR="RED"
 >{a,b}</FONT
-> is for passing static arguments <FONT
+> という構文は、静的な変数 <FONT
 COLOR="RED"
 >a</FONT
+> と <FONT
+COLOR="RED"
+>b</FONT
+> を <FONT
+COLOR="RED"
+>swap_boxed</FONT
 >
-and <FONT
-COLOR="RED"
->b</FONT
-> to <FONT
-COLOR="RED"
->swap_boxed</FONT
-> simultaneously. As neither
+に同時に渡しています。
 <FONT
 COLOR="RED"
 >a</FONT
-> nor <FONT
+> も <FONT
 COLOR="RED"
 >b</FONT
-> is actually used in the body of
-<FONT
+> も実際には <FONT
 COLOR="RED"
 >swap_boxed</FONT
->, it is allowed to drop <FONT
+> の中身では使われないので、
+この場合 <FONT
 COLOR="RED"
 >{a,b}</FONT
-> in this
-case.
+> は省くことができます。
 </P
 ><P
->&#13;As yet another example, the following code declares an interface for a
-function template named <FONT
+>&#13;また別の例として、
+次のコードは <FONT
 COLOR="RED"
 >swap_tmplt</FONT
->:
+> という名前で関数テンプレートのインターフェイスを宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -455,22 +443,22 @@ fun{a,b:t@ype} swap_tmplt (xy: (a, b)): (b, a)
 >
 
 
-Note that both type variables <FONT
+型変数 <FONT
 COLOR="RED"
 >a</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >b</FONT
-> are of the
-sort <FONT
+> は種 <FONT
 COLOR="RED"
 >t@ype</FONT
->, indicating that they can be of any size.
+> であることに注意してください。
+これらの型変数がどのようなサイズも取れることを示しています。
 
-An implementation for <FONT
+<FONT
 COLOR="RED"
 >swap_tmplt</FONT
-> is given as follows:
+> の実装は次のようなものでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -491,15 +479,14 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;It is a standard practice for a programmer to first design interfaces for
-the functions to be supported in a package before actually implementing any
-of these functions. When such interfaces are available, application
-programs can be constructed to test whether the interface design makes
-sense or is convenient for practical use. Please remember that a superb
-implementation of a poor design cannot make the design any
-better. Therefore, testing a design before actually implementing it is
-often of vital importance. This is especially true if the involved design
-is complex.
+>&#13;実際に関数を実装する前に、
+パッケージでサポートすべき関数のインターフェイスをデザインすることは、プログラマにとって一般的な訓練です。
+そのようなインターフェイスがあれば、
+そのインターフェイスデザインが妥当で実際に使いやすいかどうか検査するために、
+アプリケーションプログラムを作ることができます。
+貧弱なデザインを持つ素晴しい実装は良いデザインを作りえないということを、覚えておいてください。
+したがって、実際に実装する前にデザインを検査することはしばしば非常に重要になります。
+複雑なデザインが入り組んでいる時には、特に重要です。
 </P
 ></DIV
 ></DIV
@@ -561,7 +548,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Static and Dynamic ATS Files</TD
+>ATSの静的/動的ファイル</TD
 ></TR
 ></TABLE
 ></DIV

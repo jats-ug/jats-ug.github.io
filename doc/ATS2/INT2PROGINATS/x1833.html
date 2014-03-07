@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->&#13;Generic Template Implementation
+>&#13;総称テンプレート実装
 </TITLE
 ><META
 CHARSET="UTF-8"><META
@@ -12,16 +12,16 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Modularity"
+TITLE="モジュール性"
 HREF="c1693.html"><LINK
 REL="PREVIOUS"
 TITLE="
-Static and Dynamic ATS Files
+ATSの静的/動的ファイル
 "
 HREF="x1769.html"><LINK
 REL="NEXT"
 TITLE="
-Specific Template Implementation
+特殊テンプレート実装
 "
 HREF="x1850.html"></HEAD
 ><BODY
@@ -59,7 +59,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 7. Modularity</TD
+>Chapter 7. モジュール性</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -80,15 +80,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="generic_template_implementation"
->7.3. Generic Template Implementation</A
+>7.3. 総称テンプレート実装</A
 ></H1
 ><P
->&#13;Interfaces for function templates are mostly similar to those for
-functions.  For example, the following syntax declares an interface in a
-dynamic file for a function template of the name <FONT
+>&#13;関数テンプレートのインターフェイスは関数のインターフェイスによく似ています。
+例えば、次の構文は動的ファイルにおいて
+<FONT
 COLOR="RED"
 >list0_fold_left</FONT
->:
+> という名前の関数テンプレートのインターフェイスを宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -111,25 +111,25 @@ a:t0p}{b:t0p
 >
 
 
-where <FONT
+ここで <FONT
 COLOR="RED"
 >t0p</FONT
-> is a shorthand for <FONT
+> は <FONT
 COLOR="RED"
 >t@ype</FONT
->.</P
+> の略記です。</P
 ><P
->&#13;If the same interface is declared in a static file, the keyword
+>&#13;もし同じインターフェイスが静的ファイルの中で宣言されていたら、
 <FONT
 COLOR="RED"
 >extern</FONT
-> should be dropped. Implementing an interface for a
-function template is also mostly similar to implementing one for a
-function. The above interface for <FONT
+> キーワードは削除するべきです。
+関数テンプレートのインターフェイスを実装することは関数のインターフェイスを実装することと、
+やはりよく似ています。
+上記の <FONT
 COLOR="RED"
 >list0_fold_left</FONT
-> is given an
-implementation in the following code:
+> のインターフェイスは次のようなコードで実装することができます:
 
 <DIV
 CLASS="informalexample"
@@ -164,13 +164,12 @@ end // end of [list0_fold_left]
 >
 
 
-Note that template parameters are required to appear immediately after the
-keyword <FONT
+<FONT
 COLOR="RED"
 >implement</FONT
->, and they cannot be omitted.  Template
-parameters can also be passed sequentially as is shown in the following
-short example:
+> キーワードの直後に、テンプレート引数を書かなければならないことに注意してください。
+この引数は省略できません。
+次の短かい例に示すように、テンプレート引数は連続して渡すこともできます:
 
 <DIV
 CLASS="informalexample"
@@ -196,10 +195,8 @@ implement{a,b}{c} app2 (f, x, y) = f (x, y)
 
 </P
 ><P
->&#13;The style of template implementation presented in this section is
-referred to as generic template implementation. I will later present a
-different style of template implementation, which is often referred to as
-specific template implementation.
+>&#13;この章で示したスタイルのテンプレート実装は総称テンプレート実装と呼ばれます。
+後の章で特殊テンプレート実装と呼ばれる異なるスタイルのテンプレート実装を紹介します。
 </P
 ></DIV
 ><DIV
@@ -246,7 +243,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Static and Dynamic ATS Files</TD
+>ATSの静的/動的ファイル</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -260,7 +257,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Specific Template Implementation</TD
+>特殊テンプレート実装</TD
 ></TR
 ></TABLE
 ></DIV

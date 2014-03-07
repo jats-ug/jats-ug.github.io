@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->&#13;Example: A Functorial Package for Rationals
+>&#13;例: ファンクタを用いた有理数パッケージ
 </TITLE
 ><META
 CHARSET="UTF-8"><META
@@ -12,11 +12,11 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Modularity"
+TITLE="モジュール性"
 HREF="c1693.html"><LINK
 REL="PREVIOUS"
 TITLE="
-Example: A Package for Rationals
+例: 有理数パッケージ
 "
 HREF="x1927.html"><LINK
 REL="NEXT"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 7. Modularity</TD
+>Chapter 7. モジュール性</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,31 +78,28 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_a_functorial_package_for_rationals"
->7.7. Example: A Functorial Package for Rationals</A
+>7.7. 例: ファンクタを用いた有理数パッケージ</A
 ></H1
 ><P
->&#13;The previous package for rational numbers contains a serious limitation:
-The type for the integers employed in the representation of rational
-numbers is fixed to be <FONT
+>&#13;前の有理数パッケージには重大な制約があります:
+有理数を表現するのに使う整数の型が <FONT
 COLOR="RED"
 >int</FONT
->. If we ever want to represent
-rational numbers based on integers of a different type (for instance,
-<FONT
+> に固定されてしまっていることです。
+もし異なる型の整数
+(例えばlong intである <FONT
 COLOR="RED"
 >lint</FONT
-> for long integers or <FONT
+> やlong long intである <FONT
 COLOR="RED"
 >llint</FONT
-> for long long
-integers), then we need to implement another package for rationals based on
-such integers. It is clearly advantageous to avoid this style of
-programming as it involves code duplication to a great extent.  </P
+>)
+を使って有理数を表現したいのであれば、そのような整数を使った別の有理数パッケージを実装する必要があります。
+コード重複をともなうこのようなプログラミングスタイルを回避することは明らかに好都合でしょう。 </P
 ><P
->&#13;The approach I employ in this section to implement a package for rational
-numbers that can address the aforementioned limitation follows the idea of
-functors in the programming language Standard ML (SML). Let us first
-introduce a type definition as follows:
+>&#13;前述の制限を対処できるような有理数パッケージを実装するためにこの章で使うアプローチは、
+プログラミング言語 Standard ML (SML) のファンクタのアイデアにもとづいています。
+はじめに次のような型を定義しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -132,17 +129,17 @@ intmod (a:t@ype) = '{
 >
 
 
-Given a type T, <FONT
+型Tが与えられた時、
+<FONT
 COLOR="RED"
 >intmod(T)</FONT
-> is a boxed record type in which each
-field is a function type. A value of the type <FONT
+> はそれぞれのフィールドが関数型であるボックス化レコード型です。
+<FONT
 COLOR="RED"
 >intmod(T)</FONT
-> is
-supposed to represent a module of integer operations on integers
-represented by values of the type T. Similarly, let us introduce another
-type definition as follows:
+> 型の値は、
+型Tの値で表現される整数に対する整数演算のモジュールを表現していると見なすことができます。
+同様に、次のような別の型を定義してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -175,16 +172,15 @@ ratmod (a:t@ype) = '{
 >
 
 
-Given a type T, a value of the type <FONT
+型Tが与えられた時、 <FONT
 COLOR="RED"
 >ratmod(T)</FONT
-> is supposed to
-represent a module of rational operations on rationals represented by
-values of the type <FONT
+> 型の値は
+<FONT
 COLOR="RED"
 >rat(T)</FONT
->. The function we need to implement can
-now be given the following interface:
+> 型の値で表現される有理数に対する有理数演算のモジュールを表現していると見なすことができます。
+ここで実装したいこの関数は次のインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -203,32 +199,30 @@ CLASS="programlisting"
 >
 
 
-If applied to a given module of integer operations,
+与えられた整数演算のモジュールに適用すると、
 <FONT
 COLOR="RED"
 >ratmod_make_intmod</FONT
-> returns a module of rational operations such
-that the integers in the former and the latter modules have the same
-representation. Therefore, <FONT
+> は有理数演算のモジュールを返します。
+前者と後者のモジュールで使っている整数は同じ表現を持ちます。
+そのため <FONT
 COLOR="RED"
 >ratmod_make_intmod</FONT
-> behaves like a
-functor in SML.  In the following code, let us implement two modules
-<FONT
+> はSMLのファンクタのような振る舞いをします。
+次のコードで、2つの有理数演算のモジュール <FONT
 COLOR="RED"
 >ratmod_int</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ratmod_dbl</FONT
-> of rational operations in
-which integers are represented as values of the types <FONT
+> を実装しましょう。
+中身の整数として <FONT
 COLOR="RED"
 >int</FONT
-> and
-<FONT
+> 型の値と <FONT
 COLOR="RED"
 >double</FONT
->, respectively:
+> 型の値をそれぞれ使用しています:
 
 <DIV
 CLASS="informalexample"
@@ -283,21 +277,20 @@ end // end of [ratmod_dbl]
 >
 
 
-An implementation of the function <FONT
+<FONT
 COLOR="RED"
 >ratmod_make_intmod</FONT
-> is
-available <A
+> 関数の実装は <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratfun.dats"
 TARGET="_top"
->on-line</A
-> and there
-is some related testing code available
-<A
+>オンライン</A
+>
+から入手できます。
+また関連したテストコードも <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/test_ratfun.dats"
 TARGET="_top"
->on-line</A
-> as well.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -344,7 +337,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: A Package for Rationals</TD
+>例: 有理数パッケージ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
