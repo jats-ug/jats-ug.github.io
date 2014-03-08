@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Enumerative Datatypes</TITLE
+>列挙データ型</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="データ型"
 HREF="c904.html"><LINK
 REL="PREVIOUS"
-TITLE="Matching Clauses and Case-Expressions"
+TITLE="マッチ節とcase式"
 HREF="x966.html"><LINK
 REL="NEXT"
-TITLE="Recursively Defined Datatypes"
+TITLE="再帰的に定義されたデータ型"
 HREF="x1009.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,15 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="enumerative_datatypes"
->4.4. Enumerative Datatypes</A
+>4.4. 列挙データ型</A
 ></H1
 ><P
->&#13;The simplest form of datatypes is for enumerating a finite number of
-constants. For instance, the following concrete syntax introduces a
-datatype of the name <FONT
+>&#13;最も簡単なデータ型は有限個の定数を列挙したものです。
+例えば、次の具体的な構文は <FONT
 COLOR="RED"
 >wday</FONT
->:
+> という名前のデータ型を導入します:
 
 <DIV
 CLASS="informalexample"
@@ -110,54 +109,53 @@ CLASS="programlisting"
 >
 
 
-where the first bar symbol (|) is optional.  There are 7 nullary
-constructors introduced in the datatype declaration: <FONT
+ここで最初の記号 (|) は省略できます。
+7つの引数のないコンストラクタがデータ宣言によって作られています:
+つまり <FONT
+COLOR="RED"
+>wday</FONT
+> 型の値をコンストラクトする <FONT
 COLOR="RED"
 >Monday</FONT
->
-through <FONT
+> から <FONT
 COLOR="RED"
 >Sunday</FONT
->, which are for constructing values of the type
-<FONT
-COLOR="RED"
->wday</FONT
->. For instance, <FONT
+> です。
+例えば <FONT
 COLOR="RED"
 >Monday()</FONT
-> is a value of the type
-<FONT
+> は <FONT
 COLOR="RED"
 >wday</FONT
->. Given a nullary constructor C, we can write C for C() as
-a value. For instance, we can write <FONT
+> 型の値です。
+引数のないコンストラクタCが与えられた時、 値としてのCを C() と書くと値になります。
+例えば <FONT
 COLOR="RED"
 >Monday</FONT
-> for
-<FONT
+> は <FONT
 COLOR="RED"
 >Monday()</FONT
->. However, one should <SPAN
+> と書くことができます。
+けれども <FONT
+COLOR="RED"
+>Tuesday</FONT
+> が <FONT
+COLOR="RED"
+>Monday+1</FONT
+> のような何かであると考えるべきでは
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->not</I
+>ありません</I
 ></SPAN
-> assume
-that <FONT
-COLOR="RED"
->Tuesday</FONT
-> is something like <FONT
-COLOR="RED"
->Monday+1</FONT
->.
+> 。
 </P
 ><P
->&#13;The following code implements a function that tests whether a given value
-of the type <FONT
+>&#13;次のコードでは、与えられた <FONT
 COLOR="RED"
 >wday</FONT
-> is a weekday or not:
+> 型の値が平日かどうか検査する関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -185,35 +183,34 @@ CLASS="programlisting"
 >
 
 
-Given a unary constructor C, C() is a pattern that can only match the value
-C(). Note that C() <SPAN
+引数のないコンストラクタCが与えられた時、 C() パターンは値 C() にのみマッチします。
+パターンとして使う時、 C() を C のように書くことが <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->cannot</I
+>できない</I
 ></SPAN
-> be written as C when it is
-used as a pattern. If <FONT
+> ことに注意してください。
+もし <FONT
+COLOR="RED"
+>isWeekday</FONT
+> 関数の中で <FONT
 COLOR="RED"
 >Monday()</FONT
-> is written as <FONT
+> を <FONT
 COLOR="RED"
 >Monday</FONT
-> in
-the body of the function <FONT
-COLOR="RED"
->isWeekday</FONT
->, then an error message is to be
-reported during typechecking, indicating that all the clauses after the
-first one are redundant. This is simply due to <FONT
+> のように書くと、
+最初の節以降の全ての節が余分であることを示すエラーメッセージが型検査時に出ます。
+これは単に <FONT
 COLOR="RED"
 >Monday</FONT
-> being
-treated as a variable pattern, which is matched by any value. A likely more
-sensible implementation of <FONT
+> が変数パターンとして解釈されたためで、
+このパターンはどのような値にもマッチするからです。
+<FONT
 COLOR="RED"
 >isWeekday</FONT
-> is given as follows:
+> のよりよい実装は次のようなものでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -235,18 +232,18 @@ CLASS="programlisting"
 >
 
 
-This implementation works because pattern-matching is done sequentially at
-run-time: If a value of the type <FONT
-COLOR="RED"
->wday</FONT
-> does not match either of
+パターンマッチは実行時に順番に処理されるので、この実装はうまく動きます:
 <FONT
 COLOR="RED"
+>wday</FONT
+> 型の値が <FONT
+COLOR="RED"
 >Saturday()</FONT
-> and <FONT
+> にも <FONT
 COLOR="RED"
 >Sunday()</FONT
->, then it must match one of
+> にもマッチしなければ、
+その値は
 <FONT
 COLOR="RED"
 >Monday()</FONT
@@ -256,14 +253,14 @@ COLOR="RED"
 > , <FONT
 COLOR="RED"
 >Wednesday()</FONT
-> ,
-<FONT
+> , <FONT
 COLOR="RED"
 >Thursday()</FONT
->, and <FONT
+> , <FONT
 COLOR="RED"
 >Friday()</FONT
->.
+>
+のどれが1つにマッチするはずです。
 </P
 ></DIV
 ><DIV
@@ -310,7 +307,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Matching Clauses and Case-Expressions</TD
+>マッチ節とcase式</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -324,7 +321,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Recursively Defined Datatypes</TD
+>再帰的に定義されたデータ型</TD
 ></TR
 ></TABLE
 ></DIV

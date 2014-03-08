@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Matching Clauses and Case-Expressions</TITLE
+>マッチ節とcase式</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="データ型"
 HREF="c904.html"><LINK
 REL="PREVIOUS"
-TITLE="Pattern-Matching"
+TITLE="パターンマッチ"
 HREF="x945.html"><LINK
 REL="NEXT"
-TITLE="Enumerative Datatypes"
+TITLE="列挙データ型"
 HREF="x973.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,34 +75,31 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="matching_clauses_and_case-expressions"
->4.3. Matching Clauses and Case-Expressions</A
+>4.3. マッチ節とcase式</A
 ></H1
 ><P
->Given a pattern pat and an expression exp, (pat <FONT
+>パターンpatと式expが与えられた時、 (pat <FONT
 COLOR="RED"
 >=&#62;</FONT
-> exp) is a
-matching clause. The pattern pat and the expression exp are referred to as
-the guard and the body of the matching clause.
+> exp) はマッチ節です。
+このパターンpatと式expは、ガードとマッチ節の中身と呼ばれます。
 </P
 ><P
->&#13;Given an expression exp0 and a sequence of matching clauses clseq, a
-case-expression can be formed as such: (<FONT
+>&#13;式exp0とマッチ節の列clseqが与えられた時、
+次のようにcase式を作ることができます: (<FONT
 COLOR="RED"
 >case</FONT
-> exp0
-<FONT
+> exp0 <FONT
 COLOR="RED"
 >of</FONT
-> clseq). To evaluate the case-expression under a given
-environment ENV0, we first evaluate exp0 under ENV0 to a value. If this
-value does not match the guard of any clause in clseq, then the evaluation
-of the case-expression aborts. Otherwise, we choose the first clause in
-clseq such that the value matches the guard of the clause. Let ENV1 be the
-environment that extends ENV0 with the bindings generated from this
-matching, and we evaluate the body of the chosen clause under ENV1. The
-value obtained from this evaluation is the value of the case-expression
-being evaluated.  </P
+> clseq) 。
+与えられた環境ENV0でcase式を評価すると、
+まずはじめにENV0においてexp0を評価して値を得ます。
+もしこの値がclseq中のどの節のガードにもマッチしない場合、case式の評価は中断されます。
+そうでない場合、この値が節のガードにマッチするようなclseqの最初の節を選びます。
+このマッチによって生成された束縛をENV0に追加した新しい環境ENV1を作り、
+そしてENV1において選んだ節の中身を評価します。
+評価されたcase式の値がこの評価によって得られる値になります。  </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -148,7 +145,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Pattern-Matching</TD
+>パターンマッチ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -162,7 +159,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Enumerative Datatypes</TD
+>列挙データ型</TD
 ></TR
 ></TABLE
 ></DIV

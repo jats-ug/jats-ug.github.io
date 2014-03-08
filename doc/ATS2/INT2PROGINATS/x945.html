@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Pattern-Matching</TITLE
+>パターンマッチ</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="データ型"
 HREF="c904.html"><LINK
 REL="NEXT"
-TITLE="Matching Clauses and Case-Expressions"
+TITLE="マッチ節とcase式"
 HREF="x966.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,87 +75,76 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="pattern-matching"
->4.2. Pattern-Matching</A
+>4.2. パターンマッチ</A
 ></H1
 ><P
->&#13;Pattern matching means matching values against patterns. In the case where
-a value matches a pattern, a collection of bindings are generated between
-the variables in the pattern and certain components in the
-value. Pattern-matching is performed according to the following set of
-rules:
+>&#13;パターンマッチはパターンに対して値をマッチさせることです。
+値がパターンにマッチする場合、
+パターンマッチ中の変数と値の中の要素を結びつける束縛群が生成されます。
+パターンマッチは次の一連のルールに従って実行されます:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->&#13;A value that matches a constant pattern must be the same constant, and this
-matching generates no bindings.
+>&#13;定数のパターンにマッチする値は同じく定数でなければなりません。このマッチは束縛を作りません。
 </P
 ></LI
 ><LI
 ><P
->&#13;The void value () only matches the pattern (), and this matching generates
-no bindings.
+>&#13;void値()はパターン()にのみマッチします。このマッチは束縛を作りません。
 </P
 ></LI
 ><LI
 ><P
->Any value can match the wildcard pattern, and this matching generates no bindings.
+>全ての値はワイルドカードパターンにマッチします。このマッチは束縛を作りません。
 </P
 ></LI
 ><LI
 ><P
->&#13;Any value can match a variable pattern, and this matching generates a
-binding between the variable and the value.
+>&#13;全ての値は変数パターンにマッチします。このマッチは変数と値の束縛を作ります。
 </P
 ></LI
 ><LI
 ><P
->&#13;A tuple value matches a tuple pattern if they are of the same length and
-each value component in the former matches the corresponding pattern
-component in the latter, and this matching generates a collection of
-bindings that is the union of the bindings generated from matching the
-value components in the tuple value against the pattern components in the
-tuple pattern.
+>&#13;タプル値はタプルパターンは、それらが同じ長さで、
+前者のそれぞれの値要素が後者の対応するパターン要素にマッチする場合にマッチします。
+そしてこのマッチは、
+マッチしたタプル中の値要素からタプルパターン中のパターン要素に対しての束縛の集合を作ります。
 </P
 ></LI
 ><LI
 ><P
->&#13;A record value matches a record pattern if they have the same field names
-and each value component in the former matches the corresponding pattern
-component in the latter, and this matching generates a collection of
-bindings that is the union of the bindings generated from matching the
-value components in the record value against the pattern components in the
-record pattern.
+>&#13;レコード値はレコードパターンは、それらが同じフィールド名を持ち、
+前者のそれぞれの値要素が後者の対応するパターン要素にマッチする場合にマッチします。
+そしてこのマッチは、
+マッチしたレコード中の値要素からレコードパターン中のパターン要素に対しての束縛の集合を作ります。
 </P
 ></LI
 ><LI
 ><P
->&#13;Given a pattern formed by applying a constructor C to some pattern
-arguments, a value matches this pattern if the value is formed by applying
-C to some value arguments matching the pattern arguments, and this matching
-generates a collection of bindings that is the union of the bindings
-generated from matching the value arguments against the pattern arguments.
+>&#13;コンストラクタCをいくつかのパターン引数に適用したパターンが与えられた時、
+パターン引数にマッチする値引数にCを適用した値があれば、その値がこのパターンにマッチします。
+そしてこのマッチは、
+値引数からパターン引数に対しての束縛の集合を作ります。
 </P
 ></LI
 ><LI
 ><P
->&#13;Given a referenced pattern (x <FONT
+>&#13;参照パターン (x <FONT
 COLOR="RED"
 >as</FONT
-> pat), a value matches the
-pattern if it matches pat, and this matching generates a collection of
-bindings that extends the bindings generated from matching the value
-against pat with a binding from x to the value.
+> pat) が与えられた時、
+値がpatにマッチしたらその値はこのパターンにマッチします。
+そしれこのマッチは、値をpatにマッチさせてxから値への束縛を作ります。
 </P
 ></LI
 ></UL
 >
 
-Suppose we have a tuple value (0, 1, 2, 3) and a tuple pattern (0, _, x,
-y). Then the value matches the pattern and this matching yields bindings
-from x and y to 2 and 3, respectively.
+タプル値 (0, 1, 2, 3) とタプルパターン (0, _, x, y) があるとします。
+するとこの値はこのパターンにマッチして、このマッチによってxとyが2と3をそれぞれ束縛します。
 </P
 ></DIV
 ><DIV
@@ -216,7 +205,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Matching Clauses and Case-Expressions</TD
+>マッチ節とcase式</TD
 ></TR
 ></TABLE
 ></DIV
