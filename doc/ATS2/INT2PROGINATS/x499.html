@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Evaluation of Function Calls</TITLE
+>関数呼び出しの評価</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Function Interface"
+TITLE="関数インターフェイス"
 HREF="x490.html"><LINK
 REL="NEXT"
 TITLE="Recursive Functions"
@@ -75,18 +75,18 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="evaluation-of-function-calls"
->3.4. Evaluation of Function Calls</A
+>3.4. 関数呼び出しの評価</A
 ></H1
 ><P
->&#13;Evaluating a function call is straightforward. Assume that we are to
-evaluate the function call <FONT
-COLOR="RED"
->abs(0.0 - 1.0)</FONT
-> under some
-environment ENV0, where the function <FONT
+>&#13;関数呼び出しの評価は単純です。
+関数 <FONT
 COLOR="RED"
 >abs</FONT
-> is defined as follows:
+> が次のように定義されていて、
+関数呼び出し <FONT
+COLOR="RED"
+>abs(0.0 - 1.0)</FONT
+> を環境 ENV0 の下で評価することを考えてみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -105,53 +105,51 @@ CLASS="programlisting"
 >
 
 
-We first evaluate the argument of the call to <FONT
+まずはじめに ENV0 の下で呼び出しの引数を評価して <FONT
 COLOR="RED"
 >~1.0</FONT
-> under ENV0;
-we then extend ENV0 to ENV1 with a binding between <FONT
+> を得ます;
+<FONT
 COLOR="RED"
 >x</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >~1.0</FONT
-> and start to evaluate the body of <FONT
+> を束縛して ENV0 を ENV1 に拡張します、
+そして ENV1 の下で <FONT
 COLOR="RED"
 >abs</FONT
-> under
-ENV1; we evaluate the test <FONT
+> 本体の評価を開始します;
+判定 <FONT
 COLOR="RED"
 >x &#62;= 0</FONT
-> to <FONT
+> を <FONT
 COLOR="RED"
 >~1.0 &#62;= 0</FONT
-> and
-then to <FONT
+> に評価してさらに <FONT
 COLOR="RED"
 >false</FONT
->, which indicates that we take the else-branch
+> にします、これはelseブランチ <FONT
+COLOR="RED"
+>~x</FONT
+> に実行を続けることを示しています;
 <FONT
 COLOR="RED"
 >~x</FONT
-> to continue; we evaluate <FONT
-COLOR="RED"
->~x</FONT
-> to
-<FONT
+> を <FONT
 COLOR="RED"
 >~(~1.0)</FONT
-> and then to <FONT
+> 評価してさらに <FONT
 COLOR="RED"
 >1.0</FONT
->; so the evaluation of the
-function call <FONT
+> にします;
+そして関数呼び出し <FONT
 COLOR="RED"
 >abs(0.0 - 1.0)</FONT
-> returns <FONT
+> の評価は <FONT
 COLOR="RED"
 >1.0</FONT
->.
+> を返します。
 </P
 ></DIV
 ><DIV
@@ -198,7 +196,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Function Interface</TD
+>関数インターフェイス</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

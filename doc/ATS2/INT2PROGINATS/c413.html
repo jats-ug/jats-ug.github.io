@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="コード中のコメント"
 HREF="x395.html"><LINK
 REL="NEXT"
-TITLE="Function Arity"
+TITLE="関数のアリティ(arity)"
 HREF="x465.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -101,7 +101,7 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="functions-as-a-simple-form-of-abstraction"
->3.1. 簡単な形式の関数</A
+>3.1. 単純な抽象としての関数</A
 ></H1
 ><P
 ><FONT
@@ -192,12 +192,11 @@ COLOR="RED"
 > を呼び出しているからです。)
 </P
 ><P
->&#13;If <FONT
+>&#13;<FONT
 COLOR="RED"
 >square</FONT
-> is a name, what is the expression it refers to? It
-turns out that the above function definition can also be written as
-follows:
+> が名前だとすれば、それが参照する式とは何なのでしょうか？
+上の関数定義は次のように書くこともできることがわかります:
 
 <DIV
 CLASS="informalexample"
@@ -216,24 +215,22 @@ CLASS="programlisting"
 >
 
 
-where the RHS of the symbol <FONT
+ここで <FONT
 COLOR="RED"
 >=</FONT
-> is a lambda-expression
-representing an anonymous function that takes one argument of the type
+> 記号のRHSはラムダ式で、
 <FONT
 COLOR="RED"
 >double</FONT
-> and returns a value of the type <FONT
+> 型の引数を1つ取り、 <FONT
 COLOR="RED"
 >double</FONT
->,
-and the expression following the symbol <FONT
+> 型の値を返す無名関数を表わしています。
+そして <FONT
 COLOR="RED"
 >=&#62;</FONT
-> is the body of the
-function. If we wish, we can change the name of the function argument as
-follows:
+> 記号に続く式が関数の本体です。
+もし望むなら、関数の引数名を次のように変更することができます:
 
 <DIV
 CLASS="informalexample"
@@ -252,66 +249,63 @@ CLASS="programlisting"
 >
 
 
-This is called alpha-renaming (of function arguments), and the new
-lambda-expression is said to be alpha-equivalent to the original one.
+これは(関数の引数の)α-変換と呼ばれ、
+新しくできたラムダ式は元の式に対するα-同値と呼ばれます。
 </P
 ><P
->&#13;A lambda-expression is a (function) value. Suppose we have a
-lambda-expression representing a binary function, that is, a function
-taking two arguments. In order to assign a type of the form (T1, T2) -&#62; T
-to the lambda-expression, we need to verify that the body of the function
-can be given the type T if the two arguments of the function are assumed to
-have the types T1 and T2.  What is stated also applies, <SPAN
+>&#13;ラムダ式は(関数)値です。
+2引数の関数を表わすラムダ式があるとします。
+(T1, T2) -&#62; T の型をラムダ式に割り当てるためには、
+関数の2つの引数が型T1とT2を持つと仮定した時、
+関数の本体が型Tであるかどうか証明しなければなりません。
+適用する箇所を<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->mutatis
-mutandis</I
+>変更すると</I
 ></SPAN
->, to lambda-expressions representing functions of fewer
-or more arguments. For instance, the lambda-expression <FONT
+>、
+より少ないもしくはより多い引数を取る関数を表わすラムダ式になります。
+例えば、ラムダ式 <FONT
 COLOR="RED"
->lam (x:
-double): double =&#62; x * x</FONT
-> can be assigned the function type
-<FONT
+>lam (x: double): double =&#62; x * x</FONT
+> は関数の型 <FONT
 COLOR="RED"
 >(double) -&#62; double</FONT
->, which may also be written as
-<FONT
+>
+を割り当てることができます。
+この型は <FONT
 COLOR="RED"
 >double -&#62; double</FONT
->.
+> と書くこともできます。
 </P
 ><P
->&#13;Assume that exp is an expression of some function type (T1, T2) -&#62; T. Note
-that exp is not necessarily a name or a lambda-expression. If expressions
-exp<SUB
+>&#13;expは関数の型 (T1, T2) -&#62; T の式であると仮定します。
+exp は名前を持つ関数やラムダ式である必要はないことに注意してください。
+式exp<SUB
 >1</SUB
-> and exp<SUB
+> と exp<SUB
 >2</SUB
-> can be assigned
-the types T1 and T2, then the function application
-exp(exp<SUB
+> に型 T1 と T2 が割り当て可能だとすると、
+関数適用 exp(exp<SUB
 >1</SUB
 >, exp<SUB
 >2</SUB
->), which may
-also be referred to as a function call, can be assigned the type T.  Typing
-a function application of fewer or more arguments is handled similarly.
+>) には型 T を割り当てることができます
+(この関数適用も関数呼び出しであるかもしれません)。
+より少ないもしくはより多い引数の関数適用の型付けも同様です。
 </P
 ><P
->Let us now see an example that builds on the previously defined
-function <FONT
+>前に定義した関数 <FONT
 COLOR="RED"
 >square</FONT
->. The boundary of a ring consists of two
-circles centered at the same point. If the radii of the outer and inner
-circles are R and r, respectively, then the area of the ring can be
-computed by the following function <FONT
+> を使った例を見てみましょう。
+2つの円から成り立つリングの境界線は同じ点を中心としています。
+外側と内側の円の半径をそれぞれ R と r とすると、
+リングの面積は次の関数 <FONT
 COLOR="RED"
 >area_of_ring</FONT
->:
+> で計算できます:
 
 <DIV
 CLASS="informalexample"
@@ -332,26 +326,24 @@ CLASS="programlisting"
 >
 
 
-Given that the subtraction and multiplication functions (on floating point
-numbers) are of the type <FONT
+浮動小数点数の減算と乗算の関数が型 <FONT
 COLOR="RED"
 >(double, double) -&#62; double</FONT
-> and
+> で、
 <FONT
 COLOR="RED"
 >square</FONT
-> is of the type <FONT
+> が型 <FONT
 COLOR="RED"
 >(double) -&#62; double</FONT
->, it is a
-simple routine to verify that the body of <FONT
+> で与えられた時、
+<FONT
 COLOR="RED"
 >area_of_ring</FONT
-> can be
-assigned the type <FONT
+> の本体に型 <FONT
 COLOR="RED"
 >double</FONT
->.
+> を割り当てられることは、単純な方法で検査できます。
 </P
 ></DIV
 ></DIV
@@ -413,7 +405,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Function Arity</TD
+>関数のアリティ(arity)</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Parametric Polymorphism</TITLE
+>パラメータ多相</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,36 +75,34 @@ CLASS="chapter"
 ><A
 NAME="parametric_polymorphism"
 ></A
->Chapter 5. Parametric Polymorphism</H1
+>Chapter 5. パラメータ多相</H1
 ><P
->&#13;Code sharing is of paramount importance in programming.  In a typed
-programming language, we often encounter a situation where the same
-functionality is needed for values of different types. For instance, we may
-need to compute the length of a list while the elements in the list can be
-characters, integers, strings, etc. Evidently, we want to avoid
-implementing a list-length function for each element type as it would
-probably be the worst form of code duplication. We want to implement one
-single function that can be applied to any list to compute the length of
-the list. This list-length function parameterizes over the element type of
-a given list, and it behaves uniformly regardless what the element type is.
-This is a form of code sharing that is often referred to as
-<SPAN
+>&#13;コードの共有はプログラミングにおいて最重要です。
+型付きのプログラミング言語では、
+異なる型の値が同じ機能を必要してしまうような状況にしばしば出会います。
+例えば、文字, 整数, 文字列などをリストの要素とするリストの長さを算出する必要があるかもしれません。
+明らかに、リストの長さを取る関数をそれぞれの要素の型毎に実装したくはありません。
+おそらくコード重複の最悪の形でしょう。
+どんなリストに対してもリストの長さを算出できるような唯一1つの関数を実装したいのです。
+このリストの長さを取る関数は与えられたリストの要素の型をパラメータ化し、
+要素の型によらず一様な振る舞いをします。
+このようなコードの共有はしばしば <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->parametric polymorphism</I
+>パラメータ多相</I
 ></SPAN
->, which should be distinguished from
-other forms of polymorphism such as inheritance polymorphism in
-object-oriented programming.
+> と呼ばれます。
+これはオブジェクト指向プログラミングにおける継承ポリモーフィズムのようなその他のポリモーフィズムとは区別すべきです。
 </P
 ><P
->&#13;The code employed for illustration in this chapter plus some additional
-code for testing is available <A
+>&#13;この章で示すコードと追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_POLYMORPH"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 </P
 ><DIV
 CLASS="sect1"
@@ -112,11 +110,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="function_templates"
->5.1. Function Templates</A
+>5.1. 関数テンプレート</A
 ></H1
 ><P
->&#13;A function template is a code template that implements a function.
-In the following code, two functions are defined to swap values:
+>&#13;関数テンプレートは関数を実装するコードテンプレートです。
+次のコードは、値をスワップする2つの関数を定義しています:
 
 <DIV
 CLASS="informalexample"
@@ -138,29 +136,28 @@ fun swap_int_char (xy: intchar): charint = (xy.1, xy.0)
 >
 
 
-If types are ignored, the bodies of <FONT
+型を無視すると <FONT
 COLOR="RED"
 >swap_char_int</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >swap_int_char</FONT
-> are identical. In order to avoid this kind of
-code duplication, we can first implement a function template
-<FONT
+> の中身は同一です。
+この種類のコードの重複を防ぐために、
+まずはじめに関数テンプレート <FONT
 COLOR="RED"
 >swap</FONT
-> as follows and then implement <FONT
+> を次のように実装し、
+それから <FONT
 COLOR="RED"
 >swap_char_int</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >swap_int_char</FONT
-> based on <FONT
+> を <FONT
 COLOR="RED"
 >swap</FONT
->:
+> を元に実装します:
 
 <DIV
 CLASS="informalexample"
@@ -183,68 +180,64 @@ fun swap_int_char (xy: intchar): charint = swap&#60;int,char&#62; (xy)
 >
 
 
-It should be noted that a function template is not a first-class value in
-ATS: There is no expression for representing a function template.  The
-syntax <FONT
-COLOR="RED"
->{a,b:t@ype}</FONT
-> following the keyword <FONT
+関数テンプレートはATSにおいて第一級の値ではないことに注意すべきです：
+関数テンプレートを現わすような式は存在しません。
+キーワード <FONT
 COLOR="RED"
 >fun</FONT
->
-represents template parameters or arguments. The unusual symbol
-<FONT
+> に続く構文 <FONT
+COLOR="RED"
+>{a,b:t@ype}</FONT
+> はテンプレートパラメータや引数を表わしています。
+一風変わった記号 <FONT
 COLOR="RED"
 >t@ype</FONT
-> is a sort for static terms representing types of
-unspecified size, where the size of a type is the number of bytes needed
-for representing a value of the type (under the assumption that all of the
-values of the type have the same size).  There is another sort
-<FONT
+> はサイズが特定されていない型を表現する静的な項の種で、
+その型のサイズは型の値を表現するのに必要なバイト数です(型の値のサイズが全て同じであると仮定した場合ですが)。
+ATSにはもう一つの種 <FONT
 COLOR="RED"
 >type</FONT
-> in ATS, which is for static terms representing types of
-size equal to one word exactly, that is, 4 bytes on a 32-bit machine or 8
-bytes on a 64-bit machine.  The syntax <FONT
+> があり、
+サイズが正確に1ワードである型を表現する静的な項です。
+1ワードというのは、32ビットマシンは4バイト、64ビットマシンでは8バイトです。
+<FONT
 COLOR="RED"
 >swap&#60;char,int&#62;</FONT
->,
-where no space is allowed between <FONT
+> という構文は
+(<FONT
 COLOR="RED"
 >swap</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >&#60;</FONT
-> ,
-stands for an instance of the function template <FONT
-COLOR="RED"
->swap</FONT
-> in which
-the parameters <FONT
+> の間にスペースを入れないでください)、
+パラメータ <FONT
 COLOR="RED"
 >a</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >b</FONT
-> are replaced with
-<FONT
+> をそれぞれ <FONT
 COLOR="RED"
 >char</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >int</FONT
->, respectively.  The syntax
-<FONT
-COLOR="RED"
->swap&#60;int,char&#62;</FONT
-> is interpreted similarly.
-</P
-><P
->&#13;A different style of implementation of <FONT
+>
+で置き換えた関数テンプレート <FONT
 COLOR="RED"
 >swap</FONT
-> is given
-as follows:
+> のインスタンスを表わします。
+構文 <FONT
+COLOR="RED"
+>swap&#60;int,char&#62;</FONT
+> も同様に解釈できるでしょう。
+</P
+><P
+>&#13;次のような <FONT
+COLOR="RED"
+>swap</FONT
+> の異なるスタイルの実装を見てみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -263,12 +256,11 @@ CLASS="programlisting"
 >
 
 
-where the template parameters are given sequentially (instead of
-simultaneously). The following code shows how <FONT
+上記の実装ではテンプレートパラメータは同時にではなく連続して与えられています。
+次のコードは <FONT
 COLOR="RED"
 >swap2</FONT
-> can be
-instantiated to form instances:
+> をインスタンス化する方法を示しています:
 
 <DIV
 CLASS="informalexample"
@@ -288,21 +280,20 @@ fun swap_int_char (xy: intchar): charint = swap2&#60;int&#62;&#60;char&#62; (xy)
 >
 
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >&#62;&#60;</FONT
-> is a special symbol (of the name GTLT) and
-no space is allowed between <FONT
+> は(GTLTという名前の)特別な記号で、
+<FONT
 COLOR="RED"
 >&#62;</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >&#60;</FONT
->.
+> の間にスペースを入れてはいけません。
 </P
 ><P
->&#13;As another example, a higher-order function template for composing
-(closure) functions is given as follows:
+>&#13;別の例として、(クロージャ)関数を作る高階関数テンプレートを次に示します:
 
 <DIV
 CLASS="informalexample"
@@ -334,30 +325,27 @@ val f_2x_2 = compose&#60;int,int,int&#62; (plus1, times2)
 >
 
 
-It should be clear that the value <FONT
+値 <FONT
 COLOR="RED"
 >f_2x_1</FONT
-> represents the
-function that multiplies its integer argument by 2 and then adds 1 to it.
-Similarly, the value <FONT
+> は、整数の引数に2を掛けた後に1を足す関数を表わしています。
+同様に、値 <FONT
 COLOR="RED"
 >f_2x_2</FONT
-> represents the function that adds 1
-to its integer argument and then multiplies it by 2.
+> は、1を整数の引数に足した後に2を掛ける関数を表わしています。
 </P
 ><P
->&#13;In ATS, function templates are typechecked but not compiled to code in C.
-Instead, they are compiled to an intermediate form.  Only instances of
-function templates are compiled to code in C. Suppose we have a function
-template foo taking one type parameter and two instances foo&#60;T1&#62; and
-foo&#60;T2&#62; are used in a program for some types T1 and T2. In general,
-one function in C is generated for each instance of foo when the program is
-compiled. However, if T1 and T2 have the same name, then the two instances
-may share one function in C.
+>&#13;ATSでは、関数テンプレートは型検査されますが、C言語コードにはコンパイルされません。
+その代わり、関数テンプレートは中間形式にコンパイルされます。
+関数テンプレートのインスタンスのみがC言語コードにコンパイルされます。
+1つの型パラメータを取る関数テンプレートfooと、
+2つのインスタンス foo&#60;T1&#62; と foo&#60;T2&#62; がT1とT2型でプログラムで使用されていると考えてみましょう。
+一般的に、プログラムがコンパイルされると、C言語の1つ1つの関数はfooのそれぞれのインスタンスから生成されます。
+けれども、T1とT2が同じ名前を持っているなら、2つのインスタンスはC言語の1つの関数を共有するかもしれません。
 </P
 ><P
->&#13;Please note that I may simply use the name function to refer to a function
-template from now on if no confusion is expected.
+>&#13;混乱しないと思われる場合、これからこの本では、
+関数という名前を関数テンプレートの意味で使うことがあることに注意してください。
 </P
 ></DIV
 ></DIV

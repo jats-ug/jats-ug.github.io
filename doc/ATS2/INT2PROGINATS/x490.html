@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Function Interface</TITLE
+>関数インターフェイス</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Function Arity"
+TITLE="関数のアリティ(arity)"
 HREF="x465.html"><LINK
 REL="NEXT"
-TITLE="Evaluation of Function Calls"
+TITLE="関数呼び出しの評価"
 HREF="x499.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,12 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="function-interface"
->3.3. Function Interface</A
+>3.3. 関数インターフェイス</A
 ></H1
 ><P
->&#13;The interface for a function specifies the type assigned to the
-function. Given a binary function foo of the type (T1, T2) -&#62; T3, its
-interface can be written as follows:
+>&#13;関数のインターフェイスは、その関数に割り当てられる型を明確にします。
+binary関数 foo が型 (T1, T2) -&#62; T3 で与えられた時、そのインターフェイスは次のように書くことができます:
 
 <DIV
 CLASS="informalexample"
@@ -99,17 +98,15 @@ CLASS="programlisting"
 >
 
 
-where <FONT
+ここで <FONT
 COLOR="RED"
 >arg1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arg2</FONT
-> may be replaced with any
-other legal identifiers for function arguments.  For functions of more or
-fewer arguments, interfaces can be written in a similar fashion.  For
-instance, we have the following interfaces for various functions on
-integers:
+> は関数の引数に対する他の識別子で置換することもできます。
+より多いもしくは少ない引数の関数でも、インターフェイスは同じように書くことができます。
+例えば、次のような様々な整数に対する関数のインターフェイスがあります:
 
 <DIV
 CLASS="informalexample"
@@ -150,11 +147,10 @@ fun tostring_int (x: int): string
 >
 
 
-For now, I mostly use function interfaces for the purpose of presenting
-functions.  I will show later how a function definition can be separated
-into two parts: a function interface and an implementation that implements
-the function interface. Note that separation as such is pivotal for
-constructing (large) programs in a modular style.
+これ以降、関数を提示するときに関数インターフェイスを使います。
+後の章で、関数定義は2つの部品に分離できることを示します:
+関数インターフェイス部分と関数インターフェイスを実装する実装部分です。
+この分離は大きなプログラムをモジュールスタイルで作るのにきわめて重要であることに注意してください。
 </P
 ></DIV
 ><DIV
@@ -201,7 +197,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Function Arity</TD
+>関数のアリティ(arity)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -215,7 +211,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Evaluation of Function Calls</TD
+>関数呼び出しの評価</TD
 ></TR
 ></TABLE
 ></DIV
