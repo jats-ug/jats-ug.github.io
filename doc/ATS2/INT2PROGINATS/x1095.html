@@ -134,13 +134,11 @@ CLASS="programlisting"
 >
 
 
-Translating an integer expression written in some string form into an abstract syntax tree is called parsing,
-which we will not do here.
-The following defined function <FONT
+文字列で書かれた整数式を抽象構文木へ変換することを構文解析と呼びますが、ここでは取り扱いません。
+次に定義する関数 <FONT
 COLOR="RED"
 >eval_iexp</FONT
-> takes the abstract syntax
-tree of an integer expression and returns an integer that is the value of the expression:
+> は整数式の抽象構文木を取り、式の値である整数を返します:
 
 <DIV
 CLASS="informalexample"
@@ -167,22 +165,20 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Suppose we also allow the construct if-then-else to be use in forming
-integer expressions. For instance, we may write an integer expression like
-(if 1+2 &#60;= 3*4 then 5+6 else 7-8). Note that the test (1+2 &#60;= 3*4) is a
-boolean expression rather than an integer expression. This indicates that
-we also need to declare a datatype <FONT
+>&#13;整数式を成すのにif-then-elseもコンストラクトできると考えてみましょう。
+例えば (if 1+2 &#60;= 3*4 then 5+6 else 7-8) のような整数式を書けるとします。
+(1+2 &#60;= 3*4) の判定は整数式ではなくブール式であることに注意してください。
+これは、データ型 <FONT
 COLOR="RED"
 >BEXP</FONT
-> for representing
-boolean expressions. Furthermore, <FONT
+> をブール木も表現できるように宣言する必要があることを示しています。
+その上 <FONT
 COLOR="RED"
 >IEXP</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >BEXP</FONT
->
-should be defined mutually recursively as follows:
+> は次のように相互再帰的に宣言されるべきです:
 
 <DIV
 CLASS="informalexample"
@@ -222,16 +218,15 @@ and BEXP = // [and] for combining datatype declarations
 >
 
 
-Evidently, we also need to evaluate boolean expressions when evaluating
-integer expressions. The following two functions <FONT
+明らかに、整数式を評価する時にはブール式も評価する必要があります。
+次の2つの関数 <FONT
 COLOR="RED"
 >eval_iexp</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >eval_bexp</FONT
-> for evaluating integer and boolean expressions,
-respectively, are defined mutually recursively as can be expected:
+> はそれぞれ整数式とブール式の評価のための関数で、
+予想される通りですが、相互再帰で定義されています:
 
 <DIV
 CLASS="informalexample"
@@ -286,21 +281,19 @@ case+ e0 of
 
 </P
 ><P
->&#13;The integer and boolean expressions used in this example are all constant
-expressions containing no variables. Therefore, there is no need for an
-environment to evaluate them. I will present a more advanced example
-elsewhere to demonstrate how an evaluator for a simple call-by-value
-functional programming language like the core of ATS can be implemented.
+>&#13;この例における整数式とブール式は全て変数を含まない定数式です。
+そのため、これらの式の評価に環境は必要ありませんでした。
+ATSのコアのような簡単な値呼び出し(call-by-value)の関数型プログラミング言語の評価器を、
+どのように実装するのか示すために、より進んだ例を別の章で紹介します。
 </P
 ><P
->&#13;Please find
+>&#13;この章のコード全体と追加のテストコードは
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATATYPE/intexp.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entirety of the code in this section plus some additional code for
-testing.
+から入手できます。
 </P
 ></DIV
 ><DIV
