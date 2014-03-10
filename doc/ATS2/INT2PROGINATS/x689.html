@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Mutually Recursive Functions</TITLE
+>相互再帰関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: The Eight-Queens Puzzle"
+TITLE="例: エイト・クイーンパズル"
 HREF="x627.html"><LINK
 REL="NEXT"
-TITLE="Mutual Tail-Recursion"
+TITLE="相互末尾再帰"
 HREF="x710.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,16 +75,16 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="mutually-recursive-functions"
->3.10. Mutually Recursive Functions</A
+>3.10. 相互再帰関数</A
 ></H1
 ><P
->&#13;A collection of functions are defined mutually recursively if each function
-can make calls in its body to any functions in this collection.  Mutually
-recursive functions are commonly encountered in practice.
+>&#13;ある関数群のそれぞれの関数がその本体からその関数群の関数を呼び出している時、
+その関数群は相互再帰的に定義されています。
+相互再帰関数は実際の場面で一般に使われます。
 
 </P
 ><P
->&#13;As an example, let P be a function on natural numbers defined as follows:
+>&#13;例として、Pを次のような自然数の関数とします:
 
 <P
 ></P
@@ -95,15 +95,14 @@ recursive functions are commonly encountered in practice.
 ></LI
 ><LI
 ><P
->P(n+1) = 1 + the sum of the products of i and P(i) for i ranging from 1 to n
+>P(n+1) = 1 + (iの範囲が1からnまでの時、iとP(i)の積の合計)
 </P
 ></LI
 ></UL
 >
 
-Let us introduce a function Q such that Q(n) is the sum of the products of
-i and P(i) for i ranging from 1 to n. Then the functions P and Q can be
-defined mutually recursively as follows:
+1からnまでの範囲をiが取る時、iとP(i)の積の合計をQ(n)とするような関数Qを導入しましょう。
+すると関数PとQは次のように相互再帰的に定義できます:
 
 <P
 ></P
@@ -127,8 +126,7 @@ defined mutually recursively as follows:
 ></UL
 >
 
-The following implementation of P and Q is a direct translation of their
-definitions into ATS:
+次のPとQの実装はこれらの定義を直接ATSに翻訳したものです:
 
 <DIV
 CLASS="informalexample"
@@ -148,11 +146,10 @@ and Q (n:int): int = if n &#62; 0 then Q(n-1) + n * P(n) else 0
 >
 
 
-Note that the keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >and</FONT
-> is used to combine function
-definitions.
+> を使って関数定義を結合していることに注意してください。
 </P
 ></DIV
 ><DIV
@@ -199,7 +196,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: The Eight-Queens Puzzle</TD
+>例: エイト・クイーンパズル</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -213,7 +210,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Mutual Tail-Recursion</TD
+>相互末尾再帰</TD
 ></TR
 ></TABLE
 ></DIV

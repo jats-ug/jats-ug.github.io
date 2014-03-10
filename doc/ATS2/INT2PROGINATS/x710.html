@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Mutual Tail-Recursion</TITLE
+>相互末尾再帰</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Mutually Recursive Functions"
+TITLE="相互再帰関数"
 HREF="x689.html"><LINK
 REL="NEXT"
 TITLE="Envless Functions and Closure-Functions"
@@ -75,19 +75,18 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="mutual-tail-recursion"
->3.11. Mutual Tail-Recursion</A
+>3.11. 相互末尾再帰</A
 ></H1
 ><P
->&#13;Suppose that foo and bar are two mutually defined recursive functions.  In
-the body of foo or bar, a tail-call to foo or bar is a mutually recursive
-tail-call. For instance, the following two functions <FONT
+>&#13;fooとbarが2つの相互再帰関数をして定義しているとします。
+fooもしくはbarの本体にある、fooもしくはbarへの末尾呼出は相互末尾再帰呼出です。
+例えば、次の2つの関数 <FONT
 COLOR="RED"
 >isevn</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >isodd</FONT
-> are mutually recursive:
+> は相互再帰です:
 
 <DIV
 CLASS="informalexample"
@@ -107,30 +106,28 @@ and isodd (n: int): bool = if n &#62; 0 then isevn (n-1) else false
 >
 
 
-The mutually recursive call to <FONT
-COLOR="RED"
->isodd</FONT
-> in the body of
 <FONT
 COLOR="RED"
 >isevn</FONT
-> is a tail-call, and the mutually recursive call to
-<FONT
-COLOR="RED"
->isevn</FONT
-> in the body of <FONT
+> の本体内の <FONT
 COLOR="RED"
 >isodd</FONT
-> is also a tail-call.  If
-we want that these two tail-calls be compiled into local jumps, we should
-replace the keyword <FONT
+> への相互再帰呼出は末尾呼出です。
+<FONT
+COLOR="RED"
+>isodd</FONT
+> の本体内の <FONT
+COLOR="RED"
+>isevn</FONT
+> への相互再帰呼出もまた末尾呼出です。
+もしこれら2つの末尾呼出をローカルジャンプにコンパイルしたい場合には、
+次のようにキーワード <FONT
 COLOR="RED"
 >fun</FONT
-> with the keyword <FONT
+> をキーワード <FONT
 COLOR="RED"
 >fnx</FONT
-> as
-follows:
+> で置き換えるべきです:
 
 <DIV
 CLASS="informalexample"
@@ -150,20 +147,17 @@ and isodd (n: int): bool = if n &#62; 0 then isevn (n-1) else false
 >
 
 
-What the ATS compiler does in this case is to combine these two functions
-into a single one so that each mutually recursive tail-call in their bodies
-can be turned into a self tail-call in the body of the combined function,
-which is then ready to be compiled into a local jump.
+この例でATSコンパイラが行なうことは、これら2つの関数を1つの関数に結合することです。
+そのためそれぞれの本体にある相互末尾再帰呼出を、結合された関数本体の自己末尾呼出に変換できます。
+そしてこれらの呼出はローカルジャンプへとコンパイルされます。
 </P
 ><P
->When writing code corresponding to embedded loops in an imperative
-programming language such as C or Java, we often need to make sure that
-mutually recursive tail-calls are compiled into local jumps. The following
-function <FONT
+>C言語やJavaのような命令型プログラミング言語の組み込みループに相当するコードを書く場合には、
+相互末尾再帰呼出がローカルジャンプにコンパイルされるかしばしば確認する必要があります。
+次の関数 <FONT
 COLOR="RED"
 >print_multable</FONT
-> is implemented to print out a standard
-multiplication table for nonzero digits:
+> ではゼロではない桁の九九の表の印字を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -201,42 +195,41 @@ end // end of [print_multable]
 >
 
 
-The functions <FONT
+関数 <FONT
 COLOR="RED"
 >loop1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >loop2</FONT
-> are defined
-mutually recursively, and the mutually recursive calls in their bodies are
-all tail-calls. The keyword <FONT
+> は相互再帰的に定義されています。
+そしてこれらの本体におけるこの相互再帰呼出は全て末尾呼出です。
+キーワード <FONT
 COLOR="RED"
 >fnx</FONT
-> indicates to the ATS compiler
-that the functions <FONT
+> は、
+これらの末尾呼出がローカルジャンプにコンパイルできるように関数 <FONT
 COLOR="RED"
 >loop1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >loop2</FONT
-> should be
-combined so that these tail-calls can be compiled into local jumps. In a
-case where <FONT
+>
+は結合すべきであることを、ATSコンパイラに指示します。
+この例では <FONT
 COLOR="RED"
 >N</FONT
-> is a large number (e.g., 1,000,000), calling
+> が大きい数(例えば1,000,000)なので、
+もしこれらの末尾呼出がローカルジャンプにコンパイルされない場合、
 <FONT
 COLOR="RED"
 >loop1</FONT
-> may run the risk of stack overflow if these tail-calls
-are not compiled into local jumps.
+> の呼び出しによってスタックオーバーフローが起きる危険性があります。
 </P
 ><P
->&#13;When called, the function <FONT
+>&#13;呼び出されると、関数 <FONT
 COLOR="RED"
 >print_multable</FONT
-> prints out the
-following multiplication table:
+> は次のような九九の表を印字します:
 
 <DIV
 CLASS="informalexample"
@@ -265,10 +258,10 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;In summary, the very ability to turn mutually recursive tail-calls into
-local jumps makes it possible to implement embedded loops as mutually
-tail-recursive functions. This ability is indispensable for advocating the
-practice of replacing loops with recursive functions in ATS.
+>&#13;要約すると、
+相互末尾再帰呼出をローカルジャンプへ変換する能力は、
+組み込みループを相互末尾再帰関数で実装することを可能にします。
+この能力はATSにおいてループを再帰関数で置換するのに実用上不可欠です。
 </P
 ></DIV
 ><DIV
@@ -315,7 +308,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Mutually Recursive Functions</TD
+>相互再帰関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

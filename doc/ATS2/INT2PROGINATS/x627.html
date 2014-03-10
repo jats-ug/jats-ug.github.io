@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: The Eight-Queens Puzzle</TITLE
+>例: エイト・クイーンパズル</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="末尾呼出と末尾再帰"
 HREF="x616.html"><LINK
 REL="NEXT"
-TITLE="Mutually Recursive Functions"
+TITLE="相互再帰関数"
 HREF="x689.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,18 +75,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example-the-eight-queens-puzzle"
->3.9. Example: The Eight-Queens Puzzle</A
+>3.9. 例: エイト・クイーンパズル</A
 ></H1
 ><P
->The eight-queens puzzle is the problem of positioning on a 8x8
-chessboard 8 queen pieces so that none of them can capture any other pieces
-using the standard chess moves defined for a queen piece. I will present as
-follows a solution to this puzzle in ATS, reviewing some of the programming
-features that have been covered so far. In particular, please note that
-every recursive function implemented in this solution is tail-recursive.
+>エイト・クイーンパズルは8x8のチェスボードの上に8つのクイーンのコマを配置する問題です。
+この時、標準のチェスで定義されているクイーンの動きで、他のコマを取れるようなコマが全くありません。
+ATSでこのパズルの解法を次に示すことで、
+これまで紹介してきたプログラミングの機能のいくつかを復習します。
+特に、この章で実装する全ての再帰関数は末尾再帰であることに注意してください。
 </P
 ><P
->First, let us introduce a name for the integer constant 8 as follows:
+>まずはじめに、次のように整数の定数8に名前を付けます:
 
 <DIV
 CLASS="informalexample"
@@ -105,15 +104,14 @@ CLASS="programlisting"
 >
 
 
-After this declaration, each occurrence of the name <FONT
+この宣言の後では、 <FONT
 COLOR="RED"
 >N</FONT
-> is to
-be replaced with 8. For representing board configurations, we define
-a type <FONT
+> の名前それぞれは8で置換されます。
+ボードの配置を表現するために、次のような <FONT
 COLOR="RED"
 >int8</FONT
-> as follows:
+> 型を定義します:
 
 <DIV
 CLASS="informalexample"
@@ -135,17 +133,15 @@ CLASS="programlisting"
 >
 
 
-A value of the type <FONT
+<FONT
 COLOR="RED"
 >int8</FONT
-> is a tuple of 8 integers where the
-first integer states the column position of the queen piece on the first
-row (row 0), and the second integer states the column position of the queen
-piece on the second row (row 1), and so on.
+> 型の値は8つの整数のタプルです。
+1番目の整数は1番目の行 (row 0) 上のクイーンの列の位置を表現していて、
+2番目の整数は2番目の行 (row 1) 上のクイーンの列の位置を表現していて、などと続きます。
 </P
 ><P
->In order to print out a board configuration, we define the following
-functions:
+>ボードの配置を印字するために、次の関数群を定義します:
 
 <DIV
 CLASS="informalexample"
@@ -178,24 +174,23 @@ fun print_board (bd: int8): void =
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >print_newline</FONT
-> prints out a newline symbol and then
-flushes the buffer associated with the standard output. If the reader is
-unclear about what buffer flushing means, please feel free to ignore this
-aspect of <FONT
+> は改行記号を印字して、標準出力のバッファをフラッシュします。
+読者がバッファのフラッシュに詳しくない場合には、
+<FONT
 COLOR="RED"
 >print_newline</FONT
->.
+> のこの側面を無視してかまいません。
 </P
 ><P
->&#13;As an example, if <FONT
+>&#13;例として、
+@(0, 1, 2, 3, 4, 5, 6, 7) で表わされたボード配置に <FONT
 COLOR="RED"
 >print_board</FONT
-> is called on the board
-configuration represented by @(0, 1, 2, 3, 4, 5, 6, 7), then the following
-8 lines are printed out:
+> を呼び出すと、
+次の8行が印字されます:
 
 <DIV
 CLASS="informalexample"
@@ -222,11 +217,11 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Given a board and the row number of a queen piece on the board, the
-following function <FONT
+>&#13;ボードとボード上に行の数だけクイーンのコマが与えられた時、
+次の関数 <FONT
 COLOR="RED"
 >board_get</FONT
-> returns the column number of the piece:
+> は列のコマの数を返します:
 
 <DIV
 CLASS="informalexample"
@@ -257,12 +252,12 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Given a board, a row number i and a column number j, the following function
-<FONT
+>&#13;ボードと行の数iと列の数jが与えられた時、
+次の関数 <FONT
 COLOR="RED"
 >board_set</FONT
-> returns a new board that are the same as the original
-board except for j being the column number of the queen piece on row i:
+> は、
+行iのクイーンの列の数がjである点を除いて元のボードと同じ新しいボードを返します:
 
 <DIV
 CLASS="informalexample"
@@ -302,27 +297,25 @@ end // end of [board_set]
 >
 
 
-Clearly, the functions <FONT
+明確に、関数 <FONT
 COLOR="RED"
 >board_get</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >board_set</FONT
-> are
-defined in a rather unwieldy fashion. This is entirely due to the use of
-tuples for representing board configurations. If we could use an array to
-represent a board configuration, then the implementation would be much
-simpler and cleaner. However, we have not yet covered arrays at this point.
+> はいくらか不恰好な定義です。
+これは全て、タプルをボード配置の表現に使っていることに由来します。
+ボード配置の表現に配列を使うことができるようになったら、この実装はより単純に明解になるでしょう。
+けれども、ここではまだ配列を紹介していません。
 </P
 ><P
->&#13;Let us now implement two testing functions <FONT
+>&#13;2つのテスト関数 <FONT
 COLOR="RED"
 >safety_test1</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >safety_test2</FONT
-> as follows:
+> を次のように実装しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -360,61 +353,57 @@ fun safety_test2
 >
 
 
-The functionalities of these two functions can be described as such:
+これら2つの関数の機能は次のように表現できます:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->&#13;The function <FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >safety_test1</FONT
-> tests whether a queen piece on row
-<FONT
+> は、行 <FONT
 COLOR="RED"
 >i0</FONT
-> and column <FONT
+> 列 <FONT
 COLOR="RED"
 >j0</FONT
-> can capture another one on row
-<FONT
+> にあるクイーンが、行 <FONT
 COLOR="RED"
 >i</FONT
-> and column <FONT
+> 列 <FONT
 COLOR="RED"
 >j</FONT
->.
+> にあるクイーンを取ることができるかどうかテストします。
 </P
 ></LI
 ><LI
 ><P
->&#13;The function <FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >safety_test2</FONT
-> tests whether a queen piece on row
-<FONT
+> は、行 <FONT
 COLOR="RED"
 >i0</FONT
-> and column <FONT
+> 列 <FONT
 COLOR="RED"
 >j0</FONT
-> can capture any other pieces on a
-given board with a row number less than or equal to <FONT
+> にあるクイーンが、
+与えられたボード上の <FONT
 COLOR="RED"
 >i</FONT
->.
+> 以下の行番号にあるどれかのクイーンを取ることができるかどうかテストします。
 </P
 ></LI
 ></UL
 >
 </P
 ><P
->&#13;We are now ready to implement the following function
-<FONT
+>&#13;これで、深さ優先探索(DFS)アルゴリズムを使って、次のような関数 <FONT
 COLOR="RED"
 >search</FONT
-> based on a standard depth-first search (DFS) algorithm:
+> を実装する準備が整いました:
 
 <DIV
 CLASS="informalexample"
@@ -459,26 +448,25 @@ CLASS="programlisting"
 >
 
 
-The return value of <FONT
-COLOR="RED"
->search</FONT
-> is the number of distinct solutions
-to the eight queens puzzle. The symbol <FONT
-COLOR="RED"
->print!</FONT
-> in the body of
 <FONT
 COLOR="RED"
 >search</FONT
-> is a special identifier in ATS: It takes an indefinite
-number of arguments and then applies <FONT
-COLOR="RED"
->print</FONT
-> to each of them. Here
-is the first solution printed out by a call to the function <FONT
+> の返値はエイト・クイーンパズルの解の総数です。
+<FONT
 COLOR="RED"
 >search</FONT
->:
+> の本体の中のシンボル <FONT
+COLOR="RED"
+>print!</FONT
+> はATSにおける特別な識別子です:
+この識別子は任意の数の引数を取り、それぞれの引数に <FONT
+COLOR="RED"
+>print</FONT
+> を適用します。
+ここでは <FONT
+COLOR="RED"
+>search</FONT
+> 関数を呼び出すと最初の解が印字されます:
 
 <DIV
 CLASS="informalexample"
@@ -504,15 +492,16 @@ CLASS="programlisting"
 >
 
 
-There are 92 distinct solutions in total.
+解の総数は92になります。
 </P
 ><P
->&#13;Note that the entire code in this section plus some additional code for
-testing is available <A
+>&#13;この章で紹介した全コードと追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/queens.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -573,7 +562,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Mutually Recursive Functions</TD
+>相互再帰関数</TD
 ></TR
 ></TABLE
 ></DIV
