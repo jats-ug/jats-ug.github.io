@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Evaluation of Recursive Function Calls</TITLE
+>再帰関数呼び出しの評価</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Recursive Functions"
+TITLE="再帰関数"
 HREF="x519.html"><LINK
 REL="NEXT"
-TITLE="Example: Coin Changes for Fun"
+TITLE="例: コインチェンジ遊び"
 HREF="x593.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,15 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="evaluation-of-recursive-function-calls"
->3.6. Evaluation of Recursive Function Calls</A
+>3.6. 再帰関数呼び出しの評価</A
 ></H1
 ><P
->Evaluating a call to a recursive function is not much different from
-evaluating one to a non-recursive function.  Let <FONT
+>再帰関数呼び出しの評価は、再帰でない関数呼び出しの評価と比べてもそう難しくはありません。
+<FONT
 COLOR="RED"
 >fib</FONT
-> be the
-following defined function for computing the Fibonacci numbers:
+> をフィボナッチ数を計算する関数として次のように定義しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -103,115 +102,113 @@ CLASS="programlisting"
 >
 
 
-Suppose that we are to evaluate <FONT
+ENV0 環境の下で <FONT
 COLOR="RED"
 >fib(2)</FONT
-> under some environment
-ENV0. Given that <FONT
+> を評価することを考えてみましょう。
+<FONT
 COLOR="RED"
 >2</FONT
-> is already a value, we extend ENV0 to ENV1
-with a binding between <FONT
+> が値として与えられた時、
+<FONT
 COLOR="RED"
 >n</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >2</FONT
-> and start to
-evaluate the body of <FONT
+> を束縛してENV0をENV1に拡張し、
+そしてENV1の下で <FONT
 COLOR="RED"
 >fib</FONT
-> under ENV1; clearly, this evaluation
-leads to the evaluation of <FONT
+> の本体の評価を開始します;
+明らかにこの評価は <FONT
 COLOR="RED"
 >fib(n-1) + fib(n-2)</FONT
->; it is easy to
-see that evaluating <FONT
+> の評価を導きます;
+ENV1の下で <FONT
 COLOR="RED"
 >fib(n-1)</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >fib(n-2)</FONT
-> under
-ENV1 leads to <FONT
+> を評価してそれぞれ <FONT
 COLOR="RED"
 >1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >0</FONT
->, respectively, and the
-evaluation of <FONT
+>
+が得られ、 <FONT
 COLOR="RED"
 >fib(n-1) + fib(n-2)</FONT
-> eventually returns
-<FONT
-COLOR="RED"
->1</FONT
-> (as the result of <FONT
+> の評価は結局 (<FONT
 COLOR="RED"
 >1+0</FONT
->); thus the evaluation of
-<FONT
-COLOR="RED"
->fib(2)</FONT
-> under ENV0 yields the integer value <FONT
+> を計算して) <FONT
 COLOR="RED"
 >1</FONT
->.
+>
+を返すことは理解しやすいでしょう;
+したがってENV0の下で <FONT
+COLOR="RED"
+>fib(2)</FONT
+> を評価すると整数値 <FONT
+COLOR="RED"
+>1</FONT
+> が得られます。
 </P
 ><P
->Let us now evaluate <FONT
+>さらにENV0の下で <FONT
 COLOR="RED"
 >fib(3)</FONT
-> under ENV0; we extend ENV0
-to ENV2 with a binding between <FONT
+> を評価してみましょう;
+<FONT
 COLOR="RED"
 >n</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >3</FONT
->, and start
-to evaluate the body of <FONT
+> の間に束縛を作りENV0をENV2に拡張した後、
+ENV2の下で <FONT
 COLOR="RED"
 >fib</FONT
-> under ENV2; we then reach the
-evaluation of <FONT
+> の本体の評価を開始します;
+それからENV2の下で <FONT
 COLOR="RED"
 >fib(n-1) + fib(n-2)</FONT
-> under ENV2; evaluating
-<FONT
+> の評価に辿り着きます;
+ENV2の下で <FONT
 COLOR="RED"
 >fib(n-1)</FONT
-> under ENV2 leads to the evaluation of
-<FONT
+> を評価してENV2の下で <FONT
 COLOR="RED"
 >fib(2)</FONT
-> under ENV2, which eventually returns <FONT
-COLOR="RED"
->1</FONT
->;
-evaluating <FONT
-COLOR="RED"
->fib(n-2)</FONT
-> under ENV2 leads to the evaluation of
+> の評価を導き、結局
 <FONT
 COLOR="RED"
+>1</FONT
+> を返します;
+ENV2の下で <FONT
+COLOR="RED"
+>fib(n-2)</FONT
+> を評価してENV2の下で <FONT
+COLOR="RED"
 >fib(1)</FONT
-> under ENV2, which eventually returns <FONT
+> の評価を導き、結局
+<FONT
 COLOR="RED"
 >1</FONT
->;
-therefore, evaluating <FONT
+> を返します;
+したがってENV0の下で <FONT
 COLOR="RED"
 >fib(3)</FONT
-> under ENV0 returns <FONT
-COLOR="RED"
->2</FONT
->
-(as the result of <FONT
+> を評価すると(<FONT
 COLOR="RED"
 >1+1</FONT
->).
+> の結果) <FONT
+COLOR="RED"
+>2</FONT
+> が返ることになります。
 </P
 ></DIV
 ><DIV
@@ -258,7 +255,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Recursive Functions</TD
+>再帰関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -272,7 +269,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Coin Changes for Fun</TD
+>例: コインチェンジ遊び</TD
 ></TR
 ></TABLE
 ></DIV

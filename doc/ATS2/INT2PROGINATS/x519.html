@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Recursive Functions</TITLE
+>再帰関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="関数呼び出しの評価"
 HREF="x499.html"><LINK
 REL="NEXT"
-TITLE="Evaluation of Recursive Function Calls"
+TITLE="再帰関数呼び出しの評価"
 HREF="x557.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,27 +75,26 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="recursive-functions"
->3.5. Recursive Functions</A
+>3.5. 再帰関数</A
 ></H1
 ><P
->A recursive function is one that may make calls to itself in its
-body. Therefore, a non-recursive function is just a special kind of of
-recursive function: the kind that does not make any calls to itself in its
-body. I consider recursion the most enabling feature a programming language
-can provide. With recursion, we are enabled to do problem-solving based on
-a strategy of reduction: In order to solve a problem to which a solution is
-difficult to find immediately, we reduce the problem to problems that are
-similar but simpler, and we repeat this reduction process if needed until
-solutions become apparent. Let us now see some concrete examples of
-problem-solving that make use of this reduction strategy.
+>再帰関数はその本体で自分自身を呼び出すような関数です。
+したがって、再帰しない関数は再帰関数の単なる特殊形であるとも言えます:
+この種の関数はその本体で自分自身を決して呼び出しません。
+再帰はプログラミング言語が提供しているもっとも効果的な機能だと、私は考えています。
+再帰を使うことで、再帰的な戦略で問題解決をすることができます:
+すぐに解法を見つけることが困難な問題を解決するために、
+問題を同様で単純な問題に減少させ、
+さらに解法が明白になるまでその減少プロセスを繰り返します。
+ここでは
+このような減少戦略を使った問題解決の具体的な例を見てみましょう。
 </P
 ><P
->Suppose that we want to sum up all the integers ranging from 1 to n,
-where n is a given integer. This can be readily done by implementing the
-following recursive function <FONT
+>与えられた整数をnとするとき、1からnまでの範囲の整数を全て足すことを考えましょう。
+これは次のような再帰関数 <FONT
 COLOR="RED"
 >sum1</FONT
->:
+> にたやすく実装することができます:
 
 <DIV
 CLASS="informalexample"
@@ -114,48 +113,45 @@ CLASS="programlisting"
 >
 
 
-Note that the keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >fun</FONT
-> initiates the definition of a
-recursive function. To find out the sum of all the integers ranging from
+> は再帰関数の定義の開始です。
 <FONT
 COLOR="RED"
 >1</FONT
-> to <FONT
+> から <FONT
 COLOR="RED"
 >n</FONT
->, we call <FONT
-COLOR="RED"
->sum1 (n)</FONT
->. The
-reduction strategy for <FONT
-COLOR="RED"
->sum1 (n)</FONT
-> is straightforward: If
+> までの範囲の全ての整数の和を得るために、
 <FONT
 COLOR="RED"
->n</FONT
-> is greater than <FONT
-COLOR="RED"
->1</FONT
->, then we can readily find the
-value of <FONT
+>sum1 (n)</FONT
+> を呼び出しましょう。
+<FONT
 COLOR="RED"
 >sum1 (n)</FONT
-> by solving a simpler problem, that is,
-finding the value of <FONT
+> の減少戦略は単純です:
+もし <FONT
+COLOR="RED"
+>n</FONT
+> が <FONT
+COLOR="RED"
+>1</FONT
+> よりも大きければ、
+<FONT
+COLOR="RED"
+>sum1 (n)</FONT
+> の値はより単純な問題である <FONT
 COLOR="RED"
 >sum1 (n-1)</FONT
->.
+> にできます。
 </P
 ><P
->We can also solve the problem by implementing the following
-recursive function <FONT
+>与えられた範囲の整数の和を得るような次の再帰関数 <FONT
 COLOR="RED"
 >sum2</FONT
-> that sums up all the integers in a
-given range:
+> を実装して問題解決することもできます:
 
 <DIV
 CLASS="informalexample"
@@ -174,64 +170,61 @@ CLASS="programlisting"
 >
 
 
-This time, we call <FONT
-COLOR="RED"
->sum2 (1, n)</FONT
-> in order to find out the sum of
-all the integers ranging from <FONT
-COLOR="RED"
->1</FONT
-> to <FONT
-COLOR="RED"
->n</FONT
->.  The
-reduction strategy for <FONT
-COLOR="RED"
->sum2 (m, n)</FONT
-> is also straightforward: If
 <FONT
 COLOR="RED"
->m</FONT
-> is less than <FONT
+>1</FONT
+> から <FONT
 COLOR="RED"
 >n</FONT
->, then we can readily find the
-value of <FONT
+> の範囲の全ての整数の和を取るために、ここで
+<FONT
+COLOR="RED"
+>sum2 (1, n)</FONT
+> を呼び出してみましょう。
+<FONT
 COLOR="RED"
 >sum2 (m, n)</FONT
-> by solving a simpler problem, that is,
-finding the value of <FONT
+> の減少戦略もまた単純です:
+もし<FONT
+COLOR="RED"
+>m</FONT
+> が <FONT
+COLOR="RED"
+>n</FONT
+> より小さいならば、
+<FONT
+COLOR="RED"
+>sum2 (m, n)</FONT
+> の値をより単純な問題である <FONT
 COLOR="RED"
 >sum2 (m+1, n)</FONT
->. The reason for <FONT
+> にできます。
+<FONT
 COLOR="RED"
->sum2
-(m+1, n)</FONT
-> being simpler than <FONT
+>sum2 (m+1, n)</FONT
+> が <FONT
 COLOR="RED"
 >sum2 (m, n)</FONT
-> is that
+> よりも単純な理由は、
 <FONT
 COLOR="RED"
 >m+1</FONT
-> is closer to <FONT
-COLOR="RED"
->n</FONT
-> than <FONT
+> が <FONT
 COLOR="RED"
 >m</FONT
-> is.
+> よりも <FONT
+COLOR="RED"
+>n</FONT
+> に近いことです。
 </P
 ><P
->Given integers m and n, there is another strategy for summing up all
-the integers from m to n: If m does not exceed n, we can find the sum of
-all the integers from m to (m+n)/2-1 and then the sum of all the integers
-from (m+n)/2+1 to n and then sum up these two sums and (m+n)/2. The
-following recursive function <FONT
+>整数 m と n が与えられた時、m から n までの全ての整数の和を取るために、また別の戦略があります:
+それはもしmがnを超えないとすると、 m から (m+n)/2-1 までの全ての整数の和を取り、
+さらに (m+n)/2+1 から n までの全ての整数の和を取り、最後に左記2つの和と (m+n)/2 の和を取ることです。
+次の再帰関数 <FONT
 COLOR="RED"
 >sum3</FONT
-> is implemented precisely
-according to this strategy:
+> はこの戦略に忠実に実装されています:
 
 <DIV
 CLASS="informalexample"
@@ -255,12 +248,10 @@ CLASS="programlisting"
 >
 
 
-It should be noted that the division involved in the expression
-<FONT
+式 <FONT
 COLOR="RED"
 >(m+n)/2 </FONT
-> is integer division for which rounding is done by
-truncation.
+> に含まれる除算は整数の除算であるため、切り捨てが発生することに注意すべきです。
 </P
 ></DIV
 ><DIV
@@ -321,7 +312,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Evaluation of Recursive Function Calls</TD
+>再帰関数呼び出しの評価</TD
 ></TR
 ></TABLE
 ></DIV

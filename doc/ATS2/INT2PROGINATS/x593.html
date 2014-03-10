@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Coin Changes for Fun</TITLE
+>例: コインチェンジ遊び</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Evaluation of Recursive Function Calls"
+TITLE="再帰関数呼び出しの評価"
 HREF="x557.html"><LINK
 REL="NEXT"
-TITLE="Tail-Call and Tail-Recursion"
+TITLE="末尾呼出と末尾再帰"
 HREF="x616.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,51 +75,48 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example-coin-changes-for-fun"
->3.7. Example: Coin Changes for Fun</A
+>3.7. 例: コインチェンジ遊び</A
 ></H1
 ><P
->Let S be a finite set of positive numbers.  The problem we want to
-solve is to find out the number of distinct ways for a given integer x to
-be expressed as the sum of multiples of the positive numbers chosen from
-S. If we interpret each number in S as the denomination of a coin, then the
-problem asks how many distinct ways there exist for a given value x to be
-expressed as the sum of a set of coins. If we use cc(S, x) for this number,
-then we have the following properties on the function cc:
+>Sを正の数の有限集合としましょう。
+解決したい問題とは、与えられた整数xを、
+Sから選択した正の数の倍数の和として表現する、異なる方法の数を見つけることです。
+S中のそれぞれの数をコインの額面に見立てると、
+この問題は、与えられた値xをコインの集合の和で表わす異なる方法がいくつあるか調べることになります。
+この数を cc(S, x) で表わすと、関数ccは次の特性を持ちます:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->cc(S, 0) = 1 for any S.
+>どのようなSに対しても cc(S, 0) = 1
 </P
 ></LI
 ><LI
 ><P
->If x &#60; 0, then cc(S, x) = 0 for any S.
+>どのようなSに対しても、もし x &#60; 0 ならば cc(S, x) = 0
 </P
 ></LI
 ><LI
 ><P
->If S is empty and x &#62; 0, then cc(S, x) = 0.
+>Sが空で x &#62; 0 ならば cc(S, x) = 0
 </P
 ></LI
 ><LI
 ><P
->If S contains a number c, then
+>Sが数cを含むならば、S<SUB
+>1</SUB
+>がSからcを削除した集合の時
 cc(S, x) = cc(S<SUB
 >1</SUB
->, x) + cc(S, x-c),
-where S<SUB
->1</SUB
-> is the set formed by removing c from S.
+>, x) + cc(S, x-c)
 </P
 ></LI
 ></UL
 >
 
-In the following implementation, we fix S to be the set consisting of
-1, 5, 10 and 25.
+次の実装では、Sを 1, 5, 10, 25 からなる集合に設定しています。
 
 <DIV
 CLASS="informalexample"
@@ -159,35 +156,34 @@ end // end of [coin_change]
 >
 
 
-The auxiliary function <FONT
+関数 <FONT
+COLOR="RED"
+>coin_change</FONT
+> の本体の中で定義されている補助関数 <FONT
 COLOR="RED"
 >aux</FONT
-> defined in the body of
-the function <FONT
-COLOR="RED"
->coin_change</FONT
-> corresponds to the cc function
-mentioned above.
+>
+は上記で述べたcc関数に該当します。
 
-When applied to <FONT
+<FONT
 COLOR="RED"
 >1000</FONT
->, the function <FONT
+> に適用すると、関数 <FONT
 COLOR="RED"
 >coin_change</FONT
->
-returns <FONT
+> は <FONT
 COLOR="RED"
 >142511</FONT
->.
+> を返します。
 </P
 ><P
->Note that the entire code in this section plus some additional
-code for testing is available <A
+>この章で紹介したコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/coinchange.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -234,7 +230,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Evaluation of Recursive Function Calls</TD
+>再帰関数呼び出しの評価</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -248,7 +244,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Tail-Call and Tail-Recursion</TD
+>末尾呼出と末尾再帰</TD
 ></TR
 ></TABLE
 ></DIV
