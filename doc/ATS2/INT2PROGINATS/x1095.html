@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Evaluating Integer Expressions</TITLE
+>例: 整数式の評価</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="データ型"
 HREF="c904.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Binary Search Tree"
+TITLE="例: 2分探索木"
 HREF="x1072.html"><LINK
 REL="NEXT"
 TITLE="Parametric Polymorphism"
@@ -75,14 +75,13 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_evaluating_integer_expressions"
->4.8. Example: Evaluating Integer Expressions</A
+>4.8. 例: 整数式の評価</A
 ></H1
 ><P
->&#13;For representing integer expressions, we declare a datatype
-<FONT
+>&#13;整数式を表現するために、次のようなデータ型 <FONT
 COLOR="RED"
 >IEXP</FONT
-> as follows:
+> を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -108,16 +107,15 @@ CLASS="programlisting"
 >
 
 
-The meaning of the constructors associated with <FONT
+<FONT
 COLOR="RED"
 >IEXP</FONT
-> should be
-obvious. A value of the type <FONT
+> に関連するコンストラクタの意味は明確です。
+<FONT
 COLOR="RED"
 >IEXP</FONT
-> is often referred to as an
-abstract syntax tree. For instance, the abstract syntax tree for the
-expression (~1+(2-3)*4) is the following one:
+> 型の値はしばしば抽象構文木と呼ばれます。
+例えば、式 (~1+(2-3)*4) の抽象構文木は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -136,14 +134,13 @@ CLASS="programlisting"
 >
 
 
-Translating an integer expression written in some string form into an
-abstract syntax tree is called parsing, which we will not do here. The
-following defined function <FONT
+Translating an integer expression written in some string form into an abstract syntax tree is called parsing,
+which we will not do here.
+The following defined function <FONT
 COLOR="RED"
 >eval_iexp</FONT
 > takes the abstract syntax
-tree of an integer expression and returns an integer that is the value of
-the expression:
+tree of an integer expression and returns an integer that is the value of the expression:
 
 <DIV
 CLASS="informalexample"
@@ -350,7 +347,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Binary Search Tree</TD
+>例: 2分探索木</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

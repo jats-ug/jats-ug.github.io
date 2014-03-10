@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Binary Search Tree</TITLE
+>例: 2分探索木</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="データ型"
 HREF="c904.html"><LINK
 REL="PREVIOUS"
-TITLE="Exhaustiveness of Pattern-Matching"
+TITLE="網羅的なパターンマッチ"
 HREF="x1026.html"><LINK
 REL="NEXT"
-TITLE="Example: Evaluating Integer Expressions"
+TITLE="例: 整数式の評価"
 HREF="x1095.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,25 +75,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_binary_search_tree"
->4.7. Example: Binary Search Tree</A
+>4.7. 例: 2分探索木</A
 ></H1
 ><P
->&#13;A binary search tree is a binary tree satisfying the following property:
-for each node in the tree, the key stored in the node is greater than or
-equal to every key stored in the left child of the node and less than or
-equal to every key stored in the right child of the node. In other words, a
-binary tree is a binary search tree if a pre-order traversal encounters a
-sequence of keys ordered ascendingly (according to some ordering on keys). In
-practice, binary search trees are commonly employed to represent sets and
-maps.
+>&#13;2分探索木は次の性質を満たすような二分木です:
+ツリーのそれぞれのノードについて、ノードの中に保存されているキーは、
+ノードの左の子に保存されている全てのキー以上で、
+ノードの右の子に保存されている全てのキー以下です。
+別の言い方では、深さ優先探索の走査をすると昇順のキーの列が得られるような二分木は2分探索木です。
+実際には、2分探索木は集合や写像を表現する際によく使われます。
 
 </P
 ><P
->&#13;The following declaration introduces a datatype <FONT
+>&#13;次のコードは、文字列を保存するキーとする2分探索木のために、データ型 <FONT
 COLOR="RED"
 >bstree</FONT
-> for
-binary search trees in which the stored keys are strings:
+> を宣言しています:
 
 </P
 ><DIV
@@ -113,17 +110,15 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;It should be noted that not every value of the type <FONT
+>&#13;<FONT
 COLOR="RED"
 >bstree</FONT
->
-represents a valid binary search tree as it is certainly possible to
-construct a value representing a binary tree but not a binary search tree.
+> 型の全ての値が有効な2分探索木を表現していないことに注意すべきです。
+2分探索木ではない二分木を表現する値をコンストラクトする可能性があります。
 
 </P
 ><P
->&#13;The following function [bstree_inord] does a in-order traversal of a
-given binary tree:
+>&#13;次の関数 [bstree_inord] は与えられた二分木を間順走査します:
 
 </P
 ><DIV
@@ -154,13 +149,12 @@ case+ t0 of
 ></P
 ></DIV
 ><P
->&#13;If [t0] is a binary search tree, then the sequence of
-keys processed by [fwork] are ordered ascendingly.
+>&#13;[t0] が2分探索木であるなら、 [fwork] によって作られるキーの列は昇順になります。
 
 </P
 ><P
->&#13;Given a binary search tree and a key, the following function
-[bstree_search] checks whether the key is stored inside the tree:
+>&#13;2分探索木とキーが与えられると、次の関数 [bstree_search]
+はそのキーがその探査木の中に保存されているかどうか調べます:
 
 </P
 ><DIV
@@ -191,13 +185,12 @@ case+ t0 of
 ></P
 ></DIV
 ><P
->&#13;Note that [bstree_search] returns true if the given key is
-found. Otherwise, it returns false.
+>&#13;与えられたキーが見つかれば [bstree_search] はtrueを返し、
+見つからなければfalseを返します。
 
 </P
 ><P
->&#13;Given a binary search tree and a key, the following function
-[bstree_insert] inserts the key into the tree:
+>&#13;2分探索木とキーが与えられると、次の関数 [bstree_insert] はその探索木にそのキーを挿入します:
 
 </P
 ><DIV
@@ -228,20 +221,18 @@ case+ t0 of
 ></P
 ></DIV
 ><P
->&#13;Note that [bstree_insert] inserts the key only if it is not already stored
-inside the given tree. Also, if inserted, the key is always stored in a newly
-created leaf node.
+>&#13;キーが与えられた探索木の中に含まれていない時のみ、 [bstree_insert] はキーを挿入することに注意してください。
+もし挿入済みであった場合、そのキーは新しく作られた葉ノードにいつも格納されます。
 
 </P
 ><P
->&#13;Please find
+>&#13;この章で紹介したコード全体と追加のテストコードは
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATATYPE/bstree.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entirety of the code in this section plus some additional code for
-testing.
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -288,7 +279,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Exhaustiveness of Pattern-Matching</TD
+>網羅的なパターンマッチ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -302,7 +293,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Evaluating Integer Expressions</TD
+>例: 整数式の評価</TD
 ></TR
 ></TABLE
 ></DIV
