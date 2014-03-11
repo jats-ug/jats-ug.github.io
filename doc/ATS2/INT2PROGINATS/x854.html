@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: A Higher-Order Fun Puzzle</TITLE
+>例: 高階関数パズル</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Binary Search for Fun"
+TITLE="例: 二分探索遊び"
 HREF="x840.html"><LINK
 REL="NEXT"
 TITLE="Currying and Uncurrying"
@@ -75,10 +75,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example-a-higher-order-fun-puzzle"
->3.15. Example: A Higher-Order Fun Puzzle</A
+>3.15. 例: 高階関数パズル</A
 ></H1
 ><P
->&#13;Let us first introduce a type definition as follows:
+>&#13;はじめに次のような型定義を導入しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -97,14 +97,14 @@ CLASS="programlisting"
 >
 
 
-Given a type T, I(T) is for a closure-function that maps a given input
-value of type T to an output value of the same type T. Given a function f
-of type I(T), we can compose f with itself to form another function, which
-just applies f twice to a given argument. The following function template
-<FONT
+型 T が与えられた時、
+I(T) は与えられた入力としての型Tの値を出力としての型Tの値へ写像するクロージャ関数です。
+型 I(T) の関数 f が与えられた時、
+単に与えられた引数にfを2度適用するような別の関数を作ることができます。
+次の関数テンプレート <FONT
 COLOR="RED"
 >twice</FONT
-> does precisely the described function composition:
+> は左記に説明した関数を正確に構成しています:
 
 <DIV
 CLASS="informalexample"
@@ -124,11 +124,11 @@ twice (f: I(a)):&#60;cloref&#62; I(a) = lam (x) =&#62; f (f (x))
 >
 
 
-Let us now take a look at some interesting code involving <FONT
+<FONT
 COLOR="RED"
 >twice</FONT
->
-that is also likely to be puzzling:
+> を使った興味深いコードを見てみましょう。
+それはパズルのようにも見えます:
 
 <DIV
 CLASS="informalexample"
@@ -159,7 +159,7 @@ val ans3 = twice&#60;I3&#62;(twice&#60;I2&#62;)(twice&#60;I1&#62;)(twice&#60;I0&
 >
 
 
-Note that the type definitions
+上記のコードを読みやすくするために、型宣言
 <FONT
 COLOR="RED"
 >I0</FONT
@@ -171,59 +171,58 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >I2</FONT
->, and
+>,
 <FONT
 COLOR="RED"
 >I3</FONT
-> are introduced to make the above code more easily
-accessible.
+>
+が導入されていることに注意してください。
 </P
 ><P
->&#13;Obviously, <FONT
+>&#13;明らかに <FONT
 COLOR="RED"
 >Z</FONT
-> stands for the integer 0 and <FONT
+> は整数0を表わし、 <FONT
 COLOR="RED"
 >S</FONT
-> for the
-successor function on integers. Also, <FONT
+> は整数の後者関数(Successor Function)を表わしています。
+また <FONT
 COLOR="RED"
 >ans0</FONT
-> equals 2 as it is
-the result of applying <FONT
+> は <FONT
 COLOR="RED"
 >S</FONT
-> to <FONT
+> を <FONT
 COLOR="RED"
 >Z</FONT
-> twice. Let
+> に2度適用した結果なので、2に等しくなります。
 <FONT
 COLOR="RED"
 >S2</FONT
-> be the function that applies <FONT
+> を <FONT
 COLOR="RED"
 >S</FONT
-> twice.  It is
-clear that <FONT
+> を2度適用する関数とします。
+<FONT
 COLOR="RED"
 >ans1</FONT
-> is the result of applying <FONT
+> は <FONT
 COLOR="RED"
 >S2</FONT
-> to
-<FONT
+> を <FONT
 COLOR="RED"
 >Z</FONT
-> twice and thus equals 4. With a bit more effort, one should
-be able to figure out that the value of <FONT
+>
+に2度適用した結果となり、すなわち4に等しくなることは明確です。
+もう少し考えると、 <FONT
 COLOR="RED"
 >ans2</FONT
-> is 16. What is the
-value of <FONT
+> の値が16になることが分かるはずです。
+<FONT
 COLOR="RED"
 >ans3</FONT
->? In general, what is the nth value in the
-sequence of <FONT
+> の値はいくつでしょうか？
+一般に、<FONT
 COLOR="RED"
 >ans0</FONT
 >, <FONT
@@ -232,17 +231,18 @@ COLOR="RED"
 >, <FONT
 COLOR="RED"
 >ans2</FONT
->, etc.?
-I leave these questions as exercises for the interested reader.
+>, などの数列のn番目の値はいくつになるのでしょうか？
+これらの疑問点は興味を持った読者への練習問題とします。
 
 </P
 ><P
->Please find <A
+>この章のコード全体とテストのための追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/twice.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entire code in this section plus some additional code for testing.
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -289,7 +289,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Binary Search for Fun</TD
+>例: 二分探索遊び</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

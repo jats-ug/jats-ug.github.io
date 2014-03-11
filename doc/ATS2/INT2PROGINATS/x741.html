@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Envless Functions and Closure-Functions</TITLE
+>環境の無い(envless)関数とクロージャ関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="相互末尾再帰"
 HREF="x710.html"><LINK
 REL="NEXT"
-TITLE="Higher-Order Functions"
+TITLE="高階関数"
 HREF="x795.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,43 +75,43 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="envless-functions-and-function-closures"
->3.12. Envless Functions and Closure-Functions</A
+>3.12. 環境の無い(envless)関数とクロージャ関数</A
 ></H1
 ><P
->&#13;I use <SPAN
+>&#13;<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >envless</I
 ></SPAN
-> as a shorthand for environmentless,
-which is not a legal word but I suppose that you have no problem figuring
-out what it means.
+> という単語は一般的な単語ではなく、
+私は environmentless(環境の無い) の略記として使いますが、
+その意味をあなたは問題なく想像できるだろうと思います。
 </P
 ><P
->&#13;An envless function is represented by a pointer pointing to some place in a
-code segment where the object code for executing a call to this function is
-located. Every function in the programming language C is envless. A
-closure-function is also represented by a pointer, but the pointer points
-to some place in a heap where a tuple is allocated (at run-time). Usually,
-the first component of this tuple is a pointer representing an envless
-function and the rest of the components represent some bindings. A tuple as
-such is often referred to as a closure-function or simply closure, which
-can be thought of as an envless function paired with an environment. It is
-possible that the environment of a closure-function is empty, but this does
-not equate a closure-function with an envless function. Every function in
-functional languages such as ML and Haskell is a closure-function.
+>&#13;envless関数は、
+
+この関数の呼び出しを実行するオブジェクトコードが配置されている、
+コードセグメントを指し示すポインタによって表現されます。
+プログラミング言語Cにおいて、全ての関数はenvlessです。
+クロージャ関数もまたポインタで表現されますが、
+そのポインタはヒープ中の(実行時に)割り当てられたタプルがある場所を指し示しています。
+通常、このタプルの1つ目の要素はenvless関数を表わすポインタで、残りの要素は束縛群を表わしています。
+そのようなタプルはしばしばクロージャ関数もしくは単純にクロージャと呼ばれ、
+環境とペアになったenvless関数であると考えることができます。
+クロージャ関数の環境が空であっても問題ありませんが、
+これはenvless関数のクロージャ関数と同じではありません。
+MLやHaskellのような関数型言語の全ての関数はクロージャ関数です。
 </P
 ><P
->&#13;In the following example, the function <FONT
-COLOR="RED"
->sum</FONT
->, which is assigned
-the type <FONT
+>&#13;次の例では、型 <FONT
 COLOR="RED"
 >(int) -&#62; int</FONT
->, sums up all the integers between 1 and a
-given natural number:
+> が割り当てられた関数 <FONT
+COLOR="RED"
+>sum</FONT
+>
+は1から与えられた自然数までの全ての整数を合計します:
 
 <DIV
 CLASS="informalexample"
@@ -140,58 +140,53 @@ end // end of [sum]
 >
 
 
-The inner function <FONT
+内側の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> is a closure-function as is indicated
-by the special syntax <FONT
+> は特別な構文 <FONT
 COLOR="RED"
 >:&#60;cloref1&#62;</FONT
->, and the type assigned
-to <FONT
+> で示されるクロージャ関数です。
+また <FONT
 COLOR="RED"
 >loop</FONT
-> is denoted by <FONT
+> に割り当てられた型は <FONT
 COLOR="RED"
->(int, int) -&#60;cloref1&#62;
-int</FONT
->. Hence, envless functions and closure-functions can be distinguished
-at the level of types.
+>(int, int) -&#60;cloref1&#62; int</FONT
+> です。
+それゆえにenvless関数とクージャ関数は型レベルで見分けることができます。
 </P
 ><P
->&#13;If the syntax <FONT
+>&#13;もし構文 <FONT
 COLOR="RED"
 >:&#60;cloref1&#62;</FONT
-> is replaced with the colon
-symbol <FONT
+> を単独のコロン記号 <FONT
 COLOR="RED"
 >:</FONT
-> alone, the code can still pass typechecking but its
-compilation may eventually lead to a warning or even an error indicating
-that <FONT
+> に置き換えると、
+コードは型検査を通りますが、 <FONT
 COLOR="RED"
 >loop</FONT
-> cannot be compiled into a toplevel function in C. The
-reason for this warning/error is due to the body of <FONT
+> をC言語のトップレベル関数にコンパイルできないことを示す、
+警告もしくはエラーを引き起こす可能性があります。
+この警告/エラーの理由は、トップレベルでもなく <FONT
 COLOR="RED"
 >loop</FONT
->
-containing a variable <FONT
+> 関数自身の引数でもない値 <FONT
 COLOR="RED"
 >n</FONT
-> that is neither at toplevel nor a part
-of the arguments of <FONT
-COLOR="RED"
->loop</FONT
-> itself. It is straightforward to make
+> を
 <FONT
 COLOR="RED"
 >loop</FONT
-> an envless function by including <FONT
+> の本体が含んでいることにあります。
+<FONT
 COLOR="RED"
 >n</FONT
-> as an
-argument in addition to the original ones:
+> を元の関数への追加の引数として <FONT
+COLOR="RED"
+>loop</FONT
+> をenvless関数 にするのは簡単です:
 
 <DIV
 CLASS="informalexample"
@@ -220,39 +215,36 @@ end // end of [sum]
 >
 
 
-As a matter of fact, what happens during compilation is that the first
-implementation of <FONT
+実際のコンパイルの中では、
+1番目の <FONT
 COLOR="RED"
 >sum</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >loop</FONT
-> gets translated,
-more or less, into the second implementation, and there is <SPAN
+> の実装はおおよそ2番目の実装に変換され、
+実行時に実際のクロージャが作られるわけでは<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->no</I
+>ありません</I
 ></SPAN
->
-actual creation of closures at run-time.
+>。
 </P
 ><P
->&#13;The need for creating closures often appears when a function is not
-directly applied. For instance, the return value of a function call may
-also be a function. In the following code, the defined function
-<FONT
+>&#13;関数が直接適用されない時でも、しばしばクロージャを作る必要があります。
+例えば、関数呼び出しの返値もまた関数であるかもしれません。
+次のコードで、定義された関数 <FONT
 COLOR="RED"
 >addx</FONT
-> returns another function when applied to a given integer
-<FONT
+> は与えられた整数 <FONT
 COLOR="RED"
 >x</FONT
->, and the returned function is a closure-function, which
-always adds the integer <FONT
+> に適用した別の関数を返します。
+この返値の関数は、いつも整数 integer <FONT
 COLOR="RED"
 >x</FONT
-> to its own argument:
+> と自分への引数の和を取るクロージャ関数です:
 
 
 <DIV
@@ -275,81 +267,77 @@ val plus2 = addx (2) // [plus2] is of the type int -&#60;cloref1&#62; int
 >
 
 
-It should be clear that <FONT
+<FONT
 COLOR="RED"
 >plus1(0)</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >plus2(0)</FONT
->
-return <FONT
+> がそれぞれ <FONT
 COLOR="RED"
 >1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >2</FONT
->, respectively.  The closure-function
-that is given the name <FONT
+> を返すのは自明でしょう。
+<FONT
 COLOR="RED"
 >plus1</FONT
-> consists of an envless function
-and an environment binding <FONT
+> の名前が与えられたクロージャ関数はenvless関数と
+<FONT
 COLOR="RED"
 >x</FONT
-> to <FONT
+> を <FONT
 COLOR="RED"
 >1</FONT
->. The envless
-function can essentially be described by the pseudo syntax <FONT
-COLOR="RED"
->lam
-(env, y) =&#62; env.x + y</FONT
->, where <FONT
+> に束縛した環境から構成されています。
+<FONT
 COLOR="RED"
 >env</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >env.x</FONT
-> refer
-to an environment and the value to which <FONT
+> が環境とその環境で <FONT
 COLOR="RED"
 >x</FONT
-> is bound in that
-environment. When evaluating <FONT
+> に束縛された値を参照する時、
+このenvless関数は本質的に仮構文で <FONT
+COLOR="RED"
+>lam (env, y) =&#62; env.x + y</FONT
+> と表現できます。
+<FONT
 COLOR="RED"
 >plus1(0)</FONT
->, we can first bind
-<FONT
+> を評価すると、
+はじめに <FONT
 COLOR="RED"
 >env</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >y</FONT
-> to the environment in <FONT
+> をそれぞれ <FONT
 COLOR="RED"
 >plus1</FONT
->
-and the argument <FONT
+> 内の環境と引数 <FONT
 COLOR="RED"
 >0</FONT
->, respectively, and then start to evaluate
-the body of the envless function in <FONT
-COLOR="RED"
->plus1</FONT
->, which is
-<FONT
+>
+に束縛します。
+それから、 <FONT
 COLOR="RED"
 >env.x + y</FONT
->. Clearly, this evaluation yields the value
-<FONT
+> である <FONT
+COLOR="RED"
+>plus1</FONT
+> 内のenvless関数の本体の評価を開始します。
+この評価によって期待通り値 <FONT
 COLOR="RED"
 >1</FONT
-> as is expected.
+> が生成されることは明確です。
 </P
 ><P
->&#13;Closures are often passed as arguments to functions that are referred
-to as higher-order functions.  It is also fairly common for closures to
-be embedded in data structures.
+>&#13;クロージャはしばしば高階関数と呼ばれる関数への引数として渡されることがあります。
+クロージャがデータ構造に埋め込まれることも一般的です。
 </P
 ></DIV
 ><DIV
@@ -410,7 +398,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Higher-Order Functions</TD
+>高階関数</TD
 ></TR
 ></TABLE
 ></DIV

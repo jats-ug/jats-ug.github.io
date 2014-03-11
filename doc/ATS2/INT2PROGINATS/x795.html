@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Higher-Order Functions</TITLE
+>高階関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Envless Functions and Closure-Functions"
+TITLE="環境の無い(envless)関数とクロージャ関数"
 HREF="x741.html"><LINK
 REL="NEXT"
-TITLE="Example: Binary Search for Fun"
+TITLE="例: 二分探索遊び"
 HREF="x840.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,15 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="higher-order-functions"
->3.13. Higher-Order Functions</A
+>3.13. 高階関数</A
 ></H1
 ><P
->A higher-order function is a function that take another function as
-its argument. For instance, the following defined function
-<FONT
+>高階関数は別の関数を引数として取るような関数です。
+例えば、次に定義する関数 <FONT
 COLOR="RED"
 >rtfind</FONT
-> is a higher-order one:
+> は高階関数の例です:
 
 <DIV
 CLASS="informalexample"
@@ -111,39 +110,36 @@ end // end of [rtfind]
 >
 
 
-Given a function from integers to integers, <FONT
+与えられた整数から整数への関数が与えられた時、
+<FONT
 COLOR="RED"
 >rtfind</FONT
-> searches
-for the first natural number that is a root of the function. For instance,
-calling <FONT
+> は関数の根である最初の自然数を探します。
+例えば、 <FONT
 COLOR="RED"
 >rtfind</FONT
-> on the polynomial function <FONT
+> を多項式の関数 <FONT
 COLOR="RED"
->lam x =&#62; x * x
-- x + 110</FONT
-> returns <FONT
+>lam x =&#62; x * x - x + 110</FONT
+> に呼び出すと
+<FONT
 COLOR="RED"
 >11</FONT
->.  Note that <FONT
+> が返ります。
+もし根を持たない関数に適用されると、 <FONT
 COLOR="RED"
 >rtfind</FONT
->
-loops forever if it is applied to a function that does not have a root.
+> は無限ループすることに注意してください。
 </P
 ><P
->Higher-order functions can greatly facilitate code reuse, and I now
-present a simple example to illustrate this point.  The following defined
-functions <FONT
+>高階関数はコードの再利用を非常に促進します。ここではその単純な例を示そうと思います。
+次に定義する関数 <FONT
 COLOR="RED"
 >sum</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >prod</FONT
-> compute the sum and
-product of the integers ranging from 1 to a given natural number,
-respectively:
+> は1から与えられた自然数までの和と積をそれぞれ計算します:
 
 <DIV
 CLASS="informalexample"
@@ -163,28 +159,27 @@ fun prod (n: int): int = if n &#62; 0 then prod (n-1) * n else 1
 >
 
 
-The similarity between the functions <FONT
+関数 <FONT
 COLOR="RED"
 >sum</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >prod</FONT
->
-is evident.  We can define a higher-function <FONT
+> の間における類似点は明白です。
+高階関数 <FONT
 COLOR="RED"
 >ifold</FONT
-> and then
-implement <FONT
-COLOR="RED"
->sum</FONT
-> and <FONT
-COLOR="RED"
->prod</FONT
-> based on
+> を定義して、
 <FONT
 COLOR="RED"
+>sum</FONT
+> と <FONT
+COLOR="RED"
+>prod</FONT
+> を <FONT
+COLOR="RED"
 >ifold</FONT
->:
+> にもとづいて実装することができます:
 
 <DIV
 CLASS="informalexample"
@@ -209,12 +204,11 @@ fun prod (n: int): int = ifold (n, lam (res, x) =&#62; res * x, 1)
 >
 
 
-If we ever want to compute the sum of the squares of the integers ranging
-from 1 to a given natural number n, we can readily do it by defining a
-function based on <FONT
+もし1から与えられた自然数nまでの範囲の整数の二条の和を計算するのであれば、
+<FONT
 COLOR="RED"
 >ifold</FONT
-> as follows:
+> にもとづいた関数を次のようにたやすく定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -233,15 +227,14 @@ CLASS="programlisting"
 >
 
 
-Suppose we generalize <FONT
-COLOR="RED"
->sqrsum</FONT
-> to the following function
+1からnまでの整数の中で与えられた数dの倍数を選んで二乗の和を計算するために、
 <FONT
 COLOR="RED"
+>sqrsum</FONT
+> を一般化して次の関数 <FONT
+COLOR="RED"
 >sqrmodsum</FONT
-> in order to compute the sum of the squares of the
-integers ranging from 1 to n that are multiples of a given number d:
+> を作ることを考えましょう:
 
 <DIV
 CLASS="informalexample"
@@ -262,33 +255,31 @@ CLASS="programlisting"
 >
 
 
-For someone unfamilar with the distinction between an envless function and
-a closure-function, it may be a bit suprising to learn that this
-generalization does not actually work. The simple reason is that
-<FONT
+envless関数とクロージャ関数の差異に慣れていない人にとって、
+この一般化が実際には動かないことは少し意外かもしれません。
+その単純な理由は <FONT
 COLOR="RED"
 >ifold</FONT
-> expects its second argument to be an envless function but
-the function passed to <FONT
-COLOR="RED"
->ifold</FONT
-> in the body of
+> は二番目の引数にenvless関数が渡されることを期待していますが、
 <FONT
 COLOR="RED"
 >sqrmodsum</FONT
-> is clearly not envless (due to its use of
-<FONT
+> の本体で <FONT
+COLOR="RED"
+>ifold</FONT
+> に渡される関数は <FONT
 COLOR="RED"
 >d</FONT
->). To address the issue, we can implement a variant of
-<FONT
+>
+を使っているため明らかにenvlessではないことです。
+この問題に対処するために、次のような <FONT
 COLOR="RED"
 >ifold</FONT
-> as follows and then implement <FONT
+> の変形を実装し、
+それからその変形にもとづいて <FONT
 COLOR="RED"
 >sqrmodsum</FONT
-> based
-on this variant:
+> を実装することができます:
 
 <DIV
 CLASS="informalexample"
@@ -316,36 +307,34 @@ fun sqrmodsum (n: int, d: int): int =
 >
 
 
-While <FONT
+<FONT
 COLOR="RED"
 >ifold2</FONT
-> is indeed more general than <FONT
+> は確かに <FONT
 COLOR="RED"
 >ifold</FONT
->,
-this generality does come with a price. Whenever <FONT
+> よりも一般的ですが、代償を伴います。
+<FONT
 COLOR="RED"
 >sqrmodsum</FONT
-> is
-called, a closure-function must be created on heap and then passed to
+> が呼び出されると、クロージャ関数をヒープの中に生成してから
 <FONT
 COLOR="RED"
 >ifold2</FONT
->; this closure-function is of no further use after the
-call returns and the memory it occupies can only be properly relcaimed
-through garbage collection (GC). Therefore, calling functions like
-<FONT
+> に渡さなければなりません;
+このクロージャ関数は関数が返った後はもはや使いません。
+そのメモリはガベージコレクション(GC)が回収するまで解放されません。
+そのためGCが無効な場合 <FONT
 COLOR="RED"
 >sqrmodsum</FONT
-> can readily result in memory leaks in a setting where
-GC is not available. Fortunately, there are also linear closure-functions
-in ATS, which do not cause any memory leaks even in the absence of GC as
-they are required to be explicitly freed by the programmer. I will cover
-this interesting programming feature elsewhere.
+> のような関数呼び出しは、
+たやすくメモリリークを引き起こしてしいまいます。
+幸運にも、明示的にプログラマが解放することで、
+GCがなくともメモリリークを引き起こさない線形クロージャ関数もATSは備えています。
+この興味深いプログラミングの機能は別の章で紹介します。
 </P
 ><P
->&#13;As more features of ATS are introduced, higher-order functions will become
-even more effective in facilitating code reuse.
+>&#13;より多くのATSの機能を紹介すれば、高階関数はコードの再利用の促進により効果的になります。
 </P
 ></DIV
 ><DIV
@@ -392,7 +381,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Envless Functions and Closure-Functions</TD
+>環境の無い(envless)関数とクロージャ関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -406,7 +395,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Binary Search for Fun</TD
+>例: 二分探索遊び</TD
 ></TR
 ></TABLE
 ></DIV

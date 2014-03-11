@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Binary Search for Fun</TITLE
+>例: 二分探索遊び</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="Higher-Order Functions"
+TITLE="高階関数"
 HREF="x795.html"><LINK
 REL="NEXT"
-TITLE="Example: A Higher-Order Fun Puzzle"
+TITLE="例: 高階関数パズル"
 HREF="x854.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,18 +75,18 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example-binary-search-for-fun"
->3.14. Example: Binary Search for Fun</A
+>3.14. 例: 二分探索遊び</A
 ></H1
 ><P
->&#13;While binary search is often performed on an ordered array to check whether
-a given element is stored in that array, it can also be employed to compute
-the inverse of an increasing or decreasing function on integers. In the
-following code, the defined function <FONT
+>&#13;与えられた要素が配列に保存されているか検査するために、
+しばしば順序付けられた配列に対して二分探索を行ないます。
+また整数に対して増加や減少する関数の逆関数を作るのに使うこともでききます。
+次のコードで定義している関数 <FONT
 COLOR="RED"
 >bsearch_fun</FONT
-> returns an
-integer i0 such that f(i) &#60;= x0 holds for i ranging from lb to i0,
-inclusive, and x0 &#60; f(i) holds for i ranging from i0+1 to ub, inclusive:
+> は、
+i が lb から i0 までの範囲では f(i) &#60;= x0 を維持し、
+i が i0+1 から ub までの範囲では x0 &#60; f(i) を維持するような整数 i0 を返します:
 
 <DIV
 CLASS="informalexample"
@@ -122,16 +122,15 @@ fun bsearch_fun
 >
 
 
-As an example, the following function <FONT
+例として、次の関数 <FONT
 COLOR="RED"
 >isqrt</FONT
-> is defined based
-on <FONT
+> は <FONT
 COLOR="RED"
 >bsearch_fun</FONT
-> to compute the integer square root of a given
-natural number, that is, the largest integer whose square is less than or
-equal to the given natural number:
+> にもとづいて定義されていて、
+与えられた自然数の平方根を整数、
+つまりその二乗が与えられた自然数以下であるような最も大きい整数を返します:
 
 <DIV
 CLASS="informalexample"
@@ -157,23 +156,23 @@ fun isqrt
 >
 
 
-Note that the function <FONT
+関数 <FONT
 COLOR="RED"
 >g0i2u</FONT
-> is for casting a signed integer
-into an unsigned one and the function <FONT
+> は符号付き整数を符号なし整数にキャストし、
+関数 <FONT
 COLOR="RED"
 >square</FONT
-> returns the square
-of its argument.
+> は引数の二乗を返すことに注意してください。
 </P
 ><P
->Please find <A
+>この章で紹介したコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/bsearch.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entire code in this section plus some additional code for testing.
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -220,7 +219,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Higher-Order Functions</TD
+>高階関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -234,7 +233,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: A Higher-Order Fun Puzzle</TD
+>例: 高階関数パズル</TD
 ></TR
 ></TABLE
 ></DIV
