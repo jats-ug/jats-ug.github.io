@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Currying and Uncurrying</TITLE
+>カリー化とアンカリー化</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,23 +75,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="currying-and-uncurrying"
->3.16. Currying and Uncurrying</A
+>3.16. カリー化とアンカリー化</A
 ></H1
 ><P
->&#13;Currying, which is named after the logician Haskell Curry, means to
-turn a function taking multiple arguments simultaneously into a function of
-the same body (modulo corresponding recursive function calls being changed
-accordingly) that takes these arguments sequentially. Uncurrying means
-precisely the opposite of currying. In the following code, both of the
-defined functions <FONT
+>&#13;論理学者 Haskell Curry の名前に由来する、
+カリー化は同時に複数の引数を取る関数を、
+それらの引数を連続して取るような同じ本体の関数に変換することを意味します。
+アンカリー化はカリー化の反対です。
+次のコードでは、
+定義された関数 <FONT
 COLOR="RED"
 >acker1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >acker2</FONT
-> implement the
-Ackermann's function (which is famous for being recursive but not primitive
-recursive):
+> はアッカーマン関数を実装しています。
+この関数は原始再帰関数でない再帰として有名です:
 
 <DIV
 CLASS="informalexample"
@@ -124,58 +123,55 @@ fun acker2
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >acker2</FONT
-> is a curried version of <FONT
+> は <FONT
 COLOR="RED"
 >acker1</FONT
->
-while the function <FONT
+> のカリー化されたバージョンです。
+また関数 <FONT
 COLOR="RED"
 >acker1</FONT
-> in an uncurried version of
+> は <FONT
+COLOR="RED"
+>acker2</FONT
+> のアンカリー化されたバージョンです。
 <FONT
 COLOR="RED"
 >acker2</FONT
->. Applying <FONT
-COLOR="RED"
->acker2</FONT
-> to an integer value
-generates a closure-function, which causes a memory-leak unless it can be
-reclaimed by garbage collection (GC) at run-time.
+> を整数の値に適用するとクロージャ関数を生成します。
+実行時にガベージコレクション(GC)によって回収されないと、このクロージャ関数はメモリリークを引き起こします。
 </P
 ><P
->&#13;In functional languages such as ML and Haskell, a function of multiple
-arguments needs to be either curried or translated into a corresponding
-unary function of a single argument that itself is a tuple. In such
-languages, currying often leads to better performance at run-time and thus
-is preferred. In ATS, functions of multiple arguments are supported
-directly. Also, given a function of multiple arguments, a curried version
-of the function is likely to perform less efficiently at run-time than the
-function itself (due to the treatment of curried functions by the ATS
-compiler <B
+>&#13;MLやHaskellのような関数型言語では、
+複数引数の関数はカリー化するか、唯一の引数としてタプルを取るunary関数に変換する必要があります。
+そのような言語では、カリー化はしばしば実行時の効率を向上させるので好んで使用されんます。
+ATSでは、複数引数の関数は直接サポートされています。
+また複数引数の関数が与えられた時、
+その関数のカリー化されたバージョンは元のバージョンより実行時の効率が悪くなることがあります。
+これはATSコンパイラ <B
 CLASS="command"
 >atsopt</B
->).  Therefore, the need for currying in
-ATS is greatly diminished. Unless convincing reasons can be given, currying
-is in general <SPAN
+> のカリー化された関数の取り扱いに起因します。
+そのため、ATSにおいてカリー化の必要性はとても小さいことになります。
+一般に説得力のある理由なしに、
+カリー化はATSにおいて推奨されるプログラミングスタイルでは<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->not</I
+>ありません</I
 ></SPAN
-> a recommended programming style in ATS.
+>。
 </P
 ><P
->&#13;Please find
+>&#13;この章のコード全体と追加のテストコードは
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_FUNCTION/acker.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entire code in this section plus some additional
-code for testing.
+から入手できます。
 </P
 ></DIV
 ><DIV
