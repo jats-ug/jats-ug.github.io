@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Polymorphic Functions</TITLE
+>多相関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,16 +75,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="polymorphic_functions"
->5.2. Polymorphic Functions</A
+>5.2. 多相関数</A
 ></H1
 ><P
->&#13;A polymorphic function is rather similar to a function template.
-However, the former is a first-class value in ATS while the latter is not.
-As an example, the following defined function <FONT
+>&#13;多相関数はどちらかといえば関数テンプレートに似ています。
+けれども、前者はATSにおける第一級の値ですが、後者は違います。
+例として、次に定義する関数 <FONT
 COLOR="RED"
 >swap_boxed</FONT
-> is
-polymorphic:
+> は多相的です:
 
 <DIV
 CLASS="informalexample"
@@ -103,21 +102,20 @@ CLASS="programlisting"
 >
 
 
-The type variables <FONT
+型変数 <FONT
 COLOR="RED"
 >a</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >b</FONT
-> are often referred as
-static arguments while <FONT
+> はしばしば静的引数と呼ばれ、 <FONT
 COLOR="RED"
 >xy</FONT
-> is a dynamic argument. Here is some code
-that makes use of the polymorphic function <FONT
+> は動的引数と呼ばれます。
+次のコードは多相関数 <FONT
 COLOR="RED"
 >swap_boxed</FONT
->:
+> を使っています:
 
 <DIV
 CLASS="informalexample"
@@ -138,35 +136,31 @@ val BA2 = swap_boxed (AB) // omitting type arguments may be fine
 >
 
 
-If <FONT
+もし型 T1 と T2 が与えられ <FONT
 COLOR="RED"
 >swap_boxed</FONT
-> is called on a pair of the type (T1, T2) for some
-types T1 and T2, both T1 and T2 are required to be boxed. Otherwise, a
-type-error is reported. For instance, calling <FONT
+> をタプル型 (T1, T2) に対して呼び出した場合、
+T1とT2はボックス化されていなければなりません。
+そうでなければ型エラーが発生します。
+例えば <FONT
 COLOR="RED"
 >swap_boxed</FONT
-> on
-<FONT
+> を <FONT
 COLOR="RED"
 >(0, 1)</FONT
-> yields a type-error as the type <FONT
+> に呼び出すと、
+型 <FONT
 COLOR="RED"
 >int</FONT
-> is not
-boxed.
+> がボックス化されていないことを示す型エラーを誘発します。
 </P
 ><P
->&#13;When calling a polymorphic function, we often omit passing static
-arguments explicitly and expect them to be synthesized by the
-compiler. However, there are also occasions, which are not uncommon, where
-static arguments need to be supplied explicitly as either they cannot be
-successfully synthesized or what is synthesized is not exactly what is
-expected by the programmer.
+>&#13;多相関数を呼び出す時、静的引数をしばしば省略してコンパイラによって推論されることを期待します。
+けれども推論に失敗したり、推論がプログラマが意図していたものとは違っているために、
+明示的に静的引数を指定することが必要になることも珍しくはありません。
 </P
 ><P
->&#13;It is also possible to pass static arguments sequentially as is
-shown in the following style of implementation of a polymorphic function:
+>&#13;次の多相関数の実装スタイルのように、静的引数を連続して渡すことも可能です:
 
 <DIV
 CLASS="informalexample"
@@ -193,27 +187,25 @@ val BA6 = swap2_boxed{string}{string} (AB) // both static arguments are provided
 >
 
 
-The special syntax <FONT
+特殊構文 <FONT
 COLOR="RED"
 >{..}</FONT
-> indicates to the typechecker that the
-static argument (or arguments) involved in the current application should
-be synthesized while the special syntax <FONT
+> はこの適用に含まれる静的引数が推論されるべきであることを型検査器に指示します。
+さらに特殊構文 <FONT
 COLOR="RED"
 >{...}</FONT
-> means that the
-rest of static arguments should all be synthesized.
+> は残りの静的引数全がを推論されるべきであることを型検査器に指示します。
 </P
 ><P
->&#13;I have seen two kinds of errors involving polymorphic functions that are
-extremely common in practice.
+>&#13;
+実際の場面でも非常に一般的な多相関数に由来する2種類のエラーを見てます:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->The first kind is depicted in the following example:
+>1番目のエラーの種類は次のような例です:
 
 <DIV
 CLASS="informalexample"
@@ -232,40 +224,39 @@ CLASS="programlisting"
 >
 
 
-Notice that the sort for type variables <FONT
+型変数 <FONT
 COLOR="RED"
 >a</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >b</FONT
-> is
-<FONT
-COLOR="RED"
->t@ype</FONT
-> (instead of <FONT
+> の種が <FONT
 COLOR="RED"
 >type</FONT
->). While this example can
-pass typechecking, its compilation results in a compile-time error that may
-seem mysterious to many programmers. The simple reason for this error is
-that the compiler cannot figure out the size of <FONT
-COLOR="RED"
->a</FONT
-> and
-<FONT
-COLOR="RED"
->b</FONT
-> when trying to generate code in C as the sort <FONT
+> の代わりに <FONT
 COLOR="RED"
 >t@ype</FONT
 >
-is for types of unspecified size.
+であることに注意してください。
+この例は型検査には通りますが、コンパイル時に起きるエラーは、多くのプログラマにとって不可解なものでしょう。
+このエラーを発生させる単純な理由は、コンパイラが <FONT
+COLOR="RED"
+>a</FONT
+> と <FONT
+COLOR="RED"
+>b</FONT
+>
+のサイズを算出できないことです。
+種 <FONT
+COLOR="RED"
+>t@ype</FONT
+> のC言語コードを生成しようとした時、型のサイズが特定できないのです。
 
 </P
 ></LI
 ><LI
 ><P
->The second kind is depicted in the following example:
+>2番目のエラーの種類は次のような例です:
 
 <DIV
 CLASS="informalexample"
@@ -284,26 +275,24 @@ CLASS="programlisting"
 >
 
 
-Strictly speaking, there is really no error in this case. If defined as
-such, <FONT
+厳密に言えば、この例には実際エラーはありません。
+もしこのような定義がされると、 <FONT
 COLOR="RED"
 >swap_boxed</FONT
-> is a function template instead of a
-polymorphic function. However, such a function template is severely
-restricted as it cannot be instantiated with types that are not boxed.
-While this could be intended, it is very unlikely.
+> は多相関数の代わりに関数テンプレートになります。
+けれども、
+このような関数テンプレートはボックス化されていない型でインスタンス化できないよう、
+使用が厳しく制限されています。
+これが意図してものでなければ、好ましくないでしょう。
 </P
 ></LI
 ></UL
 >
 
-Given the potential confusion, why do we need both function templates and
-polymorphic functions?  At this stage, it is certainly plausible that we
-program only with function templates and make no use of polymorphic
-functions. However, polymorphic functions can hardly be missed in the
-presence dependent types. There will actually be numerous occasions where
-we encounter polymorphic function templates, that is, templates for
-polymorphic functions.
+混乱する可能性があるのに、なぜ関数テンプレートと多相関数が必要になるのでしょうか？
+関数テンプレートだけを使い、多相関数を使うべきではない、というのがもちろん現時点ではもっともらしく思えます。
+けれども、多相関数は依存型に強く結びついています。
+多相関数のためのテンプレートである多相関数テンプレートに、実際には数多く出会うことになるでしょう。
 </P
 ></DIV
 ><DIV
