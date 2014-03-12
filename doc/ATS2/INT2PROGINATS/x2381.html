@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Constraint-Solving during Typechecking</TITLE
+>型検査中での制約解決</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,12 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="constraint-solving_during_typechecking"
->9.2. Constraint-Solving during Typechecking</A
+>9.2. 型検査中での制約解決</A
 ></H1
 ><P
->&#13;Typechecking in ATS involves generating and solving constraints.
-As an example, the code below implements the well-known factorial
-function:
+>&#13;ATSにおける型検査は制約の生成と解決を引き起こします。
+例として、次のコードはよく知られた階乗関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -102,11 +101,10 @@ fact{n:nat}
 >
 
 
-In this implementation, the function <FONT
+この実装では、関数 <FONT
 COLOR="RED"
 >fact</FONT
-> is assigned the
-following type:
+> には次の型が割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -125,78 +123,73 @@ CLASS="programlisting"
 >
 
 
-which means that <FONT
+これは、 <FONT
 COLOR="RED"
 >fact</FONT
-> returns a natural number r when applied
-to a natural number n. When the code is typechecked, the following
-constraints need to be solved:
+> は自然数 n に適用されると自然数 r を返すことを意味しています。
+このコードが型検査されるとき、次の制約が解決される必要があります:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->&#13;For each natural number n, n &#62; 0 implies n - 1 &#62;= 0
+>&#13;それぞれの自然数 n について、 n &#62; 0 が n - 1 &#62;= 0 の意味を含む
 </P
 ></LI
 ><LI
 ><P
->For each natural number n and each natural number r<SUB
+>それぞれの自然数 n とそれぞれの自然数 r<SUB
 >1</SUB
->, n &#62; 0 implies n * r<SUB
+> について、 n &#62; 0 が n * r<SUB
 >1</SUB
->&#62;= 0
+>&#62;= 0 の意味を含む
 </P
 ></LI
 ><LI
 ><P
->&#13;For each natural number n, 1 &#62;= 0 holds.
+>&#13;それぞれの自然数 n について、常に 1 &#62;= 0 である
 </P
 ></LI
 ></UL
 >
 
-The first constraint is generated due to the call <FONT
+1番目の制約は呼び出し <FONT
 COLOR="RED"
 >fact(x-1)</FONT
->,
-which requires that <FONT
-COLOR="RED"
->x-1</FONT
-> be a natural number. The second
-constraint is generated in order to verify that <FONT
-COLOR="RED"
->x * fact(x-1)</FONT
->
-is a natural number under the assumption that <FONT
-COLOR="RED"
->fact(x-1)</FONT
-> is a
-natural number.  The third constraint is generated in order to verify that
+> によって生成されています。
 <FONT
 COLOR="RED"
+>x-1</FONT
+> が自然数であることが要求されているからです。
+2番目の制約は、 <FONT
+COLOR="RED"
+>fact(x-1)</FONT
+> が自然数であるという仮定の下で、
+<FONT
+COLOR="RED"
+>x * fact(x-1)</FONT
+> が自然数であるかどうか検証することで生成されています。
+3番目の制約は <FONT
+COLOR="RED"
 >1</FONT
-> is a natural number.  The first and the third constraints can
-be readily solved by the constraint solver in ATS, which is based on the
-Fourier-Motzkin variable elimination method. However, the second constraint
-cannot be handled by the constraint solver as it is nonlinear: The
-constraint cannot be turned into a linear integer programming problem due
-to the occurrence of the nonlinear term (n*r<SUB
+> が自然数であるかどうか検証することで生成されています。
+1番目と3番目の制約はATSの制約ソルバによってたやすく解決できます。
+この手法は Fourier-Motzkin 変数消去法にもとづいています。
+けれども、2番目の制約は線形ではないため制約ソルバで取り扱うことができません:
+この制約は、線形でない項 (n*r<SUB
 >1</SUB
->).  While nonlinear
-constraints cannot be handled automatically by the constraint solver in
-ATS, the programmer can verify them by constructing proofs in ATS
-explicitly. I will cover the issue of explicit proof construction in an
-elaborated manner elsewhere.
+>) が存在するために、線形整数プログラミングの問題に変形できないのです。
+ATSの制約ソルバは非線形の制約を自動的に取り扱うことはできませんが、
+ATSの証明を明示的に構築することでプログラマはそれらを検証することができます。
+精巧にそして明示的に構築する証明については別の章で紹介します。
 </P
 ><P
->&#13;By default, the constraint-solver implemented for ATS/Postiats makes use of
-the standard arithmetic of infinite precision.  For the sake of efficiency,
-one may also choose to use machine-level arithmetic for solving integer
-constraints. Due to potential arithmetic overflow, results returned by the
-constraint-solver that uses machine-level arithmetic can be incorrect (but
-we have so far never knowingly encountered such a situation in practice).
+>&#13;初期設定では、ATS/Postiatsで実装されている制約ソルバは標準の任意精度演算を用いています。
+効率の理由で、整数の制約の解決にマシンレベル演算を使うこともまた選択できます。
+演算のオーバーフローの可能性があるため、
+マシンレベル演算を使う制約ソルバが返す結果は不正確である可能性があります。
+(しかし今までのところ意図せず実際にはそのような状況に遭遇したことはありません。)
 </P
 ></DIV
 ><DIV
