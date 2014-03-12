@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Mergesort on Lists</TITLE
+>例: リストのマージソート</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,24 +75,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_mergesort"
->5.5. Example: Mergesort on Lists</A
+>5.5. 例: リストのマージソート</A
 ></H1
 ><P
->&#13;Mergesort is simple sorting algorithm that is guaranteed to be log-linear.
-It is stable in the sense that the order of two equal elements always stay
-the same after sorting. I give as follows a typical functional style of
-implementation of mergesort on lists.
+>&#13;マージソートは最悪計算量 O(n log n) の単純なソートアルゴリズムです。
+2つの等しい要素がソートした後でも同じ配置であるという意味で安定です。
+次にリストに対するマージソートの典型的な関数型スタイルの実装を示します。
 
 </P
 ><P
->&#13;First, let us introduce abbreviations
-for the list constructors <FONT
+>&#13;はじめに、リストコンストラクタ <FONT
 COLOR="RED"
 >list0_nil</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >list0_cons</FONT
->:
+> の省略形を導入しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -113,12 +111,11 @@ CLASS="programlisting"
 >
 
 
-Note that the operator <FONT
+演算子 <FONT
 COLOR="RED"
 >::</FONT
-> is already given the infix status.
-For instance, the list consisting of the first 5 natural numbers can be
-constructed as follows:
+> は既に中置に設定されていることに注意してください。
+例えば、自然数のはじめの5個からなるリストは次のようにコンストラクトできます:
 
 <DIV
 CLASS="informalexample"
@@ -137,22 +134,21 @@ CLASS="programlisting"
 >
 
 
-In practice, there is of course no point in mixing <FONT
+もちろん実際には、 <FONT
 COLOR="RED"
 >cons0</FONT
->
-with <FONT
+> と <FONT
 COLOR="RED"
 >::</FONT
->.
+> を混ぜる意味はありません。
 
 </P
 ><P
->&#13;We next implement a function template <FONT
+>&#13;次に、与えられた2つの整列されたリストを1つの整列されたリストにマージする関数テンプレート
+<FONT
 COLOR="RED"
 >merge</FONT
-> to merge two given
-ordered lists into a single ordered one:
+> を実装します:
 
 <DIV
 CLASS="informalexample"
@@ -192,42 +188,39 @@ a:t@ype
 >
 
 
-For instance, suppose that the two given lists are (1, 3, 4, 8) and (2, 5,
-6, 7, 9), and the comparison function (the third argument of
+例えば、与えられた2つのリストが (1, 3, 4, 8) と (2, 5, 6, 7, 9) だと考えてみましょう。
 <FONT
 COLOR="RED"
 >merge</FONT
->) is the standard less-than-or-equal-to function on
-integers. Then the list returned by <FONT
+> の第3引数である比較関数は整数の標準的な less-than-or-equal-to 関数です。
+すると <FONT
 COLOR="RED"
 >merge</FONT
-> is (1, 2, 3, 4, 5, 6,
-7, 8, 9). The syntax <FONT
+> はリスト (1, 2, 3, 4, 5, 6, 7, 8, 9) を返します。
+構文 <FONT
 COLOR="RED"
 >\lte</FONT
-> means that the particular occurrence
-of <FONT
+> はほぼ <FONT
 COLOR="RED"
 >lte</FONT
-> following the backslash symbol (<FONT
+> と同じ意味をしていますが、バックスラッシュ記号
+(<FONT
 COLOR="RED"
 >\</FONT
->) is
-given the infix status, and thus the expression <FONT
+>) を前に付けるとは中置設定になります。
+したがって式 <FONT
 COLOR="RED"
 >x \lte y</FONT
->
-means the same as <FONT
+> は <FONT
 COLOR="RED"
 >lte(x, y)</FONT
->.
+> と同じ意味です。
 </P
 ><P
->&#13;The following function template <FONT
+>&#13;次の関数テンプレート <FONT
 COLOR="RED"
 >mergesort</FONT
-> implements the
-standard mergesort algorithm:
+> は標準のマージソートアルゴリズムを実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -278,37 +271,39 @@ end // end of [mergesort]
 >
 
 
-Suppose we want to sort the list (8, 3, 4, 1, 2, 7, 6, 5, 9); we first
-divide it into two lists: (8, 3, 4, 1) and (2, 7, 6, 5, 9); by performing
-mergesort on each of them, we obtain two ordered lists: (1, 3, 4, 8) and
-(2, 5, 6, 7, 9); by merging these two ordered list, we obtain the ordered
-list (1, 2, 3, 4, 5, 6, 7, 8, 9), which is a permutation of the original
-list (8, 3, 4, 1, 2, 7, 6, 5, 9).
+リスト (8, 3, 4, 1, 2, 7, 6, 5, 9) をソートしてみましょう;
+はじめに2つのリストに分割します:
+(8, 3, 4, 1) と (2, 7, 6, 5, 9) です;
+これらそれぞれにマージソートをほどこすことで、2つの整列されたリストが得られます:
+(1, 3, 4, 8) と (2, 5, 6, 7, 9) です;
+これら2つの整列済みリストをマージして、整列済みリスト (1, 2, 3, 4, 5, 6, 7, 8, 9) が得られます。
+これは元のリスト (8, 3, 4, 1, 2, 7, 6, 5, 9) の置換になっています。
 </P
 ><P
->&#13;Note that the function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >merge</FONT
-> is not tail-recursive as
-the call to <FONT
+> は末尾再帰ではないことに注意してください。
+<FONT
 COLOR="RED"
 >merge</FONT
-> in its body is not a tail-call. This can be a
-serious problem in practice: It is almost certain that a stack overflow is
-to occur if the above implementation of mergesort is employed to sort a
-list that is very long (e.g., containing 1,000,000 elements or more). I
-will later give a tail-recursive implementation of the <FONT
+> 本体の自分自身の呼び出しが末尾呼出ではありません。
+これは実際の使用において大きな問題です:
+上記のマージソートの実装がとても長い(例えば1,000,000以上の要素を含む)リストのソートに対して呼び出されたら、
+スタックオーバーフローが引き起こされることは疑う余地がありません。
+後の章で、ATSの線形型を使って <FONT
 COLOR="RED"
 >merge</FONT
->
-function in ATS that makes use of linear types.  </P
+> 関数の末尾再帰的実装を紹介します。
+</P
 ><P
->&#13;Please find the entire code in this section plus some additional code for
-testing <A
+>&#13;この章のコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_POLYMORPH/mergesort.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
