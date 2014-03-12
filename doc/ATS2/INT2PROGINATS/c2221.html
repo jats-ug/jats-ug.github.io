@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Introduction to Dependent Types</TITLE
+>依存型入門</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,30 +75,28 @@ CLASS="chapter"
 ><A
 NAME="introduction-to-dependent-types"
 ></A
->Chapter 9. Introduction to Dependent Types</H1
+>Chapter 9. 依存型入門</H1
 ><P
->&#13;The types we have encountered so far in this book are often not adequately
-precise in capturing programming invariants. For instance, if we assign the
-type <FONT
+>&#13;この本でこれまで見てきた型は、しばしばプログラミングの不変条件を正確に表現していませんでした。
+例えば型 <FONT
 COLOR="RED"
 >int</FONT
-> to both of integers 0 and 1, then we simply cannot
-distinguish 0 from 1 at the level of types. This means that 0 and 1 are
-interchangeable as far as typechecking is concerned. In other words, we
-cannot expect a program error to be caught during typechecking if the error
-is caused by 0 being mistyped as 1. This form of imprecision in types can
-become a crippling limitation if we ever want to build a type-based
-specification language that is reasonably expressive for practical use.
+> を整数0と1の両方に割り当てると、型のレベルでは0と1を単純に見分けることができません。
+これは型検査の範囲では0と1が交換可能であることを意味しています。
+別の言い方をすると、もし0であるべきところろ1とミスタイプして、
+型検査中に捕捉すべきプログラムのエラーが起きても、型検査時に予測できません。
+もし、実際の使用のために表現力豊かな型ベースの仕様記述言語を作ろうとしたなら、
+型におけるこの種の不正確さは不自由な制限になりえます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介するコードとテストのための追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPTYPES/"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the code employed for illustration in this chapter plus some additional
-code for testing.
+から入手できます。
 </P
 ><DIV
 CLASS="sect1"
@@ -106,59 +104,56 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="enhanced_expressiveness_for_specification"
->9.1. Enhanced Expressiveness for Specification</A
+>9.1. 仕様に対する表現力の強化</A
 ></H1
 ><P
->&#13;The primary purpose of introducing dependent types into the type system of
-ATS is to greatly enhance the expressiveness of types so that they can be
-employed to capture program invariants with much greater precision.
-Generally speaking, dependent types are types dependent on values of
-expressions. For instance, <FONT
-COLOR="RED"
->bool</FONT
-> is a type constructor in ATS
-that forms a type <FONT
-COLOR="RED"
->bool(b)</FONT
-> when applied to a given boolean value
-b. As this type can only be assigned to a boolean expression of the value
-b, it is often referred to as a singleton type, that is, a type for exactly
-one value. Clearly, the meaning of <FONT
-COLOR="RED"
->bool(b)</FONT
-> depends on the
-boolean value b.  Similarly, <FONT
-COLOR="RED"
->int</FONT
-> is a type constructor in ATS
-that forms a type <FONT
-COLOR="RED"
->int(i)</FONT
-> when applied to a given integer
-i. This type is also a singleton type as it can only be assigned to an
-integer expression of the value i. Please note that both <FONT
+>&#13;ATSの型システムに依存型を導入する主要な目的は、
+プログラムの不変条件をより正確に捕捉できるように、
+型の表現力をより強化することです。
+一般的に言うと、依存型は式の値に依存した型のことです。
+例えば、 <FONT
 COLOR="RED"
 >bool</FONT
 >
-and <FONT
+は与えられたブール値 b に適用されると型 <FONT
+COLOR="RED"
+>bool(b)</FONT
+> を作るようなATSの型コンストラクタです。
+この型は値 b のブール式にのみ割り当てることができ、
+これはしばしばシグルトン型と呼ばれ、つまりきっちり1つの値しか持たない型を意味します。
+明らかに、 <FONT
+COLOR="RED"
+>bool(b)</FONT
+> の意味はブール値 b に依存しています。
+同様に、 <FONT
 COLOR="RED"
 >int</FONT
-> are overloaded as they also refer to (non-dependent)
-types.  I will gradually introduce many other examples of dependent types.
-In particular, I will present a flexible means for the programmer to
-declare dependent datatypes.
+> はATSの型コンストラクタで、
+与えられた整数 i に適用されて型 <FONT
+COLOR="RED"
+>int(i)</FONT
+> を作ります。
+また、この型は値 i の整数式にのみ割り当てることができるようなシングルトン型です。
+<FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
+> は両方ともオーバーロードされて非依存型を参照していることに注意してください。
+依存型の他の例を徐々に紹介します。
+特に、依存データ型を宣言するプログラマにとって柔軟な手法を紹介します。
 </P
 ><P
->&#13;The statics of ATS is a simply-typed language, and the types in this
-language are called <SPAN
+>&#13;ATSの静的な部分は単純型付き言語で、混乱する可能性を回避するために、
+この言語の型は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->sorts</I
+>種(sort)</I
 ></SPAN
-> so as to avoid some
-potential confusion (with the types for dynamic terms). The following four
-listed sorts are commonly used:
+> と呼ばれます(動的な項では型と読んでいました)。
+次に挙げる4つの種は一般的に使用されます:
 
 <P
 ></P
@@ -171,7 +166,7 @@ CLASS="emphasis"
 CLASS="emphasis"
 >bool</I
 ></SPAN
->: for static terms of boolean values
+>: ブール値の静的な項
 </P
 ></LI
 ><LI
@@ -182,7 +177,7 @@ CLASS="emphasis"
 CLASS="emphasis"
 >int</I
 ></SPAN
->: for static terms of integer values
+>: 整数値の静的な項
 </P
 ></LI
 ><LI
@@ -193,7 +188,7 @@ CLASS="emphasis"
 CLASS="emphasis"
 >type</I
 ></SPAN
->: for static terms representing boxed types (for dynamic terms)
+>: 動的な項のボックス化型を表現する静的な項
 </P
 ></LI
 ><LI
@@ -204,116 +199,114 @@ CLASS="emphasis"
 CLASS="emphasis"
 >t@ype</I
 ></SPAN
->: for static terms representing unboxed types (for dynamic terms)
+>: 動的な項のアンボックス化型を表現する静的な項
 </P
 ></LI
 ></UL
 >
 
-The sorts <SPAN
+種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >bool</I
 ></SPAN
-> and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int</I
 ></SPAN
-> are classified as
-predicative sorts while the sorts <SPAN
+> は述語種(predicative sorts)に、
+種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >type</I
 ></SPAN
-> and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >t@ype</I
 ></SPAN
+> は非述語種(impredicative sorts)に分類されます
+ボックス化型は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>type</I
+></SPAN
+> の静的な項です。
+アンボックス化型は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+> の静的な項です。
+型としての <FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
+> は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+> の静的な項です。
+型コンストラクタとしての <FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
 >
-are impredicative. A boxed type is a static term of the sort
-<SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->type</I
-></SPAN
-> while an unboxed type is a static term of the sort
-<SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->t@ype</I
-></SPAN
->. As types, <FONT
-COLOR="RED"
->bool</FONT
-> and <FONT
-COLOR="RED"
->int</FONT
-> are
-static terms of the sort <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->t@ype</I
-></SPAN
->. As type constructors,
-<FONT
-COLOR="RED"
->bool</FONT
-> and <FONT
-COLOR="RED"
->int</FONT
-> are static terms of the sorts
-(<SPAN
+はそれぞれ種 (<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >bool -&#62; t@ype</I
 ></SPAN
->) and (<SPAN
+>) と (<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int -&#62; t@ype</I
 ></SPAN
->),
-respectively.  Also note that the type constructor <FONT
+>) の静的な項です。
+型コンストラクタ <FONT
 COLOR="RED"
 >list0</FONT
-> is of
-the sort (<SPAN
+> もまた種 (<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >t@ype -&#62; type</I
 ></SPAN
->), which indicates that
-<FONT
+>) であることに注意してください。
+これは <FONT
 COLOR="RED"
 >list0</FONT
-> forms a boxed type when applied to an unboxed one.  There
-are a variety of built-in static functions in ATS for constructing static
-terms of the sorts <SPAN
+> はアンボックス化型に適用するとボックス化型を作ることを示しています。
+種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >bool</I
 ></SPAN
-> and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int</I
 ></SPAN
->, and I list as
-follows some of these functions together with the sorts assigned to them:
+> の静的な項をコンストラクトするために、
+ATSにはビルトインの静的な関数が多数用意されています。
+次にこのような関数のいくつかを割り当てられた種と一緒に挙げてみます:
 
 <P
 ></P
@@ -486,14 +479,13 @@ CLASS="emphasis"
 ></UL
 >
 
-By combining a sort with one or more predicates, we can define a subset
-sort. For instance, the following subset sorts are defined in the file
-<A
+種と1つ以上の述語を結合して、サブセット種を定義できます。
+例えば、次のサブセット種が <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/basics_pre.sats"
 TARGET="_top"
 >basics_pre.sats</A
->, which is
-automatically loaded by the ATS compiler:
+>
+ファイルで定義されていて、ATSコンパイラが自動的にロードします:
 
 <DIV
 CLASS="informalexample"
@@ -519,8 +511,8 @@ sortdef nat4 = {a: nat | a &#60; 4} // for 0, 1, 2, 3
 >
 
 
-Note that predicates can be sequenced together with the semicolon
-symbol (;) to form a conjunction:
+
+セミコロン記号 (;) を使って述語群を結合して連続させることができることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -541,20 +533,19 @@ sortdef sgn = { i:int | ~1 &#60;= i; i &#60;= 1 } // for ~1, 0, 1
 >
 
 
-It is also possible to define the subset sorts <SPAN
+次のようにサブセット種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >nat2</I
 ></SPAN
->
-and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >nat3</I
 ></SPAN
-> as follows:
+> を定義することも可能です:
 
 <DIV
 CLASS="informalexample"
@@ -574,24 +565,23 @@ sortdef nat3 = {a: int | 0 &#60;= a &#38;&#38; a &#60;= 2} // for 0, 1, 2
 >
 
 
-where <FONT
+ここで <FONT
 COLOR="RED"
 >||</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >&#38;&#38;</FONT
-> stands for disjunction and
-conjunction, respectively.
+> はそれぞれ論理和と論理積を表わしています。
 
 </P
 ><P
->In order to unleash the expressiveness of dependent types, we need
-to employ both universal and existential quantification over static
-variables. For instance, the type <FONT
+>依存型の表現力を解き放つために、
+静的な値の上に全称量化(universal quantification)と存在量化(existential quantification)
+の両方を採用する必要があります。
+例えば、ATSの型  <FONT
 COLOR="RED"
 >Int</FONT
-> in ATS is defined as
-follows:
+> は次のように定義されています:
 
 <DIV
 CLASS="informalexample"
@@ -610,45 +600,43 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+ここでは、構文 <FONT
 COLOR="RED"
 >[a:int]</FONT
-> means existential quantification over
-a static variable <FONT
-COLOR="RED"
->a</FONT
-> of the sort
-<SPAN
+> は種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int</I
 ></SPAN
->. Essentially, this means that for each value of
-the type <FONT
+> の静的な変数 <FONT
+COLOR="RED"
+>a</FONT
+>
+の上の存在量化を意味しています。
+本質的にこれは、型 <FONT
 COLOR="RED"
 >Int</FONT
->, there exists an integer I such that the value is
-of the type <FONT
+> のそれぞれの値に対して、型 <FONT
 COLOR="RED"
 >int(I)</FONT
->. Therefore, any value that can be given the
-type <FONT
+>
+の値になるような整数 I が存在することを意味します。
+したがって、型 <FONT
 COLOR="RED"
 >int</FONT
-> can also be given the type <FONT
+> が与えられるどのような値にも型 <FONT
 COLOR="RED"
 >Int</FONT
->. A type
-like <FONT
+> を与えることができます。
+<FONT
 COLOR="RED"
 >Int</FONT
-> is often referred to as an existentially quantified
-type.  As another example, the type <FONT
+> のような型はしばしば存在量化型(existentially quantified type)と呼ばれます。
+別の例として、ATSの型 <FONT
 COLOR="RED"
 >Nat</FONT
-> in ATS is defined as
-follows:
+> は次のように定義されます:
 
 <DIV
 CLASS="informalexample"
@@ -667,44 +655,43 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+構文 <FONT
 COLOR="RED"
 >[a:int | a &#62;= 0]</FONT
-> means existential
-quantification over a static variable <FONT
+> は、不変条件 <FONT
 COLOR="RED"
->a</FONT
-> of the sort
+>a &#62;= 0</FONT
+> を満たすような種
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int</I
 ></SPAN
-> that satisfies the constraint <FONT
+> の静的な変数 <FONT
 COLOR="RED"
->a &#62;= 0</FONT
->.
-Therefore, each value of the type <FONT
+>a</FONT
+> の上の存在量化を意味しています。
+したがって、型 <FONT
 COLOR="RED"
 >Nat</FONT
-> can be assigned the type
+> のそれぞれの値には
+I &#62;= 0 を満たす整数 I を使った型 <FONT
+COLOR="RED"
+>int(I)</FONT
+> を割り当てることができます。
 <FONT
 COLOR="RED"
 >int(I)</FONT
-> for some integer I satisfying I &#62;= 0. Given that
+> がシングルトン型として与えられると、その値は I に等しく、つまり自然数になります。
+つまり型 <FONT
+COLOR="RED"
+>Nat</FONT
+> は自然数を意味することになります。
 <FONT
 COLOR="RED"
->int(I)</FONT
-> is a singleton type, the value equals I and is thus a
-natural number. This means that the type <FONT
-COLOR="RED"
 >Nat</FONT
-> is for natural
-numbers. The definition of <FONT
-COLOR="RED"
->Nat</FONT
-> can also be given as follows:
+> はまた次のようにも定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -723,31 +710,28 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+構文 <FONT
 COLOR="RED"
 >[a:nat]</FONT
-> is just a form of syntactic sugar that
-automatically expands into <FONT
+> は単なる構文糖衣で、自動的に <FONT
 COLOR="RED"
 >[a:int | a &#62;= 0]</FONT
->.
+> に展開されます。
 </P
 ><P
->At this point, types have already become much more expressive. For
-instance, we could only assign the type <FONT
+>現時点で型の表現力はすでに強化されています。
+例えば、型 <FONT
 COLOR="RED"
 >(int) -&#62; int</FONT
-> to a
-function that maps integers to natural numbers (e.g., the function that
-computes the absolute value of a given integer), but we can now do better
-by assigning it the type <FONT
+> は整数を自然数に写像する関数にしか割り当てることができません
+(例: 与えられた整数の絶対値を計算する関数)。
+しかし、そのような関数には型 <FONT
 COLOR="RED"
 >(Int) -&#62; Nat</FONT
->, which is clearly more
-precise. In order to relate at the level of types the return value of a
-function to its arguments, we need universal quantification. For instance,
-the following universally quantified type is for a function that returns
-the successor of its integer argument:
+> を割り当てた方がより良いでしょう。
+その方がより明確になります。
+型レベルで関数の返値とその引数を関連付けるためには、全称量化が必要になります。
+例えば、次の全称量化型は整数の引数の次の数を返すような関数を表わしています:
 
 <DIV
 CLASS="informalexample"
@@ -766,22 +750,21 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+構文 <FONT
 COLOR="RED"
 >{i:int}</FONT
-> means universal quantification over a
-static variable <FONT
-COLOR="RED"
->i</FONT
-> of the sort <FONT
+> は種 <FONT
 COLOR="RED"
 >int</FONT
-> and the scope
-of this quantification is the function type following it.  One may think
-that this function type is also a singleton type as the only function of
-this type is the successor function on integers. Actually, there are
-infinitely may partial functions that can be given this type as well.  For
-the successor function on natural numbers, we can use the following type:
+> の静的な変数 <FONT
+COLOR="RED"
+>i</FONT
+> の上の全称量化を意味しています。
+この全称量化のスコープはそれに続く関数型の中です。
+この型の唯一の関数は整数の後者関数(successor function)であり、
+この関数型もまたシングルトン型であると考えるかもしれません。
+実際には、この型を与えられる部分関数が無限に存在します。
+自然数の後者関数に、次のような型を使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -800,25 +783,24 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+構文 <FONT
 COLOR="RED"
 >{i:int | i &#62;= 0}</FONT
-> means universal
-quantification over a static variable <FONT
+> は不変条件 <FONT
 COLOR="RED"
->i</FONT
-> of the sort
-<SPAN
+>i &#62;= 0</FONT
+> を満たすような種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >int</I
 ></SPAN
-> that satisfies the constraint <FONT
+>
+の静的な変数 <FONT
 COLOR="RED"
->i &#62;= 0</FONT
->.
-This type can also be written as follows:
+>i</FONT
+> の上の全称量化を意味しています。
+この型はまた次のように書くこともできます:
 
 <DIV
 CLASS="informalexample"
@@ -837,15 +819,14 @@ CLASS="programlisting"
 >
 
 
-where the syntax <FONT
+構文 <FONT
 COLOR="RED"
 >{i:nat}</FONT
-> automatically expands into
-<FONT
+> は自動的に <FONT
 COLOR="RED"
 >{i:int | i &#62;= 0}</FONT
->.  I list as follows the interfaces for some
-commonly used functions on integers:
+> に展開されます。
+整数に一般的に使われるいくつかのインターフェイスを次に挙げます:
 
 <DIV
 CLASS="informalexample"
@@ -875,34 +856,32 @@ fun g1int_neq {i,j:int} (int i, int j): bool (i != j) // not-equal-to
 >
 
 
-These interfaces are all declared in the file
-<A
+これらのインターフェイスは全て <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/integer.sats"
 TARGET="_top"
 >integer.sats</A
->, which is
-automatically loaded by the ATS compiler. Note that
-the functions listed here can all be referred to by their
-standard names:
-~ for g1int_neg,
-+ for g1int_add,
-- for g1int_sub,
-* for g1int_mul,
-/ for g1int_div,
-&#60; for g1int_lt,
-&#60;= for g1int_lte,
-&#62; for g1int_gt,
-&#62;= for g1int_gte,
-= for g1int_eq,
-!= for g1int_neq,
-&#60;&#62; for g1int_neq (most of the time).
+>
+ファイルで宣言されていて、ATSコンパイラが自動的にロードします。
+ここで挙げた関数群は全てそれらの標準名で参照可能であることに注意してください:
+ほとんどの場合、
+~ は g1int_neg,
++ は g1int_add,
+- は g1int_sub,
+* は g1int_mul,
+/ は g1int_div,
+&#60; は g1int_lt,
+&#60;= は g1int_lte,
+&#62; は g1int_gt,
+&#62;= は g1int_gte,
+= は g1int_eq,
+!= は g1int_neq,
+&#60;&#62; は g1int_neq を参照しています。
 
 </P
 ><P
->&#13;It is now a proper moment for me to raise an interesting question: What
-does a dependently typed interface for the factorial function look like?
-After seeing the above examples, it is only natural for one to expect
-something along the following line of thought:
+>&#13;この興味深い質問を持ち出すには今が適切な時でしょう:
+階乗関数の依存型インターフェイスはどのようになるでしょうか？
+上記の例を見た後では次の行のように考えるのが自然でしょう:
 
 <DIV
 CLASS="informalexample"
@@ -921,34 +900,32 @@ CLASS="programlisting"
 >
 
 
-where <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->fact</I
-></SPAN
-> is a static version of the factorial function. The
-very problem with this solution is that a static function like
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >fact</I
 ></SPAN
-> cannot be defined in ATS.  The statics of ATS is a
-simply-typed language that does not allow any recursive means to be
-employed in the construction of static terms. This design is adopted
-primarily to ensure that the equality on static terms can be decided based
-on a practical algorithm. As typechecking involving dependent types
-essentially turns into verifying whether a set of equalities (and some
-built-in predicates) on static terms hold, such a design is of vital
-importance to the goal of supporting practical programming with dependent
-types.
+> は階乗関数の静的なバージョンです。
+この答には大きな問題があります。
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>fact</I
+></SPAN
+> のような静的な関数をATSでは定義できないのです。
+ATSの静的な部分は単純型付き言語であり、
+静的な項のコンストラクトにおいてどのような再帰的な意味も許されていません。
+主に現実的なアルゴリズムをベースに静的な項の等価性を決定できるように保証するために、
+このデザインは採用されています。
+本質的に、依存型を伴う型検査は、
+保持している静的な項における等価性(とビルトインの述語)の集合の検査に変化します。
+そのようなデザインは依存型を使った実際のプログラミングをサポートするためにきわめて重要です。
 
-In order to assign an interface to the factorial function that precisely
-matches the definition of the function, we need to employ a mechanism in ATS
-for combining programming with theorem-proving.  This is a topic I will
-cover later.
+関数の定義に正確に一致する階乗関数にインターフェイスを割り当てるために、
+ATSに定理証明を使ったプログラミングを採用する必要があります。
+このトピックは後の章で取り上げます。
 </P
 ></DIV
 ></DIV
