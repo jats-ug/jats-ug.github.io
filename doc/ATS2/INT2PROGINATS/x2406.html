@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: String Processing</TITLE
+>例: 文字列処理</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,42 +75,39 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_string_processing"
->9.3. Example: String Processing</A
+>9.3. 例: 文字列処理</A
 ></H1
 ><P
->&#13;A string in ATS is represented in the same manner as in C: It is a sequence
-of adjacently stored non-null characters followed by the null character,
-and its length is the number of non-null characters in the sequence.
-Conventionally, such strings are often referred to as C-style strings,
-which are notoriously difficult to be processed safely (as is clearly
-indicated by so many bugs and breaches due to misusing such strings). As a
-matter of fact, ATS is the first practical programming language that I know
-can fully support safe processing of C-style strings. In ATS,
-<FONT
+>&#13;ATSの文字列はC言語と同じ方法で表現されています:
+それはNULL文字で終端される非NULL文字群が隣接して保存された列で、
+その長さはその列の中の非NULL文字の数です。
+慣習的に、このような文字列をしばしばC言語スタイル文字列と呼びます。
+また安全に処理することが困難であるために悪評が高いことでも知られています
+(この文字列の誤用に起因する多くのバグと欠陥が明確に物語っています)。
+実際のところ、私の知るかぎりATSはC言語スタイルの文字列に対する安全な処理を完全にサポートするはじめての実用的なプログラミング言語です。
+ATSでは、 <FONT
 COLOR="RED"
 >string</FONT
-> is a type constructor of the sort <SPAN
+> は種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->(int) -&#62;
-type</I
+>(int) -&#62; type</I
 ></SPAN
->.
+> の型コンストラクタです。
 
-Given a static integer n, <FONT
+静的な整数 n が与えられた時、 <FONT
 COLOR="RED"
 >string(n)</FONT
-> is the type for strings of
-the length n. Note that <FONT
+> は長さ n の文字列の型です。
+<FONT
 COLOR="RED"
 >string</FONT
-> also refers to a non-dependent
-type for strings of unspecified length, which is basically equivalent to
-the type <FONT
+> は長さが指定されていない文字列の非依存型をも参照していることに注意してください。
+この非依存型は次に定義する型 <FONT
 COLOR="RED"
 >String</FONT
-> defined as follows:
+> と基本的に同等です:
 
 <DIV
 CLASS="informalexample"
@@ -129,7 +126,7 @@ CLASS="programlisting"
 >
 
 
-The following two functions are commonly used for traversing a given string:
+次の2つの関数は与えられた文字列を横断する用途に一般に使われます:
 
 <DIV
 CLASS="informalexample"
@@ -156,9 +153,8 @@ fun string_isnot_atend
 >
 
 
-Obviously, either one of them can be implemented based on the other. As an
-example, the following code implements a function that computes the length
-of a given string:
+明らかに、これら内のどちらかはもう一方を元にして実装することができます。
+例として、次のコードは与えられた文字列の長さを算出する関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -188,25 +184,22 @@ end // end of [string_length]
 >
 
 
-Note that the function <FONT
-COLOR="RED"
->loop</FONT
-> in the body of
 <FONT
 COLOR="RED"
 >string_length</FONT
-> is defined tail-recursively, which can then be
-translated into a genuine loop in the generated C code.  Although this
-implementation of <FONT
+> の本体中の関数 <FONT
+COLOR="RED"
+>loop</FONT
+> は末尾再帰的な定義であることに注意してください。
+これは生成されたC言語コード中では純粋なループになります。
+現時点では <FONT
 COLOR="RED"
 >string_length</FONT
-> looks fairly plain right now,
-it was actually an exciting achievement in the pursuit of practical
-programming with dependent types.
+> のこの実装はかなり簡素に見えますが、
+依存型を使った実践的なプログラミングを突き詰めると実に面白い成果が得られます。
 </P
 ><P
->&#13;The following two functions are for accessing and updating characters
-stored in strings:
+>&#13;次の2つの関数は文字列に保存されている文字へのアクセスと更新です:
 
 <DIV
 CLASS="informalexample"
@@ -235,31 +228,30 @@ overload [] with string_set_char_at
 >
 
 
-The type constructor <FONT
+型コンストラクタ <FONT
 COLOR="RED"
 >char</FONT
-> is of the sort
-<SPAN
+> には種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >(char) -&#62; t@ype</I
 ></SPAN
->, which takes a static
-character c to form a singleton type <FONT
+> が割り当てられています。
+このコンストラクタは静的な文字 c を取って c と等しい文字しか持てないシングルトン型 <FONT
 COLOR="RED"
 >char(c)</FONT
-> for the only
-character equal to c. Thus, the type <FONT
+>
+を作ります。
+したがって型 <FONT
 COLOR="RED"
 >charNZ</FONT
-> is for all non-null
-characters. The following defined function <FONT
+> は全ての非NULL文字を表わします。
+次に定義される関数 <FONT
 COLOR="RED"
 >string_find</FONT
->
-traverses a string from left to right to see whether a given character
-occurs in the string:
+> は文字列を左から右に横断して、
+与えられた文字が文字列の中に見つかるか判定します:
 
 <DIV
 CLASS="informalexample"
@@ -299,49 +291,47 @@ end // end of [string_find]
 >
 
 
-If the character <FONT
+もし文字 <FONT
 COLOR="RED"
 >c0</FONT
-> occurs in the string <FONT
+> が文字列 <FONT
 COLOR="RED"
 >str</FONT
->, then
-a value of the form <FONT
+> の中に存在するなら <FONT
 COLOR="RED"
 >Some(i)</FONT
-> is returned, when i refers to the
-position of the first occurrence of <FONT
+> の値を返します。
+この i は <FONT
 COLOR="RED"
 >c0</FONT
-> (counting from left to
-right). Otherwise, the value <FONT
+> がはじめに出現した位置を(左から右に数えて)参照しています。
+そうでなければ値 <FONT
 COLOR="RED"
 >None()</FONT
-> is returned.
+> が返ります。
 </P
 ><P
->&#13;There is some inherent inefficiency in the implementation of
-<FONT
+>&#13;<FONT
 COLOR="RED"
 >string_find</FONT
->: A given position <FONT
-COLOR="RED"
->i</FONT
-> is first checked to
-see if it is strictly less than the length of the string <FONT
-COLOR="RED"
->str</FONT
-> by
-calling <FONT
+> の実装にはいくらか非効率な部分があります:
+最初に <FONT
 COLOR="RED"
 >string_isnot_atend</FONT
->, and, if it is, the character stored
-at the position in the string is fetched by calling
-<FONT
+> 呼び出して、与えられた位置 <FONT
+COLOR="RED"
+>i</FONT
+> は 文字列 <FONT
+COLOR="RED"
+>str</FONT
+>
+の長さより短かいかどうか検査されます。
+そしてもし短かければ <FONT
 COLOR="RED"
 >string_get_at</FONT
->. These two function calls are merged into one in
-the following implementation:
+> を呼び出して、
+文字列の当該位置に保存されている文字を取り出します。
+これら2つの関数呼び出しを次の実装のように1つにまとめましょう:
 
 <DIV
 CLASS="informalexample"
@@ -416,26 +406,24 @@ string_test_at
 >
 
 
-By checking the return value of a call to <FONT
+<FONT
 COLOR="RED"
 >string_test_at</FONT
->,
-we can readily tell whether the position <FONT
+> 呼び出しの返値を検査することで、
+位置 <FONT
 COLOR="RED"
 >i</FONT
-> is at the end of
-the string <FONT
+> が文字列 <FONT
 COLOR="RED"
 >str</FONT
->.
+> の最後かどうかすぐに判定できます。
 </P
 ><P
->&#13;Handling strings safely and efficiently is a complicated matter in
-programming language design, and a great deal of information about a
-programming language can often be revealed by simply studying its treatment
-of strings. In ATS, properly processing C-style strings also makes
-essential use of linear types, which I will cover in another part of this
-book.
+>&#13;文字列を安全に効率的に取り扱うことはプログラミング言語のデザインにおいて厄介事の一つです。
+またプログラミング言語に関する大量の情報は、
+文字列の取り扱いを単にすることでしばしば明らかになることがあります。
+ATSでは、線形型を使ってC言語スタイル文字列を適切に処理することができます。
+このトピックはこの本の別の章で紹介します。
 </P
 ></DIV
 ><DIV
