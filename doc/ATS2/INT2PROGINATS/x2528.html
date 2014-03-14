@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Dependent Types for Debugging</TITLE
+>例: 依存型を使ったデバッグ</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,12 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="dependent_types_for_debugging"
->9.6. Example: Dependent Types for Debugging</A
+>9.6. 例: 依存型を使ったデバッグ</A
 ></H1
 ><P
->&#13;Given an integer x &#62;= 0, the integer square root of x is the greatest
-integer i satisfying i * i &#60;= x.  An implementation of the integer square
-root function is given as follows based on the method of binary search:
+>&#13;x &#62;= 0 の整数が割り当てられた時、x の平方根は i * i &#60;= x を満たすような最大の整数 i になります。
+次のように平方根関数を二分探索法をもとに実装します:
 
 <DIV
 CLASS="informalexample"
@@ -120,71 +119,66 @@ end // end of [isqrt]
 >
 
 
-This implementation passes typechecking, but it seems to be looping forever
-when tested. Instead of going into the standard routine of debugging (e.g.,
-by inserting calls to some printing functions), let us attempt to identify
-the cause for infinite looping by proving the termination of the function
-<FONT
+この実装は型検査を通りますが、実行すると無限ループにおちいってしまいます。
+一般的なデバッグ手法 (例: プリント関数呼び出しを埋め込む) を使う代わりに、
+依存型を使って関数 <FONT
 COLOR="RED"
 >search</FONT
-> through the use of dependent types. Clearly, the
-function <FONT
+> の停止性を証明して、無限ループの原因を特定してみることにしましょう。
+関数 <FONT
 COLOR="RED"
 >search</FONT
-> is assigned the function type <FONT
+> には関数型 <FONT
 COLOR="RED"
->(int,
-int, int) -&#62; int</FONT
->, meaning that <FONT
-COLOR="RED"
->search</FONT
-> takes three integers as
-its arguments and returns an integer as its result, and there is not much
-else that can be gathered from a non-dependent type as such. However, the
-programmer may have thought that the function <FONT
+>(int, int, int) -&#62; int</FONT
+> が割り当てられています。
+これは <FONT
 COLOR="RED"
 >search</FONT
-> should
-possess the following invariants (if implemented correctly):
+> が3つの整数を引数に取り、1つの整数を返すことを意味しています。
+このような非依存型からその他の情報が得られないことは明確です。
+けれども、もし実装が正しければ関数 <FONT
+COLOR="RED"
+>search</FONT
+> は次の不変条件を持つべきだと、プログラマは思うでしょう:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->&#13;l * l &#60;= x and x &#60;= r * r must hold when <FONT
+>&#13;<FONT
 COLOR="RED"
 >search(x, l, r)</FONT
-> is called.
+> が呼び出された時、l * l &#60;= x かつ x &#60;= r * r である。
 </P
 ></LI
 ><LI
 ><P
->&#13;Assume l * l &#60;= x &#60; r * r for some integers x, l, r.  If a recursive
-call <FONT
-COLOR="RED"
->search(x, l1, r1)</FONT
-> for some integers l1 and r1 is
-encountered in the body of <FONT
+>&#13;整数 x, l, r について l * l &#60;= x &#60; r * r を仮定します。
+<FONT
 COLOR="RED"
 >search(x, l, r)</FONT
->, then r1-l1 &#60; r-l
-must hold. This invariant implies that <FONT
+> の本体で整数 l1 と r1 について再帰関数 <FONT
+COLOR="RED"
+>search(x, l1, r1)</FONT
+>
+を呼び出すと、r1-l1 &#60; r-l です。
+この不変条件は <FONT
 COLOR="RED"
 >search</FONT
-> is terminating.
+> が停止することを示しています。
 </P
 ></LI
 ></UL
 >
 
-Though the first invariant can be captured in the type system of ATS, it is
-somewhat involved to do so due to the need for handling nonlinear
-constraints. Instead, let us try to assign <FONT
+1番目の不変条件は ATS の型システムで表現できるにもかかわらず、
+非線形な制約を取り扱う必要があるためにいくぶん複雑です。
+その代わりに、次の依存型の関数として <FONT
 COLOR="RED"
 >search</FONT
-> the following
-dependent function type:
+> を定義してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -203,25 +197,23 @@ CLASS="programlisting"
 >
 
 
-which captures a weaker invariant stating that l &#60; r must hold when
 <FONT
 COLOR="RED"
 >search(x, l, r)</FONT
-> is called. The termination metric
-<FONT
+> が呼び出される時、より弱い不変条件である l &#60; r を取ります。
+関数 <FONT
+COLOR="RED"
+>search</FONT
+> の停止性を検証するために停止性メトリクス <FONT
 COLOR="RED"
 >.&#60;r-l&#62;.</FONT
-> is provided for checking that the function
+> を与えます。
 <FONT
 COLOR="RED"
 >search</FONT
-> is terminating. When we assign <FONT
-COLOR="RED"
->search</FONT
-> the
-dependent function type, we have to modify its body as certain errors are
-otherwise reported during typechecking. The following code we obtain after
-proper modification does pass typechecking:
+> に依存型の関数型を割り当てると、
+型検査で見つかるエラーに対して関数本体を修正する必要があります。
+次のコードは型検査を通るように適切な修正を施したものです:
 
 <DIV
 CLASS="informalexample"
@@ -262,29 +254,26 @@ end // end of [isqrt]
 >
 
 
-It is now rather clear that infinite looping in the previous implementation
-of <FONT
-COLOR="RED"
->search</FONT
-> may happen if <FONT
+r-l が 1 等しい時に <FONT
 COLOR="RED"
 >search(x, l, r)</FONT
-> is called
-in a situaltion where r-l equals 1 as this call can potentially lead to
-another call to <FONT
+> が呼び出されると、以前の
+<FONT
 COLOR="RED"
 >search</FONT
-> of the same arguments. However, such a call
-leads to a type-error after <FONT
+> 実装における無限ループが発生するのではないか、ということが幾分明らかになりました。
+この呼び出しは同じ引数で別の <FONT
 COLOR="RED"
 >search</FONT
-> is assigned the aforementioned
-dependent function type.
+> 呼び出しを引き起こしてしまう可能性があります。
+けれども、<FONT
+COLOR="RED"
+>search</FONT
+> に前述の依存型の関数型が割り当てた後では、そのような呼び出しは型エラーになります。
 </P
 ><P
->&#13;By being precise and being able to enforce precision effectively, the
-programmer will surely notice that his or her need for run-time debugging
-is diminishing rapidly.
+>&#13;正確であろうとし、また効果的に正確さを強制できることで、
+実行時デバッグの必要性はどんどん小さくなることに、プログラマは確実に気が付くでしょう。
 </P
 ></DIV
 ><DIV
