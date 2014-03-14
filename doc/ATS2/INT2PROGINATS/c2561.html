@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Datatype Refinement</TITLE
+>データ型の改良</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,31 +75,30 @@ CLASS="chapter"
 ><A
 NAME="datatype_refinement"
 ></A
->Chapter 10. Datatype Refinement</H1
+>Chapter 10. データ型の改良</H1
 ><P
->&#13;The datatype mechanism in ATS is adopted from ML directly, and it is really
-a signatory feature in functional programming. However, the datatypes we
-have seen so far are not very precise when employed to classify values. For
-instance, given a type T, the type <FONT
+>&#13;ATS におけるデータ型のメカニズムは ML から直接輸入しています。
+関数型プログラミングにおいてこの機能はお墨付きです。
+けれども、これまで見てきたデータ型は値を分類するに十分に正確というわけでもありません。
+例えば型 T が与えられた時、
+型 T の要素から成る空のリストと空でないリストを表わす値は両方とも型 <FONT
 COLOR="RED"
 >list0(T)</FONT
-> is for values
-representing both empty and non-empty lists consisting of elements of the
-type T. Therefore, empty and non-empty lists cannot be distinguished at the
-level of types. This limitation severely diminishes the effectiveness of
-datatypes of ML-style in capturing program invariants. In ATS, datatypes of
-ML-style can be refined into dependent datatypes of DML-style, where DML
-refers to the programming language Dependent ML, the immediate precursor of
-ATS. With such refinement, datatypes can classify values with greatly
-enhanced precision.
+> です。
+したがって、空のリストと空でないリストは型レベルで区別がつきません。
+プログラムの不変条件を捕捉する ML スタイルのデータ型の有効性が、この制限によってしばしば減少してしまいます。
+ATS では、ML スタイルのデータ型は DML スタイルの依存データ型に改良することができます。
+この DML とは ATS の祖先であるプログラミング言語 Dependent ML のことです。
+このような改良によって、データ型は値をより正確に分類できます。
 </P
 ><P
->&#13;The code employed for illustration in this chapter plus some additional
-code for testing is available <A
+>&#13;この章で紹介するコードと追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPDTREF/"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ><DIV
