@@ -18,7 +18,7 @@ TITLE="例: 依存型を使ったデバッグ"
 HREF="x2528.html"><LINK
 REL="NEXT"
 TITLE="Example: Function Templates on Lists (Redux)"
-HREF="x2671.html"></HEAD
+HREF="x2670.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x2671.html"
+HREF="x2670.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -107,15 +107,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="dependent_datatypes"
->10.1. Dependent Datatypes</A
+>10.1. 依存データ型</A
 ></H1
 ><P
->&#13;The syntax for declaring dependent datatypes is mostly similar to the
-syntax for declaring non-dependent datatypes: For instance, the dependent
-datatype <FONT
+>&#13;依存データ型を宣言する構文は非依存データ型を宣言する構文とほとんど同じです:
+例えば、ATSの依存データ型 <FONT
 COLOR="RED"
 >list</FONT
-> in ATS is declared as follows:
+> は次のように宣言されています:
 
 <DIV
 CLASS="informalexample"
@@ -136,69 +135,70 @@ CLASS="programlisting"
 >
 
 
-More precisely, <FONT
+より正確には、<FONT
 COLOR="RED"
 >list</FONT
-> is declared as a type constructor of the
-sort <SPAN
+> は種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >(t@ype, int) -&#62; type</I
 ></SPAN
->, which means that <FONT
+>
+の型コンストラクタとして宣言されています。
+これは <FONT
 COLOR="RED"
 >list</FONT
->
-takes an unboxed type and a static integer to form a boxed type. The
-keyword <FONT
+> はアンボックス化型と静的な整数を取りボックス化型を作ることを意味しています。
+キーワード <FONT
 COLOR="RED"
 >t@ype+</FONT
-> indicates that <FONT
+> は、
+<FONT
 COLOR="RED"
 >list</FONT
-> is covariant at
-its first parameter (of the sort <SPAN
+> が種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >t@ype</I
 ></SPAN
->), that is,
-<FONT
+> である最初のパラメータについて共変 (covariant)
+であることを示しています。
+つまり T1 が T2 のサブタイプであるなら、<FONT
 COLOR="RED"
 >list(T1, I)</FONT
-> is considered a subtype of <FONT
+> は <FONT
 COLOR="RED"
 >list(T2, I)</FONT
 >
-if T1 is a subtype of T2.  There is also the keyword <FONT
+のサブタイプであるということになります。
+また、宣言された型コンストラクタがパラメータについて反変 (contravariant) であることを示すキーワード
+<FONT
 COLOR="RED"
 >t@ype-</FONT
-> for
-indicating the declared type constructor being contravariant at a
-parameter, but it is rarely used in practice. Also, keywords like
-<FONT
+> も存在しますが、実際にはあまり使われません。
+また <FONT
 COLOR="RED"
 >type+</FONT
-> and <FONT
+> や <FONT
 COLOR="RED"
 >type-</FONT
-> are interpreted similarly.
+> のようなキーワードは同等に解釈されます。
 </P
 ><P
->&#13;There two data (or value) constructors <FONT
-COLOR="RED"
->list_nil</FONT
-> and
-<FONT
-COLOR="RED"
->list_cons</FONT
-> associated with <FONT
+>&#13;<FONT
 COLOR="RED"
 >list</FONT
->, which are declared to be
-of the following types:
+> に関連して、2つのデータコンストラクタ (や値コンストラクタ)
+<FONT
+COLOR="RED"
+>list_nil</FONT
+> と <FONT
+COLOR="RED"
+>list_cons</FONT
+> があります。
+これらは次の型で宣言されています:
 
 <DIV
 CLASS="informalexample"
@@ -218,38 +218,30 @@ list_cons : {a:t@ype}{n:nat} (a, list(a, n)) -&#62; list(a, n+1)
 >
 
 
-Given a type T and a static integer I, the type <FONT
+型 T と静的な整数 I が与えられた時、
+要素の型が T で長さが I のリストを表現する値は型 <FONT
 COLOR="RED"
 >list(T, I)</FONT
-> is
-for values representing lists of length I in which each element is of the
-type T. Hence, the types of <FONT
+> です。
+ゆえに、型 <FONT
 COLOR="RED"
 >list_nil</FONT
-> and <FONT
+> は長さ0のリストを、
+型 <FONT
 COLOR="RED"
 >list_cons</FONT
->
-mean that <FONT
-COLOR="RED"
->list_nil</FONT
-> forms a list of length 0 and
-<FONT
-COLOR="RED"
->list_cons</FONT
-> forms a list of length n+1 if applied to an element
-and a list of length n.  Note that it is also possible to declare
-<FONT
+> は要素と長さ n のリストに適用すると長さ n+1 のリストを作ることを意味しています。
+次のようなより簡潔なスタイルで <FONT
 COLOR="RED"
 >list</FONT
-> as follows in a more concise style:
+> を宣言することもできることに注意してください:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2596"
+NAME="AEN2594"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -263,33 +255,35 @@ CLASS="programlisting"
 >
 
 
-The use of <FONT
-COLOR="RED"
->a:t@ype+</FONT
-> (instead of <FONT
-COLOR="RED"
->t@ype+</FONT
->) introduces
-implicitly a universal quantifier over <FONT
-COLOR="RED"
->a</FONT
-> for the type assigned
-to each data constructor associated with the declared type constructor
 <FONT
 COLOR="RED"
+>t@ype+</FONT
+> の代わりに <FONT
+COLOR="RED"
+>a:t@ype+</FONT
+> を使うことで <FONT
+COLOR="RED"
+>a</FONT
+>
+の上に全称量化を暗黙的に導入します。
+この <FONT
+COLOR="RED"
+>a</FONT
+> は宣言された型コンストラクタ <FONT
+COLOR="RED"
 >list</FONT
->.
+>
+に関連するのデータコンストラクタに割り当てられた型です。
 </P
 ><P
->&#13;As an example of programming with dependent datatypes, the following code
-implements a function template for computing the length of a given list:
+>&#13;依存データ型を用いたプログラミングの例として、次のコードは与えられたリストの長さを算出する関数テンプレートを実装しています:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2603"
+NAME="AEN2602"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -309,30 +303,28 @@ a:t@ype
 >
 
 
-The type assigned to the function <FONT
+関数 <FONT
 COLOR="RED"
 >list_length</FONT
-> indicates that
-the function takes a list of length n for any natural number n and returns
-an integer of value n. In addition, the function is verified to be
-terminating. Therefore, <FONT
+> の型は自然数 n 長さのリストを取り、整数の値 n を返すことを示しています。
+加えて、この関数は停止することが検査されています。
+したがって、<FONT
 COLOR="RED"
 >list_length</FONT
-> is guaranteed to implement the
-function that computes the length of a given list. I now briefly explain
-how typechecking can be performed on the definition of
+>
+が与えられたリストの長さを計算する関数を実装していることが保証されています。
 <FONT
 COLOR="RED"
 >list_length</FONT
->. Let us first see that the the following clause
-typechecks:
+> の定義に対する型検査がどのように行なわれるのか簡単に説明してみます。
+はじめに次の節の型検査を見てみましょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2608"
+NAME="AEN2607"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -344,103 +336,103 @@ CLASS="programlisting"
 >
 
 
-What we need to verify is that the expression on the righthand side of the
-symbol <FONT
-COLOR="RED"
->=&#62;</FONT
-> can be assigned the type <FONT
-COLOR="RED"
->int(n)</FONT
-> under the
-assumption that <FONT
+私達が検査しなければならないのは、
+<FONT
 COLOR="RED"
 >xs</FONT
-> matches the pattern on the lefthand side of
-the symbol <FONT
+> 記号 <FONT
 COLOR="RED"
 >=&#62;</FONT
->.  Let us assume that <FONT
+> の左側にあるパターンにマッチと仮定して、記号 <FONT
 COLOR="RED"
->xs1</FONT
-> is of the
-type <FONT
+>=&#62;</FONT
+>
+の右側にある式に型 <FONT
 COLOR="RED"
->list(a, n1)</FONT
-> for some natural number <FONT
+>int(n)</FONT
+> を割り当てることができるかどうかです。
+自然数  <FONT
 COLOR="RED"
 >n1</FONT
->, and
-this assumption implies that the pattern <FONT
+> について <FONT
+COLOR="RED"
+>xs1</FONT
+> の型が <FONT
+COLOR="RED"
+>list(a, n1)</FONT
+> だと仮定してみましょう。
+この仮定はパターン <FONT
 COLOR="RED"
 >list_cons(_, xs1)</FONT
-> is
-of the type <FONT
+> は型 <FONT
 COLOR="RED"
 >list(a, n1+1)</FONT
->.  Clearly, matching <FONT
+> であることを意味します。
+<FONT
 COLOR="RED"
 >xs</FONT
->
-against the pattern <FONT
+> がパターン <FONT
 COLOR="RED"
 >list_cons(_, xs1)</FONT
-> generates a condition
-<FONT
+> にマッチすることから、<FONT
 COLOR="RED"
 >n=n1+1</FONT
->.  It is also clear that <FONT
+> は明確です。
+<FONT
 COLOR="RED"
 >list_length(xs1)</FONT
-> is
-of the type <FONT
+> の型が <FONT
 COLOR="RED"
 >int(n1)</FONT
-> and thus <FONT
+> であり、したがって  <FONT
 COLOR="RED"
 >1 + list_length(xs1)</FONT
 >
-is of the type <FONT
+の型が <FONT
 COLOR="RED"
 >int(1+n1)</FONT
->. As the condition <FONT
+> であることもまた明確です。
+<FONT
 COLOR="RED"
 >n=n1+1</FONT
->
-implies <FONT
+> であれば <FONT
 COLOR="RED"
 >n=1+n1</FONT
->, <FONT
+> であるので、
+<FONT
 COLOR="RED"
 >1 + list_length(xs1)</FONT
-> can be given
-the type <FONT
+> には型 <FONT
 COLOR="RED"
 >int(n)</FONT
->. So this clause typechecks.  Note that matching
-<FONT
-COLOR="RED"
->xs</FONT
-> against the pattern <FONT
+> が与えられることになります。
+この節の型検査はこのようになりました。
+パターン <FONT
 COLOR="RED"
 >list_nil()</FONT
-> generates the
-assumption <FONT
+> に <FONT
+COLOR="RED"
+>xs</FONT
+> がマッチする場合、<FONT
 COLOR="RED"
 >n=0</FONT
->, which implies that <FONT
+>
+を仮定できることに注意してください。
+この仮定は <FONT
 COLOR="RED"
 >0</FONT
-> is of the type
-<FONT
+> が型 <FONT
 COLOR="RED"
 >int(n)</FONT
->. Therefore, the following clause typechecks: </P
+> であることを示しています。
+したがって、次の節が型検査できました:
+</P
 ><DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2635"
+NAME="AEN2634"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -450,25 +442,22 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;Given that the two clauses typecheck properly, the case-expression
-containing them can be assigned the type <FONT
+>&#13;与えられた2つの節の型検査がおわれば、それらを含む case 式には型 <FONT
 COLOR="RED"
 >int(n)</FONT
->. Therefore, the
-definition of <FONT
+> を割り当てることができます。
+したがって <FONT
 COLOR="RED"
 >list_length</FONT
-> typechecks.
+> の定義が型検査できました。
 </P
 ><P
->&#13;As the recursive call in the body of the above defined function
-<FONT
+>&#13;上記で定義されている関数 <FONT
 COLOR="RED"
 >list_length</FONT
-> is not a tail-call, the function may not be able to
-handle a long list (e.g., one that contains 1 million elements).  The
-following code gives another implementation for computing the length of a
-given list:
+> の本体での再帰呼出 は末尾呼出ではないため、この関数は
+(例えば100万個の要素を持つような) 長いリストを扱うことができません。
+次のコードは与えられたリストの長さを計算する別の実装です:
 
 </P
 ><DIV
@@ -476,7 +465,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2642"
+NAME="AEN2641"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -498,35 +487,33 @@ end // end of [list_length]
 ></P
 ></DIV
 ><P
->&#13;This time, <FONT
+>&#13;このとき <FONT
 COLOR="RED"
 >list_length</FONT
-> is based on a tail-recursive function
+> は末尾再帰関数 <FONT
+COLOR="RED"
+>loop</FONT
+> を使っています。
+そのためどのような長さのリストも一定のスタック量で扱うことができます。
 <FONT
 COLOR="RED"
 >loop</FONT
-> and thus can handle lists of any length in constant stack
-space. Note that the type assigned to <FONT
+> の型は、自然数 i と j について <FONT
 COLOR="RED"
 >loop</FONT
-> indicates that
-<FONT
+> が長さ i のリストと値 j の整数を取り、値
+i+j の整数を返すことを示していることに注意してください。
+また <FONT
 COLOR="RED"
 >loop</FONT
-> takes a list of length i and an integer of value j for some
-natural numbers i and j and returns an integer of value i+j. Also,
-<FONT
-COLOR="RED"
->loop</FONT
-> is verified to be terminating.
+> が停止することは検査済みです。
 
 </P
 ><P
->&#13;There is also a dependent datatype <FONT
+>&#13;ATS ではオプション値を成す依存データ型 <FONT
 COLOR="RED"
 >option</FONT
-> in ATS for forming
-optional values:
+> もまた存在します:
 
 </P
 ><DIV
@@ -534,7 +521,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2652"
+NAME="AEN2651"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -547,11 +534,11 @@ option (a:t@ype+, bool) =
 ></P
 ></DIV
 ><P
->&#13;As an example, the following function template <FONT
+>&#13;例として、
+次の関数テンプレート <FONT
 COLOR="RED"
 >list_last</FONT
-> tries to
-find the last element in a given list:
+> は与えられたリストの最後の要素を探します:
 
 </P
 ><DIV
@@ -559,7 +546,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN2656"
+NAME="AEN2655"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -594,51 +581,48 @@ end // end of [list_last]
 ></P
 ></DIV
 ><P
->&#13;The inner function <FONT
+>&#13;内部の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> is evidently tail-recursive and it is
-verified to be terminating.
+> は明らかに末尾再帰であり、停止することは検査済みです。
 
 </P
 ><P
->&#13;After a programmer becomes familar with <FONT
+>&#13;プログラマは <FONT
 COLOR="RED"
 >list</FONT
-> and
+> と <FONT
+COLOR="RED"
+>option</FONT
+> に慣れ親しんだ後
+<FONT
+COLOR="RED"
+>list0</FONT
+> と <FONT
+COLOR="RED"
+>option0</FONT
+> を使う動機はほとんどないでしょう。
+内部では、<FONT
+COLOR="RED"
+>list</FONT
+> と <FONT
+COLOR="RED"
+>list0</FONT
+> の値は全く同じ表現を持ちます。
+さらに <FONT
+COLOR="RED"
+>list</FONT
+> と <FONT
+COLOR="RED"
+>list0</FONT
+> の値を相互変換するキャスト関数が ATS にはあります。
 <FONT
 COLOR="RED"
 >option</FONT
->, there is little incentive for him or her to use
-<FONT
-COLOR="RED"
->list0</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >option0</FONT
-> anymore. Internally, values of
-<FONT
-COLOR="RED"
->list</FONT
-> and <FONT
-COLOR="RED"
->list0</FONT
-> have exactly the same representation and
-there are cast functions of zero run-time cost in ATS for translating
-between values of <FONT
-COLOR="RED"
->list</FONT
-> and <FONT
-COLOR="RED"
->list0</FONT
->.  The same applies
-to values of <FONT
-COLOR="RED"
->option</FONT
-> and <FONT
-COLOR="RED"
->option0</FONT
-> as well.
+> の値についても同様です。
 
 </P
 ></DIV
@@ -677,7 +661,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x2671.html"
+HREF="x2670.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
