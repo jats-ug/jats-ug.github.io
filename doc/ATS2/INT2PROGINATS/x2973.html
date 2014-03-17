@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Datasorts</TITLE
+>datasort</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="例: 乗法の分配法則を証明する"
 HREF="x2958.html"><LINK
 REL="NEXT"
-TITLE="Example: Proving Properties on Braun Trees"
+TITLE="例: ブラウンツリーの性質を証明する"
 HREF="x3016.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,18 +75,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="datasorts"
->11.4. Datasorts</A
+>11.4. datasort</A
 ></H1
 ><P
->A datasort is rather similar to a dataype. However, the former is
-declared in the statics of ATS while the latter in the dynamics of ATS. To
-see a typical need for datasorts, let us try to encode a theorem in ATS
-stating that s is strictly less than 2<SUP
+>datasort は datatype に少し似ています。
+けれども、後者は ATS の動的な宣言ですが、前者はATSの静的な宣言です。
+datasort の典型的な用途を見るために、
+s と h がそれぞれ与えられた二分木のサイズと高さであるなら、s がきっちり 2<SUP
 >h</SUP
-> if s and
-h are the size and height, respectively, of a given binary tree. To
-represent binary trees in the statics, we first declare a datasort as
-follows:
+>
+より小さくなることを示す定理を ATS でエンコードしてみましょう。
+二分木を静的に表わすために、まず次の datasort を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -105,32 +104,29 @@ CLASS="programlisting"
 >
 
 
-The name of the declared datasort is <FONT
+宣言した datasort の名前は <FONT
 COLOR="RED"
 >tree</FONT
-> and there are two
-constructor associated with it: <FONT
+> で、関連する2つのコンストラクタがあります:
+それは <FONT
 COLOR="RED"
 >E</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >B</FONT
->, where E
-forms the empty tree and B forms a tree by joining two given trees.  For
-instance, <FONT
+> で、E は空の木を作り、B は与えられた2つの木を結合した木を作ります。
+例えば、<FONT
 COLOR="RED"
 >B(E(), E())</FONT
-> is a static term of the sort
-<FONT
+> は種 <FONT
 COLOR="RED"
 >tree</FONT
-> that represents a singleton tree, that is, a tree
-consisting of exactly one node.  Please note that the trees formed by E and
-B are really just tree skeletons carrying no data.
+> の静的な項で、シングルトン木を表わしています。
+つまりノードが1つしかない木です。
+E と B で作った木は全くデータを保持しない骨だけの木であることに注意してください。
 </P
 ><P
->We now declare two dataprops as follows for capturing the notion of
-size and height of trees:
+>次のように木のサイズと高さの概念を捕捉するために2つの dataprop を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -159,13 +155,11 @@ dataprop HT (tree, int) =
 >
 
 
-Given a tree t and an integer s, SZ(t, s) encodes the relation that the
-size of t equals s. Similiarly, given a tree t and an integer h, HZ(t, h)
-encodes the relation that the height of t equals h.
+木 t と整数 s が与えられた時、SZ(t, s) は t のサイズが s に等しいという関係をエンコードします。
+同様に、木 t と整数 h が与えられた時、HZ(t, h) は t の高さが h に等しいという関係をエンコードします。
 </P
 ><P
->As the power function (of base 2) is not available in the statics of ATS,
-we declare a dataprop as follows to capture it:
+>2を底にした累乗関数は ATS の静的な部分にはないので、それを捕捉する次の dataprop を宣言します:
 
 <DIV
 CLASS="informalexample"
@@ -187,18 +181,17 @@ CLASS="programlisting"
 >
 
 
-Given two integers h and p, POW2 (h, p) encodes the relation that
-2<SUP
+2つの整数 h と p が与えられた時、POW2 (h, p) は 2<SUP
 >h</SUP
-> equals p.
+> が p
+に等しいという関係をエンコードします。
 </P
 ><P
->It should be clear by now that the following proof function
-interface encodes the theorem stating that s is strictly less than
-2<SUP
+>s と h が与えられた二分木のサイズと高さである時、
+s がきっちり 2<SUP
 >h</SUP
-> if s and h are the size and height of a
-given binary tree:
+> より小さくなることを表わす定理を、
+次の証明関数のインターフェイスがエンコードしていることは明確でしょう:
 
 <DIV
 CLASS="informalexample"
@@ -223,11 +216,10 @@ lemma_tree_size_height
 >
 
 
-Let us now construct an implementation of this proof function as follows.
+この証明関数の実装を次のようにコンストラクトしてみましょう。
 </P
 ><P
->We first establish some elementary properties on the power function
-(of base 2):
+>はじめに、2を底にした累乗関数のいくつかの基本的な性質を作ります:
 
 <DIV
 CLASS="informalexample"
@@ -266,29 +258,28 @@ prfun pow2_inc
 >
 
 
-Clearly, <FONT
+明確に、<FONT
 COLOR="RED"
 >pow2_istot</FONT
-> shows that the relation encoded by the
-dataprop <FONT
+> は dataprop <FONT
 COLOR="RED"
 >POW2</FONT
-> is a total relation; <FONT
+>
+にエンコードされた関係が全域な関係であることを表わしています;
+<FONT
 COLOR="RED"
 >pow2_pos</FONT
-> proves
-that the power of each natural number is positive; <FONT
+> は自然数の累乗が正の数になることを証明しています;
+<FONT
 COLOR="RED"
 >pow2_inc</FONT
->
-establishes that the power function is increasing.
+> は累乗関数が単調増加であることを証明しています。
 </P
 ><P
->&#13;The function <FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >lemma_tree_size_height</FONT
-> can be implemented
-as follows:
+> は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -345,49 +336,46 @@ end // end of [lemma_tree_size_height]
 >
 
 
-The inner function <FONT
+内部の関数 <FONT
 COLOR="RED"
 >lemma</FONT
->, which is given a termination metric
-consisting of a static term of the sort <FONT
+> は、種 <FONT
 COLOR="RED"
 >tree</FONT
->, corresponds to a
-proof based on structural induction (where the involved structure is the
-binary tree <FONT
+> の静的な項で構成されている停止性メトリクスを持ちます。
+またこの関数は二分木 <FONT
 COLOR="RED"
 >t</FONT
->).  Given two terms t1 and t2 of the sort
-<FONT
+> に関連する構造的な帰納法の証明に対応しています。
+2つの項 t1 と t2 が種 <FONT
 COLOR="RED"
 >tree</FONT
->, t1 is (strictly) less than t2 if t1 is a (proper)
-substructure of t2. Evidently, this is a well-founded ordering.  The
-keyword <FONT
+> として与えられ、t1 が t2 より小さい構造であるなら、t1 は きっちり t2
+より小さくなります。
+明らかに、これは根拠の確かな順序です。
+キーワード <FONT
 COLOR="RED"
 >scase</FONT
-> is used to form a dynamic expression that does
-case-analysis on a static term (built by constructors associated with some
-declared datasort). So the relation between <FONT
+> は (宣言された datasort に関連するコンストラクタで構築される)
+静的な項のcase判定をする動的な式を作るのに使われます。
+そのため、<FONT
 COLOR="RED"
 >sif</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >scase</FONT
-> is essentially parallel to that between <FONT
+> の関係は <FONT
 COLOR="RED"
 >if</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >case</FONT
->.  Please find the entirety of the above code
-<A
+> の関係と同じです。
+上記のコード全体は <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_THMPRVING/tree.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -448,7 +436,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Proving Properties on Braun Trees</TD
+>例: ブラウンツリーの性質を証明する</TD
 ></TR
 ></TABLE
 ></DIV

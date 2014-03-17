@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Proving Properties on Braun Trees</TITLE
+>例: ブラウンツリーの性質を証明する</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="ATS/LF を使った定理証明"
 HREF="c2842.html"><LINK
 REL="PREVIOUS"
-TITLE="Datasorts"
+TITLE="datasort"
 HREF="x2973.html"><LINK
 REL="NEXT"
 TITLE="Programming with Theorem-Proving"
@@ -75,17 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_proving_properties_on_braun_trees"
->11.5. Example: Proving Properties on Braun Trees</A
+>11.5. 例: ブラウンツリーの性質を証明する</A
 ></H1
 ><P
->&#13;As stated previously in this book, a binary tree is a Braun tree if it is
-empty or if its left and right subtrees are Braun trees and the size of the
-left one minus the size of the right one is either 0 or 1.  Formally, we
-can declare the following dataprop <FONT
+>&#13;この本で以前示したように、空であるか、もしくは左と右の子がブラウンツリーでなおかつ左の子のサイズから右の子のサイズを引くと0もしくは1なら、そのような二分木はブラウンツリーです。
+形式的には、ブラウンツリーの概念を捕捉するために、次の dataprop <FONT
 COLOR="RED"
 >isBraun</FONT
-> to capture the notion
-of Braun trees:
+> を宣言できます:
 
 <DIV
 CLASS="informalexample"
@@ -112,8 +109,8 @@ CLASS="programlisting"
 
 </P
 ><P
->We first prove that there exists a Braun tree of any given size.
-This property can be encoded as follows in ATS:
+>与えられたどんなサイズのブラウンツリーも存在することをはじめに証明しましょう。
+この性質は ATS では次のようにエンコードできます:
 
 <DIV
 CLASS="informalexample"
@@ -133,16 +130,15 @@ prfun lemma_existence {n:nat} (): [t:tree] (isBraun (t), SZ (t, n))
 >
 
 
-Literally, the type assigned to <FONT
+事実上、<FONT
 COLOR="RED"
 >lemma_existence</FONT
-> means that there
-exists a tree t for any given natural number n such that t is a Braun tree
-and the size of t is n. The following code gives an implementation of
-<FONT
+> に割り当てられた型は
+t がブラウンツリーで t のサイズが n であるような自然数 n が与えられた時、木 t が存在することを意味しています。
+次のコードは <FONT
 COLOR="RED"
 >lemma_existence</FONT
->:
+> の実装です:
 
 <DIV
 CLASS="informalexample"
@@ -177,24 +173,24 @@ end // end of [lemma_existence]
 >
 
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >stadef</FONT
-> is a keyword in ATS for introducting a static
-binding between a name and a static term (of any sort). If one prefers,
-this keyword can be chosen to replace the keyword <FONT
+> は、名前と (なんらかの種の) 静的な項の間に静的な束縛を導入するための ATS
+のキーワードであることに注意してください。
+もし望めば、このキーワードは <FONT
 COLOR="RED"
 >typedef</FONT
-> (for
-introducing a name and a static term of the sort <FONT
+> で置き換えることもできます
+(名前と種 <FONT
 COLOR="RED"
 >t@ype</FONT
->).
+> の静的な項を束縛します)。
 
 </P
 ><P
->Next we show that two Braun trees of the same size are identical. This
-property can be encoded as follows:
+>次に、同じサイズの2つのブラウンツリーが同一であることを示します。
+この性質は次のようにエンコードできます:
 
 <DIV
 CLASS="informalexample"
@@ -219,11 +215,10 @@ lemma_unicity
 >
 
 
-where <FONT
+<FONT
 COLOR="RED"
 >EQ</FONT
-> is a prop-constructor introduced by the following
-dataprop declaration:
+> は次の dataprop 宣言で導入されている prop コンストラクタです:
 
 <DIV
 CLASS="informalexample"
@@ -246,15 +241,14 @@ CLASS="programlisting"
 >
 
 
-Clearly, <FONT
+<FONT
 COLOR="RED"
 >EQ</FONT
-> is the inductively defined equality on trees.
-An implementation of the proof function <FONT
+> が木の等式を帰納的に定義していることは明確です。
+証明関数 <FONT
 COLOR="RED"
 >lemma_unicity</FONT
-> is presented
-as follows:
+> の実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -299,14 +293,14 @@ end // end of [lemma_unicity]
 >
 
 
-Note that the proof function <FONT
-COLOR="RED"
->SZ_istot</FONT
-> in this implementation of
 <FONT
 COLOR="RED"
 >lemma_unicity</FONT
-> is given the following interface:
+> のこの実装内の証明関数 <FONT
+COLOR="RED"
+>SZ_istot</FONT
+>
+は次のインターフェイスを持つことに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -327,37 +321,32 @@ prfun SZ_istot{t:tree}{n1,n2:int}
 >
 
 
-which simply states that <FONT
+これは <FONT
 COLOR="RED"
 >SZ</FONT
-> is a functional relation with
-respect to its first parameter, that is, there is at most one n for every
-given t such that t and n are related according to <FONT
+> がその最初のパラメータに関して関数的な関係であることを単純に表わしています。
+つまり、<FONT
 COLOR="RED"
 >SZ</FONT
->.
+> によって関係付けられた t と n があるとい、どのような t が与えられても1つ以上の n
+が存在します。
 
-Clearly, the mathematical proof corresponding to this implementation is of
-induction on the size n of the two given trees t1 and t2. In the base case
-where n is 0, t1 and t2 are equal as they both are the empty tree. In the
-inductive case where n &#62; 0, it is proven that n1l and n2l are of the same
-value where n1l and n2l are the sizes of the left subtrees of t1 and t2,
-respecitvely; similarly, it is also proven that n1r and n2r are of the same
-value where n1r and n2r are the sizes of the right subtrees of t1 and t2,
-respectively; by induction hypothesis on n1l, the left substrees of t1 and
-t2 are the same; by induction hypothesis on n1r, the right substrees of t1
-and t2 are the same; by the definition of tree equality (encoded by
-<FONT
+明確に、この実装に対応する数学的証明は与えられた2つの木 t1 と t2 のサイズ n に対する帰納法で証明されます。
+n が 0 のベースケースでは、t1 と t2 は両方とも空の木なので等しくなります。
+n &#62; 0 の場合、帰納的に、それぞれ t1 と t2 の左の子のサイズである n1l と n2l が同じ値であることを証明します;
+同様に、それぞれ t1 と t2 の右の子のサイズである n1r と n2r が同じ値であることを証明します;
+n1l について帰納法の仮定から、t1 と t2 の左の子は同じです;
+n1r について帰納法の仮定から、t1 と t2 の右の子は同じです;
+木の等式の定義 (<FONT
 COLOR="RED"
 >EQ</FONT
->), t1 and t2 are the same.
+> にエンコードされています) から、t1 と t2 は同じです。
 </P
 ><P
->&#13;As a comparison, the following code gives another implementation of
-<FONT
+>&#13;比較として、次のコードは <FONT
 COLOR="RED"
 >lemma_unicity</FONT
-> that is of a different (and rather unusual) style:
+> の別の実装ですが、少し独特のスタイルです:
 
 <DIV
 CLASS="informalexample"
@@ -410,26 +399,25 @@ end // end of [lemma_unicity]
 >
 
 
-This implementation corresponds to a proof by induction on the structure of
-the given tree t1. Note that the use of the special symbol <FONT
+この実装は与えられた木 t1 の構造に対する帰納法の証明に対応します。
+特殊記号 <FONT
 COLOR="RED"
 >=/=&#62;</FONT
->,
-which is a keyword in ATS, is to indicate to the typechecker of ATS that
-the involved clause of pattern matching is <SPAN
+> の使用に注意してください。
+これは ATS のキーワードで、パターンマッチに含まれる節が <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->unreachable</I
+>到達不能</I
 ></SPAN
->: It is the
-responsibility of the programmer to establish the falsehood on the
-right-hand side of the clause. Please find the entirety of the above code
-<A
+> であることを ATS
+の型検査器に指示します;
+節の右辺にうそを書くのはプログラマの責務です。
+上記のコード全体は <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_THMPRVING/brauntree.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -476,7 +464,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Datasorts</TD
+>datasort</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
