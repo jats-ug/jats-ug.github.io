@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Theorem-Proving in ATS/LF</TITLE
+>ATS/LF を使った定理証明</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="例: 関数的な赤黒木"
 HREF="x2799.html"><LINK
 REL="NEXT"
-TITLE="Constructing Proofs as Total Functions"
+TITLE="全域関数として証明をコンストラクトする"
 HREF="x2904.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,31 +75,28 @@ CLASS="chapter"
 ><A
 NAME="theorem-proving_in_ats_lf"
 ></A
->Chapter 11. Theorem-Proving in ATS/LF</H1
+>Chapter 11. ATS/LF を使った定理証明</H1
 ><P
->&#13;Within the ATS programming langauge system, there is a component named
-ATS/LF for supporting (interactive) therorem-proving. In ATS/LF,
-theorem-proving is done by constructing proofs as total functional
-programs. It will soon become clear that this style of theorem-proving can
-be combined cohesively with functional programming to yield a programming
-paradigm that is considered the signature of ATS: <SPAN
+>&#13;ATS プログラミング言語システムには、(対話的な) 定理証明をサポートする ATS/LF という名前の部品あります。
+ATS/LF では、全域関数のプログラムとして証明をコンストラクトすることで定理証明は行なわれます。
+このスタイルの定理証明は関数型プログラミングと組み合わさってあるプログラミングパラダイムを産み出すことがすぐに明確になるでしょう。
+このようなパラダイムを ATS では <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->programming
-with theorem-proving</I
+>定理証明を使ったプログラミング</I
 ></SPAN
->. Moreover, ATS/LF can be employed to encode various
-deduction systems and their meta-properties.
+> と呼んでいます。
+その上、ATS/LF は様々な演繹システムとそれらのメタ属性をエンコードすることができます。
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で解説するコードとテストのための追加コードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_THMPRVING/"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the code employed for illustration in this chapter plus some additional
-code for testing.
+から入手できます。
 </P
 ><DIV
 CLASS="sect1"
@@ -107,30 +104,28 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="encoding_relations_as_dataprops"
->11.1. Encoding Relations as Dataprops</A
+>11.1. dataprop として関係をエンコードする</A
 ></H1
 ><P
->&#13;In the statics of ATS, there is a built-in sort <SPAN
+>&#13;ATS の静的な部分には、証明の型を表わす静的な項のためのビルトインの種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >prop</I
 ></SPAN
-> for
-static terms that represent types for proofs. A static term of the sort
-<SPAN
+> があります。
+種 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >prop</I
 ></SPAN
-> can also be referred to as a type or more accurately, a
-prop-type or just a prop. A dataprop can be declared in a manner that is
-mostly similar to the declaration of a datatype. For instance, a prop
-construct <FONT
+> の静的な項は、型もしくはより正確に prop 型や単に prop と呼ばれます。
+dataprop は datatype の宣言とよく似た作法で宣言できます。
+例えば、<FONT
 COLOR="RED"
 >FIB</FONT
-> is introduced in the following dataprop declaration:
+> をコンストラクトする prop は次の dataprop 宣言で導入できます:
 
 <DIV
 CLASS="informalexample"
@@ -154,35 +149,35 @@ CLASS="programlisting"
 >
 
 
-The sort assigned to <FONT
+<FONT
 COLOR="RED"
 >FIB</FONT
-> is <SPAN
+> に割り当てられた種は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >(int, int) -&#62; prop</I
 ></SPAN
->,
-indicating that <FONT
+> で、<FONT
 COLOR="RED"
 >FIB</FONT
-> takes two static integers to form a
-prop-type. There are three data (or proof) constructors associated with
+>
+が2つの静的な整数を取って prop 型を作ることを示していいます。
 <FONT
 COLOR="RED"
 >FIB</FONT
->: <FONT
+> に関連して3つのデータ (もしくは証明の) コンストラクタがあります:
+それらは <FONT
 COLOR="RED"
 >FIB0</FONT
 >, <FONT
 COLOR="RED"
 >FIB1</FONT
-> and <FONT
+>, <FONT
 COLOR="RED"
 >FIB2</FONT
->, which are
-assigned the following function types (or more accurately, prop-types):
+> で、次の関数型 (もしくはより正確に prop 型)
+が割り当てられています:
 
 <P
 ></P
@@ -224,12 +219,12 @@ COLOR="RED"
 ></UL
 >
 
-Given a natural number n and an integer r, it should be clear that
-<FONT
+自然数 n と整数 r が与えられた時、<FONT
 COLOR="RED"
 >FIB(n, r)</FONT
-> encodes the relation fib(n) = r, where fib is defined
-by the following three equations:
+> が関係 fib(n) = r
+をエンコードしていることは明確でしょう。
+この fib は次の3つの等式で定義されます:
 
 <P
 ></P
@@ -252,26 +247,25 @@ by the following three equations:
 ></UL
 >
 
-A proof value of the prop <FONT
+証明の値 prop <FONT
 COLOR="RED"
 >FIB(n, r)</FONT
-> can be constructed if and
-only if fib(n) equals r. For instance, the proof value
-<FONT
+> は fib(n) が r と等しい場合のみコンストラクトできます。
+例えば、証明の値 <FONT
 COLOR="RED"
 >FIB2(FIB0(), FIB1())</FONT
-> is assigned the prop <FONT
+> には prop  <FONT
 COLOR="RED"
->FIB(2,
-1)</FONT
->, attesting to fib(2) equaling 1.
+>FIB(2, 1)</FONT
+> が割り当てられ、
+これは fib(2) が 1 に等しいことを証明しています。
 </P
 ><P
->&#13;As another example of dataprop, the following declaration introduces a prop
-constructor <FONT
+>&#13;dataprop の別の例として、
+次の宣言は prop コンストラクタ <FONT
 COLOR="RED"
 >MUL</FONT
-> together with three associated proof constructors:
+> と関連する3つの証明コンストラクタを導入しています:
 
 <DIV
 CLASS="informalexample"
@@ -296,55 +290,51 @@ CLASS="programlisting"
 >
 
 
-Given three integers m, n and p, the prop <FONT
+3つの整数 m, n, p が与えられた時、prop <FONT
 COLOR="RED"
 >MUL(m, n, p)</FONT
-> encodes
-the relation m*n = p. As for <FONT
+> は関係 m*n = p をエンコードしています。
+<FONT
 COLOR="RED"
 >MULbas</FONT
 >, <FONT
 COLOR="RED"
 >MULind</FONT
-> and
-<FONT
+>, <FONT
 COLOR="RED"
 >MULneg</FONT
->, they correspond to the following three equations,
-respectively:
+> はそれぞれ次の3つの等式に相当します:
 
 <P
 ></P
 ><UL
 ><LI
 ><P
->0*n = 0 for every integer n, and
+>全ての整数 n について 0*n = 0 、かつ
 </P
 ></LI
 ><LI
 ><P
->(m+1)*n = m*n + n for each pair of integers m and n, and
+>整数 m と n のペアそれぞれについて (m+1)*n = m*n + n 、かつ
 </P
 ></LI
 ><LI
 ><P
->(~m)*n = ~(m*n) for each pair of integers m and n.
+>整数 m と n のペアそれぞれについて (~m)*n = ~(m*n)
 </P
 ></LI
 ></UL
 >
 
-In other words, the dataprop declaration for <FONT
+言い換えると、
+dataprop 宣言 <FONT
 COLOR="RED"
 >MUL</FONT
-> encodes the
-relation that represents the standard multiplication function on integers.
+> は整数の乗法関数を表わす関係をエンコードしています。
 </P
 ><P
->&#13;It can be readily noticed that the process of encoding a functional
-relation (i.e., a relation representing a function) as a dataprop is
-analogous to implementing a function in a logic programming language such
-as Prolog.
+>&#13;関数的な関係 (例: 関数を表わす関係) を dataprop にエンコードする過程は Prolog
+のような論理型プログラミング言語における関数の実装に類似していることにすぐに気が付くでしょう。
 </P
 ></DIV
 ></DIV
@@ -406,7 +396,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Constructing Proofs as Total Functions</TD
+>全域関数として証明をコンストラクトする</TD
 ></TR
 ></TABLE
 ></DIV

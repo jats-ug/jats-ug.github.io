@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Proving Distributivity of Multiplication</TITLE
+>例: 乗法の分配法則を証明する</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,10 +11,10 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Theorem-Proving in ATS/LF"
+TITLE="ATS/LF を使った定理証明"
 HREF="c2842.html"><LINK
 REL="PREVIOUS"
-TITLE="Constructing Proofs as Total Functions"
+TITLE="全域関数として証明をコンストラクトする"
 HREF="x2904.html"><LINK
 REL="NEXT"
 TITLE="Datasorts"
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 11. Theorem-Proving in ATS/LF</TD
+>Chapter 11. ATS/LF を使った定理証明</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -75,11 +75,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_proving_distributivity_of_multiplication"
->11.3. Example: Proving Distributivity of Multiplication</A
+>11.3. 例: 乗法の分配法則を証明する</A
 ></H1
 ><P
->The distributivity of multiplication over addition means that the following
-equation holds
+>加法に対する乗法の分配法則は次の等式を意味しています:
 
 <DIV
 CLASS="informalexample"
@@ -98,8 +97,8 @@ CLASS="programlisting"
 >
 
 
-for m, n1 and n2 ranging over integers. Clearly, a direct encoding of the equation
-is given by the following (proof) function interface:
+m, n1, n2 は整数の範囲を持ちます。
+この等式を直接エンコードすると次のような (証明の) 関数インターフェイスが得られます:
 
 <DIV
 CLASS="informalexample"
@@ -123,12 +122,12 @@ mul_distribute
 >
 
 
-Plainly speaking, the encoding states that the product of m and (n1+n2) is
-p1+p2 if the product of m and n1 is p1 and the product of m and n2 is p2.
-An implementation of <FONT
+端的に言うと、このエンコードは
+m と n1 の積が p1 でありかつ m と n2 の積が p2 であったなら m と (n1+n2) の積は p1+p2 になる、と言っています。
+<FONT
 COLOR="RED"
 >mul_distribute</FONT
-> is given as follows:
+> の実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -170,12 +169,11 @@ end // end of [mul_distribute]
 >
 
 
-In essence, the inner function <FONT
+本質的に、
+内部の関数 <FONT
 COLOR="RED"
 >aux</FONT
-> encodes a straighforward
-proof based on mathematical induction that establishes the following
-equation:
+> は次の等式を満たす数学的帰納法の証明を素直にエンコードしています:
 
 <DIV
 CLASS="informalexample"
@@ -194,15 +192,14 @@ CLASS="programlisting"
 >
 
 
-for m ranging over natural numbers and n1 and n2 ranging over integers. The
-function <FONT
+m は自然数の範囲を取り、n1 と n2 は整数の範囲を取ります。
+関数 <FONT
 COLOR="RED"
 >mul_distribute</FONT
-> can then be implemented immediately
-based on <FONT
+> は <FONT
 COLOR="RED"
 >aux</FONT
->.
+> を使ってすぐに実装できます。
 </P
 ></DIV
 ><DIV
@@ -249,7 +246,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Constructing Proofs as Total Functions</TD
+>全域関数として証明をコンストラクトする</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
