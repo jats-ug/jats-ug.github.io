@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Sequentiality of Pattern Matching</TITLE
+>パターンマッチの連続性</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="データ型の改良"
 HREF="c2561.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Mergesort on Lists (Redux)"
+TITLE="例: リストのマージソート (再)"
 HREF="x2742.html"><LINK
 REL="NEXT"
-TITLE="Example: Functional Red-Black Trees"
+TITLE="例: 関数的な赤黒木"
 HREF="x2799.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,17 +75,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="sequentiality_of_pattern_matching"
->10.4. Sequentiality of Pattern Matching</A
+>10.4. パターンマッチの連続性</A
 ></H1
 ><P
->&#13;In ATS, pattern matching is performed sequentially at run-time. In other
-words, a clause is selected only if a given value matches the pattern
-guard associated with this clause but the value fails to match the pattern
-associated with any clause ahead of it. Naturally, one may expect that the
-following implementation of <FONT
+>&#13;ATS では、パターンマッチは実行時において連続して評価されます。
+別の言い方をすると、節が選択されるのは与えられた値がその節に関連するパターンガードにマッチし、しかも値がその前にあるどの節のパターンにもマッチしない場合にだけです。
+当然、<FONT
 COLOR="RED"
 >list_zipwith</FONT
-> also typechecks:
+> 次の実装も型検査できると期待するでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -122,15 +120,14 @@ a2:t@ype
 >
 
 
-This, however, is not the case. In ATS, typechecking clauses is done
-nondeterministically (rather than sequentially). In this example, the
-second clause fails to typecheck as it is done without the assumption of
-the given pair <FONT
+けれども、この場合は型検査に失敗します。
+ATS では、節の型検査は(連続的と言うよりむしろ)非決定的です。
+この例では、2番目の節が型検査に失敗します。
+与えられたペア <FONT
 COLOR="RED"
 >(xs1, xs2)</FONT
-> failing to match the pattern
-guard associated with the first clause.  The second clause can be modified
-slightly as follows to pass typechecking:
+> が最初の節のパターンガードへのマッチに失敗することが仮定されていないからです。
+次のように少し修正することで2番目の節は型検査を通ります:
 
 <DIV
 CLASS="informalexample"
@@ -149,25 +146,21 @@ CLASS="programlisting"
 >
 
 
-The use of the symbol <FONT
-COLOR="RED"
->=&#62;&#62;</FONT
-> (in place of <FONT
+記号 <FONT
 COLOR="RED"
 >=&#62;</FONT
->)
-indicates to the typechecker that this clause needs to be typechecked under
-the sequentiality assumption that the given value that matches it does not
-match the pattern guards associated with any previous clauses. Therefore,
-when the modified second clause is typechecked, it can be assumed that the
-pair <FONT
+> の代わりに <FONT
 COLOR="RED"
->(xs1, xs2)</FONT
-> matching the pattern <FONT
+>=&#62;&#62;</FONT
+> を使うと、前の節それぞれのパターンガードに与えられたマッチするかしないか連続的な仮定において、この節が型検査されるべきであると、型検査器に指示します。
+したがって、修正された2番目の節が型検査されると、パターン <FONT
 COLOR="RED"
 >(_, _)</FONT
-> must
-match one of the following three patterns:
+> にマッチするペア
+<FONT
+COLOR="RED"
+>(xs1, xs2)</FONT
+> は次の2つのパターンのにマッチするはずだということが仮定できます:
 
 <P
 ></P
@@ -199,19 +192,19 @@ COLOR="RED"
 ></UL
 >
 
-Given that <FONT
+同じ長さの <FONT
 COLOR="RED"
 >xs1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >xs2</FONT
-> are of the same length,
-the typechecker can readily infer that <FONT
+> が与えられた時、
+型検査器は <FONT
 COLOR="RED"
 >(xs1, xs2)</FONT
-> cannot match
-either of the first two patterns. After these two patterns are ruled out,
-typechecking is essentially done as if the second clause was written as follows:
+> は最初の2パターンにマッチしないとたやすく推論できます。
+これら2パターンが除外されたら、2番目の節が次のように書かれていることになり、
+型検査は本質的に終わったとことになります:
 
 <DIV
 CLASS="informalexample"
@@ -232,12 +225,9 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;One may be wondering why typechecking clauses is not required to be
-done sequentially by default. The simple reason is that this requirement,
-if fully enforced, can have a great negative impact on the efficiency of
-typechecking. Therefore, it is a reasonable design to provide the
-programmer with an explict means to occasionally make use of the
-sequentiality assumption needed for typechecking a particular clause.
+>&#13;なぜ節の型検査がデフォルトで連続的に行なわれないのか気にするかもしれません。
+その単純な理由は、全体に適用すると型検査の効率に大きなマイナスの影響があるからです。
+したがって、特定の節の型検査に連続的な仮定を時々使うための明確な手段をプログラマに提供するのは、妥当なデザインなのです。
 </P
 ></DIV
 ><DIV
@@ -284,7 +274,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Mergesort on Lists (Redux)</TD
+>例: リストのマージソート (再)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -298,7 +288,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Functional Red-Black Trees</TD
+>例: 関数的な赤黒木</TD
 ></TR
 ></TABLE
 ></DIV
