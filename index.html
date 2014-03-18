@@ -121,9 +121,7 @@ $ which patscc
 <p>Hello Worldプログラムをコンパイルして動かしましょう。</p>
 <pre><code>$ vi hello.dats
 implement
-main0 () = {
-  val () = println! ("Hello world!")
-}
+main0 () = println! ("Hello world!")
 $ patscc -o hello hello.dats
 $ ls
 hello  hello.dats  hello_dats.c
