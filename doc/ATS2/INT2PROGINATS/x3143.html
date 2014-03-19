@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Another Verified Factorial</TITLE
+>例: もう一つの検証された階乗</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,14 +11,14 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Programming with Theorem-Proving"
+TITLE="定理証明によるプログラミング"
 HREF="c3056.html"><LINK
 REL="PREVIOUS"
-TITLE="Specifying with Enhanced Precision"
+TITLE="強化された正確性を使って明記する"
 HREF="x3117.html"><LINK
 REL="NEXT"
-TITLE="Example: Verified Fast Exponentiation"
-HREF="x3166.html"></HEAD
+TITLE="例: 検証された高速な累乗"
+HREF="x3167.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -54,13 +54,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 12. Programming with Theorem-Proving</TD
+>Chapter 12. 定理証明によるプログラミング</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3166.html"
+HREF="x3167.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -75,38 +75,36 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_another_verified_factorial"
->12.4. Example: Another Verified Factorial</A
+>12.4. 例: もう一つの検証された階乗</A
 ></H1
 ><P
->&#13;The function <FONT
-COLOR="RED"
->ifact</FONT
-> presented in the section on <A
+>&#13;<A
 HREF="x3117.html"
 >specifying with enhanced precision</A
-> is a verified implementation of
-the factorial function as its type guarantees that <FONT
+> の章で示した関数 <FONT
 COLOR="RED"
 >ifact</FONT
 >
-implements the specification of factorial encoded by the dataprop
-<FONT
-COLOR="RED"
->FACT</FONT
->. Clearly, the implementation of <FONT
+は階乗関数の検証された実装の一つでした。
+その型は <FONT
 COLOR="RED"
 >ifact</FONT
-> closely
-follows the declaration of <FONT
+> が dataprop <FONT
 COLOR="RED"
 >FACT</FONT
->. If we think of the latter as a
-logic program, then the former is essentially a functional version
-extracted from the logic program. However, the implementation of a
-specification in practice can often digress far from the specification
-algorithmically. For instance, we may want to have a verified
-implementation of factorial that is also tail-recursive. This can be done
-as follows:
+>
+にエンコードされた階乗の仕様を実装していることを保証しています。
+明確に、<FONT
+COLOR="RED"
+>ifact</FONT
+> の実装は <FONT
+COLOR="RED"
+>FACT</FONT
+> の宣言にきっちり従っています。
+もし後者をロジックプログラムと考えれば、本質的に前者はロジックプログラムから展開された関数的なバージョンです。
+けれども、仕様の実装の実際はアルゴリズム的な仕様からしばしば遠く外れたものになることがあります。
+例えば、階乗の検証された実装を末尾再帰として得たいかもしれません。
+これは次のようになるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -141,30 +139,32 @@ end // end of [ifact2]
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >ifact2</FONT
-> is assigned a type indicating that
-<FONT
+> には <FONT
 COLOR="RED"
 >ifact2</FONT
-> is a verified implementation of factorial, and it is
-defined as a call to the inner function <FONT
+> が階乗の検証された実装であることを示す型が割り当てられています。
+内部の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> that is clearly
-tail-recursive.  If we erase types and proofs, the function <FONT
+> は明確に末尾再帰で、関数 <FONT
 COLOR="RED"
 >ifact2</FONT
 >
-is essentially defined as follows:
+はこの関数を呼び出すことで定義されています。
+もし型と証明を削除したら、関数 <FONT
+COLOR="RED"
+>ifact2</FONT
+> は本質的に次のような定義になります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3158"
+NAME="AEN3159"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -184,33 +184,32 @@ end // end of [ifact2]
 >
 
 
-When the inner function <FONT
+内部の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> is called on three arguments n, i
-and r, the precondition for this call is that i is natural number less than
-or equal to n and r equals fact(i), that is, the value of the factorial
-function on i. This precondition is captured by the type assigned to
-<FONT
+> が3つの引数 n, i, r で呼び出される時、
+この呼び出しの前提条件は i が n 以下の自然数であり、なおかつ r が fact(i) つまり i の階乗の値に等しいことです。
+この前提条件は <FONT
 COLOR="RED"
 >loop</FONT
-> and thus enforced at each call site of <FONT
-COLOR="RED"
->loop</FONT
-> in
-the implementation of <FONT
+> に割り当てられた型によって捕捉されています。
+したがって、<FONT
 COLOR="RED"
 >ifact2</FONT
->.
+> の実装において、この条件は <FONT
+COLOR="RED"
+>loop</FONT
+> の呼び出し毎に強制されます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章のコード全体とテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/ifact23.dats"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entirety of the above presented code plus some testing code.
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -247,7 +246,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3166.html"
+HREF="x3167.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -257,7 +256,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Specifying with Enhanced Precision</TD
+>強化された正確性を使って明記する</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -271,7 +270,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Verified Fast Exponentiation</TD
+>例: 検証された高速な累乗</TD
 ></TR
 ></TABLE
 ></DIV

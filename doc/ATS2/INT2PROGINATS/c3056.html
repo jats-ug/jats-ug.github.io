@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Programming with Theorem-Proving</TITLE
+>定理証明によるプログラミング</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="例: ブラウンツリーの性質を証明する"
 HREF="x3016.html"><LINK
 REL="NEXT"
-TITLE="Example: Safe Matrix Subscripting"
+TITLE="例: 安全な行列の添字演算"
 HREF="x3098.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,67 +75,60 @@ CLASS="chapter"
 ><A
 NAME="programming_with_theorem-proving"
 ></A
->Chapter 12. Programming with Theorem-Proving</H1
+>Chapter 12. 定理証明によるプログラミング</H1
 ><P
 >&#13;<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->Programming with Theorem-Proving</I
+>定理証明によるプログラミング - Programming with Theorem-Proving</I
 ></SPAN
-> (PwTP) is a rich and broad
-programming paradigm that allows cohesive construction of programs and
-proofs in a syntactically intwined manner. The support for PwTP in ATS is a
-signatory feature of ATS, and the novelty of ATS largely stems from it. For
-people who are familiar with the so-called Curry-Howard isomorphism, I
-emphasize that PwTP as is supported in ATS makes little, if any, essential
-use of this isomorphism (between proofs and programs): The dynamics of ATS
-in which programs are written is certainly not pure and the proofs encoded
-in ATS/LF are not required to be constructive, either. However, that proof
-construction in ATS can be done in a style of (functional) programming is
-fundamentally important in terms of syntax design for ATS, for the need to
-combine programs with proofs would otherwise be greatly more challenging.
+> (PwTP)
+は豊かで広いプログラミングパラダイムで、プログラムと証明が構文的に絡み合って密着させることができます。
+PwTP をサポートすることは ATS の主要な機能で、ATS の新規性は主にここにあります。
+カリー＝ハワード同型対応に馴染んだ人々にとって、少しでも証明とプログラムの間でこの同型を本質的に使ったことがあれば、ATS
+でサポートされている PwTP は簡単であることを強調したいです:
+書かれた ATS プログラムの動的な部分はもちろん純粋ではありませんし、
+ATS/LF にエンコードされた証明は積極的に必要なわけでもありません。
+けれども、ATS での関数型プログラミングのスタイルで記述できる証明の構築は ATS
+のデザインの観点で根本的に重要です。
+プログラムを証明と結合することが必要なのです。
 
 </P
 ><P
->In this chapter, I will present some simple but convincing examples to
-illustrate the power and flexibility of PwTP as is supported in
-ATS. However, the real showcase for PwTP will not arrive until after the
-introduction of linear types in ATS, when linear proofs can be combined
-with programs to track and safely manipulate resources such as memory and
-objects (e.g, file handles). In particular, PwTP is to form the cornersone
-of the support for imperative programming in ATS.
+>この章では、単純だけれど説得力のある例を使って ATS でサポートされる PwTP のパワー柔軟性を説明します。
+けれでも、PwTP を使った実用例は ATS の線形型を導入した後まで紹介できません。
+線形型の証明はプログラムと結合して、メモリやオブジェクト (例: ファイルハンドル)
+のようなリソースを追跡したり安全に操作したりすることができます。
+特に、PwTP は ATS における命令型プログラミングをサポートする土台となります。
 </P
 ><P
->Please find <A
+>この章で解説するコードと追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the code employed for illustration in this chapter plus some additional
-code for testing.</P
+から入手できます。</P
 ><DIV
 CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
 NAME="circumventing_nonlinear_constraints"
->12.1. Circumventing Nonlinear Constraints</A
+>12.1. 非線形の制約を回避する</A
 ></H1
 ><P
->&#13;The constraint-solver of ATS is of rather diminished power. In particular,
-constraints containing nonlinear integer terms (e.g., those involving the
-use of multiplication (of variables)) are immediately rejected. This
-weakness must be properly addressed for otherwise it would become a
-crippling limitation on practicality of the type system of ATS. I now use
-a simple example to demonstrate how theorem-proving can be employed to
-circumvent the need for handling nonlinear constraints directly.
+>&#13;ATS の制約ソルバはやや非力な力しか持っていません。
+特に、非線形の整数項を含む制約 (例: 値の乗法の使用を意味するような制約) はただちに破棄されます。
+この非力さは当然対策されるべきです。さもなくば ATS の型システムの実用性における深刻な制限になってしまいます。
+ここでは単純な例を使って、非線形の制約を直接扱う必要性を回避して定理証明を使うことができるのか説明します。
 </P
 ><P
->&#13;A function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >list_concat</FONT
-> is implemented as follows:
+> は次のような実装です:
 
 <DIV
 CLASS="informalexample"
@@ -164,10 +157,10 @@ a:t@ype
 >
 
 
-where the interface for <FONT
+<FONT
 COLOR="RED"
 >list_append</FONT
-> is given below:
+> のインターフェイスは次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -189,30 +182,27 @@ a:t@ype
 >
 
 
-Given a list <FONT
-COLOR="RED"
->xss</FONT
-> of length <FONT
+長さ <FONT
 COLOR="RED"
 >m</FONT
-> in which each element is of
-the type <FONT
+> のリスト <FONT
+COLOR="RED"
+>xss</FONT
+> が与えられ、その要素がある型 T について型 <FONT
 COLOR="RED"
 >list(T,n)</FONT
-> for some type T,
-<FONT
+>
+である時、<FONT
 COLOR="RED"
 >list_concat&#60;T&#62;(xss)</FONT
-> constructs a list of the type
-<FONT
+> は型 <FONT
 COLOR="RED"
 >list(T,m*n)</FONT
->. When the first matching clause in the code for
+> のリストをコンストラクトします。
 <FONT
 COLOR="RED"
 >list_concat</FONT
-> is typechecked, a constraint is generated that is
-essentially like the following one:
+> のコードの最初のマッチ節が型検査されると、本質的に次のような制約が発生します:
 
 <DIV
 CLASS="informalexample"
@@ -223,7 +213,7 @@ NAME="AEN3079"
 ></A
 ><PRE
 CLASS="programlisting"
->m = m1 + 1 implying n + (m1 * n) = m * n holds for all natural numbers m, m1 and n.
+>全ての自然数 m, m1, n について、m = m1 + 1 は n + (m1 * n) = m * n を意味している。
 </PRE
 ><P
 ></P
@@ -231,20 +221,19 @@ CLASS="programlisting"
 >
 
 
-This contraint may look simple, but it was once rejected by the ATS
-constraint solver as it contains nonlinear integer terms (e.g.,
-<FONT
+この制約は単純に見えますが、非線形な整数の項 (例: <FONT
 COLOR="RED"
 >m1*n</FONT
-> and <FONT
+> や <FONT
 COLOR="RED"
 >m*n</FONT
->). In order to overcome (or rather
-circumvent) the limitation, we can make use of theorem-proving. Another
-implementation of <FONT
+>)
+を含んでいるので ATS の制約ソルバは破棄してしまいます。
+この制限を克服 (もしくは回避) すれば、定理証明を使えるようになるはずです。
+<FONT
 COLOR="RED"
 >list_concat</FONT
-> is given as follows:
+> の別の実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -276,52 +265,51 @@ a:t@ype
 >
 
 
-Given a list <FONT
-COLOR="RED"
->xss</FONT
-> of the type <FONT
+型 <FONT
 COLOR="RED"
 >list(list(T,n),m)</FONT
->,
+> のリスト <FONT
+COLOR="RED"
+>xss</FONT
+> が与えられた時、
 <FONT
 COLOR="RED"
 >list_concat(xss)</FONT
-> now returns a pair <FONT
+> はペア <FONT
 COLOR="RED"
 >(pf | res)</FONT
-> such
-that <FONT
-COLOR="RED"
->pf</FONT
-> is a proof of the prop-type <FONT
-COLOR="RED"
->MUL(m,n,p)</FONT
-> for
-some natural number <FONT
+> を返します。
+このペアの中で、自然数 <FONT
 COLOR="RED"
 >p</FONT
-> and <FONT
-COLOR="RED"
->res</FONT
-> is a list of the type
-<FONT
-COLOR="RED"
->list(T,p)</FONT
->, where the symbol bar (|) is used to separate proofs
-from values. In other words, <FONT
+> があるとき <FONT
 COLOR="RED"
 >pf</FONT
-> acts as a witness to the
-equality <FONT
+> は prop 型 <FONT
+COLOR="RED"
+>MUL(m,n,p)</FONT
+> の証明で、
+<FONT
+COLOR="RED"
+>res</FONT
+> は型 <FONT
+COLOR="RED"
+>list(T,p)</FONT
+> のリストです。
+この記号バー (|) は証明と値を分離するために使われます。
+別の言い方をすると、<FONT
+COLOR="RED"
+>pf</FONT
+> は等式 <FONT
 COLOR="RED"
 >p=m*n</FONT
->. After proof erasure is performed, this
-implementation of <FONT
+> の証拠となります。
+証明が削除されると、<FONT
 COLOR="RED"
 >list_concat</FONT
-> is essentially translated into
-the previous one (as far as dynamic semantics is concerned). In particular,
-there is no need for proof construction at run-time.
+> のこの実装は本質に (関係する動的な意味論に関する限りは)
+以前のバージョンに変換されます。
+特に実行時には証明の構成は不要になります。
 </P
 ></DIV
 ></DIV
@@ -383,7 +371,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Safe Matrix Subscripting</TD
+>例: 安全な行列の添字演算</TD
 ></TR
 ></TABLE
 ></DIV

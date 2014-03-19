@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Specifying with Enhanced Precision</TITLE
+>強化された正確性を使って明記する</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Programming with Theorem-Proving"
+TITLE="定理証明によるプログラミング"
 HREF="c3056.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Safe Matrix Subscripting"
+TITLE="例: 安全な行列の添字演算"
 HREF="x3098.html"><LINK
 REL="NEXT"
-TITLE="Example: Another Verified Factorial"
+TITLE="例: もう一つの検証された階乗"
 HREF="x3143.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 12. Programming with Theorem-Proving</TD
+>Chapter 12. 定理証明によるプログラミング</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -75,12 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="specifying_with_precision"
->12.3. Specifying with Enhanced Precision</A
+>12.3. 強化された正確性を使って明記する</A
 ></H1
 ><P
->&#13;The integer addition function can be assigned the following
-(dependent) type in ATS to indicate that it returns the sum of
-its two integer arguments:
+>&#13;整数の加算関数には ATS では次のような依存型を割り当てることができます。
+これはこの関数が2つの整数の引数の和を返すことを示しています:
 
 <DIV
 CLASS="informalexample"
@@ -99,11 +98,8 @@ CLASS="programlisting"
 >
 
 
-This type gives a full specification of integer addition as the only
-(terminating) function that can be given the type is the integer addition
-function. However, the factorial function, which yields the product of the
-first n positive integers when applied to a natural number n, cannot be
-given the following type:
+この型は整数の加算に対する完全な仕様です。この型を取るような停止する関数は、整数の加算関数だけです。
+けれども、自然数 n に適用すると最初の n 個の正の整数の積を得るような、階乗関数には次のような型を与えることができません:
 
 <DIV
 CLASS="informalexample"
@@ -122,22 +118,20 @@ CLASS="programlisting"
 >
 
 
-as <FONT
+階乗関数を指す <FONT
 COLOR="RED"
 >fact</FONT
->, which refers to the factorial function, does not exist in
-the statics of ATS. Evidently, a highly interesting and relevant question is
-whether a type can be formed in ATS that fully captures the functional
-relation specified by <FONT
+> は ATS の静的な部分には存在しないからです。
+明らかに、大変興味深く適切な疑問は次のようなものでしょう。
+<FONT
 COLOR="RED"
 >fact</FONT
->? The answer is affirmative. We can not
-only construct such a type but also assign it to a (terminating) function
-implemented in ATS.
+> で明記された関数的関係を完全に捕捉するような型を ATS で作れるのでしょうか？
+その答は肯定的なものです。
+そのような型をコンストラクトできるだけでなく、ATS で実装された停止する関数に適用することもできるのです。
 </P
 ><P
->Let us recall that the factorial function can be defined by the following
-two equations:
+>階乗関数は次の2つの等式で定義できることを思い出してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -149,7 +143,7 @@ NAME="AEN3127"
 ><PRE
 CLASS="programlisting"
 >fact(0) = 1
-fact(n) = n * fact(n-1) (for all n &#62; 0)
+fact(n) = n * fact(n-1) (n &#62; 0 のような全ての n について)
 </PRE
 ><P
 ></P
@@ -157,11 +151,11 @@ fact(n) = n * fact(n-1) (for all n &#62; 0)
 >
 
 
-Naturally, these equations can be encoded by the constructors associated
-with the dataprop <FONT
+当然これらの等式は、次のように宣言される dataprop <FONT
 COLOR="RED"
 >FACT</FONT
-> declared as follows:
+>
+に関連したコンストラクタでエンコードできます:
 
 <DIV
 CLASS="informalexample"
@@ -184,15 +178,16 @@ CLASS="programlisting"
 >
 
 
-Note that for any given natural number n and integer r, <FONT
-COLOR="RED"
->FACT(n,
-r)</FONT
-> can be assigned to a proof if and only if <FONT
+与えられたどのような自然数 n と 整数 r についても、
+<FONT
 COLOR="RED"
 >fact(n)</FONT
-> equals
-r. Therefore, the following type:
+> が r に等しいかどうか証明するために <FONT
+COLOR="RED"
+>FACT(n, r)</FONT
+>
+を割り当てられることに注意してください。
+したがって、次のような型:
 
 <DIV
 CLASS="informalexample"
@@ -211,16 +206,15 @@ CLASS="programlisting"
 >
 
 
-can only be assigned to a function that, if applied to a natural number n,
-returns a proof and an integer such that the proof attests to the integer
-being equal to <FONT
+は自然数 n に適用されると証明と整数を返すような関数にのみ割り当てることができます。
+この証明はその整数が <FONT
 COLOR="RED"
 >fact(n)</FONT
->. For instance, the following defined
-function <FONT
+> に等しいことを立証しています。
+例えば、次に定義された関数 <FONT
 COLOR="RED"
 >ifact</FONT
-> is assigned this type:
+> にはこの型が割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -251,20 +245,20 @@ CLASS="programlisting"
 >
 
 
-After proof erasure, <FONT
+証明が削除されると、<FONT
 COLOR="RED"
 >ifact</FONT
-> precisely implements the factorial
-function.
+> は階乗関数の正確な実装になります。
 
 </P
 ><P
->&#13;Please find the entirety of the above presented code plus some testing code
+>&#13;この章で紹介したコードの全体とテストのための追加コードは
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/ifact.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
@@ -312,7 +306,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Safe Matrix Subscripting</TD
+>例: 安全な行列の添字演算</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -326,7 +320,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Another Verified Factorial</TD
+>例: もう一つの検証された階乗</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Safe Matrix Subscripting</TITLE
+>例: 安全な行列の添字演算</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Programming with Theorem-Proving"
+TITLE="定理証明によるプログラミング"
 HREF="c3056.html"><LINK
 REL="PREVIOUS"
-TITLE="Programming with Theorem-Proving"
+TITLE="定理証明によるプログラミング"
 HREF="c3056.html"><LINK
 REL="NEXT"
-TITLE="Specifying with Enhanced Precision"
+TITLE="強化された正確性を使って明記する"
 HREF="x3117.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 12. Programming with Theorem-Proving</TD
+>Chapter 12. 定理証明によるプログラミング</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -75,12 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_safe_matrix_subscripting"
->12.2. Example: Safe Matrix Subscripting</A
+>12.2. 例: 安全な行列の添字演算</A
 ></H1
 ><P
->&#13;Internally, a matrix of the dimension m by n is represented as an array
-of the size m*n. For matrix subscripting, we need to implement a function
-template of the following interface:
+>&#13;内部では、次元 m x n の行列はサイズ m*n の配列として表現されます。
+行列の添字演算のために、次のインターフェイスの関数テンプレートを実装する必要があります:
 
 <DIV
 CLASS="informalexample"
@@ -105,11 +104,10 @@ a:t@ype
 >
 
 
-Assume that the matrix is represented in the row-major style. Then the
-element indexed by i and j in the matrix is the element indexed by i*n + j
-in the array that represents the matrix, where i and j are natural numbers
-less than m and n, respectively. However, the following implementation
-fails to pass typechecking:
+行列が行優先スタイルで表現されていると仮定しましょう。
+すると、その行列の i と j で指定された要素は、その行列を表現する配列では i*n + j で指定されることになります。
+ここで、i と j はそれぞれ m と n より小さい自然数です。
+けれども、次の実装の型検査には失敗します:
 
 <DIV
 CLASS="informalexample"
@@ -129,13 +127,12 @@ matrix_get (A, n, i, j) = A[i*n+j] // it fails to typecheck!!!
 >
 
 
-The simple reason for this failure is due to the ATS constraint solver not
-being able to automatically verify that i*n+j is a natural number strictly
-less than m*n. An implementation of <FONT
+この推論失敗の簡単な理由は、i*n+j が m*n より正確に小さい自然数であることを、
+ATS の制約ソルバが自動的に検査できないためです。
+型検査を通る <FONT
 COLOR="RED"
 >matrix_get</FONT
-> that typechecks
-can be given as follows:
+> の実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -167,11 +164,10 @@ end // end of [matrix_get]
 >
 
 
-where the functions called in the body of <FONT
+<FONT
 COLOR="RED"
 >matrix_get</FONT
->
-are assigned the following interfaces:
+> の本体から呼び出される関数には次のインターフェイスが割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -200,38 +196,39 @@ prfun mul_elim
 >
 
 
-Assume that m and n are natural numbers and i and j are natural numbers
-less than m and n, respectively.  The proof code employed in the
-implementation of <FONT
+m と n が自然数で、i と j がそれぞれ m と n より小さい自然数であると仮定します。
+i*n+j &#60; m*n を示すために <FONT
 COLOR="RED"
 >matrix_get</FONT
-> to show i*n+j &#60; m*n proves
-(m-1-i)*n &#62;= 0, which clearly implies m*n &#62;= i*n+n &#62; i*n+j.
+> の実装で用いられている証明コードは、
+(m-1-i)*n &#62;= 0 を証明しています。
+これは明確に m*n &#62;= i*n+n &#62; i*n+j を暗示しています。
 
 </P
 ><P
 >&#13;
-Note that there are a variety of proof functions declared in
-<A
+様々な証明関数が <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arith_prf.sats"
 TARGET="_top"
 >arith_prf.sats</A
-> for helping prove
-theorems involving arithmetic operations. For examples of proof
-construction in ATS, please find the implementation of some of these proof
-functions in <A
+>
+で宣言されていることに注意してください。
+これらの証明は算術演算を含む定理を証明するのに役に立ちます。
+ATSにおける証明の構成例として、<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/DATS/arith_prf.dats"
 TARGET="_top"
 >arith_prf.dats</A
->.
+>
+にある証明関数の実装を参照してください。
 </P
 ><P
->&#13;The entirety of the above presented code is available
+>&#13;この章のコード全体は
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/matget.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -278,7 +275,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Programming with Theorem-Proving</TD
+>定理証明によるプログラミング</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -292,7 +289,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Specifying with Enhanced Precision</TD
+>強化された正確性を使って明記する</TD
 ></TR
 ></TABLE
 ></DIV

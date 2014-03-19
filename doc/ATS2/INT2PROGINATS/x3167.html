@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Verified Fast Exponentiation</TITLE
+>例: 検証された高速な累乗</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,14 +11,14 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Programming with Theorem-Proving"
+TITLE="定理証明によるプログラミング"
 HREF="c3056.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Another Verified Factorial"
+TITLE="例: もう一つの検証された階乗"
 HREF="x3143.html"><LINK
 REL="NEXT"
 TITLE="Programming with Linear Views and Types"
-HREF="p3220.html"></HEAD
+HREF="p3221.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -54,13 +54,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 12. Programming with Theorem-Proving</TD
+>Chapter 12. 定理証明によるプログラミング</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="p3220.html"
+HREF="p3221.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -75,18 +75,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_verified_fast_exponentiation"
->12.5. Example: Verified Fast Exponentiation</A
+>12.5. 例: 検証された高速な累乗</A
 ></H1
 ><P
->Given an integer x, pow(x, n), the nth power of x, can be defined
-inductively as follows:
+>整数 x が与えられた時、pow(x, n)、つまり x の n 乗、は次のように帰納的に宣言することができます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3169"
+NAME="AEN3170"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -99,14 +98,14 @@ pow (x, n) = x * pow (x, n-1) (for all n &#62; 0)
 >
 
 
-A direct implementation of this definition is given as follows:
+この定義の直接的な実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3171"
+NAME="AEN3172"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -120,15 +119,15 @@ CLASS="programlisting"
 >
 
 
-which is of time-complexity O(n) (assuming multiplication is O(1)). A
-more efficient implmentation can be given as follows:
+この実装の時間的計算量は (乗法を O(1) と仮定すると) O(n) になります。
+より効率的な実装は次のようになるでしょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3173"
+NAME="AEN3174"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -147,36 +146,35 @@ CLASS="programlisting"
 >
 
 
-which makes use of the property that pow(x, n) equals pow(x*x, n/2) if n is
-even or x * pow(x*x, n/2) if n is odd. This is referred to as fast
-exponentiation. Note that <FONT
+ここでは、もし n が偶数であれば pow(x, n) は pow(x*x, n/2) に等しく、もし n が奇数であれば pow(x, n) は x * pow(x*x, n/2) に等しい、という性質を使っています。
+これは高速な累乗と呼ばれています。
+<FONT
 COLOR="RED"
 >ifastpow</FONT
-> is of time-complexity O(log(n)).
+> の時間的計算量は O(log(n)) であることに注意してください。
 
 </P
 ><P
->&#13;Clearly, what is done above is not restricted to exponentiation on
-integers. As long as the underlying multiplication is associative, fast
-exponentiation can be employed to compute powers of any given element. In
-particular, powers of square matrices can be computed in this way.  I now
-present as follows a verified generic implementation of fast exponentiation.
+>&#13;明確に、上記は整数の累乗に限定されたものではありません。
+用いている乗法が結合的である限り、どのような要素の累乗を計算するのにも高速な累乗を使うことができます。
+特に、正方行列の累乗はこの方法で計算できます。
+高速な累乗の検証された一般化実装を次に紹介します。
 
 </P
 ><P
->Handling generic data properly in a verified implementation often requires some
-finesse with the type system of ATS. Let us first introduce an abstract type
-constructor <FONT
+>検証された実装の中で一般化されたデータを正確に扱うために、しばしば ATS
+の型システムにおいて技巧的なテクニックが必要です。
+はじめに、次のような抽象型コンストラクタ <FONT
 COLOR="RED"
 >E</FONT
-> as follows:
+> を導入してみましょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3179"
+NAME="AEN3180"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -189,33 +187,32 @@ abst@ype E (a:t@ype, x:elt) = a // [x] is an imaginary stamp
 >
 
 
-This is often referred to as <SPAN
+これはしばしば <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->stamping</I
+>スタンプ化 (stamping)</I
 ></SPAN
->. For each type T and stamp
-x, <FONT
+> と呼ばれます。
+それぞれの型 T とスタンプ X について、関連するデータ表現に関する限り <FONT
 COLOR="RED"
 >E(T, x)</FONT
-> is just T as far as data representation is concerned.
-The stamps are imaginary and they are solely used for the purpose of
-specification. We next introduce an abstract prop-type <FONT
+> は単に T です。
+このスタンプは架空の存在で、仕様の目的にだけ使われます。
+次に抽象 prop 型 <FONT
 COLOR="RED"
 >MUL</FONT
-> and
-a function template <FONT
+> と関数テンプレート <FONT
 COLOR="RED"
 >mul_elt_elt</FONT
->:
+> を導入します:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3185"
+NAME="AEN3186"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -232,24 +229,23 @@ mul_elt_elt {x,y:elt}
 >
 
 
-Please do not confuse <FONT
+<FONT
 COLOR="RED"
 >MUL</FONT
-> with the one of the same name that is
-declared in <A
+> と
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arith_prf.sats"
 TARGET="_top"
 >arith_prf.sats</A
->. To
-state that the encoded multiplication is associative, we can introduce the
-following proof function:
+> で宣言されている同じ名前の型に混乱しないでください。
+エンコードされた乗法が結合的であることを示すために、次の証明関数を導入することができます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3189"
+NAME="AEN3190"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -266,29 +262,28 @@ CLASS="programlisting"
 >
 
 
-The keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >praxi</FONT
-> indicates that <FONT
+> は <FONT
 COLOR="RED"
 >mul_assoc</FONT
-> is treated as
-a form of axiom, which is not expected to be implemented.
+>
+を実装されることを期待しない公理として扱うことを示します。
 
 </P
 ><P
->&#13;The abstract power function can be readily specified in terms of the
-abstract prop-type <FONT
+>&#13;抽象的な累乗関数は、抽象 prop 型 <FONT
 COLOR="RED"
 >MUL</FONT
->:
+> の項ですぐに指定できます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3195"
+NAME="AEN3196"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -306,15 +301,14 @@ CLASS="programlisting"
 >
 
 
-As can be expected, generic fast exponentiation is given the following
-interface:
+予想される通り、一般化された高速な累乗は次のインターフェイスで与えられます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3197"
+NAME="AEN3198"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -331,18 +325,17 @@ fastpow_elt_int{x:elt}{n:nat}
 
 </P
 ><P
->&#13;With the preparation done above, a straightforward implementation of
-<FONT
+>&#13;上までで準備が整ったので、<FONT
 COLOR="RED"
 >fastpow_elt_int</FONT
-> can now be presented as follows:
+> の率直な実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3201"
+NAME="AEN3202"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -379,23 +372,22 @@ end // end of [fastpow_elt_int]
 >
 
 
-Note that this implementation of <FONT
+<FONT
 COLOR="RED"
 >fastpow_elt_int</FONT
-> is not
-tail-recursive.  The function template <FONT
+> のこの実装は末尾再帰でないことに注意してください。
+用いる乗法の単位元を作るために呼び出す関数テンプレート <FONT
 COLOR="RED"
 >mulunit</FONT
->, which is called to
-produce a unit for the underlying multiplication, is assigned the following
-interface:
+>
+には次のインターフェイスが割り当てられます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3205"
+NAME="AEN3206"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -407,27 +399,26 @@ CLASS="programlisting"
 >
 
 
-The proof function <FONT
+証明関数 <FONT
 COLOR="RED"
 >lemma</FONT
-> simply establishes that pow(x, 2*n)=
-pow(x*x, n) for each natural number n.  I have made an implementation of
+> は、それぞれの自然数 n について pow(x, 2*n)=pow(x*x, n) を立証しています。
+私が実装した <FONT
+COLOR="RED"
+>lemma</FONT
+> はオンラインから入手できます。
+けれども興味のある読者には、私の実装を見る前に実装してみることを提案します。
 <FONT
 COLOR="RED"
 >lemma</FONT
-> available on-line but I suggest that the interested
-reader give it a try first before taking a look. Note that the following
-axioms are needed to implement <FONT
-COLOR="RED"
->lemma</FONT
->:
+> の実装には次の公理が必要になることに注意してください:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3210"
+NAME="AEN3211"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -444,44 +435,44 @@ mul_isfun{x,y:elt}{z1,z2:elt} // MUL is functional
 >
 
 
-Another interesting (and possibly a bit challenging) exercise is to
-implement <FONT
+別の興味深い (そしてておそらく少しやりがいのある) 課題は
+<FONT
 COLOR="RED"
 >fastpow_elt_int</FONT
-> in a tail-recursive fashion.
+> を末尾再帰的に実装することでしょう。
 
 </P
 ><P
->&#13;Please find on-line the two files
+>&#13;オンラインから入手できる2つのファイル
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/fastexp.sats"
 TARGET="_top"
 >fastexp.sats</A
-> and
+> と
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/fastexp.dats"
 TARGET="_top"
 >fastexp.dats</A
-> that contain the
-entirety of the above presented code.
+>
+は上記に示したコード全体を含んでいます。
 
 </P
 ><P
->&#13;Now we have implemented <FONT
+>&#13;これで <FONT
 COLOR="RED"
 >fastpow_elt_int</FONT
->. How can it be used?
-Please find <A
+> を実装するできました。
+これをどうやって使うのでしょうか？
+2 x 2 行列の高速な累乗を実装した <FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> の例が
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/test_fastexp.dats"
 TARGET="_top"
->on-line</A
-> an
-example in which <FONT
-COLOR="RED"
->fastpow_elt_int</FONT
-> is called to implement fast
-exponentiation on a 2-by-2 matrix so that the Fibonacci numbers can be computed
-in a highly efficient manner.
+>オンライン</A
+> から入手できます。
+これでフィボナッチ数を効率的に計算できるようになります。
 
 </P
 ></DIV
@@ -519,7 +510,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="p3220.html"
+HREF="p3221.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -529,7 +520,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Another Verified Factorial</TD
+>例: もう一つの検証された階乗</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
