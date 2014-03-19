@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Introduction to Views and Viewtypes</TITLE
+>view と viewtype 入門</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,10 +11,10 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="Programming with Linear Views and Types"
+TITLE="線形 view と線形型を使ったプログラミング"
 HREF="p3221.html"><LINK
 REL="PREVIOUS"
-TITLE="Programming with Linear Views and Types"
+TITLE="線形 view と線形型を使ったプログラミング"
 HREF="p3221.html"><LINK
 REL="NEXT"
 TITLE="Viewtypes as a Combination of Views and Types"
@@ -75,32 +75,32 @@ CLASS="chapter"
 ><A
 NAME="introduction-to-views-and-viewtypes"
 ></A
->Chapter 13. Introduction to Views and Viewtypes</H1
+>Chapter 13. view と viewtype 入門</H1
 ><P
->&#13;Probably the single greatest motivation behind the development of ATS is
-the desire to make ATS a programming language that can be employed
-effectively to construct safe and reliable programs running in the kernels
-of operating systems. Instead of following seemingly natural approaches
-that often focus on carving out a "safe" subset of C and/or put wrappers
-around "unsafe" programming features in C, ATS relies on the paradigm of
-programming with theorem-proving to prevent resources such as memory from
-being misused or mismanaged, advocating an approach to safety that is both
-general and flexible. For example, a well-typed program constructed in ATS
-cannot cause buffer overrun at run-time even though pointer arithmetic is
-fully supported in ATS. More specifically, if a pointer is to be
-dereferenced, ATS requires that a proof be given attesting to the safety of
-the dereferencing operation. Proofs of this kind are constructed to
-demonstrate the validity of linear propositions, which are referred to as
-views in ATS, for classifying resources as well as capabilities.
+>&#13;おそらく、ATS 開発の背後にある最も大きな動機は、ATS
+をオペレーティングシステムのカーネルの中で実行される安全で信頼できるプログラムを効果的に構築できるようなプログラミング言語にしたいという要求です。
+一見したところ自然なアプローチは、
+C言語の "安全な" サブセットを苦心して作り上げることに集中したり、
+C言語の "安全でない" プログラミングの機能のラッパーを作ったりすることでしょう。
+このようなアプローチの代わりに、ATS は定理証明によるプログラミングのパラダイムを信頼しています。
+このおかげで、メモリのようなリソースが誤って仕様されたり誤って処置されたりするのを防ぐことができます。
+一般化と柔軟性を両立した安全性のためにこのアプローチを指示しています。
+例えば、ATS ではポインタ演算がサポートされているにもかわらず、ATS
+で構築された型付けされたプログラムは実行時にバッファオーバーランを引き起しません。
+より具体的には、もしポインタがデリファレンスされると、
+ATS はデリファレンス操作の安全性を実証するような証明を要求します。
+このような証明は線形命題の正当性を立証することで構築されます。
+この線形命題は ATS では view と呼ばれ、リソースおよび性能を分類します。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介するコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_VVTINTRO/"
 TARGET="_top"
->on-line</A
-> the code presented
-for illustration in this chapter.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ><DIV
@@ -669,7 +669,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Programming with Linear Views and Types</TD
+>線形 view と線形型を使ったプログラミング</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
