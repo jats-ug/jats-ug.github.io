@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Viewtypes as a Combination of Views and Types</TITLE
+>view と型を組み合わせた viewtype</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -18,7 +18,7 @@ TITLE="view と viewtype 入門"
 HREF="c3223.html"><LINK
 REL="NEXT"
 TITLE="Left-Values and Call-by-Reference"
-HREF="x3349.html"></HEAD
+HREF="x3348.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3349.html"
+HREF="x3348.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -75,60 +75,57 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="viewtypes_as_combination"
->13.2. Viewtypes as a Combination of Views and Types</A
+>13.2. view と型を組み合わせた viewtype</A
 ></H1
 ><P
->&#13;A linear type in ATS is given the name <SPAN
+>&#13;ATS の線形型は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >viewtype</I
 ></SPAN
->, which is
-chosen to indicate that a linear type consists of two parts: one part for
-views and the other for types. For instance, given a view V and a type T,
-then the tuple (V | T) is a viewtype, where the bar symbol (|) is a
-separator (just like a comma) to separate views from types. What seems a
-bit surprising is the opposite: For each viewtype VT, we may assume the
-existence of a view V and a type T such that VT is equivalent to (V |
-T). Formally, this T can be referred as VT?! in ATS.  This somewhat
-unexpected interpretation of linear types is a striking novelty of ATS,
-which stresses that the linearity of a viewtype comes <SPAN
+> という名前です。
+これは線形型は2つの部分から構成されることを示しています: 一つは view でもう一つが型 (type) です。
+例えば、view V と型 T が与えられた時、タプル (V | T) は viewtype で、バー記号 (|) は view と型を
+(コンマのように) 分離しています。
+少し意外かもしれませんが、反対に:
+それぞれの viewtype VT について、VT が (V | T) と等しいような view V と型 T の存在を仮定できます。
+形式上、ATS ではこの T は VT?! として参照されます。
+この幾分意外な線形型の解釈は ATS の目立った新規性です。
+それは viewtype の線形性は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->entirely</I
+>完全に</I
 ></SPAN
->
-from the view part residing within it.
+> その中に存在する view 部分に由来することを強調しています。
 
 </P
 ><P
->&#13;The built-in sorts <FONT
+>&#13;ビルトインの種 <FONT
 COLOR="RED"
 >viewtype</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >viewt@ype</FONT
-> are for static
-terms representing viewtypes whose type parts are of the sorts
+> は、型部分がそれぞれ種
 <FONT
 COLOR="RED"
 >type</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >t@ype</FONT
->, respectively. In other words, the former
-is assigned to viewtypes for linear values of the size equal to that of a
-pointer and the latter to viewtypes for linear values of unspecified size.
-For example, <FONT
-COLOR="RED"
->tptr</FONT
-> is defined as follows that takes a type and an
-address to form a viewtype (of the sort <FONT
+> であるような viewtype を表わす静的な項です。
+言い方をすると、前者にはポインタのサイズに等しいサイズの線形値の viewtype
+が割り当てられ、そして後者には詳細不明のサイズの線形値の viewtype が割り当てられます。
+例えば、型と、種 <FONT
 COLOR="RED"
 >viewtype</FONT
->):
+> の viewtype 作るアドレスを取るような、<FONT
+COLOR="RED"
+>tptr</FONT
+>
+は次のように定義されます:
 
 <DIV
 CLASS="informalexample"
@@ -147,18 +144,16 @@ CLASS="programlisting"
 >
 
 
-Given a type T and an address L, the viewtype <FONT
+型 T とアドレス L が与えられた時、viewtype <FONT
 COLOR="RED"
 >tptr(T, L)</FONT
-> is for
-a pointer to L paired with a linear proof stating that a value of the type
-T is stored at L. If we think of a counter as a pointer paired with a proof
-stating that the pointer points to an integer (representing the count),
-then the following defined function <FONT
+> は
+L に格納された型 T の値を示す線形の証明とペアになった L のポインタです。
+カウントを表わす整数を指すポインタを示す証明とペアになったポインタとしてのカウンタのことを考えるなら、
+次に定義する関数 <FONT
 COLOR="RED"
 >getinc</FONT
-> returns the current
-count of a given counter after increasing it by 1:
+> は与えられたカウンタを1増やした後、現時点でのカウントを返します:
 <DIV
 CLASS="informalexample"
 ><P
@@ -185,7 +180,7 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;A particularly interesting example of a viewtype is the following one:
+>&#13;次は viewtype の特に興味深い例です:
 
 <DIV
 CLASS="informalexample"
@@ -207,27 +202,24 @@ CLASS="programlisting"
 >
 
 
-Given two types A and B, a pointer to some address L where a closure
-function is stored that takes a value of the type A to return a value of
-the type B can be given the viewtype <FONT
+2つの型 A と B が与えられた時、型 A の値を取り型 B の値を返すようなクロージャ関数が保管されたアドレス L
+を指すポインタには viewtype <FONT
 COLOR="RED"
 >cloptr(A, B, L)</FONT
->. Note that
-a closure function is just an envless function paired with an environment
-containing bindings for variables in the body of the closure function that
-are introduced from outside. In the function type <FONT
+> を与えることができます。
+クロージャ関数は、外から導入されたクロージャ関数本体内の値の束縛を含む環境とペアになった単なる
+envless 関数であることに注意してください。
+関数型 <FONT
 COLOR="RED"
->(&#38;env, a)
--&#62; b</FONT
->, the symbol <FONT
+>(&#38;env, a) -&#62; b</FONT
+> において、記号 <FONT
 COLOR="RED"
 >&#38;</FONT
-> indicates that the corresponding
-function argument is passed by reference, that is, the argument is required
-to be a left-value and what is actually passed at run-time is the address
-of the left-value.  I will cover the issue of call-by-reference elsewhere
-in more details.  The following piece of code demonstrates a pointer to a
-closure function being called on a given argument:
+>
+は対応する関数の引数が参照で渡されていることを示しています。
+つまり、この引数は左辺値であることが要求されていて、実行時に実際に渡されるものは左辺値のアドレスです。
+参照渡し (call-by-reference) については別の章でより詳細に解説します。
+次のコードは与えられた引数で呼び出されるクロージャ関数へのポインタを説明しています:
 <DIV
 CLASS="informalexample"
 ><P
@@ -257,21 +249,16 @@ end // end of [cloptr]
 >
 
 
-Note that the linear proof in <FONT
+p のデリファレンスが型検査を通すために、<FONT
 COLOR="RED"
 >pclo</FONT
-> is first taken out so that
-the code for dereferencing p (denoted by the syntax <FONT
-COLOR="RED"
->!p</FONT
->) can
-pass typechecking, and it is then returned so that the type of
-<FONT
+>
+内の線形の証明がはじめに取り出されることに注意してください。
+そして <FONT
 COLOR="RED"
 >pclo</FONT
-> is restored to its original one. The very ability to
-explain within ATS programming features such as closure function is a
-convincing indication of the expressiveness of the type system of ATS.
+> の型が元の位置に復帰されて返ります。
+クロージャ関数のような ATS プログラミングの機能を説明する能力は、ATS の型システムの表現力の説得力ある証拠です。
 
 </P
 ></DIV
@@ -309,7 +296,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3349.html"
+HREF="x3348.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
