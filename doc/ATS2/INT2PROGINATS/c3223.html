@@ -109,40 +109,40 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="views_for_pointers"
->13.1. Views for Memory Access through Pointers</A
+>13.1. ポインタを通じたメモリアクセスのための view</A
 ></H1
 ><P
->&#13;A view is a linear version of prop, where the word <SPAN
+>&#13;view は prop の線形バージョンです。
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->linear</I
+>線形 (linear)</I
 ></SPAN
->
-comes from linear logic, a resource-aware logic invented by Jean-Yves
-Girard. There is a built-in sort <FONT
+> という単語は、
+Jean-Yves Girard によって考案されたリソースを意識した論理である線形論理に由来します。
+view を表わす静的な項のためにビルトインの種 <FONT
 COLOR="RED"
 >view</FONT
-> for static terms
-representing views.  Given a type T and a memory location L, a view of the
-form <FONT
+> があります。
+型 T とメモリ位置 L が与えられた時、<FONT
 COLOR="RED"
 >T@L</FONT
-> can be formed to indicate a value of the type T being stored in
-the memory at the location L, where <FONT
+> という view を作ることができ、
+これは型 T の値が位置 L にあるメモリに格納されていることを示しています。
+<FONT
 COLOR="RED"
 >@</FONT
-> is a special infix
-operator.  Views of this form are extremely common in practice, and they
-are often referred to as at-views.  As an example, the following function
-templates <FONT
+> は中置の特殊演算子です。
+この形の view は実用上非常に一般的で、それらはしばしば at-view と呼ばれます。
+例として、次の関数テンプレート <FONT
 COLOR="RED"
 >ptr_get0</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ptr_set0</FONT
->, which reads and
-writes through a given pointer, are assigned types containing at-views:
+> は、
+与えられたポインタを通して読み書きをするためで、at-view を含む型が割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -167,30 +167,28 @@ ptr_set0 {l:addr} (pf: a? @ l | p: ptr l, x: a): (a @ l | void)
 
 </P
 ><P
->&#13;Note that <FONT
+>&#13;<FONT
 COLOR="RED"
 >ptr</FONT
-> is a type constructor that forms a type
-<FONT
-COLOR="RED"
->ptr(L)</FONT
-> when applied to a static term L of the sort
-<FONT
+> は型コンストラクタで、種 <FONT
 COLOR="RED"
 >addr</FONT
->, and the only value of the type <FONT
+> の静的な項 L に適用されると型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
-> is the
-pointer that points to the location denoted by L.
+>
+を作ることに注意してください。
+型 <FONT
+COLOR="RED"
+>ptr(L)</FONT
+> の唯一の値は L によって示された位置を指すポインタです。
 
 </P
 ><P
->&#13;Given a type T, the function <FONT
+>&#13;型 T が与えられた時、関数 <FONT
 COLOR="RED"
 >ptr_get0&#60;T&#62;</FONT
-> is assigned the
-following type:
+> には次の型が割り当てられます:
 
 <DIV
 CLASS="informalexample"
@@ -209,60 +207,56 @@ CLASS="programlisting"
 >
 
 
-which indicates that the function <FONT
-COLOR="RED"
->ptr_get0&#60;T&#62;</FONT
-> returns a
-proof of the view <FONT
+これは view <FONT
 COLOR="RED"
 >T@L</FONT
-> and a value of the type T when applied to
-a proof of the view <FONT
-COLOR="RED"
->T@L</FONT
-> and a pointer of the type
-<FONT
+> の証明とどこか L について型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
-> for some L. Intuitively speaking, a proof of the view
-<FONT
+> のポインタに適用すると、
+関数 <FONT
+COLOR="RED"
+>ptr_get0&#60;T&#62;</FONT
+> が view <FONT
 COLOR="RED"
 >T@L</FONT
->, which is a form of resource as <FONT
+> の証明と型 T の値を返すことを示しています。
+直感的に言うと、<FONT
 COLOR="RED"
 >T@L</FONT
-> is linear, is
-<SPAN
+> が線形であるようなリソースである view <FONT
+COLOR="RED"
+>T@L</FONT
+>
+の証明は、<FONT
+COLOR="RED"
+>ptr_get0&#60;T&#62;</FONT
+> に渡された時に <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->consumed</I
+>消費 (consumed)</I
 ></SPAN
-> when it is passed to <FONT
-COLOR="RED"
->ptr_get0&#60;T&#62;</FONT
->,
-and another proof of the same view <FONT
+> されます。
+さらに同じ view <FONT
 COLOR="RED"
 >T@L</FONT
-> is generated when
-<FONT
+> の別の証明が <FONT
 COLOR="RED"
 >ptr_get0&#60;T&#62;</FONT
-> returns. Notice that a proof of the view
-<FONT
+> が返る時に生成されます。
+view <FONT
 COLOR="RED"
 >T@L</FONT
-> must be returned for otherwise subsequent accesses to the
-memory location L would have been precluded.
+> の証明が返らなければならないことに注意してください。
+さもなければ後続のメモリ位置 L へのアクセスは不可能になります。
 
 </P
 ><P
->&#13;Similarly, the function <FONT
+>&#13;同様に、関数 <FONT
 COLOR="RED"
 >ptr_set0&#60;T&#62;</FONT
-> is assigned the
-following type:
+> には次の型が割り当てられます:
 
 </P
 ><DIV
@@ -280,42 +274,40 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;Note that T? is a type for values of size <FONT
+>&#13;T? は未初期化であることを仮定したサイズ <FONT
 COLOR="RED"
 >sizeof(T)</FONT
-> that are
-assumed to be uninitialized.  The function <FONT
+> の値のための型であることに注意してください。
+関数 <FONT
 COLOR="RED"
 >ptr_set0&#60;T&#62;</FONT
+> は、view <FONT
+COLOR="RED"
+>T?@L</FONT
+> の証明と型 <FONT
+COLOR="RED"
+>ptr(L)</FONT
 >
-returns a proof of the view <FONT
+のポインタ、型 T の値に適用されると、view <FONT
 COLOR="RED"
 >T@L</FONT
-> when applied to a proof of the
+> の証明を返します。
 view <FONT
 COLOR="RED"
 >T?@L</FONT
->, a pointer of the type <FONT
-COLOR="RED"
->ptr(L)</FONT
-> and a value
-of the type T. The use of the view <FONT
-COLOR="RED"
->T?@L</FONT
-> indicates that the
-memory location at L is assumed to be uninitialized when
-<FONT
+> の使用は、<FONT
 COLOR="RED"
 >ptr_set0&#60;T&#62;</FONT
-> is called.
+>
+が呼び出された時に、L のメモリ位置が未初期化であると仮定されていることを示しています。
 
 </P
 ><P
->&#13;As an example, a function template <FONT
+>&#13;例として、与えられた2つの位置にあるメモリコンテンツをスワップする関数テンプレート <FONT
 COLOR="RED"
 >swap0</FONT
-> is implemented as follows
-for swapping memory contents at two given locations:
+>
+は次のように実装されます:
 
 <DIV
 CLASS="informalexample"
@@ -348,35 +340,32 @@ end // end of [swap0]
 
 </P
 ><P
->&#13;Compared to a corresponding implementation in C, the verbosity of this one
-in ATS is evident. In particular, the need for <SPAN
+>&#13;対応するC言語の実装と比較して、ATSでのこの実装が冗長であることは明白です。
+特に、リソースを使用する関数の呼び出しを通じて、線形の証明が <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->threading</I
+>分断</I
 ></SPAN
->
-linear proofs through calls to functions that make use of resources can
-often result in a lot of <SPAN
+> されてしまうため、
+多くの <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->administrative</I
+>管理上の</I
 ></SPAN
-> code to be written. I
-now present some special syntax to significantly alleviate the need for
-such administrative code.
+> コードを書くことになってしまいます。
+ここで、このような管理上のコードの必要性を大きく緩和するために、いくつか特別な構文を紹介します。
 
 </P
 ><P
->&#13;The function templates <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >ptr_get1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ptr_set1</FONT
-> are
-given the following interfaces:
+> は次のようなインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -399,11 +388,10 @@ ptr_set1 {l:addr} (pf: !a? @ l &#62;&#62; a @ l | p: ptr l, x: a): void
 >
 
 
-Clearly, for each type T, the function
-<FONT
+明確に、それぞれの型 T について、関数 <FONT
 COLOR="RED"
 >ptr_get1&#60;T&#62;</FONT
-> is assigned the following type:
+> には次の型が割り当てられます:
 
 <DIV
 CLASS="informalexample"
@@ -422,27 +410,26 @@ CLASS="programlisting"
 >
 
 
-Given a linear proof pf of the view <FONT
-COLOR="RED"
->T@L</FONT
-> for some L and a
-pointer p of the type <FONT
+どこか L と型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
->, the function call
-<FONT
-COLOR="RED"
->ptr_get1&#60;T&#62;</FONT
->(pf, p) is expected to return a value of the
-type T. However, the proof pf is not consumed. Instead, it is still a proof
-of the view <FONT
+> のポインタ p について、view <FONT
 COLOR="RED"
 >T@L</FONT
-> after the function call returns. Similarly, the
-function <FONT
+> の線形の証明 pf
+が与えられた時、関数呼び出し <FONT
+COLOR="RED"
+>ptr_get1&#60;T&#62;</FONT
+>(pf, p) は型 T の値を返すことが期待されています。
+けれども、証明 pf は消費されません。
+その代わりに、関数呼び出しが返った後も view <FONT
+COLOR="RED"
+>T@L</FONT
+> の証明はまだ在ります。
+同様に、関数 <FONT
 COLOR="RED"
 >ptr_set1&#60;T&#62;</FONT
-> is assigned the following type:
+> には次の型が割り当てられます:
 
 <DIV
 CLASS="informalexample"
@@ -461,27 +448,25 @@ CLASS="programlisting"
 >
 
 
-Given a linear proof pf of the view <FONT
-COLOR="RED"
->T?@L</FONT
-> for some L, a pointer
-p of the type <FONT
+どこか L と型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
-> and a value v of the type T, the function
-call <FONT
-COLOR="RED"
->ptr_set1&#60;T&#62;</FONT
->(pf, p, v) is expected to return the void
-value while changing the view of pf from <FONT
+> のポインタ p、型 T の値 v について、view <FONT
 COLOR="RED"
 >T?@L</FONT
-> to
-<FONT
+> の線形の証明 pf
+が与えられた時、関数呼び出し <FONT
+COLOR="RED"
+>ptr_set1&#60;T&#62;</FONT
+>(pf, p, v) は pf の view を <FONT
+COLOR="RED"
+>T?@L</FONT
+>
+から <FONT
 COLOR="RED"
 >T@L</FONT
->.  In general, assume that f is given a type of the
-following form for some views V1 and V2:
+> に変えて、void 値を返すことが期待されています。
+一般に、view V1 と V2 が与えられた時、f には次の形の型が与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -500,14 +485,13 @@ CLASS="programlisting"
 >
 
 
-Then a function call f(..., pf, ...) on some proof variable pf of the view
-V1 is to change the view of pf into V2 upon its return.  In the case where
-V1 and V2 are the same, !V1 &#62;&#62; V2 can simply be written as !V1.  As an
-example, a function template <FONT
+そのとき、view V1 の証明の値 pf について、関数呼び出し f(..., pf, ...) は返る時に pf の view を V2 に変えます。
+V1 と V2 が同じ場合には、!V1 &#62;&#62; V2 は単に !V1 と書くこともできます。
+例として、
+与えられた2つのメモリ位置のコンテンツをスワップする関数テンプレート <FONT
 COLOR="RED"
 >swap1</FONT
-> for swapping the contents at
-two given memory locations is implemented as follows:
+> は次のように実装されます:
 
 <DIV
 CLASS="informalexample"
@@ -535,18 +519,17 @@ end // end of [swap1]
 >
 
 
-Clearly, this implementation is considerably cleaner when compared to the
-above implementation of <FONT
+この実装は <FONT
 COLOR="RED"
 >swap0</FONT
->.
+> の上記の実装と比較してかなり綺麗なことは明確です。
 
 </P
 ><P
->&#13;A further simplied implementation of <FONT
+>&#13;<FONT
 COLOR="RED"
 >swap1</FONT
-> is given as follows:
+> のさらに簡単な実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -572,55 +555,53 @@ end // end of [swap1]
 >
 
 
-Given a pointer p of the type <FONT
+どこか L について型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
-> for some L, <FONT
+> のポインタ p が与えられた時、<FONT
 COLOR="RED"
 >!p</FONT
 >
-yields the value stored at the memory location L.  The typechecker first
-searches for a proof of the view <FONT
-COLOR="RED"
->T@L</FONT
-> for some T among all the
-currently available proofs when typechecking <FONT
-COLOR="RED"
->!p</FONT
->; if such a
-proof pf is found, then <FONT
-COLOR="RED"
->!p</FONT
-> is essentially elaborated into
+はメモリ位置 L に保存された値を生じます。
 <FONT
 COLOR="RED"
->ptr_get1(pf | p)</FONT
-> and then typechecked. As <FONT
-COLOR="RED"
 >!p</FONT
-> is a
-left-value (which is to be explained later in detail), it can also be used
-to form an assignment like <FONT
-COLOR="RED"
->!p := v</FONT
-> for some value v. The
-typechecker elaborates <FONT
-COLOR="RED"
->!p := v</FONT
-> into <FONT
-COLOR="RED"
->ptr_set1(pf | p,
-v)</FONT
-> for the sake of typechecking if a proof of the at-view <FONT
+> を型検査すると、型検査器はまずはじめに現在有効な全ての証明の中で T について
+view <FONT
 COLOR="RED"
 >T@L</FONT
+> の証明を検索します:
+もしそのような証明 pf が見つかったら、<FONT
+COLOR="RED"
+>!p</FONT
+> は本質的に <FONT
+COLOR="RED"
+>ptr_get1(pf | p)</FONT
 >
-can be found for some type T among all the currently available proofs. Note
-that this implementation of <FONT
+に詳細化されて、型検査は終わります。
+<FONT
+COLOR="RED"
+>!p</FONT
+> が左辺値 (詳細は後に説明します) である場合、
+なんらかの値 v について <FONT
+COLOR="RED"
+>!p := v</FONT
+> のような割り当てで使うこともできます。
+もし現在有効な全ての証明の中である型 T について at-view <FONT
+COLOR="RED"
+>T@L</FONT
+> の証明が見つかれば、
+型検査器は型検査のために <FONT
+COLOR="RED"
+>!p := v</FONT
+> を <FONT
+COLOR="RED"
+>ptr_set1(pf | p, v)</FONT
+> に詳細化します。
+<FONT
 COLOR="RED"
 >swap1</FONT
-> makes no use of
-administrative code for handling linear proofs explicitly.
+> のこの実装は線形の証明を明示的に扱うための管理上のコードを使っていないことに注意してください。
 
 </P
 ></DIV
