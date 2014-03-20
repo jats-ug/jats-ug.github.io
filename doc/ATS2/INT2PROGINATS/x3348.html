@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Left-Values and Call-by-Reference</TITLE
+>左辺値と参照渡し</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,59 +75,54 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="lval_and_cbr"
->13.3. Left-Values and Call-by-Reference</A
+>13.3. 左辺値と参照渡し</A
 ></H1
 ><P
->&#13;In its simplest form, a left-value is just a pointer paired with a linear
-proof attesting to a value (of some type) being stored at the location to
-which the pointer points. The name <SPAN
+>&#13;もっとも単純な形として、左辺値はポインタの指す位置に保存された (なんらかの型の)
+値を証言している線形の証明とペアになった単なるポインタです。
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->left-value</I
+>左辺値 (left-value)</I
 ></SPAN
-> stems from such a
-value being allowed to appear on the left-hand side of an assignment
-statement (in languages like C). Often, a left-value is intuitively
-explained as a value with an address attached to it. Note that whatever
-representation chosen for a left-value must make it possible to identify
-both the pointer and the linear proof (of some at-view) that are associated
-with the left-value.
+> という名前は、(C言語のように)
+割り当てられた文の左側に置かれることが許された値に由来します。
+しばしば直感的に、左辺値はアドレスが付属した値として説明されます。
+左辺値として選ばれたどのような表現も、
+ポインタと左辺値に関連する (なんらかの at-view の)
+線形の証明の両方ともを識別できなければならないことに注意してください。
 
 </P
 ><P
->&#13;In ATS, the simplest expression representing a left-value is
-<FONT
+>&#13;ATS では、もっとも単純な左辺値を表わす式は <FONT
 COLOR="RED"
 >!p</FONT
->, where <FONT
+> です。
+このとき <FONT
 COLOR="RED"
 >!</FONT
-> is a special symbol and p a value of
-the type <FONT
+> は特殊記号で、p はどこかのアドレス L について型 <FONT
 COLOR="RED"
 >ptr(L)</FONT
-> for some address L. When this expression is
-typechecked, a proof of <FONT
+> の値です。
+この式が型検査される時、
+なんらかの型 T について <FONT
 COLOR="RED"
 >T@L</FONT
-> for some type T is required to be
-found among the currently available proofs. I will introduce additional
-forms of left values gradually.
+> の証明が現状有効な証明群の中に見つかることを要求します。
+徐々にさらなる左辺値の形について紹介します。
 
 </P
 ><P
->&#13;The default strategy for passing a function argument in ATS is
-call-by-value. However, it is also allowed in ATS to specify that
-call-by-reference is chosen for passing a particular function argument. By
-call-by-reference, it is meant that the argument to be passed must be a
-left-value and what is actually passed is the address of the left-value
-(instead of the value stored at the address). For example, the following
-defined function <FONT
+>&#13;ATS における関数へ引数を渡す既定の戦略は値渡し (call-by-value) です。
+けれども、特定の関数に渡す引数に参照渡し (call-by-reference) を選択するように指示することも ATS では可能です。
+参照渡しの場合、渡される引数は左辺値でなければなりません。
+そして実際には (アドレスに格納された値の代わりに) 左辺値のアドレスが渡されることになります。
+例えば、次に定義した関数 <FONT
 COLOR="RED"
 >swap2</FONT
-> makes essential use of
-call-by-reference:
+> は参照渡しを使っています:
 
 <DIV
 CLASS="informalexample"
@@ -152,19 +147,18 @@ end // end of [swap2]
 >
 
 
-Note that the special symbol <FONT
+関数の引数の型の直前にある特殊記号 <FONT
 COLOR="RED"
 >&#38;</FONT
-> in front of the type of a
-function argument indicates that the argument needs to be passed according
-to the call-by-reference strategy. The following code implements
-<FONT
-COLOR="RED"
->swap1</FONT
-> based on <FONT
+>
+は、その引数が参照渡し戦略に従って渡される必要があることを示すことに注意してください。
+次のコードは <FONT
 COLOR="RED"
 >swap2</FONT
->:
+> を元にして <FONT
+COLOR="RED"
+>swap1</FONT
+> を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -188,34 +182,31 @@ a:t@ype
 >
 
 
-When the call <FONT
+呼び出し <FONT
 COLOR="RED"
 >swap2(!p1, !p2)</FONT
-> is evaluated at run-time, the
-parameters actually being passed are the two pointers <FONT
+>
+が実行時に評価された時、(この2つのポインタは指す位置に保管されている値ではなく)
+2つのポインタ <FONT
 COLOR="RED"
 >p1</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >p2</FONT
-> (rather than the values stored at the locations to which
-these two pointers point).
+> が実際にはパラメータとして渡されます。
 </P
 ><P
->&#13;Given a type T and an integer N, the syntax <FONT
+>&#13;型 T と整数 N が与えられた時、構文 <FONT
 COLOR="RED"
 >@[T][N]</FONT
-> stands for
-a flat array consisting N elements of the type T. Please note that a value
-of the type <FONT
+> は 型 T の要素数 N
+から成るフラットな配列を表わしています。
+型 <FONT
 COLOR="RED"
 >@[T][N]</FONT
-> is of the size N*sizeof(T). If a function
-has a parameter representing an array, then this parameter is most liklely
-call-by-reference. For instance, the following code implements a function
-that takes two arrays of doubles to compute their dot product (also knowns
-as inner product):
+> の値のサイズは N*sizeof(T) であることに注意してください。
+もし関数が配列を表わすパラメータを持つなら、このパラメータは参照渡しの方が好ましいでしょう。
+例えば、次のコードは double の2つの配列を取り、ドット積 (またはスカラー積) を計算する関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -241,10 +232,10 @@ CLASS="programlisting"
 >
 
 
-Note that both array arguments of <FONT
+<FONT
 COLOR="RED"
 >dotprod</FONT
-> are call-by-reference.
+> の配列引数は両方とも参照渡しであることに注意してください。
 
 </P
 ></DIV
