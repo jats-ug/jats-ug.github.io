@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Heap-Allocated Linear Closure-Functions</TITLE
+>ヒープに確保された線形クロージャ関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,20 +75,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="heap-allocated-linear-closure-functions"
->13.5. Heap-Allocated Linear Closure-Functions</A
+>13.5. ヒープに確保された線形クロージャ関数</A
 ></H1
 ><P
->&#13;In ATS, a closure-function can be assiged a linear type, allowing
-it to be properly tracked within the type system and also explicitly
-freed by the programmer.
+>&#13;ATS では、クロオージャ関数には線形型を割り当てることができます。
+これは型システムによって適切に追跡され、またプログラマによって明示的に解放されます。
 </P
 ><P
->&#13;The following code implements a higher-order function
-<FONT
+>&#13;次のコードは、第二引数に線形クロージャ関数を取る高階関数 <FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> which takes a linear closure-function
-as its second argument:
+> を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -117,32 +114,28 @@ a:t@ype}{b:vt@ype
 >
 
 
-Note that the keyword <FONT
+キーワード <FONT
 COLOR="RED"
 >-&#60;cloptr1&#62;</FONT
-> indicates that the
-function type it forms is for a linear closure-function. If a type for a
-pure linear closure-function is needed, the keyword
-<FONT
+> はその関数型が線形クロージャ関数であること示すことに注意してください。
+もし純粋な線形クロージャ関数の型が必要であれば、キーワード  <FONT
 COLOR="RED"
 >-&#60;cloptr0&#62;</FONT
-> can be used.  The symbol <FONT
+> が使えます。
+関数型の前にある記号 <FONT
 COLOR="RED"
 >!</FONT
-> in
-front of the function type means that the second (linear) argument of
-<FONT
+> は <FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> is call-by-value and it is still available
-after <FONT
+>
+の線形の第二引数が値渡しであり、<FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> returns.
+> が返った後もそれが有効であることを意味します。
 </P
 ><P
->&#13;Let us now see some concrete code in which a linear closure-function is
-created, called, and finally freed:
+>&#13;線形クロージャ関数が生成され、呼び出され、最後に解放されるような具体的なコードをいくつか見てみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -183,11 +176,10 @@ val ((*freed*)) = list_vt_free (ys)
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >cloptr_free</FONT
-> is given the following
-interface:
+> には次のインターフェイスが与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -206,22 +198,20 @@ CLASS="programlisting"
 >
 
 
-Also, the cast involved in
-<FONT
+また、<FONT
 COLOR="RED"
 >$UNSAFE.castvwtp0{cloptr(void)}(f)</FONT
-> is a safe cast.
+> に含まれるキャストは安全なキャストです。
 
 </P
 ><P
->&#13;The support for linear closure-functions in ATS1 is crucial in a setting
-where higher-order functions are needed but run-time garbage collection
-(GC) is not allowed or supported. In ATS2, linear closure-functions become
-much less important as programming with higher-order functions in a setting
-without GC can be more conveniently achieved through the use templates.
-However, if one wants to store closure-functions in a data structure
-without causing memory leaks, it is necessary to use linear closure-functions
-unless GC can be relied upon to reclaim memory.
+>&#13;ATS1 での線形クロージャ関数のサポートは、高階関数が必要だけれど実行時のガベージコレクション (GC)
+が使えないような場面で重要でした。
+ATS2 では、線形クロージャ関数は GC のない高階関数を使ったプログラミングでも重要ではなくなりました。
+好都合なことにテンプレートを使うことができるのです。
+けれども、もしメモリリークを引き起こさずにデータ構造にクロージャ関数を埋め込みたい場合で、
+さらにメモリを再利用するために GC に頼ることもできない場合には、
+線形クロージャ関数の使用が必要になります。
 </P
 ></DIV
 ><DIV
