@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Disjunctive Views</TITLE
+>分離 view</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="線形な dataprop としての dataview"
 HREF="c3453.html"><LINK
 REL="NEXT"
-TITLE="Views for Linear Arrays"
+TITLE="線形配列の view"
 HREF="x3517.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,13 +75,13 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="disjunctive_views"
->14.2. Disjunctive Views</A
+>14.2. 分離 view</A
 ></H1
 ><P
->&#13;The dataview <FONT
+>&#13;dataview <FONT
 COLOR="RED"
 >VOR</FONT
-> is declared as follows:
+> が次のように宣言されています:
 
 <DIV
 CLASS="informalexample"
@@ -101,53 +101,50 @@ CLASS="programlisting"
 >
 
 
-This declaration indicates that the dataview <FONT
+この宣言は dataview <FONT
 COLOR="RED"
 >VOR</FONT
-> is covariant
-in its first and second arguments and there are two proof constructors
-associated with it: <FONT
+> が1番目と2番目の引数について共変であることを示しています。
+そして関連する2つの証明コンストラクタ <FONT
 COLOR="RED"
 >VORleft</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >VORright</FONT
->. Given
-views V<SUB
+> があります。
+view V<SUB
 >0</SUB
-> and V<SUB
+> と V<SUB
 >1</SUB
->, a proof of <FONT
-COLOR="RED"
->VOR(V<SUB
->0</SUB
->,
-V<SUB
->1</SUB
->, 0)</FONT
-> can be turned into a proof of V<SUB
->0</SUB
-> and a proof of
+> が与えられた時、
 <FONT
 COLOR="RED"
 >VOR(V<SUB
 >0</SUB
 >, V<SUB
 >1</SUB
->, 1)</FONT
-> can be turned into a proof of
-V<SUB
+>, 0)</FONT
+> の証明は V<SUB
+>0</SUB
+> の証明になります。
+また <FONT
+COLOR="RED"
+>VOR(V<SUB
+>0</SUB
+>, V<SUB
 >1</SUB
->.
+>, 1)</FONT
+> の証明は V<SUB
+>1</SUB
+> の証明になります。
 
 </P
 ><P
->&#13;Let T be some type. The following function interface states that
-<FONT
+>&#13;なんらかの型 T を考えます。次の関数インターフェイスは <FONT
 COLOR="RED"
 >getopt</FONT
-> takes an unintialized pointer and returns an integers
-indicating whether the pointer is initialized:
+>
+が未初期化のポインタを取り、ポインタが初期化されたかどうかを示す整数を返すことを表わしています:
 
 <DIV
 CLASS="informalexample"
@@ -167,10 +164,10 @@ CLASS="programlisting"
 >
 
 
-The following code shows a typical use of <FONT
+次のコードは <FONT
 COLOR="RED"
 >getopt</FONT
->:
+> の典型的な使用例を示しています:
 
 <DIV
 CLASS="informalexample"
@@ -205,23 +202,22 @@ end // end of [foo]
 
 </P
 ><P
->&#13;In ATS, there is a type constructor <FONT
+>&#13;ATS では、型 T とブール B を取り、opt 型 <FONT
+COLOR="RED"
+>opt(T, B)</FONT
+> を作るような型コンストラクタ <FONT
 COLOR="RED"
 >opt</FONT
-> that takes a type T and
-a boolean B to form an opt-type <FONT
+>
+があります。
+このとき B が true ならば <FONT
 COLOR="RED"
 >opt(T, B)</FONT
-> such that
-<FONT
-COLOR="RED"
->opt(T, B)</FONT
-> equals T if B is true and it equals T? if B is false.
-The function <FONT
+> は T に等しく、B が false ならそれは T? に等しくなります。
+関数 <FONT
 COLOR="RED"
 >getopt</FONT
-> can be given the following interface
-that makes use of an opt-type:
+> には次のような opt 型を使ったインターフェイスを与えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -240,10 +236,10 @@ CLASS="programlisting"
 >
 
 
-The code that calls <FONT
+これで <FONT
 COLOR="RED"
 >getopt</FONT
-> can now be implemented as follows:
+> 呼び出しコードは次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -276,14 +272,13 @@ end // end of [foo]
 >
 
 
-where the proof functions <FONT
+このとき、証明関数 <FONT
 COLOR="RED"
 >opt_unsome</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >opt_unnone</FONT
->
-are assgined the following types:
+> には次の型が割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -303,11 +298,11 @@ prfun opt_unnone{a:t@ype} (x: !opt (a, false) &#62;&#62; a?): void
 >
 
 
-Compared to the version that uses <FONT
+<FONT
 COLOR="RED"
 >VOR</FONT
->, this version based on
-opt-type is considerably less verbose.
+> を使うバージョンと比較して、
+opt 型を用いたこのバージョンはかなりすっきりしています。
 
 </P
 ></DIV
@@ -369,7 +364,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Views for Linear Arrays</TD
+>線形配列の view</TD
 ></TR
 ></TABLE
 ></DIV

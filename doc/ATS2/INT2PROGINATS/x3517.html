@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Views for Linear Arrays</TITLE
+>線形配列の view</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="線形な dataprop としての dataview"
 HREF="c3453.html"><LINK
 REL="PREVIOUS"
-TITLE="Disjunctive Views"
+TITLE="分離 view"
 HREF="x3476.html"><LINK
 REL="NEXT"
 TITLE="Views for Singly-Linked Lists"
@@ -75,30 +75,29 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear_arrays"
->14.3. Views for Linear Arrays</A
+>14.3. 線形配列の view</A
 ></H1
 ><P
->&#13;Unlike in most programming languages, arrays are not a primitive data
-structure in ATS. More specifically, persistent arrays can be implemented
-based on linear arrays, which allow for being freed safely by the
-programmer, and linear arrays can be implemented based on
-at-views. Intuitively, the view for an array storing N elements of type
-T consists of N at-views: T@L<SUB
+>&#13;ほとんどのプログラミング言語と異なり、ATS では配列はプリミティブなデータ構造ではありません。
+もっと正確に言えば、永続的な配列はプログラマが安全に解放できる線形配列を用いて実装できます。
+その線形配列は at-view を用いて実装できます。
+直観的には、N 個の at-view からなる 型 T の N 個の要素が保存されている配列の view :
+T@L<SUB
 >0</SUB
 >, T@L<SUB
 >1</SUB
->, ..., and
-T@L<SUB
+>, ..., T@L<SUB
 >N-1</SUB
->, where L<SUB
+> です。
+ここで、L<SUB
 >0</SUB
-> is the starting address of the array and
-each subsequent L equals the previous one plus the size of T, that is, the
-number of bytes needed to store a value of the type T. The following
-declared dataview <FONT
+> は配列の開始アドレスで、L に続くそれぞれの要素は直前の要素に T
+のサイズを加えたものと等しくなります。
+すなわち、型 T の値を保存するのに必要なバイト数です。
+次に宣言する dataview <FONT
 COLOR="RED"
 >array_v</FONT
-> precisely captures this intuituion:
+> はこの直感を正確に捕捉しています:
 
 </P
 ><DIV
@@ -122,13 +121,13 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;Given a type T, an address L and an integer N, <FONT
+>&#13;型 T, アドレス L, 整数 N が与えられた時、<FONT
 COLOR="RED"
 >array_v(T, L, N)</FONT
 >
-is a view for the array starting at L that stores N elements of the type T.
-As can be readily expected, the function templates for array-accessing and
-array-updating are given the following interfaces:
+は型 T の N 個の要素を保存する L からはじまる配列の view です。
+すぐに予想できることですが、
+配列をアクセスしたり更新する関数テンプレートは次のインターフェイスで与えられます:
 
 </P
 ><DIV
@@ -156,15 +155,14 @@ a:t@ype
 ></P
 ></DIV
 ><P
->&#13;Before implementing <FONT
+>&#13;<FONT
 COLOR="RED"
 >arrget</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrset</FONT
->, I present as
-follows some code that implements a function template to access the first
-element of a nonempty array:
+>
+を実装する前に、空でない配列の最初の要素にアクセスする関数テンプレートを実装する次のコードを紹介します:
 
 </P
 ><DIV
@@ -192,14 +190,13 @@ a:t@ype
 ></P
 ></DIV
 ><P
->&#13;Obviously, the function template <FONT
+>&#13;明らかに、関数テンプレート <FONT
 COLOR="RED"
 >arrget</FONT
-> can be implemented
-based on <FONT
+> は <FONT
 COLOR="RED"
 >arrgetfst</FONT
->:
+> を用いて実装することができます:
 
 </P
 ><DIV
@@ -227,22 +224,19 @@ arrget (pf | p, i) =
 ></P
 ></DIV
 ><P
->&#13;This is a tail-recursive implementation of time-complexity O(n). However,
-the very point of having arrays is to support O(1)-time accessing and
-updating operations. My initial effort spent on implementing such
-operations immediately dawned on me the need to construct proof functions
-for supporting view-changes (of no run-time cost).
+>&#13;これは末尾再帰的な実装で時間的計算量は O(n) です。
+けれども、配列の重要なメリットは O(1) の時間でアクセスと更新操作ができることにあります。
+(実行時のコストなしに) view の変更をサポートするような証明関数をコンストラクトする必要性に気づき、私は最初にそのような即時的な操作を実装することに注力しました。
 
 </P
 ><P
->&#13;Clearly, an array starting at L that stores N elements of type T can also
-be thought of as two arrays: one starting at L that stores I elements while
-the other starting at L+I*sizeof(T) that stores N-I elements, where I is
-an natural number less that or equal to N. Formally, this statement can be
-encoded in the type of the proof function <FONT
+>&#13;明確に、型 T の N 個の要素を保存する L から開始する配列は2つの方法で考えることができます:
+一つは I 個の要素が L から保管されている考える方法で、もう一つは N-I 個の要素が L+I*sizeof(T)
+から保管されていると考える方法です。このとき I は N 以下の自然数です。
+形式的には、この文は証明関数 <FONT
 COLOR="RED"
 >array_v_split</FONT
->:
+> の型にエンコードできます:
 
 </P
 ><DIV
@@ -266,11 +260,10 @@ array_v_split
 ></P
 ></DIV
 ><P
->&#13;The other direction of the above statement can be encoded in the type of
-the proof function <FONT
+>&#13;上記の文のもう一方は証明関数 <FONT
 COLOR="RED"
 >array_v_unsplit</FONT
->:
+> の型にエンコードできます:
 
 </P
 ><DIV
@@ -294,21 +287,20 @@ array_v_unsplit
 ></P
 ></DIV
 ><P
->&#13;With <FONT
+>&#13;<FONT
 COLOR="RED"
 >array_v_split</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >array_v_unsplit</FONT
->, we can
-readily give implementations of <FONT
+> を使って、
+O(1) 時間の <FONT
 COLOR="RED"
 >arrget</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrset</FONT
->
-that are O(1)-time:
+> をたやすく実装することができます:
 
 </P
 ><DIV
@@ -344,32 +336,31 @@ arrset{l}{n,i}
 ></P
 ></DIV
 ><P
->&#13;Of course, the proof functions <FONT
+>&#13;もちろん、証明関数 <FONT
 COLOR="RED"
 >array_v_split</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >array_v_split</FONT
-> are still to be implemented, which I will do when
-covering the topic of view-change.
+> はまだ実装されていません。
+これは、view の変更に関するトピックを紹介するときに説明します。
 
 </P
 ><P
->&#13;Given a type T, an address L and a natural number N, a proof of the view
-<FONT
+>&#13;型 T, アドレス L, 自然数 N が与えられた時、
+view <FONT
 COLOR="RED"
 >array_v(T?, L, N)</FONT
-> can be obtained and released by calling the
-functions <FONT
+> の証明は関数 <FONT
 COLOR="RED"
 >malloc</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >free</FONT
->, respectively, which are
-to be explained in details elsewhere. I now give as follows an implemention
-of a function template for array intialization:
+>
+をそれぞれ使って獲得と解放をすることができます。
+これについては別の章で詳細を解説します。
+ここで、次のような配列を初期化する関数テンプレートの実装を見てみましょう:
 
 </P
 ><DIV
@@ -414,38 +405,34 @@ end // end of [array_ptr_tabulate]
 ></P
 ></DIV
 ><P
->&#13;Given a natural number n, the type <FONT
+>&#13;自然数 n が与えられた時、型 <FONT
 COLOR="RED"
 >natLt(n)</FONT
-> is for all natural
-numbers less than n. Given a type T, the function
-<FONT
+> は n より小さい全ての自然数です。
+型 T が与えられた時、関数 <FONT
 COLOR="RED"
 >array_ptr_tabulate&#60;T&#62;</FONT
-> takes a pointer to an uninitialized
-array, the size of the array and a function f that maps each natural number
-less than n to a value of the type T, and it initializes the array with the
-sequence of values of f(0), f(1), ..., and f(n-1). In other words, the
-array stores a tabulation of the given function f after the initialization
-is over.
+> は未初期化配列へのポインタ、
+その配列のサイズ、そして型 T の値に n より小さい自然数それぞれをマップする関数 f を取ります。
+そしてこの関数は配列を f(0), f(1), ..., f(n-1) の値のシーケンスで初期化します。
+言い方をかえると、初期化が終わるとこの配列は与えられた関数 f の表を保存していることになります。
 
 </P
 ><P
->&#13;Given a type T and an integer N, @[T][N] is a built-in type in ATS for N
-consecutive values of the type T. Therefore, the at-view @[T][N]@L for any
-given address L is equivalent to the array-view <FONT
+>&#13;型 T と自然数 N が与えられた時、@[T][N] は ATS のビルトイン型で 型 T の N 個連続した値を表わします。
+したがって、与えられたアドレス L について at-view @[T][N]@L は配列 view <FONT
 COLOR="RED"
->array_v(T, L,
-N)</FONT
->.  By making use of the feature of call-by-reference, we can also
-assign the following interfaces to the previously presented functions
-<FONT
+>array_v(T, L, N)</FONT
+>
+と等価です。
+参照渡しの機能を使えば、以前示した関数 <FONT
 COLOR="RED"
 >arrget</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrset</FONT
->:
+>
+に次のインターフェイスを割り当てることができます:
 
 <DIV
 CLASS="informalexample"
@@ -470,17 +457,17 @@ a:t@ype
 >
 
 
-These interfaces are more concise as they obviate the need to mention
-explicitly where the array argument is located.
+配列引数が配置された場所を明示的に示す必要がないので、これらのインターフェイスはより簡潔です。
 
 </P
 ><P
->&#13;Please find the entirety of the above presented code
+>&#13;上記で紹介したコードの全体は
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/array.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
@@ -528,7 +515,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Disjunctive Views</TD
+>分離 view</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
