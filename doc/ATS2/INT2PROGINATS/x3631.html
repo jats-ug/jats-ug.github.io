@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Proof Functions for View-Changes</TITLE
+>view 変更のための証明関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,38 +75,37 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="view-changes"
->14.5. Proof Functions for View-Changes</A
+>14.5. view 変更のための証明関数</A
 ></H1
 ><P
->&#13;By the phrase <SPAN
+>&#13;<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->view-change</I
+>view 変更 (view-change)</I
 ></SPAN
->, I mean applying a function to
-proofs of a set of views to turn them into proofs of another set of views.
-As this function itself is a proof function, there is no run-time cost
-associated with each view-change. For instance, a proof of the at-view
-int32@L for any address L can be turned into a proof of a tuple of 4
-at-views: int8@L, int8@L+1, int8@L+2 and int8@L+3, where int32 and int8 are
-types for 32-bit and 8-bit integers, respectively. Often more interesting
-view-changes involve recursively defined proof functions, and I present
-several of such cases in the rest of this section.
+> という言いまわしは、関数を一連の view の証明に適用してそれらを別の
+view の証明に変換することを意味しています。
+この関数自身も証明関数なので、view 変更それぞれに関連する実行時のコストはありません。
+例えば、
+どこかのアドレス L について at-view int32@L の証明は4つの at-view: int8@L, int8@L+1, int8@L+2, int8@L+3
+からなるタプルに変化できます。
+このとき int32 と int8 はそれぞれ32ビットと8ビット整数の型です。
+しばしばより興味深い view 変更が証明関数としてそれぞれ定義されています。
+この章の残りではそのようないくつかの例を紹介します。
 
 </P
 ><P
->&#13;When implementing an array subscripting operation of O(1)-time, we need a
-proof function to change the view of one array into the views of two
-adjacently located arrays and another proof function to do precisely the
-opposite. Formally speaking, we need to construct the following two proof
-functions <FONT
+>&#13;配列の添字操作を O(1) 時間で実装するには、1つの配列の view を2つの隣接した配列の view
+に変換する証明関数と、その逆の変換を行なう別の証明関数が必要です。
+形式的に言うと、次の2つの証明関数 <FONT
 COLOR="RED"
 >array_v_split</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >array_v_unsplit</FONT
->:
+>
+をコンストラクトする必要があるのです:
 
 </P
 ><DIV
@@ -138,10 +137,10 @@ array_v_unsplit
 ></P
 ></DIV
 ><P
->&#13;An implementation of <FONT
+>&#13;<FONT
 COLOR="RED"
 >array_v_split</FONT
-> is given as follows:
+> の実装は次のように与えられます:
 
 </P
 ><DIV
@@ -182,23 +181,22 @@ end // end of [array_v_split]
 ></P
 ></DIV
 ><P
->&#13;Note that the keyword <FONT
-COLOR="RED"
->primplement</FONT
-> (instead of
-<FONT
+>&#13;(<FONT
 COLOR="RED"
 >implement</FONT
->) should be used for implementing proof functions.
-Clearly, the proof function <FONT
+> の代わりに) キーワード <FONT
+COLOR="RED"
+>primplement</FONT
+>
+は証明関数の実装に使われることに注意してください。
+明確に、証明関数 <FONT
 COLOR="RED"
 >split</FONT
-> directly encodes a proof
-based on mathematical induction. Following is an implementation of
+> は数学的帰納法を使って証明を直接エンコードしています。
 <FONT
 COLOR="RED"
 >array_v_unsplit</FONT
->:
+> の実装を次に示します:
 
 <DIV
 CLASS="informalexample"
@@ -238,20 +236,18 @@ end // end of [array_v_unsplit]
 >
 
 
-The proof function <FONT
+証明関数 <FONT
 COLOR="RED"
 >unsplit</FONT
-> also directly encodes a proof based on
-mathematical induction.
+> もまた数学的帰納法を用いて証明を直接エンコードしています。
 
 </P
 ><P
->&#13;Let us now see an even more interesting proof function for performing
-view-change.  The interface of the proof function <FONT
+>&#13;ここで view 変更を行なうより興味深い証明関数を見てみましょう。
+証明関数 <FONT
 COLOR="RED"
 >array_v_takeout</FONT
->
-is given as follows:
+> のインターフェイスは次のように与えられます:
 
 </P
 ><DIV
@@ -275,8 +271,7 @@ array_v_takeout
 ></P
 ></DIV
 ><P
->&#13;Note that the following type is for a linear proof function that takes a
-proof of an at-view to return a proof of an array-view:
+>&#13;次の型は、at-view の証明を取り配列 view の証明を返すような線形証明関数を表わすことに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -295,20 +290,19 @@ CLASS="programlisting"
 >
 
 
-As such a function essentially represents an array with one missing cell,
-we may simply say that <FONT
+そのような関数は1つ要素が欠けた配列を本質的に表わし、単純に
+<FONT
 COLOR="RED"
 >array_v_takeout</FONT
-> turns the view of an
-array into an at-view (for one cell) and a view for the rest of the array.
-By making use of <FONT
+> は配列の view を (1つの要素に対する) at-view と配列の残りを表わす view
+に変更すると、表現することができます。
+<FONT
 COLOR="RED"
 >array_v_takeout</FONT
->, we can give another
-implementation of <FONT
+> を使うことで、<FONT
 COLOR="RED"
 >arrget</FONT
->:
+> に別の実装を与えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -336,10 +330,10 @@ arrget{l}{n,i}
 
 </P
 ><P
->&#13;The proof function <FONT
+>&#13;証明関数 <FONT
 COLOR="RED"
 >array_v_takeout</FONT
-> can be implemented as follows:
+> は次のように実装できます:
 </P
 ><DIV
 CLASS="informalexample"
@@ -381,18 +375,16 @@ end // end of [array_v_takeout]
 ></P
 ></DIV
 ><P
->&#13;Note that <FONT
+>&#13;<FONT
 COLOR="RED"
 >llam</FONT
-> is a keyword for forming linear functons.  Once
-a linear function is applied, it is consumed and the resource in it, if not
-reclaimed, moves into the result it returns.
+> は線形関数を作るキーワードであることに注意してください。
+線形関数が適用されるとそれは消費されてその内にリソースを作り、そしてもし未回収ならば、それが返す結果の中に移動します。
 
 </P
 ><P
->&#13;The proof functions presented so far for view-changes are all manipulating
-array-views. The following one is different in this regard as it combines
-two views for singly-linked list segments into one:
+>&#13;これまで示してきた view 変更のための証明関数はは全て配列 view の操作でした。
+次のコードはこれらとは異なり、片方向リストを表わす2つの view を1つに結合するものと考えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -416,21 +408,18 @@ CLASS="programlisting"
 >
 
 
-The type of <FONT
-COLOR="RED"
->slseg_v_unsplit</FONT
-> essentially states that a list
-segment from L1 to L2 that is of length N1 and another list segment from L2
-to L3 that is of length N2 can be thought of as a list segment from L1 to
-L3 that is of length N1+N2. The following implementation of
 <FONT
 COLOR="RED"
 >slseg_v_unsplit</FONT
-> is largely parallel to that of
-<FONT
+> の型は、長さ N1 の L1 から L2 へのリスト片と長さ N2 の L2 から L3
+への別のリスト片は、長さ N1+N2 の L1 から L3 へのリスト片であると考えることができることを本質的に表わしています。
+次の <FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> の実装は <FONT
 COLOR="RED"
 >array_v_unsplit</FONT
->:
+> の実装とおおまかに類似しています:
 
 <DIV
 CLASS="informalexample"
@@ -468,27 +457,27 @@ end // end of [slseg_v_unsplit]
 
 </P
 ><P
->&#13;The reader may find it interesting to give an implementation of
-<FONT
-COLOR="RED"
->slist_ptr_append</FONT
-> by making use of <FONT
+>&#13;興味深くも <FONT
 COLOR="RED"
 >slseg_v_unsplit</FONT
->.
+> を使って <FONT
+COLOR="RED"
+>slist_ptr_append</FONT
+>
+を実装できることに読者は気が付くかもしれえません。
 
 </P
 ><P
->&#13;Please find on-line the files <A
+>&#13;オンラインのファイル <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/array.dats"
 TARGET="_top"
 >array.dats</A
-> and <A
+> と
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/slist.dats"
 TARGET="_top"
 >slist.dats</A
->,
-which contains the code employed for illustration in this section.
+> からこの章で紹介したコードを入手できます。
 
 </P
 ></DIV
