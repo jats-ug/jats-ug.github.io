@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Views for Singly-Linked Lists</TITLE
+>片方向リストの view</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,14 +75,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="singly-linked_lists"
->14.4. Views for Singly-Linked Lists</A
+>14.4. 片方向リストの view</A
 ></H1
 ><P
->&#13;The following dataview <FONT
+>&#13;次の dataview <FONT
 COLOR="RED"
 >slseg_v</FONT
-> captures the notion of a
-singly-linked list segment:
+> は片方向リストの部分の概念を捕捉しています:
+
 <DIV
 CLASS="informalexample"
 ><P
@@ -112,18 +112,17 @@ slseg_v (
 >
 
 
-There are two proof constructors <FONT
-COLOR="RED"
->slseg_v_nil</FONT
-> and
 <FONT
 COLOR="RED"
->slseg_v_cons</FONT
-> associated with <FONT
-COLOR="RED"
 >slseg_v</FONT
->, which are
-assigned the following types:
+> に関連する2つの証明コンストラクタ <FONT
+COLOR="RED"
+>slseg_v_nil</FONT
+> と <FONT
+COLOR="RED"
+>slseg_v_cons</FONT
+>
+があり、それらに割り当てられた型は次のようになります:
 
 </P
 ><DIV
@@ -145,18 +144,17 @@ slseg_v_cons :
 ></P
 ></DIV
 ><P
->&#13;Note that <FONT
+>&#13;<FONT
 COLOR="RED"
 >agz</FONT
-> is a subset sort for addresses that are not null.
-Given a type T, two addresses L1 and L2, and a natural number N, the view
-<FONT
+> は NULL ではないアドレスのサブセット種であることに注意してください。
+型 T, 2つのアドレス L1 と L2, 自然数 N が与えられた時、
+view <FONT
 COLOR="RED"
 >slseg_v(T, L1, L2, N)</FONT
-> is for a singly-linked list segment
-containing N elements of the type T that starts at L1 and finishes at L2.
-In the case where L2 is the null pointer, then the list segment is considered
-a list as is formally defined below:
+> は L1 からはじまり L2 で終わるような型 T の N
+個の要素を含む片方向リストの部分を表わします。
+L2 が NULL ポインタである場合、このリスト部分は次に形式的に定義されるリストと考えられます:
 
 </P
 ><DIV
@@ -176,16 +174,14 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;Given a type T, a pointer pointing to L plus a proof of the view
-<FONT
+>&#13;型 T が与えられた時、L を指すポインタと自然数 N について view <FONT
 COLOR="RED"
 >slist_v(T, L, N)</FONT
-> for some natural number N is essentially the
-same as a pointer to a struct of the following declared type
-<FONT
+> の証明は、
+C言語において次に宣言された構造体型 <FONT
 COLOR="RED"
 >slist_struct</FONT
-> in C:
+> へのポインタと本質的に同じです:
 
 </P
 ><DIV
@@ -207,7 +203,7 @@ struct slist {
 ></P
 ></DIV
 ><P
->&#13;Let us now see a simple example involving singly-linked lists:
+>&#13;ここで片方向リストを使った単純な例を見てみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -249,19 +245,18 @@ end // end of [slist_ptr_length]
 >
 
 
-The function template <FONT
+関数テンプレート <FONT
 COLOR="RED"
 >slist_ptr_length</FONT
-> computes the length of a
-given singly-linked list. Note that the inner function <FONT
+> は与えられた片方向リストの長さを計算します。
+内部の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> is
-tail-recursive. The above implementation of <FONT
+> が末尾再帰であることに注意してください。
+<FONT
 COLOR="RED"
 >slist_ptr_length</FONT
->
-essentially corresponds to the following implementation in C:
+> の上記の実装はC言語における次の実装と本質的に一致します:
 
 </P
 ><DIV
@@ -283,11 +278,10 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;As another example, the following function template
-<FONT
+>&#13;もう一つの例として、次の関数テンプレート <FONT
 COLOR="RED"
 >slist_ptr_reverse</FONT
-> turns a given linked list into its reverse:
+> は与えられた連結リストを逆順にします:
 
 <DIV
 CLASS="informalexample"
@@ -330,16 +324,14 @@ end // end of [slist_ptr_reverse]
 >
 
 
-By translating the tail-recursive function <FONT
+末尾再帰関数 <FONT
 COLOR="RED"
 >loop</FONT
-> into a
-while-loop, we can readily turn the implementation of
-<FONT
+> を while ループに翻訳すれば、ATS における <FONT
 COLOR="RED"
 >slist_ptr_reverse</FONT
-> in ATS into the following implementation in
-C:
+>
+の実装を次のようなC言語の実装にたやすく変換できるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -368,9 +360,9 @@ slist_ptr_reverse (slist_struct *p)
 
 </P
 ><P
->&#13;Let us see yet another example.
-List concatenation is a common operation on lists. This time, we first give
-an implementation of list concatenation in C:
+>&#13;また別の例を見てみましょう。
+様々なリストにおいてリストの連結は共通した操作です。
+ここで、まずはじめにC言語でリストの連結を実装してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -396,30 +388,29 @@ slist_ptr_append
 >
 
 
-The algorithm is straightforward. If <FONT
+素直なアルゴリズムです。
+もし <FONT
 COLOR="RED"
 >p</FONT
-> is null, then
-<FONT
+> が NULL だった場合、<FONT
 COLOR="RED"
 >q</FONT
-> is returned. Otherwise, the last node in the list pointed to
-by <FONT
+> が返されます。
+そうでなければ、はじめに <FONT
 COLOR="RED"
 >p</FONT
-> is first found and its field of the name <FONT
+> で指し示されたリストの最後のノードを見つけて、
+そのノードの <FONT
 COLOR="RED"
 >next</FONT
->
-then replaced with <FONT
+> フィールドは <FONT
 COLOR="RED"
 >q</FONT
->.  This implementation of
-<FONT
+> に置換されます。
+C言語における <FONT
 COLOR="RED"
 >slist_ptr_append</FONT
-> in C can be translated directly into to
-the following one in ATS:
+> のこの実装は、次のような ATS の実装に直接変換できます:
 
 </P
 ><DIV
@@ -474,18 +465,15 @@ end // end of [slist_ptr_append]
 ></P
 ></DIV
 ><P
->&#13;In the above examples, it is evident that the code in ATS is a lot more
-verbose than its counterpart in C. However, the former is also a lot more
-robust than the latter in the following sense: If a minor change is made to
-the code in ATS (e.g., renaming identifiers, reordering function
-arguments), it is most likely that a type-error is to be reported when the
-changed code is typechecked. On the other hand, the same thing cannot be
-said about the code written in C. For instance, the following erroneous
-implementation of <FONT
+>&#13;上記の例では、ATS のコードがC言語の該当するコードよりも冗長であることは明らかです。
+けれども、前者は後者よりも次の点でより堅牢です:
+もし ATS のコードに小さな変更 (例: 識別子の名前変更、関数の引数の並べ替え) を加えた場合、
+変更したコードは型検査されておそらく型エラーが発生します。
+他方、C言語で書かれたコードについては同じことは起きません。
+例えば、次のようなC言語における <FONT
 COLOR="RED"
 >slist_ptr_reverse</FONT
-> in C is certainly
-type-correct:
+> の誤った実装はもちろん正しい型です:
 
 </P
 ><DIV
@@ -515,19 +503,16 @@ slist_ptr_reverse
 ></P
 ></DIV
 ><P
->&#13;I now point out that the dataview <FONT
+>&#13;ここで宣言した dataview <FONT
 COLOR="RED"
 >slseg_v</FONT
-> is declared here in a
-manner that does not address the issue of allocating and freeing list
-nodes, and it is done so for the sake of a less involved presentation. A
-dataview for singly-linked lists that does handle allocation and
-deallocation of list nodes can also be declared in ATS, but there is really
-little need for it as we can declare a dataviewtype for such lists that is
-far more convenient to use.  However, dataviews are fundamentally more
-general and flexible than dataviewtypes, and there are many common data
-structures (e.g. doubly-linked lists) that can only be properly handled
-with dataviews in ATS.
+>
+はリストのノードを確保/解放する問題に対処していないことを指摘しておこうと思います。
+これは複雑な表現を避けることを意図しています。
+確保と解放を扱うような片方向リストの dataview もまた ATS で宣言することができます。
+しかし dataviewtype で宣言することでそのようなリストをより使い易くすることができます。
+けれども、dataview は根本的に dataviewtype よりも一般的で柔軟です。
+多くの一般的なデータ構造 (例: 双方向リスト) は ATS において dataview を用いてのみ適切に取り扱うことができます。
 
 </P
 ></DIV
