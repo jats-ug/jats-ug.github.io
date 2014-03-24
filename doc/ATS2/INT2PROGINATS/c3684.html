@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Dataviewtypes as Linear Datatypes</TITLE
+>線形 datatype としての dataviewtype</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,16 +75,14 @@ CLASS="chapter"
 ><A
 NAME="dataviewtypes"
 ></A
->Chapter 15. Dataviewtypes as Linear Datatypes</H1
+>Chapter 15. 線形 datatype としての dataviewtype</H1
 ><P
->&#13;A dataviewtype can be thought of as a linear version of datatype. To a
-large extent, it is a combination of a datatype and a dataview. This
-programming feature is primarily introduced into ATS for the purpose of
-providing in the setting of manual memory management the kind of
-convenience brought by pattern matching. In a situation where GC must be
-reduced or even completely eliminated, dataviewtypes can often be chosen as
-a replacement for datatypes.  I now present in this chapter some commonly
-encountered dataviewtypes and their uses.
+>&#13;dataviewtype は datatype の線形バージョンとして考えることができます。
+おおざっぱに言うと、dataviewtype は datatype と dataview との組み合わせです。
+このプログラミングの機能は手動でメモリ管理をする状況下でパターンマッチのような利便性を提供することを主な目的として ATS に導入されています。
+GC を削減したり完全に除去しなければならない状況下では、dataviewtype はしばしば datatype
+を置き換えることになります。
+この章ではいくつかの一般的に用いられる dataviewtype とその使い方を紹介します。
 
 </P
 ><DIV
@@ -93,17 +91,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear_optional_values"
->15.1. Linear Optional Values</A
+>15.1. 線形 optional 値</A
 ></H1
 ><P
->&#13;When an optional value is created, the value is most likely to be used
-immediately and then discarded. If such a value is assigned a linear type,
-then the memory allocated for storing it can be efficiently reclaimed.  The
-dataviewtype <FONT
+>&#13;optional 値が生成さると、その値はたいがいすぐに使用され破棄されんます。
+そのような値に線形型が割り当てられているなら、値を保管するために確保されたメモリを効率よく回収することができます。
+線形 optional 値を表わす dataviewtype <FONT
 COLOR="RED"
 >option_vt</FONT
-> for linear optional values is declared as
-follows:
+> は次のように宣言されます:
 
 <DIV
 CLASS="informalexample"
@@ -127,30 +123,29 @@ vtypedef Option_vt (a:t@ype) = [b:bool] option_vt (a, b)
 >
 
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >datavtype</FONT
-> is just the short version of
-<FONT
+> は単に <FONT
 COLOR="RED"
 >dataviewtype</FONT
->.  The introduced dataviewtype
-<FONT
+> の短縮バージョンであることに注意してください。
+導入された dataviewtype <FONT
 COLOR="RED"
 >option_vt</FONT
-> is covariant in its first argument and there are two
-data constructors <FONT
+> は1番目の引数について共変です。
+また関連した2つのデータコンストラクタ <FONT
 COLOR="RED"
 >Some_vt</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >None_vt</FONT
-> associated
-with it. In the following example, <FONT
+> があります。
+次の例では、<FONT
 COLOR="RED"
 >find_rightmost</FONT
-> tries to find
-the rightmost element in a list that satisfies a given predicate:
+> 
+与えられた述語を満たすようなリスト中の最右辺の要素を見つけようとします:
 
 <DIV
 CLASS="informalexample"
@@ -184,30 +179,27 @@ find_rightmost{n:nat} .&#60;n&#62;.
 >
 
 
-Note that the tilde symbol (<FONT
-COLOR="RED"
->~</FONT
->) in front of the pattern
-<FONT
+パターン <FONT
 COLOR="RED"
 >None_vt()</FONT
-> indicates that the memory for the node that matches
-the pattern is freed before the body of the matched clause is evaluated.
-In this case, no memory is actually freed as <FONT
+> の前にあるチルダ記号 (<FONT
+COLOR="RED"
+>~</FONT
+>)
+は、そのパターンにマッチしたノードのためのメモリが、そのマッチ節の本体が評価される前に解放されることを表わすことに注意してください。
+この例では、<FONT
 COLOR="RED"
 >None_vt</FONT
-> is mapped
-to the null pointer.  I will soon give more detailed explanation about
-freeing memory allocated for constructors associated with dataviewtypes.
+> は NULL ポインタにマップされるので、実際にはメモリの解放は起きません。
+dataviewtype に関連するコンストラクタのために確保されたメモリを解放する方法について詳細をすぐに解説します。
 
 </P
 ><P
->&#13;As another example, the following function template
-<FONT
+>&#13;別の例として、次の関数テンプレート <FONT
 COLOR="RED"
 >list_optcons</FONT
-> tries to construct a new list with its head
-element extracted from a given optional value:
+> は与えられた
+optional 値を展開した要素を先頭にした新しいリストをコンストラクトします:
 
 <DIV
 CLASS="informalexample"
@@ -234,26 +226,25 @@ list_optcons
 >
 
 
-The symbol <FONT
+記号 <FONT
 COLOR="RED"
 >bool2int</FONT
-> stands for a built-in static function in
-ATS that maps <FONT
+> は <FONT
 COLOR="RED"
 >true</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >false</FONT
-> to 1 and 0,
-respectively. What is special here is that the first argument of
-<FONT
+> をそれぞれ 1 と 0 に変換する ATS
+におけるビルトインの静的な関数です。
+ここで注目べきなのは、<FONT
 COLOR="RED"
 >list_optcons</FONT
->, which is linear, is consumed after a call to
-<FONT
+> の最初の引数が線形であり、<FONT
 COLOR="RED"
 >list_optcons</FONT
-> returns and the memory it occupies is reclaimed.
+>
+呼び出しが返ると消費され、それが占有していたメモリはは回収されるということです。
 
 </P
 ></DIV
