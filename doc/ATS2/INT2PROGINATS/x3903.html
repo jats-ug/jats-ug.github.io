@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Insertion Sort on Linear Lists</TITLE
+>例: 線形リストの挿入ソート</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,11 +75,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_insertionSort_lin"
->15.4. Example: Insertion Sort on Linear Lists</A
+>15.4. 例: 線形リストの挿入ソート</A
 ></H1
 ><P
->&#13;I present a standard implementation of insertion sort on linear lists in
-this section.  The interface for insertion sort is given as follows:
+>&#13;この章では線形リストの挿入ソートの一般的な実装を紹介します。
+挿入ソートのインターフェイスは次のように与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -102,27 +102,26 @@ a:t@ype
 >
 
 
-Like <FONT
+<FONT
 COLOR="RED"
 >mergeSort</FONT
->, <FONT
+> のように、<FONT
 COLOR="RED"
 >insertionSort</FONT
-> is implemented in a
-manner that makes no use of memory allocation or deallocation.  Given a
-linear list, <FONT
+> の実装はメモリの確保/解放を行ないません。
+線形リストが与えられた時、本質的に <FONT
 COLOR="RED"
 >insertionSort</FONT
-> essentially shuffles the nodes in
-the list to form a sorted list.
+>
+はそのリストのノードを入れ換えてソートされたリストを作ります。
 
 </P
 ><P
->&#13;The following code implements a function <FONT
+>&#13;次のコードは関数 <FONT
 COLOR="RED"
 >insord</FONT
-> that inserts a
-given list-node into a sorted linear list to form another sorted linear list:
+> を実装しています。
+この関数は与えられたリストノードをソート済みの線形リストに挿入して、別のソート済み線形リストを作ります:
 
 <DIV
 CLASS="informalexample"
@@ -180,44 +179,41 @@ a:t@ype
 >
 
 
-The implementation of <FONT
-COLOR="RED"
->insord</FONT
-> is tail-recursive.  The type
-assigned to <FONT
-COLOR="RED"
->insord</FONT
-> indicates that the argument xs0 of
 <FONT
 COLOR="RED"
 >insord</FONT
-> is call-by-reference. If xs0 stores a list of length n
-when <FONT
-COLOR="RED"
->insord</FONT
-> is called, then it stores a list of length n+1 when
+> の実装は末尾再帰です。
 <FONT
 COLOR="RED"
 >insord</FONT
-> returns. The arguments nx0, p1 and p2 are call-by-value,
-and they should be bound to a list-node and the first and second fields in
-the list-node, respectively, when a call to <FONT
+> に割り当てられた型は <FONT
 COLOR="RED"
 >insord</FONT
->
-initiates. The proof arguments pf1 and pf2 are needed so that the pointers
-bound to p1 and p2 can be accessed and updated.
+> の引数 xs0 が参照渡しであることを示しています。
+もし <FONT
+COLOR="RED"
+>insord</FONT
+> が呼び出された時に xs0 が長さ n のリストを保持していたら、
+<FONT
+COLOR="RED"
+>insord</FONT
+> が返る時には xs0 は長さ n+1 のリストを保持していることになります。
+引数 nx0, p1, p2 は値渡しで、<FONT
+COLOR="RED"
+>insord</FONT
+> が呼び出される時それらはそれぞれ
+リストノード, リストノードの1番目のフィールド, 2番目のフィールド に束縛されています。
+p1 と p2 を束縛するポインタにアクセスしたり更新したりするために、証明引数 pf1 と pf2 が必要です。
 
 </P
 ><P
->&#13;The function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >insertionSort</FONT
-> can now be readily
-implemented based <FONT
+> は <FONT
 COLOR="RED"
 >insord</FONT
->:
+> を用いてすぐに実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -263,24 +259,23 @@ end // end of [insertionSort]
 >
 
 
-Clearly, this implementation of <FONT
+明確に、<FONT
 COLOR="RED"
 >insertionSort</FONT
-> is
-tail-recursive.  While insertion sort is of O(n^2)-time complexity, it is
-often more efficient than merge-sort or quick-sort when sorting very short
-lists.  For instance, we may implement <FONT
+> のこの実装は末尾再帰です。
+挿入ソートの時間的計算量は O(n^2)
+ですが、ソートするリストがとても短かい場合にはマージソートやクイックソートよりもしばしばより効率的です。
+例えば、短かいリストについて <FONT
 COLOR="RED"
->msort</FONT
-> (which is called
-by <FONT
+>insertionSort</FONT
+> の効率が有利になるような
+(<FONT
 COLOR="RED"
 >mergeSort</FONT
->) as follows by taking advantage of the efficiency
-of <FONT
+> が呼び出す) <FONT
 COLOR="RED"
->insertionSort</FONT
-> on short lists:
+>msort</FONT
+> を次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -322,23 +317,23 @@ end // end of [msort]
 >
 
 
-Note that the stableness of <FONT
-COLOR="RED"
->mergeSort</FONT
-> is maintained as
 <FONT
 COLOR="RED"
+>mergeSort</FONT
+> と同様に、<FONT
+COLOR="RED"
 >insertionSort</FONT
-> also performs stable sorting.
+> も安定ソートであることに注意してください。
 
 </P
 ><P
->&#13;Please find the entire code in this section plus some additional
-code for testing <A
+>&#13;この章で紹介したコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/insertionSort.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
