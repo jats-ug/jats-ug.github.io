@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Lists</TITLE
+>線形リスト</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,24 +75,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear_lists"
->15.2. Linear Lists</A
+>15.2. 線形リスト</A
 ></H1
 ><P
->&#13;A linear list is essentially the same as a singly-linked list depicted by
-the dataview <FONT
+>&#13;線形リストは dataview <FONT
 COLOR="RED"
 >slist_v</FONT
->. However, memory allocation and
-deallocation of list-nodes not handled previously are handled this time.
-The following declaration introduces a linear datatype <FONT
+> で表現された片方向リストと本質的に同じです。
+けれども、以前の実装ではできなかったリストノードのメモリ確保と解放が可能になります。
+次の宣言は線形 datatype <FONT
 COLOR="RED"
 >list_vt</FONT
->,
-which forms a boxed type (of the sort <FONT
+> を導入しています。
+これは型と整数に適用されると、(<FONT
 COLOR="RED"
 >viewtype</FONT
->) when applied to
-a type and an integer:
+> である) ボックス型を作ります:
 
 <DIV
 CLASS="informalexample"
@@ -116,63 +114,59 @@ list_vt (a:t@ype+, int) =
 >
 
 
-Given a type T and an integer I, <FONT
+型 T と整数 I が与えられた時、<FONT
 COLOR="RED"
 >list_vt(T, I)</FONT
-> is
-for linear lists of length I in which each element is of the type T.
+> は、それぞれの要素が型 T である長さ I
+の線形リストを表わします。
 
 </P
 ><P
->&#13;Assume that a data constructor named <SPAN
+>&#13;ある dataviewtype に関連する <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foo</I
 ></SPAN
-> is associated with a
-dataviewtype.  Then there is a corresponding viewtype construtor of the name
+> という名前のデータコンストラクタあると仮定しましょう。
+すると、n が <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+> のアリティのとき、n+1 個のアドレスを取り viewtype を作るような、一致する
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foo_unfold</I
 ></SPAN
-> that takes n+1 addresses to form a viewtype, where
-n is the arity of <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->foo</I
-></SPAN
->. For instance, there is a viewtype
-constructor <FONT
+> という名前の viewtype コンストラクタがあります。
+例えば、viewtype コンストラクタ <FONT
 COLOR="RED"
 >list_vt_cons_unfold</FONT
-> that takes 3 address L0, L1 and
-L2 to form a viewtype <FONT
+> は3つのアドレス L0, L1, L2
+を取り、viewtype <FONT
 COLOR="RED"
 >list_vt_cons_unfold(L0, L1, L2)</FONT
->. This
-viewtype is for a list-node created by a call to <FONT
+> を作ります。
+この viewtype は、リストノードが L0 に配置されていて、<FONT
 COLOR="RED"
 >list_vt_cons</FONT
->
-such that the node is located at L0 and the two arguments of
-<FONT
+> の2つの引数が L1 と L2
+に配置されているような、<FONT
 COLOR="RED"
 >list_vt_cons</FONT
-> are located at L1 and L2 while the proofs for the
-at-views associated with L1 and L2 are put in the store for currently
-available proofs.
+> を呼び出して作られたリストノードを表わします。
+このとき L1 と L2 に関連する at-view の証明は現在有効な証明として保管されます。
 
 </P
 ><P
->&#13;The following function template <FONT
+>&#13;次の関数テンプレート <FONT
 COLOR="RED"
 >length</FONT
-> computes the length of a
-given linear list:
+> は与えられた線形のリストの長さを計算します:
 
 <DIV
 CLASS="informalexample"
@@ -203,71 +197,68 @@ end // end of [length]
 >
 
 
-The interface of <FONT
-COLOR="RED"
->length</FONT
-> indicates that
 <FONT
 COLOR="RED"
->length&#60;T&#62;</FONT
-> returns an integer equal to I when applied to a
-list of the type <FONT
+>length</FONT
+> インターフェイスは、型 <FONT
 COLOR="RED"
 >list_vt(T, I)</FONT
->, where T and I are a type and an
-integer, respectively. Note that the symbol <FONT
+>
+のリストに適用されると、<FONT
+COLOR="RED"
+>length&#60;T&#62;</FONT
+> が I に等しい整数を返すことを示しています。
+このとき T と I はそれぞれ型と整数です。
+関数引数の型の前にある記号 <FONT
 COLOR="RED"
 >!</FONT
-> in front of the
-type of a function argument indicates that the argument is call-by-value
-and it is preserved after a call to the function. The function
+>
+は、その引数が値渡しで関数呼び出しが完了した後も保持されることに注意してください。
 <FONT
-COLOR="RED"
->loop</FONT
-> inside the body of <FONT
 COLOR="RED"
 >length</FONT
-> is tail-recursive.
-Given a linear list and an integer, <FONT
+> の本体内の関数 <FONT
 COLOR="RED"
 >loop</FONT
-> returns the sum of the
-length of the list and the integer. In the body of <FONT
+> は末尾再帰です。
+線形のリストと整数が与えられた時、<FONT
 COLOR="RED"
 >loop</FONT
->, if
+> はそのリストの長さとその整数の和を返します。
 <FONT
 COLOR="RED"
+>loop</FONT
+> の本体において、もし <FONT
+COLOR="RED"
 >xs</FONT
-> matches the pattern <FONT
+> が パターン <FONT
 COLOR="RED"
 >list_vt_cons(_, xs1)</FONT
->, then
-the name <FONT
+>
+にマッチするなら、名前 <FONT
 COLOR="RED"
 >xs1</FONT
-> is bound to the tail of <FONT
+> は <FONT
 COLOR="RED"
 >xs</FONT
->. Note that
+> の tail に束縛されます。
 <FONT
 COLOR="RED"
 >xs1</FONT
-> is a value (instead of a variable), and it is not allowed
-that <FONT
+> は (変数ではなく) 値であり、<FONT
 COLOR="RED"
 >xs1</FONT
-> be modified into another value (of a different type).
+>
+を違う型の別の値に変更することはできないことに注意してください。
 
 </P
 ><P
->&#13;Suppose that we do want to modify the content stored in a list-node.
-For instance, we may want to double the value of each integer stores in a
-linear integer list. The following code implements a function named
-<FONT
+>&#13;リストノードに保管された中身を修正したくなったとしましょう。
+例えば、線形の整数リストに保管されているそれぞれの整数の値を2倍したいかもしれません。
+次のコードは、このようなことを行なうたに <FONT
 COLOR="RED"
 >list_vt_2x</FONT
-> that does precisely this:
+> という名前の関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -300,78 +291,75 @@ list_vt_2x{n:nat}
 >
 
 
-Given a type T, the notation (<FONT
+型 T が与えられた時、(<FONT
 COLOR="RED"
 >!T &#62;&#62; _</FONT
->) is a shorthand for
-(<FONT
+>) という記法は (<FONT
 COLOR="RED"
 >!T &#62;&#62; T</FONT
->).  Note that the special symbol <FONT
-COLOR="RED"
->@</FONT
-> in
-front of the pattern <FONT
+>) の略です。
+パターン <FONT
 COLOR="RED"
 >list_vt_cons(x, xs1)</FONT
-> means
+> の前にある特殊記号 <FONT
+COLOR="RED"
+>@</FONT
+> は
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >unfolding</I
 ></SPAN
->. If <FONT
+> を意味することに注意してください。
+もし <FONT
 COLOR="RED"
 >xs</FONT
-> matches this pattern, then
+> がこのパターンにマッチした場合、
 <FONT
 COLOR="RED"
 >x</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >xs1</FONT
-> are bound to the pointers pointing to
-some memory locations L1 and L2 where the head and tail of <FONT
+> は、それぞれ <FONT
 COLOR="RED"
 >xs</FONT
->
-are stored, respectively, and the type of <FONT
+> の head と tail が格納された場所 L1 と L2
+を指すポインタに束縛されます。
+そして <FONT
 COLOR="RED"
 >xs</FONT
-> changes into
+> が参照するリストノードの位置を L0 とするために、<FONT
+COLOR="RED"
+>xs</FONT
+> の型は
 <FONT
 COLOR="RED"
 >list_vt_cons_unfold(L0, L1, L2)</FONT
-> for L0 being the location of
-the list-node referred to by <FONT
-COLOR="RED"
->xs</FONT
->.  In the body of the clause
-guarded by the pattern <FONT
+> に変化します。
+パターン <FONT
 COLOR="RED"
 >list_vt_cons(x, xs1)</FONT
->, <FONT
+> によるガード節の本体において、<FONT
 COLOR="RED"
 >x</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >xs1</FONT
-> are treated as variables (which are a form of
-left-value). The special proof function <FONT
+>
+は (左辺値の) 変数として扱われます。
+特別な証明関数 <FONT
 COLOR="RED"
 >fold@</FONT
-> is called on
-<FONT
+> は <FONT
 COLOR="RED"
 >xs</FONT
-> to fold it plus the proofs of at-views attached to L1 and L2
-into a linear list.
+> に対して呼び出され、それを畳み込むと同時に L1 と L2 に付属した at-view の証明を線形リストにします。
 
 </P
 ><P
->&#13;Let us now see an example where linear list-nodes are explicitly freed:
+>&#13;線形リストのノードが正確に解放される例を見てみましょう:
 
 </P
 ><DIV
@@ -399,77 +387,73 @@ a:t@ype
 ></P
 ></DIV
 ><P
->&#13;Given a linear list, the function <FONT
+>&#13;線形リストが与えられた時、関数 <FONT
 COLOR="RED"
 >list_vt_free</FONT
-> frees all the
-nodes in the list. Let us go over the body of <FONT
+> はそのリスト中の全てのノードを解放します。
+<FONT
 COLOR="RED"
 >list_vt_free</FONT
->
-carefully.  If <FONT
+> の本体を注意深く調べてみましょう。
+<FONT
 COLOR="RED"
 >xs</FONT
-> matches the pattern <FONT
+> がパターン <FONT
 COLOR="RED"
->list_vt_cons(x,
-xs1)</FONT
->, then the names <FONT
+>list_vt_cons(x, xs1)</FONT
+> にマッチするなら、
+名前 <FONT
 COLOR="RED"
 >x</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >xs1</FONT
-> are bound to the
-head and tail of <FONT
+> はそれぞれ <FONT
 COLOR="RED"
 >xs</FONT
->, respectively; the special symbol
-<FONT
+> の head と tail に束縛されます;
+パターンの前にある特殊記号 <FONT
 COLOR="RED"
 >~</FONT
-> in front of the pattern indicates that the list-node referred
-to by <FONT
+> は、<FONT
 COLOR="RED"
 >xs</FONT
-> is freed immediately after <FONT
+> がパターンにマッチした後、<FONT
 COLOR="RED"
 >xs</FONT
-> matches the
-pattern.  If <FONT
+>
+で参照されるリストノードが即座に解放されることを意味しています。
+もし <FONT
 COLOR="RED"
 >xs</FONT
-> matches the pattern <FONT
+> がパターン <FONT
 COLOR="RED"
 >list_vt_nil()</FONT
->,
-no bindings are generated; the special symbol <FONT
+> にマッチするなら、束縛は生成されません;
+パターンの前にある特殊記号 <FONT
 COLOR="RED"
 >~</FONT
-> in front of the
-pattern indicates that the list-node referred to by <FONT
+> は <FONT
 COLOR="RED"
 >xs</FONT
-> is
-freed; nothing in this case is actually freed at run-time as
-<FONT
+> で参照されるリストノードが解放されることを示しています;
+この場合 <FONT
 COLOR="RED"
 >list_vt_nil</FONT
-> is mapped to the null pointer.
+> は NULL ポインタにマップされているので、実際に実行時には何も解放されません。
 
 </P
 ><P
->&#13;It is also possible to use the special function <FONT
+>&#13;変数が dataviewtype に関連するコンストラクタで作られたパターンにマッチした後に、線形変数はそのまま残して
+(またはスケルトンとも呼ばれます)
+ノードを明示的に解放するために特殊関数 <FONT
 COLOR="RED"
 >free@</FONT
-> to
-explicitly free a node (also called a skeleton) left in a linear variable
-after the variable matches a pattern formed with a constructor associated
-with some dataviewtype. For instance, the following code gives another
-implementation of <FONT
+> を使うことも可能です。
+例えば、次のコードは <FONT
 COLOR="RED"
 >list_vt_free</FONT
->:
+> の別の実装です:
 
 </P
 ><DIV
@@ -498,22 +482,20 @@ a:t@ype
 ></P
 ></DIV
 ><P
->&#13;As it can be a bit tricky to use <FONT
+>&#13;実際の場面における <FONT
 COLOR="RED"
 >free@</FONT
-> in practice, I present
-more details as follows. First, let us note that the constructors
-<FONT
-COLOR="RED"
->list_vt_nil</FONT
-> and <FONT
-COLOR="RED"
->list_vt_cons</FONT
-> associated with
-<FONT
+> の少し巧妙な使い方として、次に詳しく解説します。
+はじめに <FONT
 COLOR="RED"
 >list_vt</FONT
-> are assigned the following types:
+> に関連するコンストラクタ <FONT
+COLOR="RED"
+>list_vt_nil</FONT
+> と <FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> には次のような型が割り当てられています:
 
 </P
 ><DIV
@@ -534,63 +516,58 @@ list_vt_cons : // two quantifiers
 ></P
 ></DIV
 ><P
->&#13;If <FONT
+>&#13;もし <FONT
 COLOR="RED"
 >free@</FONT
-> is applied to a node of the type
-<FONT
+> が型 <FONT
 COLOR="RED"
 >list_vt_nil()</FONT
->, it needs one static argument, which is a type,
-to instantiate the quantifier in the type of the constructor
+> ノードに適用されたら、コンストラクタ
 <FONT
 COLOR="RED"
 >list_vt_nil</FONT
->. If <FONT
+> の型に量化子をインスタンス化するために、型としての静的引数を1つ必要とします。
+もし <FONT
 COLOR="RED"
 >free@</FONT
-> is applied to a node of the
-type <FONT
+> が型 <FONT
 COLOR="RED"
 >list_vt_cons_unfold(L0, L1, L2)</FONT
->, then it needs two static
-arguments, which are a type and an integer, to instantiate the two
-quantifiers in the type of the constructor <FONT
+> ノードに適用されたら、コンストラクタ
+<FONT
 COLOR="RED"
 >list_vt_cons</FONT
->. In the
-case where the type of <FONT
+> の型に2つの量化子をインスタンス化するために、2つの型と整数の静的引数を必要とします。
+<FONT
 COLOR="RED"
 >xs</FONT
-> is <FONT
+> の型が <FONT
 COLOR="RED"
->list_vt_cons_unfold(L0,
-L1, L2)</FONT
->, typechecking the call <FONT
+>list_vt_cons_unfold(L0, L1, L2)</FONT
+> である場合、
+<FONT
 COLOR="RED"
 >free@{a}{0}(xs)</FONT
-> implicitly
-consumes a proof of the at-view <FONT
+> 呼び出しを型検査すると at-view <FONT
 COLOR="RED"
 >a?@L1</FONT
-> and another proof of the
+> と
 at-view <FONT
 COLOR="RED"
 >list_vt(a, 0)?@L2</FONT
->.  As there is no difference between
-<FONT
+> の証明を暗黙的に消費します。
+どのような T と I においても、<FONT
 COLOR="RED"
 >list_vt(T, 0)?</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >list_vt(T, I)?</FONT
-> for any T and I,
-the static argument 0 is chosen in the code. As a matter of fact, any
-natural number can be used in place of 0 as the second static argument of
-<FONT
+>
+の間に違いがないので、静的引数 0 をこのコードでは使っています。
+実際のところ、どのような自然数も <FONT
 COLOR="RED"
 >free@</FONT
->.
+> の第二静的引数として0の代わりに使うことができます。
 
 </P
 ><DIV
@@ -599,14 +576,13 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="linear-list-reversing"
->15.2.1. Linear List-Reversing</A
+>15.2.1. 線形リストの逆順</A
 ></H2
 ><P
->&#13;The following code implements a function <FONT
+>&#13;次のコードは、与えられた線形リストを逆順にする関数 <FONT
 COLOR="RED"
 >reverse</FONT
-> that turns a
-given linear list into its reverse:
+> を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -649,30 +625,27 @@ end // end of [reverse]
 >
 
 
-The type assigned to <FONT
+<FONT
 COLOR="RED"
 >reverse</FONT
-> indicates that the function
-returns a linear list of the same length as the one it consumes.  Note that
-the inner function <FONT
+> に割り当てられた型は、この関数が線形リストを消費してそれと同じ長さの線形リストを返すことを示しています。
+内部の関数 <FONT
 COLOR="RED"
 >revapp</FONT
-> is tail-recursive.  This
-implementation of linear list-reversing directly corresponds to the one
-presented previously that is based the dataview <FONT
+> は末尾再帰であることに注意してください。
+線形リストの逆順のこの実装は、以前示した dataview <FONT
 COLOR="RED"
 >slseg_v</FONT
-> (for
-singly-linked list segments). Comparing the two implementations, we can see
-that the one based on dataviewtype is significantly simplified at the level
-of types. For instance, there is no explicit mentioning of pointers in the
-types assigned to functions <FONT
+> (これは片方向リストでした)
+を使った実装に直接対応しています。
+これら2つの実装を比較すると、dataviewtype を使った実装は型レベルで著しく単純化されています。
+例えば、関数 <FONT
 COLOR="RED"
 >reverse</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >revapp</FONT
->.
+> に割り当てられた型において、ポインタに関して明示的な言及をしていません。
 
 </P
 ></DIV
@@ -682,14 +655,13 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="linear-list-appending"
->15.2.2. Linear List-Appending</A
+>15.2.2. 線形リストの連結</A
 ></H2
 ><P
->&#13;The following code implements a function <FONT
+>&#13;次のコードは、与えられた2つの線形リストを1つに連結する関数 <FONT
 COLOR="RED"
 >append</FONT
-> that
-concatenates two given linear lists into one:
+> を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -730,59 +702,56 @@ end // end of [append]
 >
 
 
-As the call <FONT
+関数 <FONT
+COLOR="RED"
+>loop</FONT
+> の本体にある <FONT
 COLOR="RED"
 >fold@(xs)</FONT
-> in the body of the function
-<FONT
+> 呼び出しは型検査後に消去されるので、<FONT
 COLOR="RED"
 >loop</FONT
-> is erased after typechecking, <FONT
-COLOR="RED"
->loop</FONT
-> is a
-tail-recursive function.  Therefore, <FONT
+>
+は末尾再帰関数です。
+したがって、スタックオーバーフローの可能性を気にせず、どのような長さのリストに対しても <FONT
 COLOR="RED"
 >append</FONT
-> can be called on
-lists of any length without the concern of possible stack overflow. The
-type for the first argument of <FONT
-COLOR="RED"
->loop</FONT
-> begins with the symbol
+>
+を呼び出すことができます。
 <FONT
 COLOR="RED"
+>loop</FONT
+> の最初の引数の型は記号 <FONT
+COLOR="RED"
 >&#38;</FONT
->, which indicates that this argument is
-call-by-reference. The type of <FONT
+> ではじまっています。
+これはこの引数が参照渡しであることを示しています。
+<FONT
 COLOR="RED"
 >loop</FONT
-> simply means that its first
-argument is changed from a list of length <FONT
+> の型は、1番目の引数が長さ <FONT
 COLOR="RED"
 >m</FONT
-> into a list of
-length <FONT
+> のリストから長さ <FONT
 COLOR="RED"
 >m+n</FONT
-> while its second argument is consumed.
+>
+のリストに変化することを単に意味しています。
+この時、2番目の引数は消費されます。
 
 </P
 ><P
->&#13;This implementation of list append essentially corresponds to the
-one presented previously that is based on the dataview <FONT
+>&#13;リスト連結のこの実装は、以前紹介した dataview <FONT
 COLOR="RED"
 >slseg_v</FONT
->.
-Comparing these two, we can easily see that the above one is much simpler
-and cleaner, demonstrating concretely some advantage of dataviewtypes over
-dataviews.
+> を用いた実装と本質的に一致しています。
+これら2つの比較すると、上記の実装がはるかに単純できれいで、dataview に対する dataviewtype
+の利点を具体的に立証していることがわかるでしょう。
 
 </P
 ><P
->&#13;This is also a good place for me to mention a closely related issue
-involving (functional) list construction and tail-recursion. Following is a
-typical implementation of functioal list concatenation:
+>&#13;これはまた、関数的なリスト連結と末尾再帰に関連する問題について言及する良い機会です。
+次は関数的なリスト連結の典型的な実装です:
 
 <DIV
 CLASS="informalexample"
@@ -810,19 +779,19 @@ a:t@ype
 >
 
 
-Clearly, <FONT
+明確に <FONT
 COLOR="RED"
 >append1</FONT
-> is not tail-recursive, which means that it may
-cause stack overflow at run-time if its first argument is very long (e.g.,
-containing 1 million elements). There is, however, a direct and type-safe
-way in ATS to implement functional list concatenation in a tail-recursive
-manner, thus eliminating the concern of potential stack overflow. For
-instance, the following implementation of <FONT
+> は末尾再帰ではありません。
+つまり、もし1番目の引数がとても長かった (例: 百万個の要素を含むような)
+場合には実行時にスタックオーバーフローを引き起こす可能性があります。
+けれども、関数的なリスト連結を末尾再帰的に実装するために、ATS では直接的かつ化安全な方法があります。
+スタックオーバーフローの可能性を取り除くことができます。
+例えば、
+次のような <FONT
 COLOR="RED"
 >append2</FONT
-> returns the
-concatenation of two given functional lists while being tail-recursive:
+> の実装は与えられた関数的な2つのリストを、末尾再帰的に連結して返します:
 
 <DIV
 CLASS="informalexample"
@@ -874,60 +843,57 @@ end // end of [append2]
 >
 
 
-During typechecking, the expression <FONT
+型検査の間では、アドレス L0, L1, L2 について、式 <FONT
 COLOR="RED"
 >list_cons{a}{0}(x, _)</FONT
-> is
-assigned the (linear) type <FONT
+> には線形型
+<FONT
 COLOR="RED"
 >list_cons(L0, L1, L2)</FONT
-> for some
-addresses L0, L1 and L2 while a proof of the at-view <FONT
+> が割り当てられています。
+このとき、at-view <FONT
 COLOR="RED"
 >a@L1</FONT
-> and
-another proof of the at-view <FONT
+> と at-view <FONT
 COLOR="RED"
 >list(a, 0)?@L2</FONT
-> are put into the
-store for currently available proofs. Note that the special symbol
-<FONT
+> の証明が現在有効な証明として保存されます。
+特殊記号 <FONT
 COLOR="RED"
 >_</FONT
-> simply indicates that the tail of the newly constructed list
-is uninitialized. A partially initialized list of the type
-<FONT
+> は単に、新しくコンストラクトされたリストの tail
+が未初期化であることを示すことに注意してください。
+型 <FONT
 COLOR="RED"
 >list_cons(L0, L1, L2)</FONT
-> is guaranteed to match the pattern
-<FONT
+> の部分的に初期化されたリストはパターン <FONT
 COLOR="RED"
 >list_cons(_, res1)</FONT
->, yielding a binding between <FONT
+>
+にマッチすることが保証されます。
+この時、<FONT
 COLOR="RED"
 >res1</FONT
->
-and the pointer pointing to L2 where the (possibly uninitialized) tail of
-the list is stored. When <FONT
-COLOR="RED"
->fold@</FONT
-> is called on a variable of the
-type <FONT
+> と当該リストの (未初期化の可能性がある) tail を格納した L2
+を指すポインタの間に束縛ができます。
+T と N がそれぞれ型と整数であるとき、型 <FONT
 COLOR="RED"
 >list_cons(L0, L1, L2)</FONT
->, it changes the type of the variable
-to <FONT
+> の変数に <FONT
+COLOR="RED"
+>fold@</FONT
+>
+が呼び出されると、それは <FONT
 COLOR="RED"
 >list(T, N+1)</FONT
-> by consuming a proof of the at-view
-<FONT
+> 型に変化します。
+この時、at-view <FONT
 COLOR="RED"
 >T@L1</FONT
-> and another proof of the at-view <FONT
+> と at-view <FONT
 COLOR="RED"
->list(T,
-N)@L2</FONT
->, where T and N are a type and an integer, respectively.
+>list(T, N)@L2</FONT
+> の証明が消費されます。
 
 </P
 ></DIV
@@ -937,15 +903,14 @@ CLASS="sect2"
 CLASS="sect2"
 ><A
 NAME="linear-list-summary"
->15.2.3. Summary</A
+>15.2.3. 要約</A
 ></H2
 ><P
->&#13;With dataviewtypes, we can largely retain the convenience of pattern
-matching associated with datatypes while supporting explicit memory
-management.  Compared to dataviews, dataviewtypes are less
-general. However, if a dataviewtype can be employed to solve a problem,
-then the solution is often significantly simpler and cleaner than an
-alternative dataview-based one.
+>&#13;datatype に関連付けれられているパターンマッチの利便性を、dataviewtype
+を用いて明示的なメモリ管理をサポートする際にも享受することができました。
+dataview と比較すると dataviewtype は一般的ではありません。
+けれども、もし dataviewtype を用いて問題を解決できれば、
+その解決策は dataview を用いた時よりしばしばきわめて単純できれいになります。
 
 </P
 ></DIV
