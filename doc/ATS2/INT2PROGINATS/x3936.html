@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Quick-Sort on Linear Lists</TITLE
+>例: 線形リストのクイックソート</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,13 +75,12 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_quickSort_lin"
->15.5. Example: Quick-Sort on Linear Lists</A
+>15.5. 例: 線形リストのクイックソート</A
 ></H1
 ><P
->&#13;In this section, I give an implementation of quick-sort on linear
-lists. While list-based quick-sort may not be a preferred sorting method in
-practice, its implementation is nonetheless interesting.
-The interface for quick-sort is given as follows:
+>&#13;この章では、線形リストのクイックソートの実装を紹介します。
+リストを用いたクイックソートは実際には望ましいソート方法ではありませんが、にもかかわらずその実装は興味深いものです。
+クイックソートのインターフェイスは次のように与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -101,26 +100,25 @@ quickSort{n:nat} (xs: list_vt (a, n), cmp: cmp a): list_vt (a, n)
 >
 
 
-Like the implementation of <FONT
-COLOR="RED"
->mergeSort</FONT
-> and
 <FONT
 COLOR="RED"
+>mergeSort</FONT
+> と <FONT
+COLOR="RED"
 >insertionSort</FONT
->, the implementation of <FONT
+> の実装のように、
+次のように与えられた <FONT
 COLOR="RED"
 >quickSort</FONT
->
-given as follows makes no use of memory allocation and deallocation.
+> の実装はメモリの確保/解放を行ないません。
 
 </P
 ><P
->&#13;The following code implements a function <FONT
+>&#13;次のコードは関数 <FONT
 COLOR="RED"
 >takeout_node_at</FONT
-> that
-takes out a node from a linear list at a given position:
+> を実装しています。
+この関数は線形リストから与えられた位置のノードを取り出します:
 
 <DIV
 CLASS="informalexample"
@@ -161,68 +159,66 @@ end // end of [if]
 >
 
 
-Assume that a data constructor named <SPAN
+dataviewtype に関連する <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foo</I
 ></SPAN
-> is associated with a
-dataviewtype.  Then there is a corresponding viewtype construtor of the
-name <SPAN
+> という名前のデータコンストラクタを仮定します。
+すると n が <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+> のアリティの時、n 個の型を取って viewtype を作るような対応する
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foo_pstruct</I
 ></SPAN
-> that takes n types to form a viewtype, where
-n is the arity of <SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->foo</I
-></SPAN
->. For instance, there is a viewtype
-constructor <FONT
+> という名前の viewtype コンストラクタが存在します。
+例えば、2つの型 T1 と T2 を取って viewtype <FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+> を作るような
+viewtype コンストラクタ <FONT
 COLOR="RED"
 >list_vt_cons_pstruct</FONT
-> that takes 2 types T1 and T2
-to form a viewtype <FONT
-COLOR="RED"
->list_vt_cons_pstruct(T1, T2)</FONT
->. This viewtype
-is for a list-node created by a call to <FONT
+> が存在することになります。
+この viewtype は、<FONT
 COLOR="RED"
 >list_vt_cons</FONT
-> such that
-the two arguments of <FONT
+> の2つの引数の型が T1 と T2 であるような、<FONT
 COLOR="RED"
 >list_vt_cons</FONT
-> are of types T1 and T2.
-Essentially, <FONT
-COLOR="RED"
->list_vt_cons_pstruct(T1, T2)</FONT
-> stands for
-<FONT
-COLOR="RED"
->list_vt_cons_unfold(L0, L1, L2)</FONT
-> for some addresses L0, L1 and
-L2 plus two views <FONT
+>
+呼び出しによって生成されるリストノードを表わします。
+アドレス L0, L1, L2 と2つの view <FONT
 COLOR="RED"
 >T1@L1</FONT
-> and <FONT
+>, <FONT
 COLOR="RED"
 >T2@L2</FONT
->.
+>
+について、<FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+> は <FONT
+COLOR="RED"
+>list_vt_cons_unfold(L0, L1, L2)</FONT
+>
+を本質的に表わしています。
 
 </P
 ><P
->&#13;A key step in quick-sort lies in partitioning a linear list based on a
-given pivot. This step is fulfilled by the following code that implements a
-function template named <FONT
+>&#13;クイックソートの鍵となるステップは、与えられたピボットを元に線形リストを分割することです。
+このステップは、<FONT
 COLOR="RED"
 >partition</FONT
->:
+> という名前の関数テンプレートを実装している次のコードで実行されます:
 
 <DIV
 CLASS="informalexample"
@@ -271,32 +267,29 @@ a:t@ype
 >
 
 
-The implementation of <FONT
+<FONT
 COLOR="RED"
 >partition</FONT
-> is tail-recursive.  Given a
-linear list and a pivot, <FONT
+> の実装は末尾再帰です。
+線形リストとピボットが与えられた時、<FONT
 COLOR="RED"
 >partition</FONT
-> returns a tuple (r1, res1,
-res2) such that res1 contains every element in the list that is less than
-or equal to the pivot, res2 contains the rest, and r1 is the length of
-res1. The way in which the nodes of the given linear list are moved into
-res1 and res2 is quite an interesting aspect of this implementation.
+> はタプル (r1, res1, res2) を返します。
+このとき res1 はリスト中でピボット以下の全ての要素を含み、res2 はその残りを含み、r1 は res1 の長さになります。
+与えらえた線形リストのノードを res1 と res2 に移動させる方法は、この実装の大変興味深い側面です。
 
 </P
 ><P
->&#13;By making use of <FONT
+>&#13;<FONT
 COLOR="RED"
 >takeout_node_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >partition</FONT
->,
-we can readily implement <FONT
+> を使って、次のような <FONT
 COLOR="RED"
 >quickSort</FONT
-> as follows:
+> をすぐに実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -343,20 +336,20 @@ end // end of [quickSort]
 >
 
 
-Note that the pivot for each round is taken from the middle of the list
-being sorted, which can be time-consuming as taking out a node from the
-middle of a list is O(n)-time. This issue can be addressed by always
-choosing the first element to be the pivot. However, doing so can
-often lead to degenerated O(n^2)-time performance of quick-sort in practice.
+それぞれの分割におけるピボットはソートされるリストの真ん中に取っていることに注意してください。
+リストの真ん中からノードを取り出す時間的計算量は O(n) です。
+この問題は最初の要素をピボットとしていつも選ぶことによって解決できます。
+けれどもそうすると、実際のクイックソートの効率は結果としてしばしば O(n^2) に悪化してしまいます。
 
 </P
 ><P
->&#13;Please find the entire code in this section plus some additional
-code for testing <A
+>&#13;この章のコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/quickSort.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
