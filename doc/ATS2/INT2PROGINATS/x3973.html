@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Binary Search Trees</TITLE
+>線形2分探索木</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,36 +75,29 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear_binary_search_trees"
->15.6. Linear Binary Search Trees</A
+>15.6. 線形2分探索木</A
 ></H1
 ><P
->&#13;A binary search tree with respect to a given ordering is a binary tree such
-that the value stored in each node inside the tree is greater than or equal
-to those stored in the left child of the node and less than or equal to
-those stored in the right child of the node.  Binary search trees are a
-common data structure for implementing finite maps.
+>&#13;与えられた順序に対する2分探索木は二分木です。
+この木の中のそれぞれのノードに保管されている値は、そのノードの左の子以上でかつ右の子以下になっています。
+2分探索木は連想配列を実装するのに一般的なデータ構造です。
 
 </P
 ><P
->&#13;A family of binary
-trees are said to be balanced if there is a fixed constant C (for the
-entire family) such that the ratio between the length of a longest path and
-the length of a shortest path is bounded by C for every tree in the
-family. For instance, common examples of balanced binary trees include AVL
-trees and red-black trees. Finite maps based on balanced binary search
-trees support guaranteed log-time insertion and deletion operations, that
-is, the time to complete such an operation is O(log(n)) in the worst case,
-where n is the size of the map.
+>&#13;二分木の最長と最短の高さの比がどの木においても定数 C の範囲におさまるとき、この二分木は平衡木であると呼ばれます。
+例えば、平衡2分探索木の一般的な例としてはAVL木や赤黒木があります。
+平衡2分探索木を用いた連想配列は log 時間で挿入/削除操作ができることを保証します。
+すなわち、n が連想配列のサイズであるとき、そのような操作を完了するのにかかる時間は最悪でも O(log(n))
+になります。
 
 </P
 ><P
->&#13;In this section, I am to implement several basic operations on linear
-binary search trees, further illustrating some use of dataviewtypes. Let us
-first declare as follows a dataviewtype <FONT
+>&#13;この章では、線形2分探索木に対するいくつかの基本的な操作を実装します。
+さらにその後 dataviewtype を使った実装を紹介します。
+はじめに、線形2分探索木のために次の dataviewtype <FONT
 COLOR="RED"
 >bstree_vt</FONT
-> for linear
-binary (search) trees:
+> を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -130,32 +123,29 @@ bstree_vt (a:t@ype+, int) =
 
 </P
 ><P
->&#13;Note that the integer index of <FONT
+>&#13;<FONT
 COLOR="RED"
 >bstree_vt</FONT
-> captures the size
-information of a binary (search) tree.  There are two constructors
+> の整数インデックスは、2分探索木のサイズ情報を捕捉していることに注意してください。
 <FONT
+COLOR="RED"
+>bstree_vt</FONT
+> に関連する2つのコンストラクタ <FONT
 COLOR="RED"
 >bstree_vt_cons</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >bstree_vt_nil</FONT
-> associated with
-<FONT
-COLOR="RED"
->bstree_vt</FONT
->. It should be pointed out that the tree created by
+>
+があります。
 <FONT
 COLOR="RED"
 >bstree_vt_nil</FONT
-> is empty and thus not a leaf, which on the other
-hand is a node whose left and right children are both empty.  As a simple
-example, the following function template <FONT
+> によって生成された木は空で葉を持たず、他方ではノードは左と右の子が両方とも空であることは指摘すべきでしょう。
+簡単な例として、次の関数テンプレート <FONT
 COLOR="RED"
 >size</FONT
-> computes the size
-of a given tree:
+> は与えられた木のサイズを計算します:
 
 <DIV
 CLASS="informalexample"
@@ -186,15 +176,13 @@ a:t@ype
 
 </P
 ><P
->&#13;Assume that we have a binary search tree with repect to some ordering.  If
-a predicate P on the elements stored in the tree possesses the property
-that P(x1) implies P(x2) whenever x1 is less than x2 (according to the
-ordering), then we can locate the least element in the tree that satisfies
-the predicate P by employing so-called binary search as is demonstrated in
-the following implementation of <FONT
+>&#13;なんらかの順序による2分探索木を持っていると仮定します。
+もし木に保管されている要素について x1 が x2 より (順序によると) 小さいなら P(x1) が P(x2)
+を含むような性質を持つ述語 P があるとすると、次の <FONT
 COLOR="RED"
 >search</FONT
->:
+>
+の実装によって示されるような2分探索によって呼び出される述語 P を満たす木の最小の要素の場所を見つけることができます:
 
 <DIV
 CLASS="informalexample"
@@ -235,26 +223,24 @@ a:t@ype
 >
 
 
-Clearly, if the argument <FONT
+もし <FONT
+COLOR="RED"
+>search</FONT
+> の引数 <FONT
 COLOR="RED"
 >t</FONT
-> of <FONT
-COLOR="RED"
->search</FONT
-> ranges over a
-family of balanced trees, then the time-complexity of <FONT
-COLOR="RED"
->search</FONT
-> is
-O(log(n)) (assuming that <FONT
+> が平衡木の一種であるなら、<FONT
 COLOR="RED"
 >P</FONT
-> is O(1)).
+> の時間的計算量が O(1)
+であると仮定すると <FONT
+COLOR="RED"
+>search</FONT
+> の計算量は O(log(n)) であることは明確です。
 
 </P
 ><P
->&#13;Let us next see some code implementing an operation that inserts a given
-element into a binary search tree:
+>&#13;次に、与えられた要素を2分探索木に挿入する操作を実装してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -299,19 +285,17 @@ a:t@ype
 
 </P
 ><P
->&#13;When inserting an element, the function template <FONT
+>&#13;要素を挿入する時、関数テンプレート <FONT
 COLOR="RED"
 >insert</FONT
-> extends
-the given tree with a new leaf node containing the element, and this form
-of insertion is often referred to as leaf-insertion.  There is another form
-of insertion often referred to as root-insertion, which always puts at the
-root position the new node containing the inserted element. The following
-function template <FONT
+> はその要素を含む新しい葉で与えられた木を拡張します。
+このような挿入方法はしばしば leaf-insertion と呼ばれます。
+別の挿入方法として root-insertion
+としばしば呼ばれる方法があり、これは挿入された要素を含む新しいノードをルートに置きます。
+次の関数テンプレート <FONT
 COLOR="RED"
 >insertRT</FONT
-> is implemented to perform a standard
-root-insertion operation:
+> は一般的な root-insertion 操作を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -362,32 +346,29 @@ a:t@ype
 >
 
 
-The code immediately following the first recursive call to
-<FONT
+1番目の再帰呼び出し <FONT
 COLOR="RED"
 >insertRT</FONT
-> performs a right tree rotation. Let us use T(tl, x,
-tr) for a tree such that its root node contains the element x and its left
-and right children are tl and tr, respectively. Then a right rotation turns
-T(T(tll, xl, tlr), x, tr) into T(tll, xl, T(tlr, x, tr)).  The code
-immediately following the second recursive call to <FONT
+> の直後のコードは木の右回転を行ないます。
+ルートノードが要素 x とその左と右の子としてそれぞれ tl と tr を持つような木として T(tl, x, tr)
+を用いることにしましょう。
+すると T(T(tll, xl, tlr), x, tr) は右回転をすると T(tll, xl, T(tlr, x, tr)) になります。
+2番目の再帰呼び出し <FONT
 COLOR="RED"
 >insertRT</FONT
->
-performs a left tree rotation, which turns T(tl, x, T(trl, xr, trr)) into
-T(T(tl, x, tlr), xr, trr).
+> の直後のコードは木の左回転を行ないます。
+すると T(tl, x, T(trl, xr, trr)) は T(T(tl, x, tlr), xr, trr) になります。
 
 </P
 ><P
->&#13;To further illustrate tree rotations, I present as follows
-two function templates <FONT
+>&#13;さらに木の操作を説明するために、次の2つの関数テンプレート <FONT
 COLOR="RED"
 >lrotate</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >rrotate</FONT
->, which
-implement the left and right tree rotations, respectively:
+> を示します。
+これらはそれぞれ木の左回転と右回転を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -446,36 +427,33 @@ end // end of [rrotate]
 >
 
 
-Given 4 addresses L0, L1, L2 and L3, the type
-<FONT
+4つのアドレス L0, L1, L2, L3 が与えられた時、型 <FONT
 COLOR="RED"
 >bstree_vt_cons_unfold(L0, L1, L2, l3)</FONT
-> is for a tree node
-created by a call to <FONT
+>
+は <FONT
 COLOR="RED"
 >bstree_vt_cons</FONT
-> such that the node is
-located at L0 and the three arguments of <FONT
+> 呼び出しによって生成された木のノードを表わします。
+このとき、そのノードは L0 に配置され、<FONT
 COLOR="RED"
 >bstree_vt_cons</FONT
-> are
-located at L1, L2 and L3, and the proofs for the at-views associated with
-L1, L2 and L3 are put in the store for currently available proofs.
+> の3つの引数は L1, L2, L3 に配置されます。
+そして L1, L2, L3 に関連する at-view の証明が現在有効な証明として保管されます。
 
 </P
 ><P
->&#13;The function template <FONT
+>&#13;これで、root-insertion を行なう関数テンプレート <FONT
 COLOR="RED"
 >insertRT</FONT
-> for root-insertion can now be
-implemented as follows by making direct use of <FONT
-COLOR="RED"
->lrotate</FONT
-> and
+> は
 <FONT
 COLOR="RED"
+>lrotate</FONT
+> と <FONT
+COLOR="RED"
 >rrotate</FONT
->:
+> を直接使って次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -523,28 +501,27 @@ a:t@ype
 
 </P
 ><P
->&#13;I would like to point out that neither <FONT
+>&#13;<FONT
 COLOR="RED"
 >insert</FONT
-> nor
-<FONT
+> も <FONT
 COLOR="RED"
 >insertRT</FONT
-> is tail-recursive. While it is straightforward to give
-the former a tail-recursive implementation, there is no direct way to do
-the same to the latter. In order to implement root-insertion in a
-tail-recursive manner, we are in need of binary search trees with parental
-pointers (so as to allow each node to gain direct access to its parent),
-which can be done with dataviews but not with dataviewtypes.
+> も末尾再帰ではないことを指摘したいと思います。
+前者を末尾再帰実装にすることはできますが、後者について同じことをする直接的な方法はありません。
+root-insertion を末尾再帰的に実装するためには、親ポインタのある二分木が必要になります
+(すなわちそれぞれのノードからその親に直接アクセスできるということです)。
+これは dataview で実現できますが、dataviewtype を使って実現することはできません。
 
 </P
 ><P
->&#13;Please find the entire code in this section plus some additional
-code for testing <A
+>&#13;この章のコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/bstree_vt.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
