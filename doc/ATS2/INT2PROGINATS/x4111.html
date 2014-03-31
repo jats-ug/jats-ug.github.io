@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: An Array-Based Circular Buffer</TITLE
+>例: 配列を用いたリングバッファ</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="抽象 view と viewtype"
 HREF="c4059.html"><LINK
 REL="NEXT"
-TITLE="Memory Allocation and Deallocation"
+TITLE="メモリの確保と解放"
 HREF="x4148.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -75,20 +75,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="array-based-circular-buffer"
->16.2. Example: An Array-Based Circular Buffer</A
+>16.2. 例: 配列を用いたリングバッファ</A
 ></H1
 ><P
->&#13;Array-based circular buffers are of common use in practice. For instance,
-in a typical client/server model, a circular buffer can be employed to hold
-requests issued by multiple clients that are then processed by the server
-according to the first-in-first-out (FIFO) policy. In a case where each
-request needs to be given a priority (chosen from a fixed set), a circular
-buffer can be created for each priority to hold requests of that particular
-priority.
+>&#13;配列を用いたリングバッファは実用でも一般的に使われます。
+例えば、典型的なクライアントサーバモデルにおいて、first-in-first-out (FIFO)
+に従ってサーバが処理するべき複数のクライアントによる要求を保持するためにリングバッファを用いることができます。
+それぞれの要求に (決まった範囲から選択することで) 優先度をつける必要がある場合、
+特定の優先度の要求を保持するためにそれぞれの優先度にリングバッファを生成することができます。
 </P
 ><P
->&#13;Let us declare a linear abstract type (that is, abstract viewtype) as
-follows for values representing circular buffers:
+>&#13;リングバッファを表現する値のために、次のような線形抽象型 (つまり抽象 viewtype) を宣言してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -108,22 +105,19 @@ cbufObj (a:vt@ype+, m:int, n: int) = ptr
 >
 
 
-Such values are considered simple linear objects (as inheritance is not an
-issue to be dealt with in this setting). Given a viewtype VT and two
-integers M and N, the viewtype <FONT
+このような値は (状態を継承によって扱わない) 単純な線形オブジェクトであると考えられます。
+viewtype VT と2つの整数 M と N が与えられた時、viewtype <FONT
 COLOR="RED"
 >cbufObj(VT, M, N)</FONT
-> is for a given
-buffer of maximal capacity M that currently holds N elements of the type
-VT.
+>
+は型 VT の要素を N 個 持つ最大容量 M のバッファを表わします。
 
 </P
 ><P
->&#13;Some properties on the parameters of <FONT
+>&#13;<FONT
 COLOR="RED"
 >cbufObj</FONT
-> can be captured
-by introducing the following proof function:
+> のパラメータの性質のいくつかは、次の証明関数を導入することで捕捉できます:
 
 <DIV
 CLASS="informalexample"
@@ -145,8 +139,7 @@ lemma_cbufObj_param
 >
 
 
-The interface for the following two function templates indicates that they
-can be called to compute the capacity and current size of a buffer:
+次の2つの関数テンプレートのインターフェイスは、それらが容量とバッファの現在のサイズを算出するために呼び出されることを示しています:
 
 <DIV
 CLASS="informalexample"
@@ -173,17 +166,15 @@ cbufObj_get_size
 
 </P
 ><P
->&#13;While it is straightforward to use <FONT
+>&#13;現在のバッファが空か満杯であるかを判定するのに <FONT
 COLOR="RED"
 >cbufObj_get_cap</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >cbufObj_get_size</FONT
-> to tell whether a buffer is currently empty or
-full, a direct approach is likely to be more efficient. The following two
-function templates check for the emptiness and fullness of a given circular
-buffer:
+>
+を単純に使うこともできますが、直接的なアプローチがより効率的です。
+次の2つの関数テンプレートは、与えられたリングバッファが空であるか満杯であるかを判定します:
 
 <DIV
 CLASS="informalexample"
@@ -212,14 +203,14 @@ cbufObj_is_full
 
 </P
 ><P
->&#13;The functions for creating and destroying circular buffers are named
-<FONT
+>&#13;リングバッファの生成と解放を行なう関数はそれぞれ <FONT
 COLOR="RED"
 >cbufObj_new</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >cbufObj_free</FONT
->, respectively:
+>
+という名前です:
 
 <DIV
 CLASS="informalexample"
@@ -243,10 +234,10 @@ fun cbufObj_free
 >
 
 
-Note that a buffer can be freed only if it contains no elements as
-an element (of some viewtype) may contain resources. If elements in
-a buffer are of some (non-linear) type, then the following function
-can be called to clear out all the elements stored in the buffer:
+
+バッファがリソースを含む可能性がある (なんらかの viewtype の)
+要素を含まない時に限って、そのバッファを解放できることに注意してください。
+バッファ中の要素がなんらかの線形でない型である場合、次の関数を呼び出してバッファ中に保管されている全ての要素を捨てることができます:
 
 <DIV
 CLASS="informalexample"
@@ -270,9 +261,8 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;The next two functions are for inserting/removing an element into/from a
-given buffer, which are probably the most frequently used operations on
-buffers:
+>&#13;次の2つの関数は、与えられたバッファに対する要素の挿入と削除を行ないます。
+おそらくこれらはバッファに対して最も頻繁に使われる操作でしょう:
 
 <DIV
 CLASS="informalexample"
@@ -305,62 +295,52 @@ cbufObj_remove
 
 </P
 ><P
->&#13;Please find on-line the file
+>&#13;リングバッファの生成/削除/操作の関数インターフェイス全体を含むファイルは
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
 TARGET="_top"
 >circbuf.sats</A
 >
-containing the entirety of the interface for functions creating, destroying
-and manipulating circular buffers.
+から入手できます。
 </P
 ><P
->&#13;There are many simple and practical ways to implement the abstract type
-<FONT
+>&#13;抽象型 <FONT
 COLOR="RED"
 >cbufObj</FONT
-> and the functions declared in
-<A
+> と <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
 TARGET="_top"
 >circbuf.sats</A
->.  In the file
-<A
+>
+で宣言されている関数を実装する簡単で実用的な方法はたくさんあります。
+ファイル <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.dats"
 TARGET="_top"
 >circbuf.dats</A
->, I give an
-implementation that employs four pointers p_beg, p_end, p_frst and p_last
-to represent a circular buffer: p_beg and p_end are the starting and
-finishing addresses of the underline array, respectively, and p_frst and
-p_last are the starting addresses of the occupied and unoccupied segments
-(in the array), respectively. What is special about this implementation is
-its employing a style of programming that deliberately eschews the need for
-proof construction. While code written in this style is not guaranteed to
-be type-safe, the style can nonetheless be of great practical value in a
-setting where constructing formal proofs is deemed too costly a requirement
-to be fully fulfilled. Anyone who tries to give a type-safe implementation
-for the functions declared in <A
+>
+では、リングバッファを表現するのに4つのポインタ p_beg, p_end, p_frst, p_last を用いる実装を与えました:
+p_beg と p_end はそれぞれ下敷にする配列の開始と終了アドレスで、p_frst と p_last はそれぞれ (その配列中の)
+占有している部分と空いている部分の開始アドレスです。
+この実装の特殊な点は、証明の構築を意識的に避けたプログラミングスタイルであることです。
+このスタイルで書かれたコードは型安全が保証されていませんが、正式な証明を構築することが高コストであるような状況下では、このスタイルにも大きな実用上の価値があります。
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
 TARGET="_top"
 >circbuf.sats</A
-> should likely find some genuine appreciation for this
-point.
+>
+で宣言された関数について型安全な実装を得ようと試してみれば、この点において誠実な評価を実感できるはずです。
 
 </P
 ><P
->&#13;In the file <A
+>&#13;ファイル <A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf2.dats"
 TARGET="_top"
 >circbuf2.dats</A
->, I
-give another implementation in which a circular buffer is represented as a
-pointer p_beg plus three integers m, n and f: p_beg points to the starting
-location of the underline array, m is the size of the array (that is, the
-capacity of the buffer), n is the number of elements currently stored in
-the buffer and f is the total number of elements that have so far been
-removed from the buffer. Again, proof construction is delibrately eschewed
-in this implementation.
+> では、ポインタ p_beg
+と3つの整数 m, n, f によってリングバッファを表現する別の実装を与えています:
+p_beg は下敷にする配列の開始位置を指し、m は配列のサイズ (つまりバッファの容量)、n
+はバッファに現在保存されている要素の数、f は今までにバッファから削除された要素の総数です。
+繰り返しますが、この実装でも故意に証明の構築をしていません。
 
 </P
 ></DIV
@@ -422,7 +402,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Memory Allocation and Deallocation</TD
+>メモリの確保と解放</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Memory Allocation and Deallocation</TITLE
+>メモリの確保と解放</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="抽象 view と viewtype"
 HREF="c4059.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: An Array-Based Circular Buffer"
+TITLE="例: 配列を用いたリングバッファ"
 HREF="x4111.html"></HEAD
 ><BODY
 CLASS="sect1"
@@ -68,23 +68,20 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="memory-allocation-deallocation"
->16.3. Memory Allocation and Deallocation</A
+>16.3. メモリの確保と解放</A
 ></H1
 ><P
->&#13;The issue of memory allocation and deallocation is of paramount importance
-in systems programming, where garabage collection (GC) at run-time may not
-even be allowed.  Handling memory management safely and efficiently is a long
-standing problem of great challenge in programming, and its novel solution
-in ATS is firmly rooted in the paradigm of programming with theorem-proving
-(PwTP).
+>&#13;メモリの確保と解放にまつわる問題は、実行時のガベージコレクション (GC)
+が許されないシステムプログラミングにおいて最重要です。
+メモリ管理を安全にかつ効率よく扱うことは、プログラミングの挑戦において長期にわたる未解決問題です。
+そして ATS におけるその新しい解決策は、定理証明によるプログラミング (PwTP) のパラダイムに堅く根差しています。
 
 </P
 ><P
->&#13;The following function <FONT
+>&#13;次の関数 <FONT
 COLOR="RED"
 >malloc_gc</FONT
-> is available in ATS for memory
-allocation:
+> がメモリ確保のために ATS では用意されています:
 
 <DIV
 CLASS="informalexample"
@@ -106,11 +103,10 @@ CLASS="programlisting"
 >
 
 
-The sort <FONT
+種 <FONT
 COLOR="RED"
 >agz</FONT
-> is a subset sort defined for addresses that are not
-null:
+> は NULL でないアドレスとして定義されたサブセット種です:
 
 <DIV
 CLASS="informalexample"
@@ -129,35 +125,33 @@ CLASS="programlisting"
 >
 
 
-Given an integer N, the type <FONT
+整数 N が与えられた時、
+型 <FONT
 COLOR="RED"
 >b0ytes(N)</FONT
-> is a shorthand for
-<FONT
+> は N バイトの未初期化の配列を表わす <FONT
 COLOR="RED"
 >@[byte?][N]</FONT
->, which is for an array of N uninitialized
-bytes. Therefore, the at-view <FONT
+> の略記です
+従って、at-view <FONT
 COLOR="RED"
 >b0ytes(N)@L</FONT
-> is the same as the
-array-view <FONT
+> は L をメモリ位置とすると、配列 view
+<FONT
 COLOR="RED"
 >array_v(byte?, L, N)</FONT
->, where L is a memory location.
-The view constructor <FONT
+> と同じです。
+view コンストラクタ <FONT
 COLOR="RED"
 >mfree_gc_v</FONT
-> is abstract. For a given
-location L, the view <FONT
+> は抽象的です。
+与えられた位置 L について、view <FONT
 COLOR="RED"
 >mfree_gc_v(L)</FONT
-> stands for a form of
-capability that allows allocated memory at location L to be freed (or
-reclaimed) by the following function <FONT
+> は次の関数 <FONT
 COLOR="RED"
 >mfree_gc</FONT
->:
+> によって解放されるべき位置 L に確保したメモリを許可する能力を表わします:
 
 <DIV
 CLASS="informalexample"
@@ -179,24 +173,23 @@ CLASS="programlisting"
 >
 
 
-Note that <FONT
+今まで紹介してきた中では、<FONT
 COLOR="RED"
 >mfree_gc_v(L)</FONT
-> is so far the first form of view we
-have encountered that is not built on top of any at-views.
+> はどのような at-view 上にも構築されていないはじめての
+view の形であることに注意してください。
 
 </P
 ><P
->&#13;In practice, it is rather cumbersome to deal with bytes directly.  The
-function <FONT
+>&#13;実際には、バイト数を直接扱うのはいくぶん面倒です。
+(ある型の) 単一の値を保管するメモリを確保する関数 <FONT
 COLOR="RED"
 >ptr_alloc</FONT
-> is available for allocating memory to store
-a single value (of certain type) and the function <FONT
+> と、そのようなメモリを解放する関数
+<FONT
 COLOR="RED"
 >ptr_free</FONT
-> for
-deallocating such memory:
+> が用意されています:
 
 <DIV
 CLASS="informalexample"
@@ -223,15 +216,14 @@ fun ptr_free
 >
 
 
-In addition, the function <FONT
+さらに、(ある型の) 値の配列を格納するメモリを確保する関数 <FONT
 COLOR="RED"
 >array_ptr_alloc</FONT
-> is for allocating
-memory to store an array of values (of certain type), and the function
-<FONT
+>
+と、そのようなメモリを解放する関数 <FONT
 COLOR="RED"
 >array_ptr_free</FONT
-> is for deallocating such memory:
+> があります:
 
 <DIV
 CLASS="informalexample"
@@ -267,15 +259,14 @@ array_ptr_free
 
 </P
 ><P
->&#13;I now give a realistic and interesting example involving both array
-allocation and deallocation. The following two functions templates
-<FONT
+>&#13;ここで配列の確保と解放の両方を必要とする現実的で興味深い例を紹介します。
+次の2つの関数テンプレート <FONT
 COLOR="RED"
 >msort1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >msort2</FONT
-> perform merge-sort on a given array:
+> は与えられた配列をマージソートします:
 
 <DIV
 CLASS="informalexample"
@@ -308,38 +299,36 @@ a:t@ype
 >
 
 
-It is well-known that merging two sorted segments of a given array requires
-additional space. When <FONT
-COLOR="RED"
->msort1</FONT
-> is called on arrays A and B, the
-array A is the one to be sorted and the array B is some kind of scratch
-area needed to perform merging (of sorted array segments). When a call to
+与えられた配列の2つのソート済み部分をマージするには追加領域が必要になることがよく知られています。
 <FONT
 COLOR="RED"
 >msort1</FONT
-> returns, the sorted version of A is still sotred in
-A. What <FONT
-COLOR="RED"
->msort2</FONT
-> does is similar but the sorted version of A is
-stored in B when a call to <FONT
-COLOR="RED"
->msort2</FONT
-> returns.  As a good exercise,
-I suggest that the interested reader take the effort to give a mutually
-recursive implementation of <FONT
+> が配列 A と B に対して呼び出された時、配列 A はソートされる対象で、配列 B
+は (ソート済みの配列の領域の) マージを行なうのに必要なスクラッチ領域の一種です。
+<FONT
 COLOR="RED"
 >msort1</FONT
-> and <FONT
+> 呼び出しが返ると、A のソートされたバージョンはまだ A に保管されています。
+<FONT
 COLOR="RED"
 >msort2</FONT
->.  An
-implementation of merge-sort based on <FONT
+> が行なうことも同様ですが、<FONT
+COLOR="RED"
+>msort2</FONT
+> 呼び出しが返ると A のソートされたバージョンは
+B に保管されます。
+興味を持った読者には、良い練習問題として <FONT
 COLOR="RED"
 >msort1</FONT
-> can be readily
-given as follows:
+> と <FONT
+COLOR="RED"
+>msort2</FONT
+>
+の相互再帰的な実装をしてみることをおすすめします。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> を用いたマージソートの実装は次のようにたやすく与えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -373,17 +362,17 @@ end // end of [mergeSort]
 >
 
 
-Clearly, an array is first allocated (to be used as a scratch area) and
-then deallocated after it is no longer needed.
+明確に、配列は (スクラッチ領域として使われるために) はじめに確保され、それからもはや使わなくなった後に解放されます。
 
 </P
 ><P
->&#13;The entire implementation of merge-sort on arrays plus some testing code is
-available <A
+>&#13;配列に対するマージソートの実装全体とテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
@@ -427,7 +416,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: An Array-Based Circular Buffer</TD
+>例: 配列を用いたリングバッファ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
