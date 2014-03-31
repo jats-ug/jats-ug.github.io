@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Abstract Views and Viewtypes</TITLE
+>抽象 view と viewtype</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,30 +75,25 @@ CLASS="chapter"
 ><A
 NAME="abstract_views_viewtypes"
 ></A
->Chapter 16. Abstract Views and Viewtypes</H1
+>Chapter 16. 抽象 view と viewtype</H1
 ><P
->&#13;I have so far given a presentation of views that solely focuses on at-views
-and the views built on top of at-views. This is largely due to at-views
-being the form of most widely used views in practice and also being the
-first form of views supported in ATS. However, other forms of views can be
-readily introduced into ATS abstractly. Even in a case where a view can be
-defined based on at-views (or other forms of views), one may still want to
-introduce it as an abstract view (accompanied with certain proof functions
-for performing view-changes). Often what the programmer really needs is to
-figure out <SPAN
+>&#13;今までは、at-view と at-view の上に構築された view にもっぱら注目した view の表現を見てきました。
+at-view が実際にもっとも広く使われる view の形であり、また ATS がサポートした view
+の最初の形であることが、その大きな理由です。
+けれども、抽象的な view の他の形を ATS に導入することができます。
+view を at-view (もしくは view の他の形) を元にして定義できる場合においてさえ、(view
+変更する証明関数をともなう) 抽象 view として導入したいと思うかもしれません。
+しばしばプログラマが本当に必要とすることは、抽象的に定義された view
+とそれらを操作する証明関数が実際に意味をなすかどうか、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->conceptually</I
+>概念的に</I
 ></SPAN
-> whether abstractly defined views and
-proof functions for manipulating them actually make sense. This is a bit
-like arguing whether a function is computable: There is rarely a need, if
-at all, to actually encode the function as a Turing-machine to prove its
-being computable. IMHO, learning proper use of abstract views and abstract
-viewtypes is a necessary step for one to take in order to employ linear
-types effectively in practice to deal with resource-related programming
-issues.
+> 理解することです。
+これは関数が計算可能かどうか根拠を示すことに少し似ています:
+例え、計算可能であることを立証するためにチューリングマシンに関数を実際にエンコードするとしても、まれにその必要があります。
+私見ですが、抽象 view と抽象 viewtype の適切な使い方を学ぶことは、実際にリソースに関連するプログラミングの問題に取り組むために、効果的に線形型を使うのに必要なステップです。
 
 </P
 ><DIV
@@ -107,25 +102,24 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="simple-linear-objects"
->16.1. Simple Linear Objects</A
+>16.1. 単純な線形オブジェクト</A
 ></H1
 ><P
->&#13;Objects in the physical world are conspicuously linear: They cannot be
-created from nothing or simply go vanished by turning into nothing. Thus,
-it is only natural to assign linear types to values that represent physical
-objects. I choose the name <SPAN
+>&#13;物理世界のオブジェクトが線形であることははっきりしています:
+それらは無から生成することはできませんし、単に消し去って無へと帰すこともできません。
+従って、物理オブジェクトを表現する値に線形型を割り当てることは極めて自然です。
+継承をサポートするビルトインの仕組みを含まないようなある種のオブジェクトを表わす線形値を参照するのに、ここでは
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->simple linear object</I
+>単純な線形オブジェクト</I
 ></SPAN
-> here to refer
-to a linear value representing an object of some sort that does not contain
-built-in mechanism for supporting inheritance.
+> という名前を使います。
 </P
 ><P
->&#13;Let us now take a look at a concrete example of simple linear object.
-The following code presents an interface for a timer (that is, stopwatch):
+>&#13;単純な線形オブジェクトの具体的な例を見てみましょう。
+次のコードは、タイマー (つまりストップウォッチです) のインターフェイスを表わしています:
 
 <DIV
 CLASS="informalexample"
@@ -154,11 +148,10 @@ fun timer_reset (x: !timer): void
 >
 
 
-The state of a timer is given the
-record type <FONT
+次に定義されるレコード型 <FONT
 COLOR="RED"
 >timer_struct</FONT
-> defined as follows:
+> によってタイマーの状態が与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -184,18 +177,17 @@ timer_struct = @{
 >
 
 
-The following linear datatype <FONT
+次の線形 datatype <FONT
 COLOR="RED"
 >timer</FONT
->
-is declared for timers, and the abstract type <FONT
+> はタイマーのために宣言され、また抽象型 <FONT
 COLOR="RED"
 >timer_vtype</FONT
->
-is assumed to equal <FONT
+> は
+<FONT
 COLOR="RED"
 >timer</FONT
->:
+> に等しいと見なされています:
 
 <DIV
 CLASS="informalexample"
@@ -221,8 +213,8 @@ assume timer_vtype = timer
 
 </P
 ><P
->&#13;Various functions on timers can now be readily implemented.
-Let us first see the code for creating and freeing timers:
+>&#13;タイマーに関する各種の関数をこれですぐに実装できます。
+はじめにタイマーの生成と解放をするコードを見てみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -264,7 +256,7 @@ timer_free (timer) =
 
 </P
 ><P
->&#13;The function for starting a timer can be implemented as follows:
+>&#13;タイマーを開始する関数は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -294,11 +286,10 @@ end // end of [timer_start]
 >
 
 
-where <FONT
+このとき <FONT
 COLOR="RED"
 >the_current_tick_get</FONT
-> is a function for
-reading the current time (represented as a number of ticks):
+> は (ティックの数として表現される) 現在時間を読む関数です:
 
 <DIV
 CLASS="informalexample"
@@ -319,8 +310,8 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;A timer can be stopped or paused. The function for stopping a timer can be
-implemented as follows:
+>&#13;タイマーは停止したり休止したりすることができます。
+タイマーを停止させる関数は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -356,9 +347,8 @@ end // end of [timer_finish]
 
 </P
 ><P
->A timer can be paused and then resumed.
-The following code implements the functions for pausing and resuming a
-timer:
+>タイマーは休止した後に再開することができます。
+次のコードはタイマーの休止と再開の関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -406,17 +396,14 @@ end // end of [timer_resume]
 >
 
 
-As can be expected, the amount of time between the point
-where a timer is paused and the point where the timer is resumed
-is not counted.
+予想できることですが、タイマーが休止してから再開するまでの時間の総計はカウントされません。
 
 </P
 ><P
->&#13;It is also possible to reset a timer by calling the function
-<FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >timer_reset</FONT
->:
+> を呼び出すことでタイマーをリセットすることもまた可能です:
 
 <DIV
 CLASS="informalexample"
@@ -448,11 +435,11 @@ end // end of [timer_reset]
 
 </P
 ><P
->&#13;In order to read the time accumulated by a timer,
-the function <FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >timer_get_ntick</FONT
-> can be called:
+> を呼び出すことで、
+タイマーにたまった時間を読み出すことができます:
 
 <DIV
 CLASS="informalexample"
@@ -485,15 +472,14 @@ end // end of [timer_get_ntick]
 
 </P
 ><P
->&#13;A straightforward approach to
-implementing <FONT
+>&#13;<FONT
 COLOR="RED"
 >the_current_tick_get</FONT
->
-can be based directly on the function <FONT
+> を実装するわかりやすいアプローチは、関数
+<FONT
 COLOR="RED"
 >clock_gettime</FONT
->:
+> を直接用いることでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -528,27 +514,27 @@ end // end of [local]
 >
 
 
-Note that the library flag <FONT
-COLOR="RED"
->-lrt</FONT
-> may be needed in order to
-have link-time access to <FONT
-COLOR="RED"
->clock_gettime</FONT
-> as the function is in
-<FONT
+リンク時に <FONT
 COLOR="RED"
 >librt</FONT
->.
+> に含まれる関数 <FONT
+COLOR="RED"
+>clock_gettime</FONT
+> にアクセスするために、ライブラリフラグ
+<FONT
+COLOR="RED"
+>-lrt</FONT
+> が必要になることに注意してください。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体とテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/timer.dats"
 TARGET="_top"
->on-line</A
-> the
-entirety of the code presented in this section plus some testing code.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
