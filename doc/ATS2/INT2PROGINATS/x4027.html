@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Transition from Datatypes to Dataviewtypes</TITLE
+>datatype から dataviewtype への翻訳</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,43 +75,36 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="transition_from_datatypes_to_dataviewtypes"
->15.7. Transition from Datatypes to Dataviewtypes</A
+>15.7. datatype から dataviewtype への翻訳</A
 ></H1
 ><P
->&#13;Many programmers are likely to find it a rather involved task to write code
-manipulating values of dataviewtypes. When handling a complex data
-structure, I myself often try to first use a datatype to model the data
-structure and implement some functionalities of the data structure based
-the datatype. I then change the datatype into a corresponding dataviewtype
-and modify the implementation accordingly to make it work with the
-dataviewtype. I now present as follows an implementation of linear
-red-black trees that is directly based on a previous
-<A
+>&#13;多くのプログラマは、dataviewtype の値を操作するコードを書くことを幾分複雑に感じると思います。
+込み入ったデータ構造を扱う時、しばしば私は datatype をはじめに使おうとすることがあります。
+そのデータ構造をモデリングして、datatype を用いてそのデータ構造のいくつかの機能を実装してみるのです。
+それからその datatype を対応する dataviewtype に変換し、dataviewtype として動作するようにその実装を修正します。
+ここでは、以前の <A
 HREF="x2799.html"
 >implementation of functional red-black trees</A
->,
-illustrating concretely a kind of gradual transition from datatypes to
-dataviewtypes that can greatly reduce the level of difficulty one may
-otherwise encounter in an attempt to program with dataviewtypes directly.
+> を元にした線形赤黒木の実装を次に示します。
+これは datatype から dataviewtype への漸進的な翻訳を具体的に説明しています。
+dataviewtype を直接用いてプログラミングしようとする際の難易度を大きく減少させることができるのです。
 
 </P
 ><P
->&#13;The following declaration of dataviewtype <FONT
+>&#13;次の dataviewtype <FONT
 COLOR="RED"
 >rbtree</FONT
-> is identical
-to the previous declaration of datatype <FONT
+> 宣言は以前の datatype <FONT
 COLOR="RED"
 >rbtree</FONT
-> except the
-keyword <FONT
-COLOR="RED"
->datavtype</FONT
-> being now used instead of the keyword
-<FONT
+> 宣言とほぼ一致しています。
+違うのはキーワード <FONT
 COLOR="RED"
 >datatype</FONT
->:
+> の代わりに、キーワード <FONT
+COLOR="RED"
+>datavtype</FONT
+> を使っている点です:
 
 <DIV
 CLASS="informalexample"
@@ -145,12 +138,11 @@ where rbtree0 (a:t@ype, c:int, bh:int) = rbtree (a, c, bh, 0)
 
 </P
 ><P
->&#13;At the first sight, the following function template <FONT
+>&#13;ひと目見たところ、次の関数テンプレート <FONT
 COLOR="RED"
 >insfix_l</FONT
-> is
-greatly more involved that a previous version of the same name (for
-manipulating functional red-black trees):
+> は (関数的な赤黒木の)
+同じ名前の関数よりもはるかに複雑です:
 
 <DIV
 CLASS="informalexample"
@@ -219,34 +211,34 @@ end // end of [insfix_l]
 >
 
 
-However, I would like to point out that the interface for the above
-<FONT
+けれども、上記の <FONT
 COLOR="RED"
 >insfix_l</FONT
-> is a <SPAN
+> のインターフェイスは以前示した <FONT
+COLOR="RED"
+>infix_l</FONT
+> のインターフェイスを
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->direct</I
+>直接</I
 ></SPAN
-> translation of the interface for
-the previous <FONT
+> 翻訳したものだと指摘したいのです。
+別の言い方をすると、以前の実装は回転される木と <FONT
 COLOR="RED"
 >infix_l</FONT
->. In other words, the previously captured
-relation between a tree being rotated and the one obtained from applying
-<FONT
-COLOR="RED"
->infix_l</FONT
-> to it also holds in the setting of linear red-black trees.
-The very same statement can be made about the following function template
-<FONT
+>
+をそれに適用して得られる木との関係を捕捉していました。
+これはまた線形赤黒木でも維持されています。
+次の関数テンプレート <FONT
 COLOR="RED"
 >insfix_r</FONT
->, which is precisely a mirror image of <FONT
+> のようによく似た文を作ることができます。
+これは <FONT
 COLOR="RED"
 >insfix_l</FONT
->:
+> の正確な鏡像になっています:
 
 <DIV
 CLASS="informalexample"
@@ -316,12 +308,11 @@ end // end of [insfix_r]
 
 </P
 ><P
->&#13;As can be expected, the following function template
-<FONT
+>&#13;予想されることですが、本質的に次の関数テンプレート <FONT
 COLOR="RED"
 >rbtree_insert</FONT
-> is essentially a direct translation of the one of
-the same name for inserting an element into a functional red-black tree:
+>
+は、関数的な赤黒木に要素を挿入する同じ名前の実装の直接的な翻訳です:
 
 <DIV
 CLASS="informalexample"
@@ -410,30 +401,26 @@ end // end of [rbtree_insert]
 
 </P
 ><P
->&#13;I literally implemented the above <FONT
+>&#13;私は文字通り以前の関数的な赤黒木の <FONT
 COLOR="RED"
 >rbtree_insert</FONT
-> by making a
-copy of the previous implementation of <FONT
+>
+実装をコピーし、それから型検査を通るように適切に修正して、上記の <FONT
 COLOR="RED"
 >rbtree_insert</FONT
-> for
-functional red-black trees and then properly modifying it to make it pass
-typechecking. Although this process of copying-and-modifying is difficult
-to be described formally, it is fairly straightforward to follow in
-practice as it is almost entirely guided by the error messages received
-during typechecking.
+> を実装しました。
+このコピーして修正する作業は外見的には難しく見えますが、型検査して起きるエラーメッセージに従えばそのほとんどはかなり単純です。
 
 </P
 ><P
->&#13;Please find the entire code in this section plus some additional
-code for testing <A
+>&#13;この章のコード全体と追加のテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/rbtree.dats"
 TARGET="_top"
->on-line</A
->.
-A challenging as well as rewarding exercise is for the reader to implement
-an operation that deletes an element from a given linear red-black tree.
+>オンライン</A
+>
+から入手できます。
+与えられた線形赤黒木から要素を削除する操作を実装することは、読者にとってやりがいのある練習問題でしょう。
 
 </P
 ></DIV
