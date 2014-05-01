@@ -79,10 +79,10 @@ NAME="evaluation-of-recursive-function-calls"
 ></H1
 ><P
 >再帰関数呼び出しの評価は、再帰でない関数呼び出しの評価と比べてもそう難しくはありません。
-<FONT
+フィボナッチ数を計算する関数として <FONT
 COLOR="RED"
 >fib</FONT
-> をフィボナッチ数を計算する関数として次のように定義しましょう:
+> を次のように定義しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -116,8 +116,8 @@ COLOR="RED"
 > と <FONT
 COLOR="RED"
 >2</FONT
-> を束縛してENV0をENV1に拡張し、
-そしてENV1の下で <FONT
+> を束縛して ENV0 を ENV1 に拡張し、
+そして ENV1 の下で <FONT
 COLOR="RED"
 >fib</FONT
 > の本体の評価を開始します;
@@ -125,7 +125,7 @@ COLOR="RED"
 COLOR="RED"
 >fib(n-1) + fib(n-2)</FONT
 > の評価を導きます;
-ENV1の下で <FONT
+ENV1 の下で <FONT
 COLOR="RED"
 >fib(n-1)</FONT
 > と <FONT
@@ -149,7 +149,7 @@ COLOR="RED"
 >1</FONT
 >
 を返すことは理解しやすいでしょう;
-したがってENV0の下で <FONT
+したがって ENV0 の下で <FONT
 COLOR="RED"
 >fib(2)</FONT
 > を評価すると整数値 <FONT
@@ -158,7 +158,7 @@ COLOR="RED"
 > が得られます。
 </P
 ><P
->さらにENV0の下で <FONT
+>さらに ENV0 の下で <FONT
 COLOR="RED"
 >fib(3)</FONT
 > を評価してみましょう;
@@ -168,19 +168,19 @@ COLOR="RED"
 > と <FONT
 COLOR="RED"
 >3</FONT
-> の間に束縛を作りENV0をENV2に拡張した後、
-ENV2の下で <FONT
+> の間に束縛を作り ENV0 を ENV2 に拡張した後、
+ENV2 の下で <FONT
 COLOR="RED"
 >fib</FONT
 > の本体の評価を開始します;
-それからENV2の下で <FONT
+それから ENV2 の下で <FONT
 COLOR="RED"
 >fib(n-1) + fib(n-2)</FONT
 > の評価に辿り着きます;
-ENV2の下で <FONT
+ENV2 の下で <FONT
 COLOR="RED"
 >fib(n-1)</FONT
-> を評価してENV2の下で <FONT
+> を評価して ENV2 の下で <FONT
 COLOR="RED"
 >fib(2)</FONT
 > の評価を導き、結局
@@ -188,10 +188,10 @@ COLOR="RED"
 COLOR="RED"
 >1</FONT
 > を返します;
-ENV2の下で <FONT
+ENV2 の下で <FONT
 COLOR="RED"
 >fib(n-2)</FONT
-> を評価してENV2の下で <FONT
+> を評価して ENV2 の下で <FONT
 COLOR="RED"
 >fib(1)</FONT
 > の評価を導き、結局
@@ -199,7 +199,7 @@ COLOR="RED"
 COLOR="RED"
 >1</FONT
 > を返します;
-したがってENV0の下で <FONT
+したがって ENV0 の下で <FONT
 COLOR="RED"
 >fib(3)</FONT
 > を評価すると(<FONT
