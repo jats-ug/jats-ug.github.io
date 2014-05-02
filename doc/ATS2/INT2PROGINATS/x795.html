@@ -14,7 +14,7 @@ REL="UP"
 TITLE="関数"
 HREF="c413.html"><LINK
 REL="PREVIOUS"
-TITLE="環境の無い (envless) 関数とクロージャ関数"
+TITLE="無環境関数とクロージャ関数"
 HREF="x741.html"><LINK
 REL="NEXT"
 TITLE="例: 二分探索遊び"
@@ -255,12 +255,12 @@ CLASS="programlisting"
 >
 
 
-envless関数とクロージャ関数の差異に慣れていない人にとって、
+無環境関数とクロージャ関数の差異に慣れていない人にとって、
 この一般化が実際には動かないことは少し意外かもしれません。
 その単純な理由は <FONT
 COLOR="RED"
 >ifold</FONT
-> は二番目の引数にenvless関数が渡されることを期待していますが、
+> は二番目の引数に無環境関数が渡されることを期待していますが、
 <FONT
 COLOR="RED"
 >sqrmodsum</FONT
@@ -271,7 +271,7 @@ COLOR="RED"
 COLOR="RED"
 >d</FONT
 >
-を使っているため明らかにenvlessではないことです。
+を使っているため明らかに無環境ではないことです。
 この問題に対処するために、次のような <FONT
 COLOR="RED"
 >ifold</FONT
@@ -381,7 +381,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->環境の無い (envless) 関数とクロージャ関数</TD
+>無環境関数とクロージャ関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
