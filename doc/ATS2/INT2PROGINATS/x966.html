@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->マッチ節とcase式</TITLE
+>マッチ節とケース式</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,31 +75,31 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="matching_clauses_and_case-expressions"
->4.3. マッチ節とcase式</A
+>4.3. マッチ節とケース式</A
 ></H1
 ><P
->パターンpatと式expが与えられた時、 (pat <FONT
+>パターン pat と式 exp が与えられた時、(pat <FONT
 COLOR="RED"
 >=&#62;</FONT
 > exp) はマッチ節です。
-このパターンpatと式expは、ガードとマッチ節の中身と呼ばれます。
+このパターン pat と式 exp は、ガードとマッチ節の中身と呼ばれます。
 </P
 ><P
->&#13;式exp0とマッチ節の列clseqが与えられた時、
-次のようにcase式を作ることができます: (<FONT
+>&#13;式 exp0 とマッチ節の列 clseq が与えられた時、(<FONT
 COLOR="RED"
 >case</FONT
 > exp0 <FONT
 COLOR="RED"
 >of</FONT
-> clseq) 。
-与えられた環境ENV0でcase式を評価すると、
-まずはじめにENV0においてexp0を評価して値を得ます。
-もしこの値がclseq中のどの節のガードにもマッチしない場合、case式の評価は中断されます。
-そうでない場合、この値が節のガードにマッチするようなclseqの最初の節を選びます。
-このマッチによって生成された束縛をENV0に追加した新しい環境ENV1を作り、
-そしてENV1において選んだ節の中身を評価します。
-評価されたcase式の値がこの評価によって得られる値になります。  </P
+> clseq)
+のようにケース式を作ることができます。
+与えられた環境 ENV0 でケース式を評価すると、
+まずはじめに ENV0 において exp0 を評価して値を得ます。
+もしこの値が clseq 中のどの節のガードにもマッチしない場合、ケース式の評価は中断されます。
+そうでない場合、この値が節のガードにマッチするような clseq の最初の節を選びます。
+このマッチによって生成された束縛を ENV0 に追加した新しい環境 ENV1 を作り、
+そして ENV1 において選んだ節の中身を評価します。
+評価されたケース式の値がこの評価によって得られる値になります。  </P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
