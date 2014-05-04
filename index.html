@@ -101,19 +101,26 @@
 		    </header>
 		    <section>
 		      <h2>1. ダウンロード</h2>
-		      <p><a href="http://sourceforge.net/projects/ats2-lang/files/">http://sourceforge.net/projects/ats2-lang/files/</a>
-			から最新バージョンのATS2-Postiatsをダウンロードしてください。</p>
+		      <p><a href="http://sourceforge.net/projects/ats2-lang/files/">http://sourceforge.net/projects/ats2-lang/files/</a> と
+	                <a href="http://sourceforge.net/projects/ats2-lang-contrib/files/">http://sourceforge.net/projects/ats2-lang-contrib/files/</a>
+			から最新バージョンのATS2-PostiatsとATS2-Postiats-contribをダウンロードしてください。</p>
 		    </section>
 		    <section>
 		      <h2>2. インストール</h2>
 		      <p>ダウンロードしたATS2-Postiatsをコンパイルして、/usr/local以下にインストールします。</p>
-<pre><code>$ tar xfz ATS2-Postiats-0.0.4.tgz
-$ cd ATS2-Postiats-0.0.4
+<pre><code>$ tar xf ATS2-Postiats-0.0.7.tgz
+$ cd ATS2-Postiats-0.0.7
 $ ./configure
 $ make
 $ sudo make install
 $ which patscc
 /usr/local/bin/patscc
+</code></pre>
+	              <p>ATS2-PostiatsをインストールしたディレクトリにATS2-Postiats-contribをコピーします。</p>
+<pre><code>$ tar xf ATS2-Postiats-contrib-0.0.7.tgz
+$ cp -r ATS2-Postiats-contrib-0.0.7/contrib /usr/local/lib/ats2-postiats-0.0.7/
+$ export PATSHOME=/usr/local/lib/ats2-postiats-0.0.7
+$ export PATSHOMERELOC=$PATSHOME
 </code></pre>
                     </section>
 		    <section>
