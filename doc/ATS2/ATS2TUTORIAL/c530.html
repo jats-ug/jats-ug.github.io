@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Closure-Functions</TITLE
+>線形クロージャ関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミングチュートリアル"
 HREF="index.html"><LINK
 REL="UP"
 TITLE="高度なチュートリアル"
-HREF="p527.html"><LINK
+HREF="p528.html"><LINK
 REL="PREVIOUS"
 TITLE="高度なチュートリアル"
-HREF="p527.html"><LINK
+HREF="p528.html"><LINK
 REL="NEXT"
 TITLE="Linear Stream-Based Lazy Evaluation"
-HREF="c576.html"></HEAD
+HREF="c577.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="p527.html"
+HREF="p528.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c576.html"
+HREF="c577.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -75,25 +75,22 @@ CLASS="chapter"
 ><A
 NAME="cloptr"
 ></A
->Chapter 14. Linear Closure-Functions</H1
+>Chapter 14. 線形クロージャ関数</H1
 ><P
 >&#13;
-A closure-function is a boxed record that contains a pointer to an envless
-function plus bindings that map certain names in the body of the envless
-function to values. In practice, a function argument of a higher-order
-function is often a closure-function (instead of an envless function). For
-instance, the following higher-order function <FONT
+クロージャ関数はボックス化レコードで、無環境関数へのポインタと、その無環境関数内で使われる名前から値をマップする束縛を含んでいます。
+実際には、高階関数の関数引数はしばしば (無環境関数の代わりに) クロージャ関数です。
+例えば、次の高階関数 <FONT
 COLOR="RED"
 >list_map_cloref</FONT
->
-takes a closure-function as its second argument:
+> はその第2引数としてクロージャ関数を取ります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN533"
+NAME="AEN534"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -110,28 +107,26 @@ a:t@ype}{b:t@ype
 
 </P
 ><P
->&#13;Closure-functions can be linear and non-linear, and linear ones can be
-explicitly freed in a safe manner. The keyword <FONT
+>&#13;クロージャ関数は線形にも非線形にも扱うことができ、線形クロージャ関数は安全な作法で明示的に解放することができます。
+キーワード <FONT
 COLOR="RED"
 >-&#60;cloref&#62;</FONT
->
-is used to form a type for non-linear closure-functions. As a variant of
+> は非線形クロージャ関数の型を作るのに使われます。
 <FONT
 COLOR="RED"
 >list_map_cloref</FONT
->, the following higher-order function
-<FONT
+> の変形として、次の高階関数 <FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> takes a linear closure-function as its second
-argument:
+>
+はその第2引数として線形クロージャ関数を取ります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN539"
+NAME="AEN540"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -146,33 +141,33 @@ a:t@ype}{b:t@ype
 >
 
 
-As can be easily guessed, the keyword <FONT
+容易に推測できることですが、キーワード <FONT
 COLOR="RED"
 >-&#60;cloptr&#62;</FONT
-> is used
-to form a type for linear closure-functions.  Note that the symbol
-<FONT
+>
+は線形クロージャ関数の型を作るのに使われます。
+記号 <FONT
 COLOR="RED"
 >!</FONT
-> indicates that the second argument is still available after
-<FONT
+> は、<FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> returns.
+>
+が返った後でも第2引数がまだ有効であることを示すことに注意してください。
 
 </P
 ><P
->&#13;A typical example making use of <FONT
+>&#13;<FONT
 COLOR="RED"
 >list_map_cloptr</FONT
-> is given as follows:
+> の典型的な使用例はは次のようになります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN546"
+NAME="AEN547"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -194,22 +189,22 @@ val () = cloptr_free ($UNSAFE.cast{cloptr(void)}(f))
 >
 
 
-Note that a linear closure is first created in the body of the function
-<FONT
+線形クロージャは、最初に関数 <FONT
 COLOR="RED"
 >foo</FONT
->, and it is explicitly freed after its use. The function
-<FONT
+>
+の本体で生成されて、使用された後に明示的に解放されていることに注意してください。
+関数 <FONT
 COLOR="RED"
 >cloptr_free</FONT
-> is given the following interface:
+> は次のようなインターフェイスです:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN550"
+NAME="AEN551"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -221,38 +216,35 @@ CLASS="programlisting"
 >
 
 
-where <FONT
+このとき <FONT
 COLOR="RED"
 >cloptr</FONT
-> is abstract. The cast
-<FONT
+> は抽象的です。
+キャスト <FONT
 COLOR="RED"
 >$UNSAFE.cast{cloptr(void)}(f)</FONT
-> can certainly be replaced with
-something safer but it would make programming more curbersome.
+>
+は確かにより安全なものに変更できますが、プログラミングがより面倒になるでしょう。
 
 </P
 ><P
->&#13;There is also some interesting interaction between currying and linear
-closure-functions. In functional programming, currying means turning a
-function taking multiple arguments simutaneously into a corresponding one
-that takes these arguments sequentially. For instance, the function
-<FONT
+>&#13;また、カリー化と線形クロージャ関数の間にはいくつか興味深い相互作用があります。
+関数型プログラミングではカリー化は、複数の引数を同時に取る関数を、それらの引数を連続して取るように変更することを意味します。
+例えば、次のコードの関数 <FONT
 COLOR="RED"
 >acker2</FONT
-> in the following code is a curried version of the
-function <FONT
+> は関数 <FONT
 COLOR="RED"
 >acker</FONT
->, which implements the famous Ackermann function
-(that is recursive but not primitive recursive):
+> のカリー化されたバージョンです。
+この関数は有名な (原始再帰でない再帰である) アッカーマン関数を実装しています:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN557"
+NAME="AEN558"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -273,48 +265,46 @@ fun acker2 (m:int) (n:int): int = acker (m, n)
 >
 
 
-Suppose that we apply <FONT
+<FONT
 COLOR="RED"
 >acker2</FONT
-> to two integers 3 and 4:
+> に2つの整数 3 と 4 を適用したとしましょう:
 <FONT
 COLOR="RED"
 >acker2(3)(4)</FONT
->; the application <FONT
+>;
+適用 <FONT
 COLOR="RED"
 >acker2(3)</FONT
-> evaluates
-to a (non-linear) closure-function; the application of this
-closure-function to 4 evaluates <FONT
+> は (非線形な) クロージャ関数に評価されます;
+このクロージャ関数に 4 を適用すると <FONT
 COLOR="RED"
 >acker(3,4)</FONT
->, which further
-evaluates to the integer 125. Note that the closure-funtion generated from
-evaluating <FONT
+>
+に評価され、さらに評価されて整数 125 になります。
+<FONT
 COLOR="RED"
 >acker2(3)</FONT
-> becomes a heap-allocated value that is no
-longer accessible after the evaluation of <FONT
+> を評価して生成されたクロージャ関数はヒープに確保された値で、<FONT
 COLOR="RED"
 >acker2(3)(4)</FONT
 >
-finishes, and the memory for such a value needs to be reclaimed through
-garbage collection (GC).
+の評価が完了した後ではもはや利用できないことに注意してください。
+そのような値のメモリは GC によって回収される必要があります。
 
 </P
 ><P
->&#13;It is also possible to define a curried version of <FONT
+>&#13;また <FONT
 COLOR="RED"
 >acker</FONT
-> as
-follows:
+> のカリー化されたバージョンを次のように定義することもできます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN567"
+NAME="AEN568"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -326,41 +316,42 @@ CLASS="programlisting"
 >
 
 
-While the evaluation of <FONT
-COLOR="RED"
->acker3(3)(4)</FONT
-> yields the same result as
 <FONT
 COLOR="RED"
+>acker3(3)(4)</FONT
+> の評価は <FONT
+COLOR="RED"
 >acker2(3)(4)</FONT
->, the compiler of ATS (ATS/Postiats) inserts code
-that automatically frees the linear closure-function generated from evaluating
+> と同じ結果になりますが、ATS (ATS/Postiats)
+コンパイラは
+
 <FONT
 COLOR="RED"
 >acker3(3)</FONT
-> after the evaluation of <FONT
+> の評価によって生成された線形クロージャ関数を
+<FONT
 COLOR="RED"
 >acker3(3)(4)</FONT
-> finishes.
+> の評価が完了した後に自動解放するコードを挿入します。
 
 </P
 ><P
->&#13;In ATS1, linear closure-functions play a pivtal role in supporting
-programming with higher-order functions in the absence of GC. Due to
-advanced support for templates in ATS2, the role played by linear
-closure-functions in ATS1 is greatly diminished. However, if
-closure-functions need to be stored in a data structure but GC is
-unavailable or undesirable, then using linear closure-functions can lead to
-a solution that avoids the risk of creating memory leaks.
+>&#13;ATS1 では、GC
+が使えない場面での高階関数利用したプログラミングをサポートするために、線形クロージャ関数は重要な役目を演じます。
+ATS2 は高度なテンプレートをサポートするので、ATS1
+で線形クロージャ関数が演じた役目は非常に弱まりました。
+けれども、もし GC
+が使えないもしくは望まれない場面でクロージャ関数をデータ構造に保存する必要があるのであれば、線形クロージャ関数の利用がメモリリークの危険を避ける解決策になるかもしれません。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコードの全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_cloptr.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -379,7 +370,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="p527.html"
+HREF="p528.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -397,7 +388,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c576.html"
+HREF="c577.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -413,7 +404,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="p527.html"
+HREF="p528.html"
 ACCESSKEY="U"
 >Up</A
 ></TD

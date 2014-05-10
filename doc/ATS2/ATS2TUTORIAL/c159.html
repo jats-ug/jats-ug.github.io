@@ -18,7 +18,7 @@ TITLE="Fixity Declarations"
 HREF="c93.html"><LINK
 REL="NEXT"
 TITLE="References"
-HREF="c193.html"></HEAD
+HREF="c194.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c193.html"
+HREF="c194.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -167,19 +167,26 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >aux</FONT
->. Assume that the last element of xs satisfies the predicate
-pred. Then there are still N-1 call frames for <FONT
+>. Assume that only the last element of xs satisfies the
+predicate pred. Then there are still N-1 call frames for <FONT
 COLOR="RED"
 >aux</FONT
-> on the call
-stack when the rightmost element satisfying pred is found, and these frames
-need to be unwinded one-by-one before the found element can be returned to
-the original call to <FONT
+> on
+the call stack when the rightmost element satisfying pred is found, and
+these frames need to be unwinded <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>one-by-one</I
+></SPAN
+> before the found
+element can be returned to the original call to
+<FONT
 COLOR="RED"
 >list_find_rightmost</FONT
->. This form of
-inefficiency is eliminated in the following exception-based implementation
-of <FONT
+>. This form of inefficiency is eliminated in
+the following exception-based implementation of
+<FONT
 COLOR="RED"
 >list_find_rightmost</FONT
 >:
@@ -189,7 +196,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN175"
+NAME="AEN176"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -338,7 +345,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c193.html"
+HREF="c194.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
