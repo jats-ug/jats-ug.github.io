@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Fixity Declarations</TITLE
+>結合性宣言</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="ATS コード中へのファイルのインクード"
+TITLE="ATS コード中へのファイルのインクルード"
 HREF="c82.html"><LINK
 REL="NEXT"
 TITLE="Exceptions"
@@ -75,100 +75,97 @@ CLASS="chapter"
 ><A
 NAME="fixity"
 ></A
->Chapter 4. Fixity Declarations</H1
+>Chapter 4. 結合性宣言</H1
 ><P
->&#13;Given a function <SPAN
+>&#13;関数 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >f</I
 ></SPAN
->, the standard syntax for applying
-<SPAN
+> が与えられたとき、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >f</I
 ></SPAN
-> to an argument <SPAN
+> を引数 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >v</I
 ></SPAN
-> is <SPAN
+> に適用する標準的な構文は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >f(v)</I
 ></SPAN
->; for two
-arguments <SPAN
+> です;
+2つの引数 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >v1</I
 ></SPAN
-> and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >v2</I
 ></SPAN
->, the syntax is
-<SPAN
+> に適用する構文は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >f(v1, v2)</I
 ></SPAN
->. Also, it is allowed in ATS to use infix notation
-for a binary function application, and prefix/postifix notation for a unary
-function application.
+> です。
+また、引数が2つの関数適用のための中置記法と、引数が1つの関数適用のための前置/後置記法が
+ATS では許されています。
 </P
 ><P
->&#13;Each identifier in ATS can be assigned one of the following fixities:
+>&#13;ATS におけるそれぞれの識別子には次の結合性の内1つを割り当てることができます:
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->prefix</I
+>前置 (prefix)</I
 ></SPAN
 >, <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->infix</I
+>中置 (infix)</I
 ></SPAN
-> and <SPAN
+>, <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->postfix</I
+>後置 (postfix)</I
 ></SPAN
->.  The
-fixity declarations for many commonly used identifiers can be found in
+> です。
+多くの一般に使われる識別子の結合性宣言を
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/fixity.ats"
 TARGET="_top"
 >prelude/fixity.ats</A
->.  Often, the
-name <SPAN
+>
+から見ることができます。
+しばしば、結合性が割り当てられた識別子を <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->operator</I
+>演算子</I
 ></SPAN
-> is used to refer to an identifier that is
-assigned a fixity. For instance, the following syntax declares that
-<FONT
+> と呼びます。
+例えば、次の構文で宣言している <FONT
 COLOR="RED"
 >+</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >-</FONT
-> are infix operators of a precedence value
-equal to 50:
+> は優先順位 50 の中置演算子です:
 
 <DIV
 CLASS="informalexample"
@@ -187,52 +184,47 @@ CLASS="programlisting"
 >
 
 
-After this declaration, we can write an expression like <FONT
+この宣言によって、<FONT
 COLOR="RED"
->1 + 2 -
-3</FONT
->, which is parsed into <FONT
+>1 + 2 - 3</FONT
+> のような式を書くことができます。
+この式は、標準的な関数適用構文の観点から <FONT
 COLOR="RED"
 >-(+(1, 2), 3)</FONT
-> in terms of the
-standard syntax for function application.
+> のように構文解析されます。
 </P
 ><P
->&#13;The keyword <FONT
+>&#13;キーワード <FONT
 COLOR="RED"
 >infixl</FONT
-> indicates that the declared infix operators
-are left-associative. For right-associative and non-associative infix
-operators, please use the keywords <FONT
+> は宣言した中置演算子が左結合であることを示しています。
+右結合と無結合の中置演算子には、それぞれキーワード <FONT
 COLOR="RED"
 >infixr</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >infix</FONT
->, respectively. If the precedence value is omitted in a
-fixity declaration, it is assumed to be equal to 0.
+> を使ってください。
+もし結合性宣言の優先順位を省略した場合、0 であると見做されます。
 </P
 ><P
->&#13;We can also use the following syntax to declare that <FONT
+>&#13;また、<FONT
 COLOR="RED"
 >iadd</FONT
->,
-<FONT
+>, <FONT
 COLOR="RED"
 >fadd</FONT
 >, <FONT
 COLOR="RED"
 >padd</FONT
-> and <FONT
+>, <FONT
 COLOR="RED"
 >uadd</FONT
-> are
-left-associative infix operators with a precedence value equal to that of
-the operator <FONT
+>
+が <FONT
 COLOR="RED"
 >+</FONT
->:
+> 演算子と等しい優先順位を持つ左結合中置演算子であることを宣言するのに次の構文を使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -251,18 +243,16 @@ CLASS="programlisting"
 >
 
 
-This is useful as it is difficult in practice to remember the precedence
-values of (a large collection of) declared operators. Sometimes, we may
-need to specify that the precedence value of one operator in relation to
-that of another one. For instance, the following syntax declares that
-<FONT
+これは数多く宣言された演算子の優先順位を思い出すのが困難な場面で実際に有用です。
+ときには、演算子の優先順位をもう一つの演算子の優先順位と関連を持たせて指定したくなることがあります。
+例えば、次の構文は <FONT
 COLOR="RED"
 >opr2</FONT
-> is a left-associative infix operator and its precedence
-value is that of <FONT
+> が左結合中置演算子で、その優先順位は <FONT
 COLOR="RED"
 >opr1</FONT
-> plus 10:
+>
+の優先順位に 10 加えたものであると宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -281,52 +271,50 @@ CLASS="programlisting"
 >
 
 
-If the plus sign (+) is changed to the minus sign (-), then the precedence
-value of <FONT
+もしプラス記号 (+) をマイナス記号 (-) に変えると、<FONT
 COLOR="RED"
 >opr2</FONT
-> is that of <FONT
+>
+の優先順位は <FONT
 COLOR="RED"
 >opr1</FONT
-> minus 10.
+> の優先順位から 10 減じたものになります。
 </P
 ><P
->&#13;We can also turn an identifier <FONT
+>&#13;また、識別子 <FONT
 COLOR="RED"
 >opr</FONT
-> into a non-associative infix
-operator (of precedence value 0) by putting the backslash symbol
-(<FONT
+> の前にバックスラッシュ記号 (<FONT
 COLOR="RED"
 >\</FONT
->) in front of it. For instance, the expression
-<FONT
+>)
+を付けると、優先順位 0 の無結合中置演算子にすることもできます。
+例えば、式 <FONT
 COLOR="RED"
 >exp1 \opr exp2</FONT
-> stands for <FONT
+> は <FONT
 COLOR="RED"
 >opr (exp1, exp2)</FONT
->,
-where <FONT
+>
+を表わします。
+このとき、<FONT
 COLOR="RED"
 >exp1</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >exp2</FONT
-> refer to some expressions,
-either static or dynamic.
+> はなんらかの静的もしくは動的な式です。
 </P
 ><P
->&#13;The syntax for declaring (unary) prefix and postfix operators are
-similar. For instance, the following syntax declares that <FONT
+>&#13;(引数が1つの) 前置演算子と後置演算子を宣言する構文は同じです。
+例えば、次の構文は <FONT
 COLOR="RED"
 >~</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >?</FONT
-> are prefix and postfix operators of precedence values 61 and 69,
-respectively:
+> をそれぞれ優先順位
+61 の前置演算子と、優先順位 69 の後置演算子として宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -346,8 +334,7 @@ postfix 69 ?
 >
 
 
-As an example, a postfix operator is involved in the following 3-line
-program:
+例として、次の3行プログラムでは後置演算子を使っています:
 
 <DIV
 CLASS="informalexample"
@@ -370,21 +357,22 @@ implement !! (x) = if x &#62;= 2 then x * (x - 2)!! else 1
 
 </P
 ><P
->&#13;For a given occurrence of an operator, we can deprive it of its assigned
-fixity status by simply putting the keyword <FONT
+>&#13;演算子の前にキーワード <FONT
 COLOR="RED"
 >op</FONT
-> in front of
-it. For instance <FONT
+>
+を単純に付けることで、その演算子に割り当てられた結合性設定を無効化することができます。
+例えば、<FONT
 COLOR="RED"
 >1 + 2 - 3</FONT
-> can be writen as <FONT
+> は <FONT
 COLOR="RED"
->op- (op+
-(1, 2), 3)</FONT
->.  It is also possible to (permanently) deprive an operator of
-its assigned fixity status.  For instance, the following syntax does so to
-the operators <FONT
+>op- (op+ (1, 2), 3)</FONT
+> のように書くことができます。
+また、演算子に割り当てられた結合性設定を (永久に)
+無効化することも可能です。
+例えば、次の構文は演算子
+<FONT
 COLOR="RED"
 >iadd</FONT
 >, <FONT
@@ -393,11 +381,11 @@ COLOR="RED"
 >, <FONT
 COLOR="RED"
 >padd</FONT
-> and
-<FONT
+>, <FONT
 COLOR="RED"
 >uadd</FONT
->:
+>
+に対して結合性設定を無効化します:
 
 <DIV
 CLASS="informalexample"
@@ -415,15 +403,14 @@ CLASS="programlisting"
 >
 
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >nonfix</FONT
-> is a keyword in ATS.
+> は ATS のキーワードであることに注意してください。
 
 </P
 ><P
->&#13;Lastly, please note that each fixity declaration is only effective within
-its own legal scope.
+>&#13;最後に、それぞれの結合性宣言はそのスコープ内でのみ効力を持つことに注意してください。
 
 </P
 ></DIV
@@ -471,7 +458,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->ATS コード中へのファイルのインクード</TD
+>ATS コード中へのファイルのインクルード</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
