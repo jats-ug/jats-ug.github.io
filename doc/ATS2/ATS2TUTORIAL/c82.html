@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->File Inclusion inside ATS Code</TITLE
+>ATS コード中へのファイルのインクード</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Filename Extensions"
+TITLE="拡張子"
 HREF="c61.html"><LINK
 REL="NEXT"
 TITLE="Fixity Declarations"
@@ -75,30 +75,29 @@ CLASS="chapter"
 ><A
 NAME="file-inclusion"
 ></A
->Chapter 3. File Inclusion inside ATS Code</H1
+>Chapter 3. ATS コード中へのファイルのインクード</H1
 ><P
->&#13;As is in C, file inclusion inside ATS code is done through the use of the
-directive <SPAN
+>&#13;C言語と同様に、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >#include</I
 ></SPAN
->. For instance, the following line
-indicates that a file named <SPAN
+> を使うことで ATS コード内へファイルをインクルードできます。
+例えば、次の行は <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foobar</I
 ></SPAN
-> is included, that is, this
-line is to be replaced with the content of the file <SPAN
+> という名前のファイルをインクルードしています。
+すなわち、この行はファイル <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foobar</I
 ></SPAN
->:
+> の中身で置き換えられます:
 
 <DIV
 CLASS="informalexample"
@@ -117,28 +116,25 @@ CLASS="programlisting"
 >
 
 
-Note that the included file is parsed according to the syntax for statics
-or dynamics depending on whether the file is included in a static or
-dynamic file.  As a convention, the name of an included file often ends
-with the extension <SPAN
+インクルードされるファイルが静的か動的どちらの構文に従って構文解析されるかは、当該ファイルが静的もしくは動的なファイルにインクルードされるかどうかに依存していることに注意してください。
+慣習として、インクルードされるファイルの名前には拡張子 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.hats</I
 ></SPAN
->.
+> をしばしば付けます。
 </P
 ><P
->&#13;A common use of file inclusion is to keep some constants, flags or
-parameters being defined consistently across a set of files. For instance,
-the file <A
+>&#13;ファイルをインクルードは、ファイル群を横断して首尾一貫して定義されるべき定数やフラグ、パラメータを保持するのに一般に使われます。
+例えば、ファイル <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/params.hats"
 TARGET="_top"
 >prelude/params.hats</A
-> serves
-such a purpose.  File inclusion can also be used to emulate (in a limited
-but rather useful manner) functors supported in languages such as SML and
-OCaml.
+> はこのような目的で使われます。
+また、ファイルのインクルードは SML や OCaml のような言語でサポートされているファンクタを
+(制限はありますがある程度有用な作法として)
+模倣するためにも使われます。
 </P
 ></DIV
 ><DIV
@@ -185,7 +181,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Filename Extensions</TD
+>拡張子</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Filename Extensions</TITLE
+>拡張子</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Syntax-Coloring for ATS code"
+TITLE="ATS コードのシンタックスカラーリング"
 HREF="c39.html"><LINK
 REL="NEXT"
-TITLE="File Inclusion inside ATS Code"
+TITLE="ATS コード中へのファイルのインクード"
 HREF="c82.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,66 +75,66 @@ CLASS="chapter"
 ><A
 NAME="filename-extensions"
 ></A
->Chapter 2. Filename Extensions</H1
+>Chapter 2. 拡張子</H1
 ><P
->&#13;In ATS, the filename extensions <SPAN
+>&#13;ATS では、拡張子 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.sats</I
 ></SPAN
-> and <SPAN
+> と <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.dats</I
 ></SPAN
 >
-are reserved to indicate static and dynamic files, respectively. As these
-two extensions have some special meaning attached to them, which can be
-interpreted by the command <B
+がそれぞれ静的と動的なファイルを表わすために予約されています。
+これら2つの拡張子が付いたファイルは <B
 CLASS="command"
 >atscc</B
->, they should not be replaced
-arbitrarily.
+>
+によって解釈される特別な意味をもっていて、
+それらを任意の拡張子に置き換えてはいけません。
 </P
 ><P
->&#13;A static file may contain sort definitions, datasort declarations, static
-definitions, abstract type declarations, exception declarations, datatype
-declarations, macro definition, interfaces for dynamic values and
-functions, etc.  In terms of functionality, a static file in ATS is
-somewhat similar to a header file (with the extension <SPAN
+>&#13;静的なファイルは次の要素を含みます:
+種 (sort) 定義, データ種 (datasort) 宣言, 静的な定義,
+抽象型 (abstract type) 宣言, 例外宣言, データ型 (datatype) 宣言,
+マクロ定義, 動的な値と関数のインターフェイス, などです。
+機能的な観点では、ATS の静的なファイルは (拡張子 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.h</I
 ></SPAN
->) in C
-or an interface file (with the extension <SPAN
+> を持つ) C言語のヘッダファイルや
+(拡張子 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.mli</I
 ></SPAN
->) in OCaml.
+> を持つ) OCaml のインターフェイスファイルに幾分似ています。
 </P
 ><P
->&#13;A dynamic file may contain everything in a static file. In addition, it may
-also contain defintions for dynamic values and functions. However,
-interfaces for functions and values in a dynamic file should follow the
-keyword <FONT
-COLOR="RED"
->extern</FONT
->, which on the other hand should not be present when
-such interfaces are declared in a static file. For instance, the following
-syntax declares interfaces (or types) in a static file for a value named
+>&#13;動的なファイルは静的なファイルの持ちうる全ての要素を含むことができます。
+さらに、動的な値と関数の定義を含むこともできます。
+けれども、動的なファイルにおける関数と値のインターフェイスにはキーワード
 <FONT
 COLOR="RED"
+>extern</FONT
+> を付ける必要があります。
+一方で、静的なファイルにおいてそのようなインターフェイスを宣言する時にはこのキーワードは不要です。
+例えば、次の構文では静的なファイルにおいて <FONT
+COLOR="RED"
 >pi</FONT
-> and a function named <FONT
+> という名前の値と
+<FONT
 COLOR="RED"
 >area_of_circle</FONT
->:
+> という名前の関数のインターフェイスと型を宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -154,14 +154,14 @@ fun area_of_circle (radius: double): double
 >
 
 
-When the same interfaces are declared in a <SPAN
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->dynamic</I
+>動的な</I
 ></SPAN
-> file, the
-following slighly different syntax should be used:
+>
+ファイルにおいて同じインターフェイスを宣言する際には、次のような少し異なる構文が用いられます:
 
 <DIV
 CLASS="informalexample"
@@ -181,30 +181,28 @@ extern fun area_of_circle (radius: double): double
 >
 
 
-Please note that a static file is essentially a special case of a dynamic
-file. It is entirely possible to replace a static file with a dynamic one.
+本質的に、静的なファイルは動的なファイルの特殊形であることに注意してください。
+静的なファイルを動的なファイルによって完全に置換することは可能です。
 
 </P
 ><P
->&#13;As a convention, we often use the filename extension <SPAN
+>&#13;慣習的に、ある作法で ATS コードと結合することを想定したC言語コードを含むファイルを表わすのに拡張子
+<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.cats</I
 ></SPAN
-> to
-indicate that a file contains some C code that is supposed to be combined
-with ATS code in certain manner. There is also the filename extension
-<SPAN
+> をしばしば使います。
+また、他のファイルに含まれる ATS コードをインクルードするために時々用いられる拡張子 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >.hats</I
 ></SPAN
->, which we occassionally use for a file that should be
-included in ATS code stored in another file.  However, the use of these two
-filename extensions are not mandatory, that is, they can be replaced if
-needed or wanted.
+> もあります。
+けれども、これら2つの拡張子の使用は強制されるものではありません。
+必要であれば、それらの拡張子を置き換えることができます。
 </P
 ></DIV
 ><DIV
@@ -251,7 +249,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Syntax-Coloring for ATS code</TD
+>ATS コードのシンタックスカラーリング</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -265,7 +263,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->File Inclusion inside ATS Code</TD
+>ATS コード中へのファイルのインクード</TD
 ></TR
 ></TABLE
 ></DIV
