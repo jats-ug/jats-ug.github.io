@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->References</TITLE
+>参照</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Exceptions"
+TITLE="例外"
 HREF="c159.html"><LINK
 REL="NEXT"
-TITLE="Persistent Arrays"
+TITLE="永続化配列"
 HREF="c265.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,24 +75,24 @@ CLASS="chapter"
 ><A
 NAME="reference"
 ></A
->Chapter 6. References</H1
+>Chapter 6. 参照</H1
 ><P
->&#13;A reference is essentially a heap-allocated array of size 1. It is
-persistent in the sense that the memory allocated for storing the content
-of a reference cannot be freed manually. Instead, it can only be (safely)
-reclaimed through garbage collection (GC).
+>&#13;参照とは本質的にヒープに確保されたサイズ 1 の配列です。
+手動で解放できない参照の内容を保管するために確保されたメモリであるという意味で、参照は永続的です。
+その代わりに、参照はガベージコレクション (GC) を通じてのみ (安全に) 回収されます。
 
 </P
 ><P
->&#13;Given a viewtype VT, the type for references to values of viewtype VT is
-<FONT
+>&#13;viewtype VT が与えられたとき、viewtype VT
+の値への参照の型は <FONT
 COLOR="RED"
 >ref</FONT
->(VT). For convenience, the type constructor <FONT
+>(VT) です。
+利便性のために、ATS では型コンストラクタ <FONT
 COLOR="RED"
 >ref</FONT
->
-is declared to be abstract in ATS. However, it can be defined as follows:
+> は抽象として宣言されます。
+けれども、次のような定義は可能です:
 
 <DIV
 CLASS="informalexample"
@@ -111,19 +111,19 @@ CLASS="programlisting"
 >
 
 
-The interfaces for various functions on references can be found in
+参照に対する様々な関数インターフェイスを
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/reference.sats"
 TARGET="_top"
 >prelude/SATS/reference.sats</A
->.
+>
+で見つけることができます。
 </P
 ><P
->For creating a reference, the function template <FONT
+>参照を生成するために、次のインターフェイスを持つ関数テンプレート <FONT
 COLOR="RED"
 >ref_make_elt</FONT
-> of
-the following interface can be called:
+> を呼び出すことができます:
 
 <DIV
 CLASS="informalexample"
@@ -142,37 +142,38 @@ CLASS="programlisting"
 >
 
 
-It is also allowed to use the shorthand <FONT
+<FONT
+COLOR="RED"
+>ref_make_elt</FONT
+> に対して略記 <FONT
 COLOR="RED"
 >ref</FONT
-> for
+> を使うこともできます。
 <FONT
 COLOR="RED"
 >ref_make_elt</FONT
->.  Note that the symbol <FONT
-COLOR="RED"
->!wrt</FONT
-> indicates
-that the so-called <FONT
+> が呼び出されるといわゆる
+<FONT
 COLOR="RED"
 >wrt</FONT
->-effect may occur when
-<FONT
+>-効果 が発生する可能性があることを、記号 <FONT
 COLOR="RED"
->ref_make_elt</FONT
-> is called.
+>!wrt</FONT
+>
+が示すことに注意してください。
 
 </P
 ><P
->&#13;For reading writing through a reference, the function templates
-<FONT
+>&#13;参照を通した読み書きのために、
+関数テンプレート <FONT
 COLOR="RED"
 >ref_get_elt</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ref_set_elt</FONT
-> can be used,
-respectively, which are assigned the following interfaces:
+>
+を使うことができます。
+これらにはそれぞれ次のインターフェイスが割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -192,46 +193,48 @@ fun{a:t@ype} ref_set_elt (r: ref a, x: a):&#60;!refwrt&#62; void
 >
 
 
-Note that the symbol <FONT
-COLOR="RED"
->!ref</FONT
-> indicates that the so-called
-ref-effect may occur when <FONT
+<FONT
 COLOR="RED"
 >ref_get_elt</FONT
-> is evaluated. Similarly,
-<FONT
+> が評価されるといわゆる ref-効果
+が発生する可能性があることを、記号 <FONT
 COLOR="RED"
->!refwrt</FONT
-> means both ref-effect and wrt-effect may occur when
-<FONT
+>!ref</FONT
+> が示すことに注意してください。
+同様に、<FONT
 COLOR="RED"
 >ref_set_elt</FONT
->.  Given a reference <FONT
+> が評価されると ref-効果 と
+wrt-効果の両方が起きる可能性があることを、<FONT
+COLOR="RED"
+>!refwrt</FONT
+> は意味しています。
+
+参照 <FONT
 COLOR="RED"
 >r</FONT
-> and a value
-<FONT
+> と値 <FONT
 COLOR="RED"
 >v</FONT
->, <FONT
+> が与えられたとき、<FONT
 COLOR="RED"
 >ref_get_elt(r)</FONT
-> and <FONT
+>
+と <FONT
 COLOR="RED"
 >ref_set_elt(r, v)</FONT
->
-can be written as <FONT
+> はそれぞれ <FONT
 COLOR="RED"
 >!r</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >!r := v</FONT
->, respectively.
+>
+のように書くことができます。
 </P
 ><P
->&#13;A reference is typically employed to record some form of persistent state.
-For instance, following is such an example:
+>&#13;典型的に、参照は永続化状態を記録するのに使われます。
+例えば、次のコードはそのような例です:
 
 <DIV
 CLASS="informalexample"
@@ -271,30 +274,30 @@ end // end of [local]
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >genNewName</FONT
-> is called to generate fresh names. As
-the integer content of the reference <FONT
+> は新しい名前を生成するために呼び出されます。
+参照 <FONT
 COLOR="RED"
 >count</FONT
-> is updated whenever
-a call to <FONT
+> の内容物である整数は <FONT
 COLOR="RED"
 >genNewName</FONT
-> is made, each name returned by
-<FONT
+>
+が呼び出される度に更新されるので、<FONT
 COLOR="RED"
 >genNewName</FONT
-> is guaranteed to have not been generated
-before. Note that the use of <FONT
-COLOR="RED"
->$extfcall</FONT
-> is for making a direct
-call to the function <FONT
+>
+が返すそれぞれの名前は以前生成されたものとは異なることが保証されます。
+C言語の関数 <FONT
 COLOR="RED"
 >snprintf</FONT
-> in C.
+> を直接呼び出すために、<FONT
+COLOR="RED"
+>$extfcall</FONT
+>
+が使用されていることに注意してください。
 
 </P
 ><P
@@ -302,12 +305,11 @@ COLOR="RED"
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->Misuse of References</I
+>参照の誤用</I
 ></SPAN
 >
-References are commonly misused in practice. The following program is often
-written by a beginner of functional programming who has already learned
-(some) imperative programming:
+参照は誤用されることが実際にあります。
+次のプログラムは、命令型プログラミングを既に学んだ関数型プログラミングの初学者がしばしば書いてしまうものです:
 
 <DIV
 CLASS="informalexample"
@@ -334,11 +336,10 @@ end // end of [fact]
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >fact</FONT
-> is written in such a style as somewhat a direct
-translation of the following C code:
+> は次のC言語コードを少々直訳したスタイルで書かれています:
 
 <DIV
 CLASS="informalexample"
@@ -361,32 +362,31 @@ CLASS="programlisting"
 >
 
 
-In the ATS implementation of <FONT
+ATS における <FONT
 COLOR="RED"
 >fact</FONT
->, <FONT
+> の実装では、<FONT
 COLOR="RED"
 >res</FONT
-> is a
-heap-allocated reference and it becomes garbage (waiting to be reclaimed by
-the GC) after a call to <FONT
+>
+はヒープに確保された参照で、<FONT
 COLOR="RED"
 >fact</FONT
-> returns.  On the other hand, the
-variable <FONT
+>
+呼び出しが返った後には (GC によって回収されるのを待つ) ゴミになります。
+一方、<FONT
+COLOR="RED"
+>fact</FONT
+> のC言語実装における値 <FONT
 COLOR="RED"
 >res</FONT
-> in the C implementation of <FONT
+> はスタックに確保
+(もしくはレジスタにマップされることさえあり得ます)
+され、<FONT
 COLOR="RED"
 >fact</FONT
-> is
-stack-allocated (or it can even be mapped to a machine register), and there
-is no generated garbage after a call to <FONT
-COLOR="RED"
->fact</FONT
-> returns. A proper
-translation of the C implementation in ATS can actually be given as
-follows, which makes no use of references:
+> 呼び出しが返った後にゴミは生成されません。
+このC実装を ATS に適切に翻訳すると、次のような参照を使わない実装になるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -414,8 +414,7 @@ end // end of [fact]
 
 </P
 ><P
->&#13;Unless strong justification can be given, making extensive use of
-(dynamically created) references is often a sure sign of poor coding style.
+>&#13;強い正当な理由なしに (動的に生成される) 参照を広範囲にわたる使用することは、しばしば悪いコーディングスタイルの兆しです。
 
 </P
 ><P
@@ -423,16 +422,15 @@ end // end of [fact]
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->Statically Allocated References</I
+>静的に確保された参照</I
 ></SPAN
 >
-Creating a reference by calling <FONT
+<FONT
 COLOR="RED"
 >ref_make_elt</FONT
-> involves dynamic
-memory allocation. If this is not desirable or even acceptable, it is
-possible to only employ statically allocated memory in a reference creation
-as is shown below:
+> を呼び出して参照を生成すると、動的なメモリ確保が必要になります。
+もしこれが望ましくなかたったり容認できなかったりするなら、
+次のように参照の生成に静的なメモリ確保を使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -452,43 +450,42 @@ val myref = ref_make_viewptr (view@(myvar) | addr@(myvar))
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
-> takes a pointer and a proof of
-some at-view associated with the pointer and returns a reference after
-consuming the proof. As <FONT
+> はポインタとそのポインタに関連した at-view
+の証明を取り、その証明を消費した後の参照を返します。
+<FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
-> is a cast-function, it
-causes no run-time overhead. In the above code, <FONT
+> はキャスト関数なので、実行時のオーバーヘッドはありません。
+上記のコードでは、<FONT
 COLOR="RED"
 >myvar</FONT
-> is
-statically allocated and it is no longer available after its at-view proof
-is consumed by <FONT
+> は静的に確保されていて、その at-view 証明が
+<FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
->. It should be interesting to
-observe that both <FONT
+> によって消費された後ではもはや有効ではありません。
+C言語では <FONT
 COLOR="RED"
 >myvar</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >myref</FONT
-> are just the same
-pointer in C but they are the reification of fundamentally different
-concepts in ATS: the former is a linear variable while the latter is a
-non-linear reference.
+> の両方とも単に同じポインタですが、ATS
+ではそれらは本質的に異なる概念の具象であることは興味深いでしょう:
+前者は線形の値であり、後者は非線形の参照なのです。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコードの全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_reference.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -535,7 +532,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Exceptions</TD
+>例外</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -549,7 +546,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Persistent Arrays</TD
+>永続化配列</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Exceptions</TITLE
+>例外</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="結合性宣言"
 HREF="c93.html"><LINK
 REL="NEXT"
-TITLE="References"
+TITLE="参照"
 HREF="c194.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,40 +75,35 @@ CLASS="chapter"
 ><A
 NAME="exceptions"
 ></A
->Chapter 5. Exceptions</H1
+>Chapter 5. 例外</H1
 ><P
 >&#13;
-While exceptions can be very useful in practice, it is also very common to
-see code that misuses exceptions.
+例外は実用上とても有用ですが、例外を誤用したコードがよく見られることでも知られています。
 
 </P
 ><P
->&#13;Generally speaking, there are exceptions that are meant to be raised but
-not captured for the purpose of aborting program execution, and there are
-also exceptions (often declared locally) that are meant to be raised and
-then captured so as to change the flow of program execution.  For instance,
-the exception <FONT
+>&#13;一般的に言うと、プログラムの実行を中断終了させるために捕捉されないことを意図した例外と、プログラム実行の流れを変えるために
+(しばしばローカルで宣言した) 捕捉されることを意図した例外があります。
+例えば、例外 <FONT
 COLOR="RED"
 >ArraySubscriptExn</FONT
-> is raised when out-of-bounds
-array subscripting is detected at run-time.  Once it is raised,
+>
+は実行時に配列の範囲外を添字指定したことを検出すると発生します。
+この例外が発生すると、通常
 <FONT
 COLOR="RED"
 >ArraySubscriptExn</FONT
-> is usually not meant to be captured.  While
-there is certainly nothing preventing a programer from writing code that
-captures a raised <FONT
+> は捕捉されることを意図していません。
+プログラマが <FONT
 COLOR="RED"
 >ArraySubscriptExn</FONT
->, a major concern is that
-reasoning can become greatly complicated on code that does so.  In the
-following presentation, I will soley focus on exceptions that are meant to
-be raised and then captured.
+>
+例外を捕捉するコードを書くことを妨げるものはなにもありませんが、そのコードが非常に複雑になってしまう懸念があります。
+次に、発生した後に捕捉されることを意図した例外について説明しようと思います。
 
 </P
 ><P
->&#13;Let us now take a look at the following code that implements a function
-for finding the rightmost element in a list that satisifes a given predicate:
+>&#13;リストの中から与えられた述語を満たす一番右の要素を見つける関数を実装している次のコードを見てみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -154,42 +149,40 @@ end // end of [list_find_rightmost]
 >
 
 
-Suppose that <FONT
+<FONT
 COLOR="RED"
 >list_find_rightmost</FONT
-> is called on a list xs of
-length N (for some large natural number N) and a predicate pred. The
-evaluation of this call leads to a call to the inner function
+> が長さ (なんらかの自然数) N のリスト xs
+と述語 pred に対して呼び出されたとしましょう。
+この呼び出しの評価は内部関数 <FONT
+COLOR="RED"
+>aux</FONT
+> の呼び出しを引き起こし、
+さらに N 回の <FONT
+COLOR="RED"
+>aux</FONT
+> の再帰呼び出しに変化します。
+xs の最後の要素だけが述語 pred を満たすと仮定しましょう。
+すると pref を満たす一番右の要素が見つかっているのに、まだ N-1 個の
 <FONT
 COLOR="RED"
 >aux</FONT
->, which in turn generates N additional recursive calls to
-<FONT
+> 呼び出しフレームがコールスタックに残っています。
+見つかった要素を大元の <FONT
 COLOR="RED"
->aux</FONT
->. Assume that only the last element of xs satisfies the
-predicate pred. Then there are still N-1 call frames for <FONT
-COLOR="RED"
->aux</FONT
-> on
-the call stack when the rightmost element satisfying pred is found, and
-these frames need to be unwinded <SPAN
+>list_find_rightmost</FONT
+>
+呼び出しへ戻す前に、これらのフレームを<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->one-by-one</I
+>一つずつ</I
 ></SPAN
-> before the found
-element can be returned to the original call to
-<FONT
+>ほどいてやらねばなりません。
+次の例外を使った実装 <FONT
 COLOR="RED"
 >list_find_rightmost</FONT
->. This form of inefficiency is eliminated in
-the following exception-based implementation of
-<FONT
-COLOR="RED"
->list_find_rightmost</FONT
->:
+> ではこの非効率な形を取り除いています:
 
 <DIV
 CLASS="informalexample"
@@ -235,80 +228,78 @@ end // end of [list_find_rightmost]
 >
 
 
-When a try-with-expression is evaluated, a label is created for the portion
-of the call stack needed to evaluate the clauses (often referred to as
-exception-handlers) following the keyword <FONT
+try-with 式が評価されると、キーワード <FONT
 COLOR="RED"
 >with</FONT
->, and this label
-is then pushed onto a designated global stack.  When an exception is
-raised, the labels on the global stack are tried one-by-one until the
-raised exception is captured by an exception-handler (that is, the value
-representing the exception matches the pattern guard of the
-exception-handler) or the current program evaluation aborts. The above
-exception-based implementation of <FONT
+>
+に続く節 (しばしば例外ハンドラと呼ばれます)
+を評価するのに必要なコールスタックの部分へのラベルが生成されます。
+それからこのラベルは指定されたグローバルスタックにプッシュされます。
+例外が発生すると、例外ハンドラによって発生した例外が捕捉されるまで
+(つまり例外を表わす値が例外ハンドラのパターンガードにマッチするまで)
+、一つずつグローバルスタック内のそのラベル群が試されます。
+もし捕捉されなかった場合は現在のプログラムの評価は中断終了します。
+上記の例外を使った実装 <FONT
 COLOR="RED"
 >list_find_rightmost</FONT
-> uses a
-raised exception to carry the element found during a recursive call to
+> では、再帰呼出
 <FONT
 COLOR="RED"
 >aux</FONT
-> so that this element can be returned in a single jump to
-the original call to <FONT
-COLOR="RED"
->list_find_rightmost</FONT
->, bypassing all the
-intermediate call frames (for recursive calls to <FONT
+> で見つかった要素を運搬するために例外を発生させています。
+コールスタックにある (<FONT
 COLOR="RED"
 >aux</FONT
->) on the
-call stack. In general, the range between the point where an exception
-is raised and the point where the raised exception is captured should span
-multiple call frames. If not, then the use of exception may be questionable.
+> への再帰呼出である)
+中間の呼び出しフレームを全て迂回して、1回のジャンプでこの要素を大元の
+<FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+> に返すことができるのです。
+一般に、例外が発生するポイントとその例外を捕捉するポイントの範囲は複数のコールフレームに及んでいるべきです。
+そうでなければ、例外の使用すべきか疑わしいかもしれません。
 
 </P
 ><P
->&#13;The implementation of the run-time support for exceptions in ATS makes use
-of the function <FONT
-COLOR="RED"
->alloca</FONT
-> declared in <TT
+>&#13;例外を実行時にサポートする ATS の実装は
+<TT
 CLASS="filename"
 >alloca.h</TT
-> and
-the functions <FONT
+> で宣言されている <FONT
 COLOR="RED"
->setjmp</FONT
-> and <FONT
-COLOR="RED"
->longjmp</FONT
-> declared in
+>alloca</FONT
+> 関数と
 <TT
 CLASS="filename"
 >setjmp.h</TT
->. If <B
+> で宣言されている <FONT
+COLOR="RED"
+>setjmp</FONT
+> と <FONT
+COLOR="RED"
+>longjmp</FONT
+> 関数を使っています。
+ATS ソースコードから生成されたC言語ソースコードをコンパイルするのに <B
 CLASS="command"
 >gcc</B
-> or <B
+> もしくは <B
 CLASS="command"
 >clang</B
-> is used to
-compile the C code generated from ATS source, one can pass the flag
--D_GNU_SOURCE so as to make sure that the header file <TT
+> を使う場合、
+<TT
 CLASS="filename"
 >alloca.h</TT
->
-is properly included.
+> ヘッダファイルが確実にインクルードするために -D_GNU_SOURCE フラグを渡すことができます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコードの全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_exception.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -369,7 +360,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->References</TD
+>参照</TD
 ></TR
 ></TABLE
 ></DIV

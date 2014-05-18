@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Persistent Arrays</TITLE
+>永続化配列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="References"
+TITLE="参照"
 HREF="c194.html"><LINK
 REL="NEXT"
 TITLE="Persistent Arrays-with-size"
@@ -75,36 +75,35 @@ CLASS="chapter"
 ><A
 NAME="arrayref"
 ></A
->Chapter 7. Persistent Arrays</H1
+>Chapter 7. 永続化配列</H1
 ><P
->&#13;A persistent array of size n is just n heap-allocated cells (or references)
-in a row.  It is persistent in the sense that the memory allocated for the
-array cannot be freed manually. Instead, it can only be safely reclaimed
-through garbage collection (GC).
+>&#13;サイズ n の永続化配列は、単に1行の中のヒープに確保された
+n 個のセル (もしくは参照) です。
+この配列に対して確保されたメモリは手動で解放できないという意味で永続的です。
+その代わりに、ガベージコレクション (GC) を通じて安全に回収されます。
 </P
 ><P
->&#13;Given a viewtype VT, the type for persistent arrays containing N values of
-viewtype VT is <FONT
+>&#13;viewtype VT が与えられたとき、viewtype VT の値 N を含む永続化配列の型は <FONT
 COLOR="RED"
 >arrayref(VT, N)</FONT
->.  Note that arrays in ATS are
-the same as those in C: There is no size information attached them. The
-interfaces for various functions on persistent arrays can be found in
-the SATS file
+> です。
+ATS での配列はC言語のものと同じで、それらにはサイズ情報が付属しないことに注意してください。
+永続化配列に関する様々な関数インターフェイスが SATS ファイル
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
 TARGET="_top"
 >prelude/SATS/arrayref.sats</A
->,
-which is automatically loaded by <B
+>
+に見つけることができます。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->.
+> によって自動的に読み込まれます。
 
 </P
 ><P
->&#13;There are various functions for array creation. For instance, the following
-two are commonly used:
+>&#13;配列を生成する様々な関数があります。
+例えば、次の2つは一般的に使用されます:
 
 <DIV
 CLASS="informalexample"
@@ -131,29 +130,28 @@ arrayref_make_listlen
 >
 
 
-Applied to a size and an element, <FONT
+サイズと要素に適用されると、<FONT
 COLOR="RED"
 >arrayref_make_elt</FONT
-> returns an
-array of the given size in which each cell is initialized with the given
-element.  Applied to a list of elements and the length of the list,
-<FONT
+>
+は与えられた要素でそれぞれのセルを初期化した与えられたサイズの配列を返します。
+リストとそのリストの長さに適用されると、<FONT
 COLOR="RED"
 >arrayref_make_listlen</FONT
-> returns an array of size equal to the
-given length in which each cell is initialized with the corresponding
-element in the given list.
+>
+は与えられた長さに等しいサイズの配列を返します。
+このとき配列のそれぞれのセルは与えられたリストの対応する要素で初期化されます。
 </P
 ><P
->&#13;For reading from and writing to an array, the function templates
-<FONT
+>&#13;配列を読み書きするために、関数テンプレート <FONT
 COLOR="RED"
 >arrayref_get_at</FONT
-> and <FONT
+>
+と <FONT
 COLOR="RED"
 >arrayref_set_at</FONT
-> can be used,
-respectively, which are assigned the following interfaces:
+> を使うことができます。
+それぞれ次のようなインターフェイスが割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -178,36 +176,35 @@ arrayref_set_at
 >
 
 
-Given an array <FONT
+配列 <FONT
 COLOR="RED"
 >A</FONT
->, an index <FONT
+>, インデックス <FONT
 COLOR="RED"
 >i</FONT
-> and a value
-<FONT
+>, 値 <FONT
 COLOR="RED"
 >v</FONT
->, <FONT
+>
+が与えられたとき、<FONT
 COLOR="RED"
 >arrayref_get_at(A, i)</FONT
-> and
+> と
 <FONT
 COLOR="RED"
 >arrayref_set_at(A, i, v)</FONT
-> can be written as <FONT
+> はそれぞれ
+<FONT
 COLOR="RED"
 >A[i]</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >A[i] := v</FONT
->, respectively.
+> のように書くことができます。
 </P
 ><P
 >&#13;
-As an example, the following function template reverses the content of a
-given array:
+例として、次の関数テンプレートは与えられた配列の内容を逆順にします:
 <DIV
 CLASS="informalexample"
 ><P
@@ -250,60 +247,58 @@ end // end of [arrayref_reverse]
 
 </P
 ><P
->&#13;If the test <FONT
+>&#13;もし判定 <FONT
 COLOR="RED"
 >i &#60; n2</FONT
-> is changed to <FONT
+> を <FONT
 COLOR="RED"
 >i &#60;= n2</FONT
->, a type-error
-is to be reported. Why? The reason is that <FONT
-COLOR="RED"
->A[n-1-i]</FONT
-> becomes
-out-of-bounds array subscripting in the case where <FONT
+> に変更すると、型エラーが発生します。
+なぜでしょうか？
+その理由は、<FONT
 COLOR="RED"
 >n</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >i</FONT
-> both equal zero. Given that it is very unlikely to encounter a
-case where an array of size 0 is involved, a bug like this, if not detected
-early, can be buried so scarily deep!
+>
+が両方ともゼロに等しい場合に、<FONT
+COLOR="RED"
+>A[n-1-i]</FONT
+>
+が配列の添字指定の範囲外になるからです。
+サイズがゼロの配列に遭遇することなく、もし早期に発見していなかったら、このようなバグはゾッとするほど奥深くに埋め込まれてしまうかもしれません!
 </P
 ><P
->&#13;The careful reader may have already noticed that the sort <FONT
+>&#13;懸命な読者は、種 <FONT
 COLOR="RED"
 >t@ype</FONT
->
-is assigned to the template parameter <FONT
+> がテンプレートパラメータ <FONT
 COLOR="RED"
 >a</FONT
->. In other words, the
-above implementation of <FONT
+>
+に割り当てられていることに、既に気がついているかもしれません。
+別の言い方をすると、<FONT
 COLOR="RED"
 >arrayref_reverse</FONT
-> cannot handle a case
-where the values stored in a given array are of some linear type. The
-reason for choosing the sort <FONT
+>
+の上記の実装は、与えられた配列内の値が線形型であるような場合を扱うことができません。
+種 <FONT
 COLOR="RED"
 >t@ype</FONT
-> is that both
-<FONT
+> を選択している理由は、<FONT
 COLOR="RED"
 >arrayref_get_at</FONT
-> and <FONT
+> と
+<FONT
 COLOR="RED"
 >arrayref_set_at</FONT
-> can only be
-applied to an array containing values of a nonlinear type. In the following
-implementation, the template parameter is given the sort <FONT
+> の両方が非線形型の値を含む配列にのみ適用できるからです。
+次の実装では、テンプレートパラメータには種 <FONT
 COLOR="RED"
 >vt@ype</FONT
 >
-so that an array containing linear values, that is, values of some linear
-type can be handled:
+が与えられているので、線形型の値を含む配列を扱うことができます:
 </P
 ><DIV
 CLASS="informalexample"
@@ -341,11 +336,10 @@ end // end of [arrayref_reverse]
 ></DIV
 ><P
 >&#13;
-The interface for the function template <FONT
+関数テンプレート <FONT
 COLOR="RED"
 >arrayref_interchange</FONT
-> is
-given below:
+> のインターフェイスは以下のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -367,23 +361,23 @@ arrayref_interchange{n:int}
 >
 
 
-Note that <FONT
-COLOR="RED"
->arrayref_interchange</FONT
-> can not be implemented in terms
-of <FONT
+<FONT
 COLOR="RED"
 >arrayref_get_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrayref_set_at</FONT
-> (unless some
-form of type-unsafe code is empolyed).
+>
+の観点では、<FONT
+COLOR="RED"
+>arrayref_interchange</FONT
+> は
+(型安全でないコードを使わずに)
+実装できないことに注意してください。
 </P
 ><P
->&#13;There are various functions available for traversing an array from left to
-right or from right to left. Also, the following two functions can be conveniently
-called to traverse an array from left to right:
+>&#13;配列を左から右に、もしくは右から左に走査するのに役に立つ様々な関数があります。
+また、次の2つの関数は配列を左から右に走査するために使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -409,8 +403,7 @@ overload .tail with arrayref_tail
 >
 
 
-For instance, the fold-left function for arrays can be implemented
-as follows:
+例として、配列に対する左 fold 関数は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -439,31 +432,31 @@ if n &#62; 0
 >
 
 
-As can be expected, <FONT
+期待される通り、<FONT
 COLOR="RED"
 >A.head</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >A.tail</FONT
-> translate
-into <FONT
+> はそれぞれ
+<FONT
 COLOR="RED"
 >A[0]</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ptr_succ&#60;T&#62;(p0)</FONT
->, respectively, where T
-is the type for the elements stored in A and p0 is the starting address of
-A.
+> に変換されます。
+このとき T は A に保管されている要素の型で、p0 は A の開始アドレスです。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコードの全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_arrayref.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -510,7 +503,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->References</TD
+>参照</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
