@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Higher-Order Functions</TITLE
+>高階関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Tail-Recursion"
+TITLE="末尾再帰"
 HREF="c416.html"><LINK
 REL="NEXT"
-TITLE="Stream-Based Lazy Evaluation"
+TITLE="遅延ストリーム"
 HREF="c476.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,15 +75,14 @@ CLASS="chapter"
 ><A
 NAME="hordfun"
 ></A
->Chapter 12. Higher-Order Functions</H1
+>Chapter 12. 高階関数</H1
 ><P
->&#13;A higher-order function is one that takes another function as its argument.
+>&#13;高階関数は、その引数に他の関数を取る関数です。
 
-Let us use BT to range over base types such as <FONT
+<FONT
 COLOR="RED"
 >int</FONT
->,
-<FONT
+>, <FONT
 COLOR="RED"
 >bool</FONT
 >, <FONT
@@ -92,12 +91,12 @@ COLOR="RED"
 >, <FONT
 COLOR="RED"
 >double</FONT
-> and
-<FONT
+>, <FONT
 COLOR="RED"
 >string</FONT
->.  A simple type T is formed according to the following
-inductive definition:
+>
+のような基本型の範囲を表わすために BT を使ってみましょう。
+単純な型 T は次の帰納的定義に従って形作られます:
 
 </P
 ><P
@@ -105,36 +104,36 @@ inductive definition:
 ><UL
 ><LI
 ><P
->BT is a simple type.</P
+>BT は単純な型です。</P
 ></LI
 ><LI
 ><P
->(T<SUB
->1</SUB
->, ..., T<SUB
->n</SUB
->) -&#62; T<SUB
->0</SUB
-> is a simple type if
-T<SUB
+>T<SUB
 >0</SUB
 >, T<SUB
 >1</SUB
 >, ... T<SUB
 >n</SUB
-> are simple types.
+>
+が単純な型であれば、(T<SUB
+>1</SUB
+>, ..., T<SUB
+>n</SUB
+>) -&#62; T<SUB
+>0</SUB
+>
+も単純な型です。
 </P
 ></LI
 ></UL
 ><P
->&#13;Let <SPAN
+>&#13;<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >order</I
 ></SPAN
-> be a function from simply types to natural numbers
-defined as follows:
+> を次のように定義された、単純な型から自然数への関数だとします:
 
 </P
 ><P
@@ -201,40 +200,37 @@ CLASS="emphasis"
 ></LI
 ></UL
 ><P
->&#13;Given a function f of some simple type T, let us say that f is a
-<SPAN
-CLASS="emphasis"
-><I
-CLASS="emphasis"
->n</I
-></SPAN
->th-order function if <SPAN
+>&#13;単純な型 T の関数 f が与えられた時、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >order</I
 ></SPAN
->(T) =
-<SPAN
+>(T) = <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >n</I
 ></SPAN
->. For instance, a function of the type (int, int) -&#62; int
-is 1st-order, and a function of the type int -&#62; (int -&#62; int) is also
-1st-order, and a function of the type ((int -&#62; int), int) -&#62; int is
-2nd-order.  In practice, most functions are 1st-order and most higher-order
-functions are 2nd-order.
+>
+なら f は <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>n</I
+></SPAN
+> 階関数であると呼ぶことにします。
+例えば、型 (int, int) -&#62; int の関数は1階関数であり、型 int -&#62; (int -&#62; int) の関数もまた1階関数です。
+さらに型 ((int -&#62; int), int) -&#62; int の関数は2階関数になります。
+実際には、ほとんどの関数は1階関数で、ほとんどの高階関数は2階関数になります。
 
 </P
 ><P
->&#13;As an example, let us implement as follows a 2nd-order function
-<FONT
+>&#13;例として次のように、引数として整数から整数への関数 f を取り、f
+の根を探すような2階関数 <FONT
 COLOR="RED"
 >find_root</FONT
-> that takes as its only argument a function f from
-integers to integers and searches for a root of f by enumeration:
+> を実装してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -267,17 +263,17 @@ end // end of [find_root]
 >
 
 
-The function <FONT
+関数 <FONT
 COLOR="RED"
 >find_root</FONT
-> computes the values of f at 0, 1, -1, 2,
--2, etc. until it finds the first integer n in this sequence that satisfies
-f(n) = 0.
+> は f を 0, 1, -1, 2, -2, など
+に適用した値を計算し、この数列の中で f(n) = 0
+を満すような最初の整数 n を見つけます。
 
 </P
 ><P
->&#13;As another example, let us implement as follows the famous Newton-Raphson's
-method for finding roots of functions on reals:
+>&#13;もう一つの例として、関数の根を見つけるために、次のように有名なニュートン・ラフソン法
+(Newton-Raphson's method) を実装してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -319,11 +315,10 @@ end // end of [newton_raphson]
 >
 
 
-With <FONT
+<FONT
 COLOR="RED"
 >newton_raphson</FONT
->, both the square root function and the
-cubic root function can be readily implemented as follows:
+> を使うと、平方根関数と立方根関数が次のようにたやすく実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -349,25 +344,25 @@ fn cbrt (c: double): double =
 
 </P
 ><P
->&#13;Higher-order functions can be of great use in supporting a form of code
-sharing that is both common and flexible. As function arguments are often
-represented as heap-allocated closures that can only be reclaimed through
-garbage collection (GC), higher-order functions are used infrequently, if
-at all, in a setting where GC is not present. In ATS, linear closures,
-which can be freed explictly in a safe manner, are available to support
-higher-order functions in the absence of GC, making it possible to employ
-higher-order functions extensively in systems programming (where GC is
-unavailable or simply disallowed). The details on linear closures are to be
-given elsewhere.
+>&#13;高階関数は、共通した柔軟なコードの共有をサポートするためによく使われます。
+関数引数はガベージコレクション (GC)
+を通して回収されるヒープに確保されたクロージャとしてしばしば表現されるため、GC
+を無効化した状態で高階関数は使われることは稀です。
+ATS では、安全な作法で明示的に解放できる線形クロージャによって、GC
+不在の環境における高階関数をサポートすることができます。
+(GC が利用できないか単純に無効化された)
+システムプログラミングにおいて広範囲に高階関数を使うことができるのです。
+線形クロージャの詳細については別の機会に紹介します。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_hordfun.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -414,7 +409,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Tail-Recursion</TD
+>末尾再帰</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -428,7 +423,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Stream-Based Lazy Evaluation</TD
+>遅延ストリーム</TD
 ></TR
 ></TABLE
 ></DIV

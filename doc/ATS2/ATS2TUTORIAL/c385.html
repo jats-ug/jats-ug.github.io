@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Persistent Matrices-with-size</TITLE
+>サイズを伴う永続化行列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Persistent Matrices"
+TITLE="永続化行列"
 HREF="c361.html"><LINK
 REL="NEXT"
-TITLE="Tail-Recursion"
+TITLE="末尾再帰"
 HREF="c416.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,43 +75,44 @@ CLASS="chapter"
 ><A
 NAME="mtrxszref"
 ></A
->Chapter 10. Persistent Matrices-with-size</H1
+>Chapter 10. サイズを伴う永続化行列</H1
 ><P
->&#13;I use the name <SPAN
+>&#13;次元情報 (つまり列の数や行の数)
+が付属した永続化行列を <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->matrix-with-size</I
+>サイズを伴う行列 (matrix-with-size)</I
 ></SPAN
-> to refer to a persistant
-matrix with attached dimension information (that is, number of rows and
-number of columns).  Given a viewtype VT, the type for a matrix-with-size
-that contains M rows and N columns of elements of viewtype VT is
-<FONT
+> と呼びます。
+viewtype VT が与えられたとき、viewtype VT の要素を M 列と N
+行含むサイズを伴う行列の型は <FONT
 COLOR="RED"
 >mtrxszref(VT, M, N)</FONT
->. Essentially, such a value is a boxed
-record of three components of types <FONT
-COLOR="RED"
->arrayref(VT, N)</FONT
->,
+> です。
+本質的に、この型の値は3つの型
 <FONT
 COLOR="RED"
+>arrayref(VT, N)</FONT
+>, <FONT
+COLOR="RED"
 >size_t(M)</FONT
-> and <FONT
+>, <FONT
 COLOR="RED"
 >size_t(N)</FONT
->. The interfaces for various
-functions on persistent matrices-with-size can be found in
+>
+を構成要素とするボックス化レコードです。
+サイズを伴う永続化行列に関する様々な関数のインターフェイスを
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
 TARGET="_top"
 >prelude/SATS/matrixref.sats</A
->.
+>
+に見つけることができます。
 
 </P
 ><P
->&#13;The following function is commonly used to create a matrix-with-size:
+>&#13;次の関数はサイズを伴う行列を生成するのに一般的に使用されます:
 
 <DIV
 CLASS="informalexample"
@@ -132,23 +133,21 @@ mtrxszref_make_elt (m: size_t, n: size_t, x0: a): mtrxref (a)
 >
 
 
-Given two sizes m and n plus an element x0, <FONT
+2つのサイズ m, n と要素 x0 が与えられたとき、
+<FONT
 COLOR="RED"
 >mtrxszref_make_elt</FONT
->
-returns a matrix-with-size of the dimension m by n in which each matrix-cell
-is initialized with the given element x0.
+> はそれぞれの行列セルが与えられた要素 x0 で初期化された次元 m, n のサイズを伴う行列を返します。
 </P
 ><P
->&#13;For accessing and updating the content of a matrix-cell, the following
-two functions <FONT
+>&#13;行列セルの内容物にアクセスしたり更新したりするために、
+次の2つの関数 <FONT
 COLOR="RED"
 >mtrxszref_get_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >mtrxszref_set_at</FONT
->
-can be called:
+> を使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -170,39 +169,37 @@ mtrxszref_set_at (M: mtrxszref(a), i: size_t, j: size_t, x: a): void
 >
 
 
-Given a matrix-with-size M, two indices i and j, and a value v,
-<FONT
+サイズを伴う行列 M と2つのインデックス i, j と値 v
+が与えられたとき、<FONT
 COLOR="RED"
 >mtrxszref_get_at(M, i, j)</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
->mtrxszref_set_at(M, i,
-j, v)</FONT
-> can be written as <FONT
+>mtrxszref_set_at(M, i, j, v)</FONT
+>
+はそれぞれ <FONT
 COLOR="RED"
 >M[i,j]</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >M[i,j] := v</FONT
->,
-respectively. Notice that matrix-bounds checking is performed at run-time
-whenever <FONT
+> のように書くことができます。
+<FONT
 COLOR="RED"
 >mtrxszref_get_at</FONT
-> or <FONT
+> もしくは <FONT
 COLOR="RED"
 >mtrxszref_set_at</FONT
-> is
-called, and the exception <FONT
+>
+が呼び出されると実行時に行列の範囲検査が行なわれ、行列の範囲外アクセスを検出すると例外
+<FONT
 COLOR="RED"
 >MatrixSubscriptExn</FONT
-> is raised in case
-of out-of-bounds matrix access is detected.
+> が発生することに注意してください。
 
 </P
 ><P
->&#13;As a simple example, the following code implements a functiont that
-transpose the content of the matrix inside a given matrix-with-size:
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う行列の中身の転置行列を取る関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -252,20 +249,18 @@ end // end of [mtrxszref_transpose]
 
 </P
 ><P
->&#13;Like arrays-with-size, matrices-with-size are easier to program with than
-dependently typed matrices. However, the latter can not only lead to more
-effective error detection at compile-time but also more efficent code
-execution at run-time. For someone programming in ATS, it is quite
-reasonable to start out with matrices-with-size and then replace them with
-matrices when there are clear benefits from doing so.
+>&#13;サイズを伴う配列と同様に、サイズを伴う行列は依存型行列よりも簡単にプログラミングできます。
+けれども、後者はコンパイル時にエラーを効果的に検出することができず、実行時のコード実行で検出します。
+ATS でプログラミングする際、サイズを伴う行列からはじめて、その恩恵が明確になった後で行列に置き換えるのは妥当でしょう。
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコードの全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_mtrxszref.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -312,7 +307,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Persistent Matrices</TD
+>永続化行列</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -326,7 +321,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Tail-Recursion</TD
+>末尾再帰</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Persistent Arrays-with-size</TITLE
+>サイズを伴う永続化配列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="永続化配列"
 HREF="c265.html"><LINK
 REL="NEXT"
-TITLE="Persistent Matrices"
+TITLE="永続化行列"
 HREF="c361.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,47 +75,46 @@ CLASS="chapter"
 ><A
 NAME="arrszref"
 ></A
->Chapter 8. Persistent Arrays-with-size</H1
+>Chapter 8. サイズを伴う永続化配列</H1
 ><P
->&#13;I use the name <SPAN
+>&#13;サイズ情報が付属した永続化配列を <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->array-with-size</I
+>サイズを伴う配列 (array-with-size)</I
 ></SPAN
-> to refer to a persistant
-array with attached size information.  Given a viewtype VT, the type for an
-array-with-size that contains N values of viewtype VT is
-<FONT
+> と呼びます。
+viewtype VT が与えられたとき、viewtype VT の N
+個の値を含むサイズを伴う配列の型は <FONT
 COLOR="RED"
 >arrszref(VT, N)</FONT
->. Essentially, such a value is a boxed pair of
-two components of types <FONT
+> です。
+本質的に、この型の値は型 <FONT
 COLOR="RED"
 >arrayref(VT, N)</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >size_t(N)</FONT
->. The interfaces for various functions on persistent
-arrays-with-size can be found in
+>
+の2つを構成要素とするボッスク化ペアです。
+サイズを伴う永続化配列に対する様々な関数のインターフェイスを
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
 TARGET="_top"
 >prelude/SATS/arrayref.sats</A
->.
+>
+に見つけることができます。
 
 </P
 ><P
->&#13;For creating an array-with-size, the following functions
-<FONT
+>&#13;次の関数 <FONT
 COLOR="RED"
 >arrszref_make_arrpsz</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrszref_make_arrayref</FONT
-> can
-be called:
+>
+を呼び出すことで、サイズを伴う配列を生成することができます:
 
 <DIV
 CLASS="informalexample"
@@ -140,8 +139,7 @@ arrszref_make_arrayref
 >
 
 
-As an example, the following code creates an array-with-size containing
-all the decimal digits:
+例として、次のコードは全ての10進数の数字を含むような、サイズを伴う配列を生成しています:
 
 <DIV
 CLASS="informalexample"
@@ -160,26 +158,27 @@ CLASS="programlisting"
 >
 
 
-Note that <FONT
-COLOR="RED"
->arrszref</FONT
-> is overloaded with
 <FONT
 COLOR="RED"
+>arrszref</FONT
+> は <FONT
+COLOR="RED"
 >arrszref_make_arrpsz</FONT
->.
+>
+によって多重定義されていることに注意してください。
 
 </P
 ><P
->&#13;For reading from and writing to an array-with-size, the function templates
+>&#13;サイズを伴う配列を読み書きするために、関数テンプレート
 <FONT
 COLOR="RED"
 >arrszref_get_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >arrszref_set_at</FONT
-> can be used,
-respectively, which are assigned the following interfaces:
+>
+をそれぞれ使うことができます。
+これらの関数テンプレートには次のインターフェイスが割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -201,39 +200,39 @@ arrszref_set_at (A: arrszref (a), i: size_t, x: a): void
 >
 
 
-Given an array-with-size A, an index i and a value v,
-<FONT
+サイズを伴う配列 A, インデックス i, 値 v
+が与えられたとき、<FONT
 COLOR="RED"
 >arrszref_get_at(A, i)</FONT
-> and <FONT
+> と
+<FONT
 COLOR="RED"
 >arrszref_set_at(A, i, v)</FONT
->
-can be written as <FONT
+> はそれぞれ
+<FONT
 COLOR="RED"
 >A[i]</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >A[i] := v</FONT
->,
-respectively. Notice that array-bounds checking is performed at run-time
-whenever <FONT
+>
+のように書くことができます。
+<FONT
 COLOR="RED"
 >arrszref_get_at</FONT
-> or <FONT
+> もしくは <FONT
 COLOR="RED"
 >arrszref_set_at</FONT
-> is
-called, and the exception <FONT
+>
+が呼び出されると実行時に配列の範囲検査が行なわれ、配列の添字指定の範囲外アクセスを検出すると例外
+<FONT
 COLOR="RED"
 >ArraySubscriptExn</FONT
-> is raised in case
-of out-of-bounds array access is detected.
+> が発生することに注意してください。
 
 </P
 ><P
->&#13;As a simple example, the following code implements a functiont that
-reverses the content of the array inside a given array-with-size:
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う配列の中身を逆順にする関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -276,20 +275,18 @@ end // end of [arrszref_reverse]
 
 </P
 ><P
->&#13;Arrays-with-size can be a good choice over arrays in a prototype
-implementation as it is often more demanding to program with arrays. Also,
-for programmers who are yet to become familiar with dependent types, it is
-definitely easier to work with arrays-with-size than arrays. When
-programming in ATS, I often start out with arrays-with-size and then
-replace them with arrays when I can see clear benefits from doing so.
+>&#13;配列を用いたプログラミングが要求される実装のプロトタイピングに、サイズを伴う配列はうってつけです。
+また、依存型にまだ精通していないプログラマにとって、配列よりもサイズを伴う配列の方が明らかに簡単に使えるでしょう。
+ATS におけるプログラミングでは、私はサイズを伴う配列からはじめて、それからその恩恵が明確になってから配列で置き換えることがしばしばあります。
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_arrszref.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -350,7 +347,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Persistent Matrices</TD
+>永続化行列</TD
 ></TR
 ></TABLE
 ></DIV

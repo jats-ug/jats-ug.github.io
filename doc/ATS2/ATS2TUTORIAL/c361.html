@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Persistent Matrices</TITLE
+>永続化行列</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Persistent Arrays-with-size"
+TITLE="サイズを伴う永続化配列"
 HREF="c326.html"><LINK
 REL="NEXT"
-TITLE="Persistent Matrices-with-size"
+TITLE="サイズを伴う永続化行列"
 HREF="c385.html"></HEAD
 ><BODY
 CLASS="chapter"
@@ -75,36 +75,35 @@ CLASS="chapter"
 ><A
 NAME="matrixref"
 ></A
->Chapter 9. Persistent Matrices</H1
+>Chapter 9. 永続化行列</H1
 ><P
->&#13;A persistent matrix of dimension m by n is just a persistent array of size
-m*n. Like in C, the representation of a matrix in ATS is row-major. In
-other words, element (i, j) in a matrix of dimension m by n is element
-i*n+j in the underlying array that represents the matrix.
+>&#13;次元 m, n の永続化行列は、単にサイズが m*n の永続化配列です。
+C言語と同様に、ATS における行列表現は列優先 (row-major) です。
+別の言い方をすると、次元 m, n の行列内の要素 (i, j) は、その行列を表現する配列内の要素 i*n+j です。
 
 </P
 ><P
->&#13;Given a viewtype VT and two integers M and N, the type
-<FONT
+>&#13;viewtype VT と2つの整数 M と N が与えられたとき、
+型 <FONT
 COLOR="RED"
 >matrixref(VT, M, N)</FONT
-> is for persistent matrices of dimension M
-by N that contain elements of the viewtype VT.  There is no dimension
-information attached to matrixref-values explicitly. The interfaces for various
-functions on persistent matrices can be found in the SATS file
+> は viewtype VT の要素を含む次元 M, N の永続化行列を表わします。
+matrixref 値にどのような次元情報も付随しません。
+永続化行列に関する様々な関数のインターフェイスを SATS ファイル
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
 TARGET="_top"
 >prelude/SATS/matrixref.sats</A
->, which is automatically loaded by
-<B
+>
+に見つけることができます。
+これは <B
 CLASS="command"
 >atsopt</B
->.
+> によって自動的に読み込まれます。
 
 </P
 ><P
->&#13;The following function is commonly used to create a matrixref-value:
+>&#13;次の関数は matrixref 値を生成するのに一般的に使用されます:
 
 <DIV
 CLASS="informalexample"
@@ -126,16 +125,14 @@ matrixref_make_elt{m,n:int}
 >
 
 
-Given two sizes m and n plus an element x0,
-<FONT
+2つのサイズ m, n と要素 x0 が与えられたとき、<FONT
 COLOR="RED"
 >matrixref_make_elt</FONT
-> returns a matrix of dimension m by n
-in which each cell is initialized with the element x0.
+>
+はそれぞれのセルが要素 x0 で初期化された次元 m, n の行列を返します。
 </P
 ><P
->&#13;Also, the following cast function can be called to turn an array into
-a matrix:
+>&#13;また、次のキャスト関数が呼び出されると、配列を行列に変化させます:
 
 <DIV
 CLASS="informalexample"
@@ -159,15 +156,14 @@ arrayref2matrixref
 
 </P
 ><P
->&#13;For accessing and updating the content of a matrix-cell, the following
-two functions <FONT
+>&#13;行列セルの内容物にアクセスしたり更新するために、次の2つの関数
+<FONT
 COLOR="RED"
 >matrixref_get_at</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >matrixref_set_at</FONT
->
-can be called:
+> を呼び出すことができます:
 
 <DIV
 CLASS="informalexample"
@@ -200,14 +196,12 @@ matrixref_set_at
 >
 
 
-Note that it is not enough to just supply the coordinates of a
-matrix-cell in order to access it; the column dimension of the matrix
-needs to be supplied as well.
+アクセスするためには単に行列セルの座標を指定するだけでは十分ではないことに注意してください;
+その行列の行の次元も同様に指定する必要があります。
 
 </P
 ><P
->&#13;In the following presentation, I give an implementation of a function that
-turns a given square matrix into its transpose:
+>&#13;次は、与えられた正方行列を転置行列にする関数の実装です:
 
 <DIV
 CLASS="informalexample"
@@ -269,12 +263,13 @@ end // end of [matrixref_transpose]
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_matrixref.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -321,7 +316,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Persistent Arrays-with-size</TD
+>サイズを伴う永続化配列</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -335,7 +330,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Persistent Matrices-with-size</TD
+>サイズを伴う永続化行列</TD
 ></TR
 ></TABLE
 ></DIV

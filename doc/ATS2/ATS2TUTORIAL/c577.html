@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Stream-Based Lazy Evaluation</TITLE
+>線形遅延ストリーム</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -68,93 +68,90 @@ CLASS="chapter"
 ><A
 NAME="linear-stream-based-lazy-evaluation"
 ></A
->Chapter 15. Linear Stream-Based Lazy Evaluation</H1
+>Chapter 15. 線形遅延ストリーム</H1
 ><P
->&#13;In ATS, there is also support for lazy evaluation based on linear
-streams. As far as I can tell, linear stream-based lazy evaluation is
-currently a unique language feature of ATS.
+>&#13;ATS では、線形ストリームに基づいた遅延評価もサポートされています。
+私が知る範囲では、線形遅延ストリームは現在のところ ATS 言語独自の機能です。
 
 </P
 ><P
->&#13;In practice, it is most likely that (non-linear) stream-based lazy
-evaluation requires the support of garbage collection (GC). As the behavior
-of GC can in general be very difficult to predict, lazy evaluation may not
-be suitable in a setting where great precision in control is needed.  With
-linear stream-based lazy evaluation, the need for GC to reclaim values
-representing streams is eliminated as such values can be explicitly freed
-in a safe manner.
+>&#13;実際には、
+
+(非線形の) 遅延ストリームにはたいがいガベージコレクション (GC) のサポートが必要になります。
+一般的には GC
+の挙動を予測することはとても困難なため、より強い正確さが必要とされる場面において遅延評価は適切でないかもしれません。
+線形遅延ストリームを用いると、ストリームを表現する値を回収する GC が不要になります。
+そのような値は安全な作法で明示的に解放できるのです。
 </P
 ><P
->&#13;There is a special language construct <FONT
+>&#13;特殊コンストラクタ <FONT
 COLOR="RED"
 >$ldelay</FONT
-> for delaying or
-suspending the evaluation of an expression (by forming a linear thunk), and
-there are also a pair of special functions <FONT
+> は
+(線形サンク (linear thunk) を作ることによって)
+式の評価を遅延もしくは中断します。
+また、特殊関数のペア <FONT
 COLOR="RED"
 >lazy_vt_force</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >lazy_vt_free</FONT
-> for resuming and freeing, respectively, a
-suspended evaluation (represented by a linear thunk).  Unlike
+>
+はそれぞれ (線形サンクによって表わされる)
+中断された評価の再開と解放を行ないます。
 <FONT
 COLOR="RED"
 >delay</FONT
->, <FONT
+> と異なり、<FONT
 COLOR="RED"
 >$ldelay</FONT
-> applies to two expressions to
-form a linear lazy stream; the first expression is the one whose evaluation
-is suspended; the second expression is the one whose evaluation results in
-all the linear values contained in the first expression being freed.
+> は線形遅延ストリームを作るために2つの式に適用されます;
+1つ目の式はその評価を中断させるため;
+2つ目の式を評価すると1つ目の式が含む全ての線形値を解放します。
 
 </P
 ><P
->&#13;The abstract type constructor <FONT
-COLOR="RED"
->lazy_vt</FONT
-> of the sort
-<FONT
+>&#13;種 <FONT
 COLOR="RED"
 >(vt@ype) =&#62; vtype</FONT
-> forms a (boxed) viewtype when applied to a
-viewtype.  Given two expressions exp1 of some type T and exp2 of the type
-<FONT
+> の抽象型コンストラクタ <FONT
+COLOR="RED"
+>lazy_vt</FONT
+> は、viewtype
+に適応されると (ボックス化された) viewtype を形作ります。
+型 T の式 exp1 と型 <FONT
 COLOR="RED"
 >void</FONT
->, the value <FONT
+> の式 exp2 が与えられたとき、値
+<FONT
 COLOR="RED"
 >$ldelay(exp1, exp2)</FONT
-> is of the type
-<FONT
+> は型 <FONT
 COLOR="RED"
 >lazy_vt(T)</FONT
->; calling <FONT
-COLOR="RED"
->lazy_vt_force</FONT
-> on
+> です;
 <FONT
 COLOR="RED"
 >$ldelay(exp1, exp2)</FONT
-> resumes the suspended evaluation of exp1;
-calling <FONT
+> に対して <FONT
 COLOR="RED"
->lazy_vt_free</FONT
-> on <FONT
+>lazy_vt_force</FONT
+> を呼び出すと中断されていた exp1 の評価が再開されます;
+<FONT
 COLOR="RED"
 >$ldelay(exp1, exp2)</FONT
->
-initiates the evaluation of exp2 (to free linear values contained in exp1).
+> に対して <FONT
+COLOR="RED"
+>lazy_vt_free</FONT
+> を呼び出すと
+(exp1 に含まれる線形値を解放するために) exp2 の評価が開始されます。
 
 </P
 ><P
->&#13;The interface for the
-function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >lazy_vt_force</FONT
-> is given as follows:
+> は次のようなインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -173,21 +170,20 @@ CLASS="programlisting"
 >
 
 
-Note that the special prefix operator <FONT
+ATS における特殊な前置演算子 <FONT
 COLOR="RED"
 >!</FONT
-> in ATS is overloaded
-with <FONT
+> は
+<FONT
 COLOR="RED"
 >lazy_vt_force</FONT
->.
+> でオーバーロードされていることに注意してください。
 </P
 ><P
->&#13;The interface for the
-function <FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >lazy_vt_free</FONT
-> is given as follows:
+> は次のようなインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -206,30 +202,30 @@ CLASS="programlisting"
 >
 
 
-Note that the special prefix operator <FONT
+ATS における特殊な前置演算子 <FONT
 COLOR="RED"
 >~</FONT
-> in ATS is overloaded
-with <FONT
+> は <FONT
 COLOR="RED"
 >lazy_vt_free</FONT
->.
+>
+でオーバーロードされていることに注意してください。
 </P
 ><P
->&#13;In <A
+>&#13;<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/stream_vt.sats"
 TARGET="_top"
 >prelude/SATS/stream_vt.sats</A
->,
-the following viewtypes <FONT
-COLOR="RED"
->stream_vt_con</FONT
-> and
+>
+にて、線形遅延ストリームを表現する次の viewtype
 <FONT
 COLOR="RED"
+>stream_vt_con</FONT
+> と <FONT
+COLOR="RED"
 >stream_vt</FONT
-> are declared mutually recursively for representing
-linear lazy streams:
+>
+が相互再帰的に宣言されています:
 
 <DIV
 CLASS="informalexample"
@@ -251,23 +247,24 @@ where stream_vt (a:vt@ype) = lazy_vt (stream_vt_con(a))
 >
 
 
-Also, a number of common functions on linear streams are declared in
+また、線形ストリームに関する多数の一般的な関数が
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/stream_vt.sats"
 TARGET="_top"
 >prelude/SATS/stream_vt.sats</A
-> and
-implemented in <A
+>
+で宣言され、
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/DATS/stream_vt.dats"
 TARGET="_top"
 >prelude/DATS/stream_vt.dats</A
->.
+>
+で実装されています。
 
 </P
 ><P
->&#13;The following code gives an implementation of the sieve
-of Eratosthenes in which a linear stream of all the primer numbers is
-constructed:
+>&#13;次のコードは、全ての素数が線形ストリームとしてコンストラクトされるエラトステネスの篩
+(Sieve of Eratosthenes) を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -316,11 +313,10 @@ val thePrimes = sieve(from(2))
 
 </P
 ><P
->&#13;The function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >stream_vt_filter_cloptr</FONT
-> is given
-the following interface:
+> は次のインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -342,31 +338,33 @@ stream_vt_filter_cloptr
 >
 
 
-Given a stream xs and a predicate pred, <FONT
+ストリーム xs と述語 pred が与えられたとき、<FONT
 COLOR="RED"
 >stream_vt_filter_cloptr</FONT
 >
-returns another stream consisting of all the elements in the stream xs
-satisfying the predicate pred.  Note that both xs and pred are consumed by
-the call to <FONT
+は述語 pred を満すようなストリーム xs 内の全ての要素から成る別のストリームを返します。
+xs と pred は両方とも <FONT
 COLOR="RED"
 >stream_vt_filter_cloptr</FONT
->.
+>
+呼び出しによって消費されることに注意してください。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_stream_vt.dats"
 TARGET="_top"
->on-line</A
-> the entirety of
-the code used in this chapter. One can readily use a tool like
+>オンライン</A
+>
+から入手できます。
+上記の実装がメモリリークをしていないことを確認するために
 <A
 HREF="http://www.valgrind.org"
 TARGET="_top"
 >valgrind</A
-> to verify that the
-implementation given above leaks no memory.
+>
+のようなツールを使うこともたやすいでしょう。
 
 </P
 ></DIV

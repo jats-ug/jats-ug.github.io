@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Stream-Based Lazy Evaluation</TITLE
+>遅延ストリーム</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Higher-Order Functions"
+TITLE="高階関数"
 HREF="c420.html"><LINK
 REL="NEXT"
 TITLE="高度なチュートリアル"
@@ -75,52 +75,52 @@ CLASS="chapter"
 ><A
 NAME="stream-based-lazy-evaluation"
 ></A
->Chapter 13. Stream-Based Lazy Evaluation</H1
+>Chapter 13. 遅延ストリーム</H1
 ><P
->&#13;While the core of ATS is based on call-by-value evaluation, there is also
-direct support in ATS for lazy (that is, call-by-need) evaluation.
+>&#13;ATS のコアは値渡し (call-by-value) 評価に基づいていますが、ATS
+は遅延評価 (call-by-need) も直接サポートしています。
 
 </P
 ><P
->&#13;There is a special language construct <FONT
+>&#13;(サンク (thunk) を作ることによって)
+式の評価を遅延もしくは中断するための特殊な言語コンストラクタ <FONT
 COLOR="RED"
 >$delay</FONT
-> for delaying or
-suspending the evaluation of an expression (by forming a thunk), and there
-is also a special function <FONT
+> があります。
+また、(サンクによって表わされる)
+中断された評価を再開するための特殊な関数 <FONT
 COLOR="RED"
 >lazy_force</FONT
-> for resuming a suspended
-evaluation (represented by a thunk).  The abstract type constructor
-<FONT
-COLOR="RED"
->lazy</FONT
-> of the sort <FONT
+> があります。
+種 <FONT
 COLOR="RED"
 >(t@ype) =&#62; type</FONT
-> forms a (boxed)
-type when applied to a type. Given an expression exp of type T, the value
-<FONT
+> の抽象型コンストラクタ <FONT
+COLOR="RED"
+>lazy</FONT
+>
+は型に適用されると (ボックス化された) 型を形作ります。
+型 T の式 exp が与えられたとき、型 <FONT
+COLOR="RED"
+>lazy(T)</FONT
+> の値 <FONT
 COLOR="RED"
 >$delay(exp)</FONT
-> of the type <FONT
+>
+は exp の中断された評価を表わしています。
+なんらかの型 T について型 <FONT
 COLOR="RED"
 >lazy(T)</FONT
-> represents the
-suspended evaluation of exp. Given a value V of the type
-<FONT
-COLOR="RED"
->lazy(T)</FONT
-> for some type T, calling <FONT
+> の値 V が与えられたとき、
+V に対する <FONT
 COLOR="RED"
 >lazy_force</FONT
-> on V
-resumes the suspended evaluation represented by V. If the call returns,
-then the returned value is of type T. The interface for the function
-template <FONT
+> 呼び出しは V によって表現される中断された評価を再開します。
+もしその呼び出しあ返ったなら、その返値は型 T になります。
+関数テンプレート <FONT
 COLOR="RED"
 >lazy_force</FONT
-> is given as follows:
+> のインターフェイスは次のように与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -139,34 +139,34 @@ CLASS="programlisting"
 >
 
 
-where the symbol <FONT
+このとき記号 <FONT
 COLOR="RED"
 >!laz</FONT
-> indicates a form of effect associated
-with lazy-evaluation. Note that the special prefix operator <FONT
+> は遅延評価 (lazy-evaluation) に関連する効果を表わします。
+ATS における特殊な前置演算子 <FONT
 COLOR="RED"
 >!</FONT
->
-in ATS is overloaded with <FONT
+> は
+<FONT
 COLOR="RED"
 >lazy_force</FONT
->.
+> の多重定義であることに注意してください。
 
 </P
 ><P
->&#13;In <A
+>&#13;<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
 TARGET="_top"
 >prelude/SATS/stream.sats</A
->,
-the following types <FONT
+>
+では、遅延ストリームを表現するために次の型
+<FONT
 COLOR="RED"
 >stream_con</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >stream</FONT
-> are declared
-mutually recursively for representing lazy streams:
+> が相互再帰的に宣言されています:
 
 <DIV
 CLASS="informalexample"
@@ -188,22 +188,21 @@ where stream (a:t@ype) = lazy (stream_con(a))
 >
 
 
-Also, a number of common functions on streams are declared in
+また、ストリームに関する多数の一般的な関数が
 <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
 TARGET="_top"
 >prelude/SATS/stream.sats</A
-> and
-implemented in <A
+> で宣言され
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/DATS/stream.dats"
 TARGET="_top"
 >prelude/DATS/stream.dats</A
->.
+> で実装されています。
 
 </P
 ><P
->&#13;The following code gives a standard implementation of the sieve of
-Eratosthenes:
+>&#13;次のコードはエラトステネスの篩 (Sieve of Eratosthenes) の一般的な実装です:
 
 <DIV
 CLASS="informalexample"
@@ -240,20 +239,17 @@ val thePrimes = sieve(from(2))
 >
 
 
-A stream is constructed consisting of all the integers
-starting from 2; the first element of the stream is kept and all the
-multiples of this element are removed from the tail of stream; this process
-is then repeated on the tail of the stream recursively. Clearly, the final
-stream thus generated consists of all the prime numbers ordered
-ascendingly.
+2からはじまる整数列から成るストリームがコンストラクトされます;
+ストリームの最初の要素が保持され、その要素の倍数がストリームの残り (tail) から削除されます;
+それからストリームの残り (tail) に対してこの処理が再帰的に繰り返されます。
+明確に、このように生成された最終的なストリームは昇順に並んだ全ての素数から成ります。
 
 </P
 ><P
->&#13;The function template <FONT
+>&#13;関数テンプレート <FONT
 COLOR="RED"
 >stream_filter_cloref</FONT
-> is of the following
-interface:
+> は次のようなインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -275,16 +271,15 @@ stream_filter_cloref
 >
 
 
-Given a stream and a predicate, <FONT
+ストリームと述語が与えられたとき、<FONT
 COLOR="RED"
 >stream_filter_cloref</FONT
 >
-generates another stream consisting of all the elements in the given stream
-that satisfy the given predicate.
+は与えられた述語を満すような、与えられたストリーム内の要素群全てから成る別のストリームを生成します。
 </P
 ><P
->&#13;Let us see another example of lazy evaluation.  The follow code
-demonstrates an interesting approach to computing the Fibonacci numbers:
+>&#13;遅延評価の別の例を見てみましょう。
+次のコードは、フィボナッチ数列を計算する興味深いアプローチを示しています:
 
 <DIV
 CLASS="informalexample"
@@ -317,11 +312,10 @@ and theFibs_2
 >
 
 
-The function template <FONT
+関数テンプレート <FONT
 COLOR="RED"
 >stream_map2_fun</FONT
-> is assigned the following
-interface:
+> には次のインターフェイスが割り当てられています:
 
 <DIV
 CLASS="informalexample"
@@ -345,20 +339,18 @@ a1,a2:t0p}{b:t0p
 >
 
 
-Given two streams xs1 and xs2 and a binary function f,
+2つのストリーム xs1, xs2 と引数が2つの関数 f が与えられたとき、
 <FONT
 COLOR="RED"
 >stream_map2_fun</FONT
-> forms a stream xs such that xs[n] (that is,
-element n in xs), if exists, equals f(xs1[n], xs2[n]), where n ranges over
-natural numbers.
+> は n が自然数の範囲において
+xs[n] が f(xs1[n], xs2[n]) と等しいようなストリーム xs を作ります。
 
 </P
 ><P
->&#13;Let us see yet another example of lazy evaluation.
-A Hamming number is a positive natural number whose prime factors can
-contain only 2, 3 and 5.  The following code shows a straightforward way to
-generate a stream consisting of all the Hamming numbers:
+>&#13;さらに別の遅延評価の例を見てみましょう。
+ハミング数 (Hamming number) は素因数として 2, 3, 5 のみを持つ自然数です。
+次のコードは、全てのハミング数から成るストリームを生成する率直な方法を示しています:
 
 <DIV
 CLASS="informalexample"
@@ -399,11 +391,10 @@ and theHamming5
 >
 
 
-The function template <FONT
+関数テンプレート <FONT
 COLOR="RED"
 >stream_mergeq_fun</FONT
-> is given the following
-interface:
+> は次のインターフェイスを持ちます:
 
 <DIV
 CLASS="informalexample"
@@ -426,37 +417,37 @@ stream_mergeq_fun
 >
 
 
-Given two streams and an ordering (represented by a function) such that the
-two streams are listed ascendingly according to the ordering,
-<FONT
+2つのストリームと、その2つのストリームがある順序によって昇順に整列されたような (関数によって表現された)
+順序が与えられたとき、<FONT
 COLOR="RED"
 >stream_mergeq_fun</FONT
-> returns a stream listed ascendingly that
-represents the union of the two given streams such that any elements in the
-second stream that also occurs in the first stream are dropped.
+>
+は与えられた2つのストリームの合併を表わす、昇順に整列したストリームを返します。
+つまり2番目のストリーム内のどのような要素も、1番目のストリーム内にも在るのであれば捨てられます。
 
 </P
 ><P
->&#13;With stream-based lazy evaluation, an illusion of infinite data can be
-readily created. This illusion is given a simple programming interface plus
-automatic support for memoization, enabling a programming style that can
-often be both elegant and intriguing.
+>&#13;遅延ストリームを用いると、無限なデータの錯覚をたやすく作り出すことができます。
+この錯覚は、メモ化 (memoization)
+に対して単純なプログラミングインターフェイスと自動化サポートによって産み出され、
+しばしば優雅さと魅力を両立したプログラミングスタイルを可能にします。
 
 </P
 ><P
->&#13;In general, it is difficult to estimate the time-complexity and
-space-complexity of a program based on lazy evaluation. This is regarded as
-a serious weakness. With linear stream-based lazy evalution, this weakness
-can essentially be removed.
+>&#13;一般的に、遅延評価に基づいたプログラムの時間的計算量 (time-complexity)
+と空間的計算量 (space-complexity) を見積ることは困難です。
+これは深刻な弱点です。
+線形遅延ストリームを用いることで、この弱点を本質的に克服することができます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_stream.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -503,7 +494,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Higher-Order Functions</TD
+>高階関数</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
