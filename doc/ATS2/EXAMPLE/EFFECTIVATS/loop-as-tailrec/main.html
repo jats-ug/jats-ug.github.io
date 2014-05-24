@@ -6,7 +6,10 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>EFFECTIVATS-loop-as-tailrec</title>
+
+
+<title>EFFECTIVATS: 末尾再帰関数としてのループ</title>
+
 <style type="text/css">
   .patsyntax {color:#808080;background-color:#E0E0E0;}
   .patsyntax span.keyword {color:#000000;font-weight:bold;}
@@ -31,31 +34,43 @@
 <body>
 
 <h1>
-Effective ATS: Loops as Tail-Recursive Functions
+
+
+Effective ATS: 末尾再帰関数としてのループ
+
 </h1>
 
-Although language constructs are available in ATS to support direct
-construction of for-loops and while-loops, it is strongly recommended that
-loops be implemented as tail-recursive functions (a.k.a. iterative
-functions). A primary advantage of doing so is that this style of loop
-implementation can be readily combined with theorem-proving as is supported
-in ATS, thus facilitating program verification involving loops.
+
+
+ATS では for ループと while ループを直接コンストラクトできますが、ループは末尾再帰関数
+(別名: 反復関数 (iterative functions))
+として実装されることが強く推奨されています。
+そのように実装する主要な利点は、このスタイルのループ実装が ATS によてサポートされている定理証明とたやすく混ぜ合わせられることです。
+そのためループを含むプログラムの検証が容易になります。
+
 
 <p>
 
-Please see tailrec.dats for the entirety of the code given in the
-followng presentation.
+
+
+以降で示すコードの全体は tailrec.dats から入手できます。
+
 
 <h2>
-What is tail-recursion?
+
+
+末尾再帰とは何ですか？
+
 </h2>
 
-Suppose that [foo] and [bar] are two functions and there is a call to [bar]
-in the body of [foo]. This call is a tail-call if what it returns is also
-the return value of [foo]. In other words, a function call in the body of
-some calling function is a tail-call if the return value of the call is
-also the return value of the calling function. For instance, the call to
-[bar] is a tail-call in the following code but the call to [baz] is not:
+
+
+[foo] と [bar] が2つの関数で、[foo] の本体から [bar] を呼び出していると仮定します。
+この呼び出しのリターンが [foo] の返値にもなるなら、この呼び出しは末尾呼出です。
+別の言い方をすると、呼び出しの返値が呼び出した関数の返値になるとき、そのような呼び出しをしている関数本体のその関数呼出は末尾呼出です。
+例えば、次のコードにおける [bar] の呼び出しは末尾呼出ですが、[baz]
+の呼び出しはそうではありません:
+
 
 <pre
 class="patsyntax">
@@ -63,18 +78,22 @@ class="patsyntax">
   <span class="keyword">if</span> x <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> bar<span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">else</span> baz<span class="keyword">(</span>x<span class="keyword">)</span>+<span class="dynexp">1</span></span>
 </pre>
 
-By the way, even if baz(x)+1 is changed into baz(x)+0, the call to
-[baz] is still not considered a tail-call unless baz(x)+0 can somehow be
-translated into baz(x).
+
+
+ところで、たとえ baz(x)+1 を baz(x)+0 に変えたとしても、baz(x)+0 をなんとかして
+baz(x) に翻訳することなしに、[baz] の呼び出しはまだ末尾呼出とは見なせません。
+
 
 <p>
 
-If the calling function calls itself in a tail-call, then this tail-call is
-often referred to as a tail-recursive call. A function is tail-recursive if
-every recursive call in its body is a tail-call. Note that a tail-recursive
-function is also referred to as an iterative function in the literature.
-In the following example, the outside call to [f91] is tail-recursive but
-the inside one is not:
+
+
+もし末尾呼出で呼び出す関数が自分自身を呼び出しているなら、この末尾呼出はしばしば末尾再帰呼出と呼ばれます。
+関数本体内のあらゆる再帰呼出が末尾呼出であれば、その関数は末尾再帰です。
+末尾再帰関数は反復関数と呼ばれることもあることに注意してください。
+次の例では、
+外側の [f91] 呼び出しは末尾再帰ですが、内側の呼び出しはそうではありません:
+
 
 <pre
 class="patsyntax">
@@ -82,40 +101,54 @@ class="patsyntax">
   <span class="keyword">if</span> x &gt;= <span class="dynexp">101</span> <span class="keyword">then</span> x-<span class="dynexp">10</span> <span class="keyword">else</span> f91<span class="keyword">(</span>f91<span class="keyword">(</span>x+<span class="dynexp">11</span><span class="keyword">)</span><span class="keyword">)</span></span>
 </pre>
 
-By definition, [f91] is not a tail-recursive function.
+
+
+定義から、[f91] は末尾再帰関数ではありません。
+
 
 <h2>
-Why is tail-recursion desirable?
+
+
+なぜ末尾再帰が望ましいのですか？
+
 </h2>
 
-Each tail-recursive function can be readily implemented as a loop.  Assume
-that a call stack is employed to implement function calls, which is by far
-the most common implementation strategy in practice.  Then calling a
-tail-recursive function only requires a fixed amount of stack space. In a
-setting where stack space is greatly limited (e.g., low-level embedded
-programming), tail-recursion is often the only form of recursion that is
-legally allowed.  In short, tail-recursion is desirable because it can be
-implemented in a much more efficient manner, both time-wise and
-memory-wise, when compared with general recursion.
+
+
+それぞれの末尾再帰関数はたやすくループによって実装できます。
+関数呼出の実装に、実際非常に一般的な実装方式である、コールスタックが用いられていると仮定しましょう。
+すると、末尾再帰関数の呼び出しには一定量のスタック空間のみが必要になります。
+スタック空間がおびただしく制限された状況下 (例: 低レイヤーな組み込みプログラミング)
+では、末尾呼出はしばしば唯一許されうる再帰です。
+手短に言えば、一般的な再帰と比較して、時間的にも空間的にもより効率的な作法で実装できるために、末尾再帰は望ましいのです。
+
 
 <h2>
-Translating recursion into tail-recursion
+
+
+再帰を末尾再帰に変換する
+
 </h2>
 
-Given the advantage of tail-recursion, it is natural to encounter the need
-for turning a recursive (but not tail-recursive) function into an
-equivalent one that is also tail-recursive. While there is a systematic
-approach to translating recursion into tail-recursion (CPS-translation),
-this approach is in general not what one wants to use if one's focus is on
-efficiency. Instead, one mostly relies on ad hoc methods or tricks to
-handle each individual case.
+
+
+末尾再帰に利点があるのであれば、末尾再帰でない再帰関数から等価な末尾再帰への変換が当然必要になります。
+再帰を末尾再帰に変換する体系立てられたアプローチ (CPS 変換)
+がありますが、効率に注目するとこのアプローチは一般的に使えるものではありません。
+その代わりに、主にそれぞれ個々の場合を扱うアドホックは手法やトリックに頼ることになります。
+
 
 <h4>
-Example 1
+
+
+例 1
+
 </h4>
-Let us now take a look at a concrete example. The following code implements
-a function [tally] that sums up all the integers between 1 and a given
-number n, inclusive:
+
+
+ここで具体的な例を見てみましょう。
+次のコードでは、1 から与えられた数字 n までの全ての整数の和を計算する関数 [tally] を実装しています:
+
 
 <pre
 class="patsyntax">
@@ -123,8 +156,11 @@ class="patsyntax">
   <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> n + tally <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">0</span></span>
 </pre>
 
-Clearly, [tally] is not tail-recursive. If we translate this implementation
-of [tally] into C, we essentially obtain the following code:
+
+
+[tally] が末尾再帰でないことは明確です。
+もしこの [tally] の実装をC言語に変換すると、本質的に次のようなコードが得られるはずです:
+
 
 <pre>
 int tally (int n)
@@ -133,8 +169,10 @@ int tally (int n)
 }
 </pre>
 
-This implementation of [tally] in C is a bit unusual as a standard one is
-expected to be based on a for-loop:
+
+
+C言語における [tally] のこの実装は少し独特で、一般的な実装は for ループに基づくものになるはずです:
+
 
 <pre>
 int tally2 (int n)
@@ -146,15 +184,19 @@ int tally2 (int n)
 }
 </pre>
 
-It should be pointed out that the equivalence between [tally] and [tally2]
-relies on the fact that integer addition is <em>associative</em>. If
-addition is replaced with subtraction, which is not associative, then these
-two implementations are no longer equivalent.
+
+
+整数の加算の <em>結合法則</em> を使えば、[tally] と [tally2] が等価であることは指摘するべきでしょう。
+もし加算を減算で置換すると、それは結合法則を満たしません。
+そのため2つの実装はもはや等価ではなくなってしまいます。
+
 
 <p>
 
-A straightforward translation of the above implementation of [tally2] in C
-into ATS yields the following code:
+
+
+C言語における [tally2] の上記の実装は、容易に次のような ATS コードに変換できます:
+
 
 <pre
 class="patsyntax">
@@ -170,33 +212,45 @@ class="patsyntax">
 <span class="keyword">end</span></span> <span class="comment">// end of [tally2]</span>
 </pre>
 
-Please note that the inner function [loop] is tail-recursive. The
-compiler of ATS (ATS/Postiats) essentially compiles [loop] into
-some code in C that is equivalent to the for-loop mentioned above.
+
+
+内部関数 [loop] が末尾再帰であることに注意してください。
+ATS (ATS/Postiats) コンパイラは、[loop] を上記で示した for ループ相当のC言語コードに本質的にコンパイルします。
+
 
 <p>
 
-In general, the process of translating a recursive function into a
-tail-recursive one hinges on finding an efficient way to encode the stack
-generated during the execution of the function. For instance, suppose we
-call [tally] on 100; this call generates a recursive call on 99, and then
-a recursive call on 98, and so on; when [tally] is called on 50, the call
-stack essentially represents the following evaluation context:
+
+
+一般的に、再帰関数を末尾再帰関数に変換は、その関数を実行中に生成されるスタックをエンコードする効率の良い方法を見つけられるかで決まります。
+例えば、[tally] を 100 に対して呼び出したと仮定しましょう;
+この呼び出しは 99 に対する再帰呼出を生成し、そして 98 に対する再帰呼出、などと続きます;
+[tally] を 50 に対して呼び出した時、そのコールスタックは本質的に次のような評価コンテキストを表わします:
+
 
 <pre>
 100 + (99 + (98 + (... + (51 + []) ...)))
 </pre>
 
-where the symbol [] is to be replaced with the return value of tally(50).
-As integer addition is associative, we can use the sum (100+99+98+...+51)
-to represent this evaluation context. This is precisely the idea behind the
-implementation of the inner function [loop] in the body of [tally2].
+
+
+このとき記号 [] は tally(50) の返値で置き換えられます。
+整数の加算は結合法則を満たすので、この評価コンテキストを表現するのに和
+(100+99+98+...+51) を使うことができます。
+これは [tally2] の本体内に内部関数 [loop] を実装する際のアイデアそのままです。
+
 
 <h4>
-Example 2
+
+
+例 2
+
 </h4>
-Let us take a look at another example. The following code implements
-a function named [fib] for computing Fibonacci numbers:
+
+
+別の例を見てみましょう。
+次のコードは、フィボナッチ数列を計算する [fib] という名前の関数を実装しています:
+1
 
 <pre
 class="patsyntax">
@@ -204,9 +258,11 @@ class="patsyntax">
   <span class="keyword">if</span> n &gt;= <span class="dynexp">2</span> <span class="keyword">then</span> fib<span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> + fib<span class="keyword">(</span>n-<span class="dynexp">2</span><span class="keyword">)</span> <span class="keyword">else</span> n</span>
 </pre>
 
-Clearly, neither of the two recursive calls in the body of [fib] is
-tail-recursive. Another function named [fib2] is presented as follows for
-computing Fibonacci numbers:
+
+
+[fib] 本体内の2つの再帰呼出のどちらも末尾再帰でないことは明白です。
+フィボナッチ数列を計算する別の関数 [fib2] を次に示します:
+
 
 <pre
 class="patsyntax">
@@ -222,30 +278,40 @@ class="patsyntax">
 <span class="keyword">end</span></span> <span class="comment">// end of [fib2]</span>
 </pre>
 
-It is evident that the inner funtion [loop] in the body of [fib2] is
-tail-recursive. Suppose we want to evaluate fib2(100), which generates a
-call of the form loop(0, 0, 1), which then generates a call of the form
-loop(1, 1, 1), which then generates a call of the form loop(2, 1, 2), etc.
-If loop(i, f0, f1) is among this sequence of calls, then f0 is Fibonacci
-number i and f1 is Fibonacci number i+1. This implies that the value
-returned by the last call in this sequence is Fibonacci number 100 (as i
-reaches 100 at that point). This argument, though informal, should probably
-be enough to convince one that [fib] and [fib2] are equivalent, that is,
-they return the same result when applied to a given integer.
+
+
+[fib2] の本体の内部関数 [loop] が末尾再帰であることは明らかです。
+fib2(100) の評価を想像してみましょう。
+この評価は loop(0, 0, 1) 呼び出しを生成し、その後 loop(1, 1, 1)
+呼び出しを、さらにその後 loop(2, 1, 2) 呼び出しを、などと続きます。
+もしこの呼び出し列を loop(i, f0, f1) とすれば、f0 は i
+番目のフィボナッチ数、f1 は i+1 番目のフィボナッチ数になります。
+これは、この列の最後の呼び出しの返値が 100 番目のフィボナッチ数
+(i が 100 に到達した地点) になることを意味しています。
+この引数は、[fib] と [fib2] は等価であることを納得させるに十分な情報でしょう。
+つまり与えられた整数に適用した時、それらは同じ結果を返すのです。
+
 
 <p>
 
-The very idea behind translating [fib] into [fib2] lies in the simple
-observation that only the two previously computed Fibonacci numbers need to
-be kept in order to compute Fibonacci number n for every n >= 2.
+
+
+[fib] を [fib2] に変換する背後にあるアイデアは、n >=2 の n
+番目のフィボナッチ数を計算するために2つ前に計算されたフィボナッチ数のみを保持する必要がある、という単純な観察によっています。
+
 
 <h4>
-Example 3
+
+
+例 3
+
 </h4>
 
-The next example we see involves list-processing.
-The following code implements the standard concatenation of two given
-lists:
+
+
+次の例はリスト処理を含んでいます。
+次のコードは、与えられた2つのリストの一般的な連結を実装しています:
+
 
 <pre
 class="patsyntax">
@@ -264,24 +330,26 @@ list_append
 <span class="keyword">)</span></span> <span class="comment">// end of [list_append]</span>
 </pre>
 
-The type assigned to [list_append] means that the function returns a list
-of length m+n when applied to two lists xs and ys of length m and n,
-respectively.  Note that this is so-called functional list concatenation as
-neither of the input lists gets modified. Clearly, [list_append] is not
-tail-recursive as the recursive call in its body is not a tail-call. If the
-first argument of a call to [list_append] is long (e.g., containing 1M
-elements), then it is very likely that an execution of this call overflows
-the call stack and thus causes a crash.
+
+
+[list_append] に割り当てられた型は、この関数が長さがそれぞれ m と n の2つのリスト xs と ys に適用されると、長さ m+n のリストを返すことを意味しています。
+これが入力のリストを修正しない、いわゆる関数的なリストの連結であることに注意してください。
+[list_append] 内の再帰呼出が末尾呼出でないので、この関数は末尾再帰ではないことは明確です。
+もし [list_append] 呼び出しの最初の引数が長い (例: 100万要素を含むなど)
+場合には、この呼び出し実行がコールスタックを溢れさせてクラッシュを引き起こす可能性が高くなります。
+
 
 <p>
 
-In order to translate [list_append] into a tail-recursive implementation,
-we need some knowledge about list construction. There are essentially two
-steps involved in evaluating list_cons(x, xs); certain memory needs to be
-first allocated for storing a list node; then this node is initialized with
-x and xs. In ATS, it is allowed to formally separate these two steps, and
-this separation is key to obtaining a proper tail-recursive implementation
-of list concatenation as is shown in the following code:
+
+
+[list_append] を末尾再帰実装にするためには、リストの結合に関するいくつかの知識が必要です。
+list_cons(x, xs) の評価は本質的に2つのステップです;
+はじめにリストノードを格納するために必要なメモリを確保し;
+それからこのノードを x と xs で初期化します。
+ATS では、これら2つのステップは形式的に分離することができます。
+この分離は、次のコードで示すような、リスト連結の適切な末尾再帰実装を得るための鍵になります:
+
 
 <pre
 class="patsyntax">
@@ -322,27 +390,36 @@ list_append2
 <span class="keyword">end</span></span> <span class="comment">// end of [list_append2]</span>
 </pre>
 
-Given xs, ys, and res, what the inner function [loop] does is to put the
-concatenation of xs and ys into res.  In the body of [loop], we see that
-the expression fold@(res) follows the recursive call to [loop].  However,
-this call is considered a tail-call as fold@(res) is solely used for the
-purpose of typechecking and erased afterwards.  Therefore, [loop] is a
-tail-recursive function.
+
+
+xs, ys, res が与えられたとき、内部関数 [loop] は res の中に xs と ys の連結を配置します。
+[loop] の本体では、式 fold@(res) が末尾呼出 [loop] よりも後ろにあるように見えます。
+けれども、型検査の目的で fold@(res) は単に使われて型検査後では削除されてしまうため、この呼び出しは末尾呼出であると考えられます。
+したがって [loop] は末尾再帰関数です。
+
 
 <p>
 
-By the way, the style of recursion employed in the implementation of [loop]
-is often dubbed <em>tail-recursion modulo allocation</em>, which commonly
-appears in untyped or weakly-typed languages (e.g., LISP and C) but rarely
-in a typed language (due to the great difficulty in properly typing it).
+
+
+ところで、この [loop]  の実装に見られる再帰のスタイルはしばしば
+<em>末尾再帰を法とするアロケーション (tail-recursion modulo allocation)</em> と呼ばれます。
+これは一般に弱い型の言語 (例: LISP や C言語) 見られますが、(適切に型を付けることが非常に困難なため)
+型付き言語ではあまり見られません。
+
 
 <h2>
-Mutually tail-recursive functions
+
+
+相互末尾再帰関数
+
 </h2>
 
-Sometimes, we need to combine functions together in order to turn mutually
-tail-recursive calls into local jumps. For instance, in the following code,
-[isevn] and [isodd] are defined mutually recursively:
+
+
+ときには、相互再帰呼出をローカルジャンプに変化させるために、関数を組み合わせる必要があります。
+例えば、次のコードでは [isevn] と [isodd] は相互再帰的に定義されています:
+
 
 <pre
 class="patsyntax">
@@ -352,18 +429,23 @@ class="patsyntax">
   <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isevn <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> false</span>
 </pre>
 
-The call to [isodd] in the body of [isevn] and the call to [isevn] in the
-body of [isadd] are both tail-calls. As they are also mutually recursive
-calls, they are referred to as mutually tail-recursive calls.
+
+
+[isevn] 本体の [isodd] 呼び出しと [isadd] 本体の [isevn] 呼び出しは両方とも末尾呼出です。
+これらはまた相互末尾呼出なので、これらは相互末尾再帰呼出と呼ばれます。
+
 
 <p>
 
-When compiling this implementation of [isevn] and [isadd], the ATS compiler
-(ATS/Postiats) handles [isevn] and [isodd] separately and thus
-is <em>unable</em> to turn the call to [isodd] ([isevn]) in the body of
-[isevn] ([isodd]) into a local jump. In order to indicate to the compiler
-that these two functions need to be combined for compilation, the keyword
-[fun] should be replaced with another keyword [fnx]:
+
+
+[isevn] と [isadd] のこの実装をコンパイルすると、
+ATS コンパイラ (ATS/Postiats) は [isevn] と [isodd] を別々に扱います。
+したがって、[isevn] ([isodd]) 本体内の [isodd] ([isevn])
+呼び出しをローカルジャンプに変換<em>できません</em>。
+2つの関数を混合してコンパイルする必要があることをコンパイラに指示するために、キーワード
+[fun] を別のキーワード [fnx] で置き換えなければなりません:
+
 
 <pre
 class="patsyntax">
@@ -373,17 +455,24 @@ class="patsyntax">
   <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isevn <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> false</span>
 </pre>
 
-When compiling the above code, the ATS compiler puts inside the body of
-[isevn] a copy of the body of [isodd] so that mutually tail-recursive calls
-in the bodies of these two functions can be translated into local jumps.
-Also, please note that only the first of a sequence of mutually defined
-functions following the keyword [fnx] is available for subsequent use. In
-the above case, only the function [isevn] is available for subsequent use
-whereas the function [isodd] is not.
+
+
+上記のコードをコンパイルすると、ATS コンパイラは [isodd] 本体のコピーを [isevn] 本体内に埋め込みます。
+これで、これら2つの関数の本体内の相互末尾再帰呼出はローカルジャンプに変換できるようになります。
+また、キーワード [fnx] に続いて相互的に定義された関数列の最初の関数だけ、後のコードで使用できることに注意してください。
+上記の場合、関数 [isevn] は後に使用することができますが、関数 [isodd] はそうではありません。
+
 
 <hr size="2">
 
-This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+
+この記事は
+<a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>
+によって書かれ、
+<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a>
+によって翻訳されています。
+
 
 </body>
 </html>
