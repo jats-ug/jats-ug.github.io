@@ -6,7 +6,10 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>EFFECTIVATS-IPC-redis</title>
+
+
+<title>EFFECTIVATS: Redis を用いたプロセス間通信</title>
+
 <style type="text/css">
   .patsyntax {color:#808080;background-color:#E0E0E0;}
   .patsyntax span.keyword {color:#000000;font-weight:bold;}
@@ -31,19 +34,31 @@
 <body>
 
 <h1>
-Effective ATS: Inter-Process Communication based on Redis
+
+
+Effective ATS: Redis を用いたプロセス間通信
+
 </h1>
 
-In this article, I present a straightforward example of inter-process
-communication based on the NOSQL <a href="http://redis.io">redis</a>.  The
-primary purpose of this example is to show a concrete case where redis
-functions are directly called inside ATS code.
+
+
+この記事では、NOSQL
+<a href="http://redis.io">redis</a>
+を用いたプロセス間通信の素直な例を紹介します。
+この例の主な目的は redis の関数を ATS コードの中から直接呼び出す具体例を示すことです。
+
 
 <h2>
-Message Channels
+
+
+メッセージチャネル
+
 </h2>
 
-Let us first introduce a type [msgchan] for message channels:
+
+
+はじめにメッセージチャネルを表わす型 [msgchan] を導入しましょう:
+
 
 <pre
 class="patsyntax">
@@ -51,21 +66,27 @@ class="patsyntax">
 <span class="keyword">typedef</span> <span class="staexp">msgchan <span class="keyword">=</span> <span class="staexp">msgchan_type</span></span>
 </pre>
 
-The following function is for creating a message channel:
+
+
+次の関数はメッセージチャネルを生成します:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> msgchan_create <span class="keyword">(</span>name<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">msgchan</span></span>
 </pre>
 
-In the actual implementation, a message channel is just a key referring to
-a queue in redis, and the function [msgchan_create] computes such a key based on
-a given name.
+
+
+実際の実装ではメッセージチャネルは redis のキューを参照する単なるキーで、関数 [msgchan_create] は与えられた名前に基づいたキーを算出します。
+
 
 <p>
 
-In order to insert a message into a given message channel, the
-following function [msgchan_insert] can be called:
+
+
+与えられたメッセージチャネルにメッセージを挿入するために、次の関数 [msgchan_insert] を使うことができます:
+
 
 <pre
 class="patsyntax">
@@ -73,56 +94,71 @@ class="patsyntax">
   <span class="keyword">(</span>chan<span class="keyword">:</span> <span class="staexp">msgchan</span><span class="keyword">,</span> msg<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">,</span> nerr<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="staexp">int</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span></span>
 </pre>
 
-The third argument of [msgchan_insert] is call-by-reference, and its value
-is increased to indicate a failed attempt to insert a message.
+
+
+[msgchan_insert] の3番目の引数は参照渡しで、メッセージの挿入に失敗するとその値を増やします。
+
 
 <p>
 
-In order to take out a message for a given message channel, the
-following function [msgchan_takeout] can be called:
+
+
+与えられたメッセージチャネルからメッセージを取り出すために、次の関数 [msgchan_takeout] を使うことができます:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> msgchan_takeout <span class="keyword">(</span>chan<span class="keyword">:</span> <span class="staexp">msgchan</span><span class="keyword">,</span> nerr<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="staexp">int</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">stropt</span></span>
 </pre>
 
-The second argument of [msgchan_takeout] is call-by-reference, and its
-value is increased to indicate a failed attempt to take out a message. What
-[msgchan_takeout] returns is an optional string, which is either a regular
-string or a null pointer. In case a null pointer is returned, it is also an
-indication of failure of some sort.  Note that a call to [msgchan_takeout]
-on a given channel is blocked if the channel is currently empty.
+
+
+[msgchan_takeout] の2番目の引数は参照渡しで、メッセージの取り出しに失敗するとその値を増やします。
+[msgchan_takeout] は、通常の文字列か NULL ポインタどちらかを取る optional 文字列を返します。
+NULL ポインタが返された場合もまた、なんらかの種類の失敗を示しています。
+与えられたチャネルがその時点で空だったら、そのチャネルに対する [msgchan_takeout] 呼び出しはブロックすることに注意してください。
+
 
 <p>
 
-If calling [msgchan_insert] or [msgchan_takeout] on a channel results in a
-failure, then the redis connection associated with the channel should be
-re-established before a second attempt is made.
+
+
+もしチャネルに対して [msgchan_insert] もしくは [msgchan_takeout] を呼び出した結果が失敗だったら、
+2回目の試みの前にそのチャネルに関連した redis 接続を再確立させなければなりません。
+
 
 <h2>
-Redis Connection
+
+
+Redis 接続
+
 </h2>
 
-To set up a redis connection means to create a value of the type
-[redisContext(l)], where l refers to the memory location at which the value
-is stored.  Let us use the name redisContext-value to refer to such a
-value.  In case a redis connection cannot be set up successfully, the type
-[redisContext(null)] is assigned to the created redisContext-value, which
-is just a null pointer.
+
+
+redis 接続を構成するというのは、値がメモリ位置 l に保管されているとき、型 [redisContext(l)] の値を生成することを意味しています。
+そのような値を参照する redisContext 値を使ってみましょう。
+redis 接続を正常に構成できなかった場合、生成された単なる NULL ポインタであるような redisContext 値に型 [redisContext(null)] が割り当てられます。
+
 
 <p>
 
-Once a redis connection is established, the redisContext-value associated
-with this connection is stored in a reference (that is, an array of size 1).
-The following function can be called to obtain the stored redisContext-value
-(for temporary use):
+
+
+いったん redis 接続が構成されると、この接続に関連する redisContext 値は
+(サイズ 1 であるような) 参照に保存されます。
+次の関数は、(一時的な使用を目的として) 保管された redisContext 値を得ることができます:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> the_redisContext_vtget <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>addr<span class="keyword">]</span></span> <span class="staexp">vttakeout0</span> <span class="keyword">(</span><span class="staexp">redisContext</span><span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span><span class="keyword">)</span></span>
 </pre>
 
-where [vttakeout0] is defined as follows:
+
+
+このとき [vttakeout0] は次のように定義されています:
+
 
 <pre
 class="patsyntax">
@@ -130,7 +166,10 @@ class="patsyntax">
 <span class="staexp">vttakeout0 <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">vt@ype</span></span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="staexp">a</span> <span class="keyword">-&lt;</span><span class="staexp">lin</span><span class="keyword">,</span><span class="staexp">prf</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">|</span> <span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// borrowed linear value</span>
 </pre>
 
-The following code depicts a typical calling sequence:
+
+
+次のコードは典型的な呼び出しシーケンスを表わしています:
+
 
 <pre
 class="patsyntax">
@@ -143,17 +182,23 @@ class="patsyntax">
 <span class="comment">//</span>
 </pre>
 
-where [the_redisContext_vtget] is called to obtain a redisContext-value and
-a proof function for returning this value, and the proof function is then
-called on the redisContext-value to return it (in the sense of theorem-proving)
-after its being used.
+
+
+このとき [the_redisContext_vtget] は redisContext 値とこの値を解放するための証明関数を得るために呼び出されています。
+そして redisContext 値を使い終わったら、それを解放するためにその証明関数を呼び出します。
+
 
 <h2>
-Testing
+
+
+テスト
+
 </h2>
 
-The ATS code implementing message channels can be found
-in the following files:
+
+
+メッセージチャネルを実装している ATS コードは次のファイルから入手できます:
+
 
 <pre>
 msgchan.sats
@@ -161,33 +206,47 @@ msgchan.dats
 redisContextSetup.dats
 </pre>
 
-In the file [test_up.dats], some testing code is available
-for uploading the content of a file into a message channel.
+
+
+ファイル [test_up.dats] は、ファイルの内容物をメッセージチャネルにアップロードするテストコードです。
+
 
 <p>
 
-In the file [test_dn.dats], some testing code is available
-for downloading the content of a message channel into a file.
+
+
+ファイル [test_dn.dats] は、メッセージチャネルの内容物をファイルにダウンロードするテストコードです。
+
 
 <p>
 
-There is also a Makefile available for compiling the ATS source code into
-excutables [test_up] and [test_dn] for testing. Assume the availability of
-a redis server running on the default port 6379 at the IP address 127.0.0.1.
-By executing the following command-line:
+
+
+ATS ソースコードを [test_up] と [test_dn] にコンパイルするための Makefile があります。
+IP アドレス 127.0.0.1 のポート 6379 で redis サーバが利用できることを仮定しています。
+次のコマンドで実行すると:
+
 
 <pre>
 cat msgchan.sats | ./test_up & ./test_dn
 </pre>
 
-one should be able to see the content of the file [msgchan.sats] being
-output to the console in a line-by-line fashion, where a short pause (of 3
-seconds at most) is introduced between the appearance of two consecutive
-lines.
+
+
+ファイル [msgchan.sats] の中身が逐次的にコンソールに表示されるのが見えるはずです。
+このとき、連続した2行を表示する間に (せいぜい3秒程度の) 短い休止が入ります。
+
 
 <hr size="2">
 
-This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+
+この記事は
+<a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>
+によって書かれ、
+<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a>
+によって翻訳されています。
+
 
 </body>
 </html>

@@ -6,7 +6,10 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>EFFECTIVATS-queue-sllist2</title>
+
+
+<title>EFFECTIVATS: キューの償却実装</title>
+
 <style type="text/css">
   .patsyntax {color:#808080;background-color:#E0E0E0;}
   .patsyntax span.keyword {color:#000000;font-weight:bold;}
@@ -31,13 +34,18 @@
 <body>
 
 <h1>
-Effective ATS: An Amortized Implementation of Queues
+
+
+Effective ATS: キューの償却実装
+
 </h1>
 
-Queues are a common data structure in practice. In the following
-presentation, I would like to give a simple 2-list-based implementation of
-queues for which both insertion (enqueue) and removal (dequeue) are
-guaranteed to be amortized O(1)-time operations.
+
+
+実用上、キューは一般的なデータ構造です。
+挿入操作 (enqueue) と削除操作 (dequeue) 両方の償却時間計算量が O(1)
+であることを保証されるような、単純な2つのリストを用いたキューの実装を紹介します。
+
 
 <h2>
 A Simple Interface for Queues
@@ -316,7 +324,14 @@ entirety of the above presented code plus some code for testing.
 
 <hr size="2">
 
-This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+
+この記事は
+<a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>
+によって書かれ、
+<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a>
+によって翻訳されています。
+
 
 </body>
 </html>
