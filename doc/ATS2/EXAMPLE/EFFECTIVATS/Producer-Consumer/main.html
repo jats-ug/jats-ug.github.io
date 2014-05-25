@@ -6,7 +6,10 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>EFFECTIVATS-Producer-Consumer</title>
+
+
+<title>EFFECTIVATS: 生産者/消費者問題</title>
+
 <style type="text/css">
   .patsyntax {color:#808080;background-color:#E0E0E0;}
   .patsyntax span.keyword {color:#000000;font-weight:bold;}
@@ -31,35 +34,46 @@
 <body>
 
 <h1>
-Effective ATS: Producer-Consumer
+
+
+Effective ATS: 生産者/消費者問題
+
 </h1>
 
-The Producer-Consumer problem is a classical one in concurrent programming.
-In this article, I present an implementation of this problem that makes
-highly effective use of dependent types and linear types.  Due to great
-difficulty in debugging concurrent programs, relying on static checking to
-detect and fix bugs is of much more significance in concurrent programing
-than in sequential programming.  While the style of programming I employ
-here may take time for one to master, the great advantages it brings can be
-readily appreciated. In general, ATS shines much more brightly in contexts
-where dynamic testing becomes more difficult to perform and/or control.
+
+
+生産者/消費者問題は並行プログラミングにおける古典的な問題です。
+この記事では、依存型と線形型を効果的に使った、この問題に対する実装を紹介しようと思います。
+並行プログラムをデバッグすることがとてつもなく困難なため、バグの検出と修正を静的な検査に頼ることは、逐次実行プログラミングよりも並行プログラミングにおいてさらに重要になります。
+ここで紹介するプログラミングのスタイルは習得するのに時間がかかるかもしれませんが、その大きな利点はすぐに評価できるでしょう。
+一般的に、動的なテストが難しい文脈において、ATS はより異彩を放っています。
+
 
 <h2>
-Description of the Problem 
+
+
+この問題についての解説
+
 </h2>
 
-Given a buffer of finite capacity, there are multiple producers who insert
-items into the buffer and also multiple consumers who take out items from
-the buffer. If a producer wants to insert an item but the buffer is full,
-the producer is blocked until the buffer becomes not full. If a consumer
-wants to take out an item but the buffer is empty, then the consumer is
-blocked until the buffer is not empty.
+
+
+有限容量のバッファが与えられたとき、そのバッファに要素を挿入する複数の生産者と、そのバッファから要素を取り出す複数の消費者がいます。
+もし生産者が要素を挿入しようとしたけれどバッファが満杯であったなら、バッファが満杯でなくなるまでその生産者はブロックします。
+もし消費者が要素を取り出そうとしたけれどバッファが空であったなら、バッファが空でなくなるまでその消費者はブロックします。
+
 
 <h2>
-Interface for Linear Buffer
+
+
+線形バッファのインターフェイス
+
 </h2>
 
-Let us first declare as follows a linear abstract type for buffers:
+
+
+はじめに次のようにバッファを表わす線形抽象型を宣言しましょう:
+
 
 <pre
 class="patsyntax">
@@ -74,10 +88,13 @@ buffer_vtype <span class="keyword">(</span>a<span class="keyword">:</span><span 
 <span class="comment">//</span>
 </pre>
 
-Given a type T and two integers M and N, the type [buffer(T, M, N)] is for
-a buffer of capacity M in which N elements of the type T are stored.  The
-following lemma can be used to establish the property that M >= N and N >=
-0 (for the purpose of constraint-solving):
+
+
+型 T と2つの整数 M, N が与えられたとき、型 [buffer(T, M, N)]
+は型 T の要素が N 個保存された容量 M のバッファを表わします。
+次の補題 (lemma) は (制約解決を目的として) M >= N かつ N >= 0
+という特性を成立させるために使うことができます:
+
 
 <pre
 class="patsyntax">
@@ -86,8 +103,10 @@ lemma_buffer_param<span class="staexp"><span class="keyword">{</span>a<span clas
   <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">buffer</span> <span class="keyword">(</span><span class="staexp">INV</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>m &gt;= n<span class="keyword">;</span> n &gt;= 0<span class="keyword">]</span></span> <span class="staexp">void</span></span>
 </pre>
 
-The function [buffer_make_nil] can be called to create a linear buffer of a
-given capacity that contains no elements:
+
+
+関数 [buffer_make_nil] は要素を含まない与えられた容量の線形バッファを生成することができます:
+
 
 <pre
 class="patsyntax">
@@ -95,8 +114,10 @@ class="patsyntax">
 buffer_make_nil<span class="staexp"><span class="keyword">{</span>m<span class="keyword">:</span>pos<span class="keyword">}</span></span> <span class="keyword">(</span>cap<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">m</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">buffer</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span></span>
 </pre>
 
-The functions [buffer_isnil] and [buffer_isful] can be called to test
-whether a given buffer is empty and full, respectively:
+
+
+関数 [buffer_isnil] と [buffer_isful] は与えられたバッファがそれぞれ空なのか、満杯なのかを判定できます:
+
 
 <pre
 class="patsyntax">
@@ -106,8 +127,10 @@ class="patsyntax">
   <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">buffer</span> <span class="keyword">(</span><span class="staexp">INV</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">m</span><span class="staexp">==</span><span class="staexp">n</span><span class="keyword">)</span></span>
 </pre>
 
-The function [buffer_insert] is for inserting an element into
-a buffer that is not full:
+
+
+関数 [buffer_insert] は満杯でないバッファに要素を挿入します:
+
 
 <pre
 class="patsyntax">
@@ -118,8 +141,10 @@ buffer_insert<span class="staexp"><span class="keyword">{</span>m<span class="ke
 <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span></span> <span class="comment">// end of [buffer_insert]</span>
 </pre>
 
-The function [buffer_insert] is for taking out an element from
-a buffer that is not empty:
+
+
+関数 [buffer_takeout] は空でないバッファから要素を取り出します:
+
 
 <pre
 class="patsyntax">
@@ -129,18 +154,26 @@ buffer_takeout<span class="staexp"><span class="keyword">{</span>m<span class="k
 </pre>
 
 <h2>
-Interface for Shared Buffer
+
+
+共有バッファのインターフェイス
+
 </h2>
 
-In terms of implementation, a shared buffer wraps a protection mechanism
-around a linear buffer that consists of a mutex and two conditional
-variables. The mutex is for protecting the linear buffer and the
-conditional variables are introduced to avoid busy-waiting. I will present
-more details on the protection mechanism later.
+
+
+実装の観点から、共有バッファは保護メカニズムで線形バッファを包みます。
+このメカニズムは1つの mutex と2つの条件変数から成り立っています。
+この mutex は線形バッファを保護するために、この条件変数はビジーウェイトを回避するために導入されています。
+この保護メカニズムについて後でより詳細に説明します。
+
 
 <p>
 
-Let us now introduce an abstract type for shared buffers:
+
+
+ここで、共有バッファを表わす抽象型を導入してみましょう:
+
 
 <pre
 class="patsyntax">
@@ -152,16 +185,22 @@ sbuffer_type <span class="keyword">(</span>a<span class="keyword">:</span><span 
 <span class="comment">//</span>
 </pre>
 
-Please note that [sbuffer] is a non-linear type. This means that a shared
-buffer cannot be freed explicitly after its creation. It is also possible
-to make [sbuffer] a reference-counted linear type so that a shared buffer
-can be freed. The interested reader is encouraged to give this alternative
-design a try, which should only lead to slightly more involved implementation.
+
+
+[sbuffer] は非線形の型であることに注意してください。
+これは、共有バッファは生成された後では明示的に解放することができないことを意味しています。
+共有バッファを解放できるように、参照カウントの線形型で [sbuffer] を作ることも可能です。
+興味のある読者にはこの別設計に挑戦してみることをおすすめします。
+これはわずかに複雑な実装になるはずです。
+
 
 <p>
 
-Given a linear buffer, [sbuffer_make_buffer] turns it into a shared buffer
-(by wrapping a protection mechanism around it):
+
+
+線形バッファが与えられたとき、[sbuffer_make_buffer] は
+(保護メカニズムで包むことで) それを共有バッファに変えます:
+
 
 <pre
 class="patsyntax">
@@ -169,8 +208,10 @@ class="patsyntax">
 sbuffer_make_buffer <span class="keyword">(</span><span class="staexp">buffer</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">sbuffer</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
 </pre>
 
-The function [sbuffer_insert] inserts an element into
-a shared buffer:
+
+
+関数 [sbuffer_insert] は共有バッファへ要素を挿入にします:
+
 
 <pre
 class="patsyntax">
@@ -178,13 +219,17 @@ class="patsyntax">
 sbuffer_insert <span class="keyword">(</span><span class="staexp">sbuffer</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span> <span class="comment">// called by producer</span>
 </pre>
 
-Note that a call to [sbuffer_insert] may be blocked due to the linear
-buffer inside the shared buffer being full.
+
+
+[sbuffer_insert] 呼び出しは、共有バッファ中の線形バッファが満杯であるためにブロックする可能性があることに注意してください。
+
 
 <p>
 
-The function [sbuffer_takeout] takes out an element from
-a shared buffer:
+
+
+関数 [sbuffer_takeout] は共有バッファから要素を取り出します:
+
 
 <pre
 class="patsyntax">
@@ -192,27 +237,41 @@ class="patsyntax">
 sbuffer_takeout <span class="keyword">(</span>sbuf<span class="keyword">:</span> <span class="staexp">sbuffer</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// called by consumer</span>
 </pre>
 
-Note that a call to [sbuffer_takeout] may be blocked due to the linear
-buffer inside the shared buffer being empty.
+
+
+[sbuffer_takeout] 呼び出しは、共有バッファ中の線形バッファが空であるためにブロックする可能性があることに注意してください。
+
 
 <h2>
-Implementation of Shared Buffer
+
+
+共有バッファの実装
+
 </h2>
 
-The linear buffer inside a shared buffer is protected by a mutex.
+
+
+共有バッファ中の線形バッファは mutex によって保護されています。
+
 
 <p>
 
-The function [sbuffer_acquire] is for acquiring the linear buffer inside a
-given shared buffer:
+
+
+関数 [sbuffer_acquire] は与えられた共有バッファ中の線形バッファを獲得します:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> sbuffer_acquire<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span> <span class="keyword">(</span>sbuf<span class="keyword">:</span> <span class="staexp">sbuffer</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">buffer</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
 </pre>
 
-The function [sbuffer_release] is for releasing a linear buffer (to the
-same shared buffer from which the linear buffer was previously acquired):
+
+
+関数 [sbuffer_release] は
+(線形バッファを獲得したときと同じ共有バッファに)
+線形バッファを手放します:
+
 
 <pre
 class="patsyntax">
@@ -220,7 +279,9 @@ class="patsyntax">
 </pre>
 
 
-Let us now declare two functions as follows:
+
+ここで、次のような2つの関数を宣言しましょう:
+
 
 <pre
 class="patsyntax">
@@ -230,22 +291,26 @@ sbuffer_insert2 <span class="keyword">(</span><span class="staexp">sbuffer</span
 sbuffer_takeout2 <span class="keyword">(</span>sbf<span class="keyword">:</span> <span class="staexp">sbuffer</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> buf<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">buffer</span> <span class="keyword">(</span><span class="staexp">INV</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
 </pre>
 
-A call to the function [sbuffer_insert2] tries to insert an element into a
-given linear buffer. In the case where the linear buffer is full, the
-caller is blocked to wait on some conditional variable until it is notified
-that the linear buffer is no longer full.
+
+
+関数 [sbuffer_insert2] を呼び出すと、与えられた線形バッファに要素を挿入しようと試みます。
+線形バッファが満杯であった場合、線形バッファが満杯でなくなるまで条件変数を待ち合わせるために呼び出し元はブロックします。
+
 
 <p>
 
-A call to the function [sbuffer_takeout2] tries to take out an element from
-a given linear buffer. In the case where the linear buffer is empty, the
-caller is blocked to wait on some conditional variable until it is notified
-that the linear buffer is no longer empty.
+
+
+関数 [sbuffer_takeout2] を呼び出すと、与えられた線形バッファから要素を取り出そうと試みます。
+線形バッファが空であった場合、線形バッファが空でなくなるまで条件変数を待ち合わせるために呼び出し元はブロックします。
+
 
 <p>
 
-It is straightforward to implement [sbuffer_insert] and [sbuffer_takeout]
-based on [sbuffer_insert2] and [sbuffer_takeout2], respectively:
+
+
+[sbuffer_insert] と [sbuffer_takeout] はそれぞれ [sbuffer_insert2] と [sbuffer_takeout2] を用いて素直に実装できます:
+
 
 <pre
 class="patsyntax">
@@ -266,11 +331,13 @@ sbuffer_takeout <span class="keyword">(</span>sbuf<span class="keyword">)</span>
 <span class="keyword">}</span></span>
 </pre>
 
-There are two conditional variables (CVs) inside a shared buffer.  One of
-them is for handling the condition of the linear buffer (inside the shared
-buffer) being empty, and the other CV is for handling the condition of the
-linear buffer being full. The following functions are implemented directly
-based on these two conditional variables:
+
+
+共有バッファの中には2つの条件変数があります。
+それらの1つは (共有バッファ中の) 線形バッファが空である条件を扱うためのものです。
+もう1つは線形バッファが満杯である条件を扱うためのものです。
+次の関数群はこれら2つの条件変数を直接用いて実装されています:
+
 
 <pre
 class="patsyntax">
@@ -287,26 +354,33 @@ sbuffer_wait_isful
 <span class="comment">//</span>
 </pre>
 
-The type assigned to the function [sbuffer_wait_isnil] means that its
-caller must have possession of a linear buffer when calling it and the
-caller should still have possession of the linear buffer, which may be
-empty, when the call returns. The reason for the linear buffer being still
-empty at the moment when a call to [sbuffer_wait_isnil] returns is
-that other callers (consumers) may have gained access to the linear buffer
-earlier.
+
+
+関数 [sbuffer_wait_isnil] に割り当てられた型は、呼び出す時に呼び出し元が線形バッファの所有者でなければならないこと、呼び出しが返る時にやはりその呼び出し元が空の可能性がある線形バッファの所有者でなければならないこと、を意味しています。
+[sbuffer_wait_isnil] 呼び出しが返る時にも線形バッファを所有すべき理由は、
+他の呼び出し元 (消費者) がより早くその線形バッファへのアクセス権を獲得してしまう可能性があるためです。
+
 
 <p>
 
-The type assigned to the function [sbuffer_wait_isful] can be
-explained similarly.
+
+
+関数 [sbuffer_wait_isful] に割り当てられた型も同様に説明できます。
+
 
 <p>
 
 <h4>
-Implementing [sbuffer_insert2]
+
+
+[sbuffer_insert2] を実装する
+
 </h4>
 
-An implementation of [sbuffer_insert2] is given as follows:
+
+
+[sbuffer_insert2] の実装は次のようになります:
+
 
 <pre
 class="patsyntax">
@@ -339,13 +413,18 @@ sbuffer_insert2
 <span class="keyword">end</span></span> <span class="comment">// end of [sbuffer_insert2]</span>
 </pre>
 
-The code should be self-explaining. Please note that inserting an element
-into an empty buffer requires a signal to be sent to the CV handling the
-condition of buffer being empty. If this is not done, then a deadlock may
-occur as the consumers waiting on the CV can never be awakened.
+
+
+このコードは自明でしょう。
+空のバッファに要素を挿入するには、バッファが空である条件を扱う条件変数にシグナルを送る必要があることに注意してください。
+もしこれを行なわないと、決して起こされない条件変数をを待ち合わせる消費者によってデッドロックが発生する可能性があります。
+
 
 <h4>
-Implementing [sbuffer_takeout2]
+
+
+[sbuffer_takeout2] を実装する
+
 </h4>
 
 <pre
@@ -377,19 +456,27 @@ sbuffer_takeout2
 <span class="keyword">end</span></span> <span class="comment">// end of [sbuffer_takeout2]</span>
 </pre>
 
-The code should be self-explaining. Please note that taking out an element
-from a full buffer requires a signal to be sent to the CV handling the
-condition of buffer being full. If this is not done, then a deadlock may
-occur as the producers waiting on the CV can never be awakened.
+
+
+このコードも自明でしょう。
+満杯のバッファから要素を取り出すには、バッファが満杯である条件を扱う条件変数にシグナルを送る必要があることに注意してください。
+もしこれを行なわないと、決して起こされない条件変数をを待ち合わせる生産者によってデッドロックが発生する可能性があります。
+
 
 <h4>
-Summary of the Remaining Implementation
+
+
+残りの実装について
+
 </h4>
 
-The remaining implementation of the producer-consumer problem can be
-readily done in C (based on pthread support for mutexes and conditional
-variables). For instance, [sbuffer] can be represented as a pointer to
-a value of the following struct type:
+
+
+生産者/消費者問題の残りの実装は
+(pthread がサポートしている mutex と条件変数を用いて)
+C言語によってすぐに作ることができます。
+例えば、[sbuffer] は次の構造体型の値へのポインタとして表現できます:
+
 
 <pre>
 struct
@@ -401,51 +488,65 @@ struct
 }
 </pre>
 
-Instead of being coded in C directly, the rest of my implementation is also
-written in ATS but it makes pervasive use of some unsafe programming
-features. Please find the entirety of the code in the files sbuffer.sats
-and sbuffer.dats. There is no testing code in my implementation as I feel
-highly confident about its correctness. A primary reason for programming in
-ATS is that one can make effective use of types in ATS so as to convince
-oneself that his or her code should perform as expected. I feel that I have
-done it in this case.
+
+
+直接C言語でコーディングする代わりに、私の実装の残りを ATS
+で書くこともできますが、安全でないプログラミングの機能を全面的に使うことになります。
+このコードの全体はファイル sbuffer.sats と sbuffer.dats から入手できます。
+実装の正確さに自信があるので、私の実装にはテストコードがありません。
+ATS でプログラミングをする主要な理由は、意図通りにコードが実行されるのか自分を納得させるために ATS の型を効果的に使えることです。
+今回の場合はそれができたと感じています。
+
 
 <h2>
-Safe Programming with Shared Resources
+
+
+共有リソースを共なう安全なプログラミング
+
 </h2>
 
-In the rest of the article, I would like to outline a general approach
-to safe programming with shared resources that can be seen as a generalization
-of the implementation of the producer-consumer problem presented above.
+
+
+この記事の残りでは、上記で説明した生産者/消費者問題を一般化したような、共有リソースを共なう安全なプログラミングに対する一般的なアプローチの要点を説明しようと思います。
+
 
 <p>
 
-Suppose we have a linear type [Resource] for values that we want to share:
+
+
+共有しようとしている値のために線形型 [Resource] を想像してみましょう:
+
 
 <pre
 class="patsyntax">
 <span class="staexp"><span class="keyword">absvtype</span> Resource</span>
 </pre>
 
-Let us introduce a (non-linear) type [SharedResource] for values that are
-formed by wrapping some kind of protection mechnism around linear values of
-the type [Resource]:
+
+
+なんらかの保護メカニズムで型 [Resource] の線形値を包んで作られる値のために (非線形な) 型 [SharedResource] を導入してみましょう:
+
 
 <pre
 class="patsyntax">
 <span class="staexp"><span class="keyword">abstype</span> SharedResource</span>
 </pre>
 
-The function that does the wrapping can be given the following type:
+
+
+その包む行為をする関数は次のような型になるでしょう:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> SharedResource_create <span class="keyword">(</span>R<span class="keyword">:</span> <span class="staexp">Resource</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">SharedResource</span></span>
 </pre>
 
-The linear resource inside a shared resource is protected by a lock,
-and the following two functions are for taking out the linear resource
-and returning it back:
+
+
+共有リソースの中にある線形なリソースはロックによって保護されています。
+そして次の2つは線形リソースを取り出す関数と、それを戻す関数です:
+
 
 <pre
 class="patsyntax">
@@ -453,33 +554,46 @@ class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> SharedResource_release <span class="keyword">(</span>SR<span class="keyword">:</span> <span class="staexp">SharedResource</span><span class="keyword">,</span> R<span class="keyword">:</span> <span class="staexp">Resource</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
 </pre>
 
-Let us now assume that we have the following function for processing
-a linear resource:
+
+
+ここで、線形リソースを処理する次の関数があると仮定してみましょう:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> Resource_process <span class="keyword">(</span>R<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">Resource</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span></span>
 </pre>
 
-If a call to [Resource_process] returns true, then the resource has been
-processed properly. Otherwise, it is an indication that the state of the
-resource needs to be changed before it is suitable for processing.
+
+
+[Resource_process] 呼び出しが true を返したら、そのリソースは適切に処理されています。
+そうでなければ、処理する前にそのリソースの状態を変更する必要があることを示していることになります。
+
 
 <p>
 
-What we want to implement is the following function:
+
+
+私達が実装したいのは次の関数です:
+
 
 <pre
 class="patsyntax">
 <span class="dynexp"><span class="keyword">fun</span> SharedResource_process <span class="keyword">(</span>SR<span class="keyword">:</span> <span class="staexp">SharedResource</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
 </pre>
 
-When called on a shared resource, [SharedResource_process] tries to process
-the linear resource inside it by calling [Resource_process].
+
+
+共有リソースに対して呼び出されると、[SharedResource_process] は [Resource_process]
+を呼び出して、その内にある線形リソースを処理しようと試みます。
+
 
 <p>
 
-An implementation of [SharedResource_process] is sketched as follows:
+
+
+[SharedResource_process] の実装は次のような概略になります:
+
 
 <pre
 class="patsyntax">
@@ -520,19 +634,30 @@ SharedResource_process2
 <span class="keyword">end</span></span> <span class="comment">// end of [SharedResource_process2]</span>
 </pre>
 
-A call to [SharedResource_wait] puts the caller on the waiting-list
-of some conditional variable to avoid busy-waiting. Whenever the condition
-needed for [Resource_process] to do proper processing is met, a signal should
-be sent to the conditional variable (by another caller).
+
+
+[SharedResource_wait] 呼び出しは、ビジーウェイトを回避するなんらかの条件変数の待ち行列にその呼び出し元を置きます。
+処理を行なう [Resource_process] に必要な条件が満たされた時はいつでも、その条件変数に
+(別の呼び出し元によって) シグナルを送らねければなりません。
+
 
 <p>
 
-Please find in the file SharedResource.dats the entirety of the code
-presented in this section.
+
+
+この記事で示したコードの全体はファイル SharedResource.dats から入手できます。
+
 
 <hr size="2">
 
-This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+
+この記事は
+<a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>
+によって書かれ、
+<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a>
+によって翻訳されています。
+
 
 </body>
 </html>
