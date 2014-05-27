@@ -108,6 +108,12 @@ body {
     color: white;
 }
 
+pre {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 3px solid #CCC;
+}
+
 /* ==============
     MOBILE: Menu
    ============== */
