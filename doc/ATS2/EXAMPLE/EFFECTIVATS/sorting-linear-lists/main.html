@@ -6,7 +6,10 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>EFFECTIVATS-sorting-linear-lists</title>
+
+
+<title>EFFECTIVATS: 線形リストのソート</title>
+
 <style type="text/css">
   .patsyntax {color:#808080;background-color:#E0E0E0;}
   .patsyntax span.keyword {color:#000000;font-weight:bold;}
@@ -31,32 +34,45 @@
 <body>
 
 <h1>
-Effective ATS: Sorting Linear Lists
+
+
+Effective ATS: 線形リストのソート
+
 </h1>
 
-In this article, I present an implementation of merge-sort for sorting
-linear lists. While quick-sort is often preferred over merge-sort for
-sorting arrays, the latter is likely to be the chosen one for sorting
-lists. When employed to sort an array, a serious weakness of merge-sort
-lies in its need for additional memory (proportional to the size of the
-array) in order to perform merging operation. This weakness does not exist
-when merge-sort is called to sort lists. Some strengths of merge-sort
-include its being a stable sorting algorithm and its (worst-case)
-time-complexity being O(n(log(n)).
+
+
+この記事では、線形リストをソートするためのマージソートの実装を紹介します。
+配列のソートをするのにマージソートよりもクイックソートがしばしば好まれますが、リストのソートには前者が好まれます。
+配列のソートにおいて、マージソートの深刻な弱点はマージ操作を行なうために
+(その配列のサイズに比例した)
+追加のメモリが必要になってしまうことです。
+リストに対するマージソートにこの弱点はありません。
+マージソートのいくつかの強みは、それが安定なソートアルゴリズムであり、その
+(最悪) 時間的計算量が O(n(log(n)) であることです。
+
 
 <h2>
-An abstract interface for linear lists
+
+
+線形リストの抽象インターフェイス
+
 </h2>
 
-In ATS, [list_vt] is declared as a dataviewtype (that is, linear datatype)
-for singly-linked lists.  However, I do not want to make direct use of
-[list_vt] as I intend to give an implementation of merge-sort for sorting
-abstract linear lists. So I first introduce an abstract interface for
-linear lists to be used in this implementation.
+
+
+ATS では、[list_vt] は片方向リスト (singly-linked list) を表わす dataviewtype (つまり線形のデータ型) として宣言されています。
+けれども、私はここで [list_vt] を直接使いたくありません。
+抽象的な線形リストをソートするマージソートの実装を作りたいのです。
+そこで、まずはじめにこの実装で使う線形リストに対する抽象インターフェイスを導入します。
+
 
 <p>
 
-Two abstract types are introduced as follows:
+
+
+次のような2つの抽象型を導入します:
+
 
 <pre
 class="patsyntax">
@@ -64,11 +80,13 @@ class="patsyntax">
 <span class="staexp"><span class="keyword">absvtype</span> mylist<span class="keyword">(</span>l<span class="keyword">:</span>addr<span class="keyword">,</span> n<span class="keyword">:</span>int<span class="keyword">)</span> <span class="keyword">=</span> ptr<span class="keyword">(</span>l<span class="keyword">)</span></span>
 </pre>
 
-Given a non-null address L , the type [mynode(L)] is for a list-node
-located L. Given a non-null address L and an integer N, the type
-[mylist(L, N)] is for a list of length N whose first node is located at L.
-Some properties on the parameters of [mylist] are captured by the following
-two proof functions:
+
+
+NULL ではないアドレス L が与えられた時、型 [mynode(L)] は L に配置されたリストノードを表わします。
+NULL ではないアドレス L と整数 N が与えられた時、型 [mylist(L, N)]
+は最初のノードが L に配置されるような長さ N のリストを表わします。
+[mylist] のパラメータの性質は次の2つの証明関数によって捕捉されます:
+
 
 <pre
 class="patsyntax">
@@ -85,7 +103,10 @@ lemma_mylist_param2
 <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span><span class="keyword">(</span>l==null &amp;&amp; n==0<span class="keyword">)</span> || <span class="keyword">(</span>l <span class="keyword">&gt;</span> null &amp;&amp; n <span class="keyword">&gt;</span> 0<span class="keyword">)</span><span class="keyword">]</span></span> <span class="staexp">void</span></span>
 </pre>
 
-The two standard list-constructors are assigned the following types:
+
+
+標準的な2つのリストのコンストラクタには次の型が割り当てられます:
+
 
 <pre
 class="patsyntax">
@@ -103,11 +124,13 @@ mylist_cons
 <span class="comment">//</span>
 </pre>
 
-It is clear that [mylist_cons] needs to perform some assignments so as to
-connect a given node (its first argument) to a given list (its second
-argument). Sometimes, a given node and a given list are already connected,
-requiring no assignments to be performed.  The following proof funtion
-[_mylist_cons] is introduced precisely for handling such a case:
+
+
+(1番目の引数である) ノードと (2番目の引数である) リストを繋げるために、[mylist_cons]
+がなんらかのメモリ割り当てをする必要があるのは明確です。
+ときどき、与えられたノードとリストが既に繋がっていて、割り当てが不要なこともあるでしょう。
+次の証明関数 [_mylist_cons] はそのような場合を正確に扱うために導入されています:
+
 
 <pre
 class="patsyntax">
@@ -121,7 +144,10 @@ _mylist_cons
 <span class="comment">//</span>
 </pre>
 
-Also, [mylist_cons2] is introduced as a variant of [mylist_cons]:
+
+
+また、[mylist_cons] の変形として [mylist_cons2] も導入されます:
+
 
 <pre
 class="patsyntax">
@@ -133,8 +159,10 @@ mylist_cons2
 <span class="comment">//</span>
 </pre>
 
-The un-constructors for [mylist], which do the opposite of what the
-constructors do, are declared as follows:
+
+
+[mylist] に対する、コンストラクタと正反対の動作をするアンコンストラクタが次のように宣言されます:
+
 
 <pre
 class="patsyntax">
@@ -153,9 +181,11 @@ mylist_uncons
 <span class="comment">//</span>
 </pre>
 
-The meaning of [mylist_unnil] and [mylist_uncons] can be readily
-inferred from the types assigned to them. As a variant of [mylist_uncons],
-[mylist_uncons2] is given as follows:
+
+
+[mylist_unnil] と [mylist_uncons] の意味は、それらに割り当てられた型からすぐに推察できるでしょう。
+[mylist_uncons] の変種として [mylist_uncons2] が次のように与えられます:
+
 
 <pre
 class="patsyntax">
@@ -168,9 +198,11 @@ mylist_uncons2
 <span class="comment">//</span>
 </pre>
 
-To see how the constructors and un-constructors for [mylist] can be used,
-let us implement a function template [mylist_length] for computing the length of a
-given list:
+
+
+[mylist] に対するこのコンストラクタとアンコンストラクタの使い方を理解するために、与えられたリストの長さを計算する関数テンプレート
+[mylist_length] を実装してみましょう:
+
 
 <pre
 class="patsyntax">
@@ -180,12 +212,14 @@ mylist_length<span class="staexp"><span class="keyword">{</span>n<span class="ke
 <span class="comment">//</span>
 </pre>
 
-As the implementation for [mylist_cons] and [mylist_uncons] can be made
-available only after a concrete representation of [mylist] is chosen,
-functions that call either [mylist_cons] or [mylist_uncons] may not be
-properly compiled. Therefore, it is important to declare [mylist_length] as
-a function template (so that only its instances need to be compiled). An
-implementation of [mylist_length] is given as follows:
+
+
+[mylist] の具体的な表現が選択された後でのみ [mylist_cons] と [mylist_uncons]
+の実装は有効なので、[mylist_cons] もしくは [mylist_uncons] を呼び出す関数も当然コンパイルできません。
+従って (そのインスタンスをコンパイルできるように)
+関数テンプレートとして [mylist_length] を宣言することが重要になります。
+[mylist_length] の実装は次のように与えられます:
+
 
 <pre
 class="patsyntax">
@@ -216,7 +250,10 @@ isneqz <span class="keyword">(</span>xs<span class="keyword">)</span>
 <span class="keyword">end</span></span> <span class="comment">// end of [mylist_length]</span>
 </pre>
 
-Note that the symbol [isneqz] is overloaded with the following function:
+
+
+記号 [isneqz] は次の関数でオーバーロードされていることに注意してください:
+
 
 <pre
 class="patsyntax">
@@ -226,16 +263,22 @@ mylist_isnot_nil
   <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">mylist</span><span class="keyword">(</span><span class="staexp">l</span><span class="keyword">,</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span><span class="keyword">(</span><span class="staexp">n</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">0</span><span class="keyword">)</span> <span class="keyword">=</span> "mac#atspre_ptr_isnot_null"</span>
 </pre>
 
-Please find in mylist.dats the entirety of the presented abstract interface
-for linear lists.
+
+
+ここで紹介した線形リストに対する抽象インターフェイスの全体は mylist.dats から入手できます。
+
 
 <h2>
-Merge-sort for sorting abstract linear lists
+
+
+抽象線形リストをソートするマージソート
+
 </h2>
 
-The following
-function template [mylist_mergesort] performs
-merge-sort on mylist-values (representing linear lists):
+
+
+次の関数テンプレート [mylist_mergesort] は (線形リストを表わす) mylist 値をマージソートします:
+
 
 <pre
 class="patsyntax">
@@ -243,7 +286,10 @@ class="patsyntax">
 mylist_mergesort<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">mylist</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">mylist</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span></span>
 </pre>
 
-And an implementation of [mylist_mergesort] is given below:
+
+
+また [mylist_mergesort] の実装は次のようになります:
+
 
 <pre
 class="patsyntax">
@@ -259,7 +305,10 @@ mylist_mergesort
 <span class="keyword">end</span></span> <span class="comment">// end of [mylist_mergesort]</span>
 </pre>
 
-where [mylist_msort] is declared to be of the following type:
+
+
+このとき [mylist_msort] は次の方で宣言されています:
+
 
 <pre
 class="patsyntax">
@@ -268,7 +317,10 @@ mylist_msort<span class="staexp"><span class="keyword">{</span>n<span class="key
   <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">mylist</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">mylist</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span></span>
 </pre>
 
-The code implements [mylist_msort] is given as follows:
+
+
+[mylist_msort] の実装は次のように与えられます:
+
 
 <pre
 class="patsyntax">
@@ -296,13 +348,18 @@ mylist_msort
 <span class="keyword">end</span></span> <span class="comment">// end of [mylist_msort]</span>
 </pre>
 
-where [mylist_split] splits a list into two and
-[mylist_merge] merges two sorted lists into one.
+
+
+このとき [mylist_split] はリストを2つに分割し、[mylist_merge]
+は2つのソート済みリストを1つのリストにマージします。
+
 
 <p>
 
-The function template [mylist_split] is declared
-as follows:
+
+
+関数テンプレート [mylist_split] は次のように宣言されます:
+
 
 <pre
 class="patsyntax">
@@ -314,7 +371,10 @@ mylist_split
 <span class="comment">//</span>
 </pre>
 
-And the following code implements [mylist_split]:
+
+
+また [mylist_split] の実装は次のようになります:
+
 
 <pre
 class="patsyntax">
@@ -341,8 +401,10 @@ k <span class="keyword">=</span> <span class="dynexp">0</span>
 
 <p>
 
-The function template [mylist_merge] is declared
-as follows:
+
+
+関数テンプレート [mylist_merge] は次のように宣言されます:
+
 
 <pre
 class="patsyntax">
@@ -354,7 +416,10 @@ mylist_merge
 <span class="comment">//</span>
 </pre>
 
-And the following code implements [mylist_merge]:
+
+
+また次のコードは [mylist_merge] を実装しています:
+
 
 <pre
 class="patsyntax">
@@ -401,43 +466,59 @@ isneqz<span class="keyword">(</span>xs2<span class="keyword">)</span>
 <span class="keyword">end</span></span> <span class="comment">// end of [mylist_merge]</span>
 </pre>
 
-Note that [compare_mynode_mynode] is a function template
-for comparing values stored in two given list-nodes.
+
+
+[compare_mynode_mynode] は与えられた2つのリストノードに保存されている値を比較する関数テンプレートであることに注意してください。
+
 
 <p>
 
-I want to point out that neither [merge_split] nor [mylist_merge] is
-currently implemented as a tail-recursive function. This is primarily for
-the sake of giving a more accessible presentation.  However, it should be
-an interesting and rewarding exercise to re-implement both [merge_split]
-and [mylist_merge] as tail-recursive functions.
+
+
+ここでは [merge_split] と [mylist_merge] のどちらも末尾再帰関数として実装されていないことを指摘したいと思います。
+ここでの主な目的はより受け入れやすい表現を得ることでした。
+けれども、[merge_split] と [mylist_merge] 双方を末尾再帰関数で再実装することは興味深くやりがいのある課題でしょう。
+
 
 <p>
 
-Please find in mylist_mergesort.dats the entirety of the presented
-implementation of merge-sort for sorting abstract linear lists.
+
+
+ここで紹介した抽象線形リストに対するマージソートの実装の全体は mylist_mergesort.dats から入手できます。
+
 
 <h2>
-Merge-sort for sorting singly-linked lists
+
+
+片方向リストをソートするマージソート
+
 </h2>
 
-In order to merge-sort lists of a concrete representation, we need to
-implement [mylist_cons] and [mylist_uncons] based on that representation.
-Also, we need to implement [compare_mynode_mynode] base on the
-corresponding representaton for list-nodes.
+
+
+具体的な表現のリストをマージソートするためには、その表現を用いて [mylist_cons] と [mylist_uncons] を実装する必要があります。
+また、リストノードに一致する表現を用いて [compare_mynode_mynode] も実装する必要があります。
+
 
 <p>
 
-Please see mergesort_list_vt.dats for a case where [mylist] is interpreted
-as [list_vt].  Also, please see mergesort_sllist.dats where [mylist] is
-interpreted as [sllist].
+
+
+[mylist] を [list_vt] として解釈した場合については、mergesort_list_vt.dats を参照してください。
+また、[mylist] を [sllist] として解釈した場合については、mergesort_sllist.dats を参照してください。
+
 
 <h2>
-A side note for quick-sort on singly-linked lists
+
+
+片方向リストのクイックソートについて
+
 </h2>
 
-For those interested in quick-sort on linear lists, please study the code
-in the following files:
+
+
+線形リストのクイックソートに興味のある読者には、次のファイルにあるコードから学習することをすすめます:
+
 
 <pre>
 mylist_quicklist.dats
@@ -445,13 +526,23 @@ quicksort_list_vt.dats
 quicksort_sllist.dats
 </pre>
 
-which is largly parallel to the presented implementation of merge-sort.
+
+
+これらはここで紹介したマージソートの実装に沿っています。
+
 
 <p>
 
 <hr size="2">
 
-This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+
+この記事は
+<a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>
+によって書かれ、
+<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a>
+によって翻訳されています。
+
 
 </body>
 </html>
