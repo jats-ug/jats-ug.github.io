@@ -15,7 +15,10 @@ TITLE="抽象 view と viewtype"
 HREF="c4059.html"><LINK
 REL="PREVIOUS"
 TITLE="例: 配列を用いたリングバッファ"
-HREF="x4111.html"></HEAD
+HREF="x4111.html"><LINK
+REL="NEXT"
+TITLE="Locking and Unlocking Shared Resources"
+HREF="x4208.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -56,7 +59,11 @@ VALIGN="bottom"
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
->&nbsp;</TD
+><A
+HREF="x4208.html"
+ACCESSKEY="N"
+>Next</A
+></TD
 ></TR
 ></TABLE
 ><HR
@@ -375,6 +382,109 @@ TARGET="_top"
 から入手できます。
 
 </P
+><P
+>&#13;The following function <FONT
+COLOR="RED"
+>array_ptr_alloca_tsz</FONT
+> is the
+same as <FONT
+COLOR="RED"
+>alloca</FONT
+> dynamically but it is given a type that
+is often more convenient to use:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4196"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+array_ptr_alloca_tsz
+  {a:vt0p}{dummy:addr}{n:int}
+(
+  pf: void@dummy | asz: size_t(n), tsz: sizeof_t(a)
+) : [l:addr] (array(a?,n)@l, array(a?,n)@l -&#62; void@dummy | ptr(l))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+As an example, the function template <FONT
+COLOR="RED"
+>mergeSort</FONT
+> implemented
+above can also be implemented as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4199"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+mergeSort (A, n, cmp) = let
+  val tsz = sizeof&#60;a&#62;
+  var dummy: void = ()
+  prval pf = view@dummy
+  val (
+    pfat, fpfat | p
+  ) = array_ptr_alloca_tsz{a}(pf | n, tsz)
+  val ((*void*)) = msort1&#60;a&#62; (A, n, !p, cmp)
+  prval ((*void*)) = view@dummy := fpfat (pfat)
+in
+  // nothing
+end // end of [mergeSort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+where the array used as a scratch area during merge-sort is allocated on
+the call-stack of <FONT
+COLOR="RED"
+>mergeSort</FONT
+>. While this implementation of
+<FONT
+COLOR="RED"
+>mergeSort</FONT
+> may seem interesting, it is actually inferior to the
+previous implementation as calling <FONT
+COLOR="RED"
+>alloca</FONT
+> to allocate a large
+chunk of memory can readily lead to a crash for which the cause is often
+very difficult to determine. In general, choosing <FONT
+COLOR="RED"
+>alloca</FONT
+> over
+<FONT
+COLOR="RED"
+>malloc</FONT
+> is difficult to justify, and any call to the former
+should be scrutinized.
+
+</P
+><P
+>&#13;The entire implementation of merge-sort on arrays plus some testing code
+is available <A
+HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
+TARGET="_top"
+>on-line</A
+>.
+
+</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -409,7 +519,11 @@ ACCESSKEY="H"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->&nbsp;</TD
+><A
+HREF="x4208.html"
+ACCESSKEY="N"
+>Next</A
+></TD
 ></TR
 ><TR
 ><TD
@@ -430,7 +544,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->&nbsp;</TD
+>Locking and Unlocking Shared Resources</TD
 ></TR
 ></TABLE
 ></DIV

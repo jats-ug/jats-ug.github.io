@@ -11,7 +11,7 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="index.html"><LINK
 REL="UP"
-TITLE="view と viewtype 入門"
+TITLE="観 (view) と観型入門"
 HREF="c3223.html"><LINK
 REL="PREVIOUS"
 TITLE="左辺値と参照渡し"
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 13. view と viewtype 入門</TD
+>Chapter 13. 観 (view) と観型入門</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -79,7 +79,7 @@ NAME="stack-allocated_variables"
 ></H1
 ><P
 >&#13;型 T とアドレス L が与えられた時、
-最初の段階で view <FONT
+最初の段階で観 <FONT
 COLOR="RED"
 >T@L</FONT
 > の証明はどのように得られるのでしょうか？
@@ -132,7 +132,7 @@ COLOR="RED"
 するとその値の位置を指すポインタは <FONT
 COLOR="RED"
 >addr@(x)</FONT
-> で表わされ、関連した (at-view の) 線形の証明は
+> で表わされ、関連した (駐観の) 線形の証明は
 <FONT
 COLOR="RED"
 >view@(x)</FONT
@@ -248,18 +248,18 @@ ATS ではこの不安は完全に取り除かれています。
 変数 <FONT
 COLOR="RED"
 >res</FONT
-> に関連する at-view の線形証明は、<FONT
+> に関連する駐観の線形証明は、<FONT
 COLOR="RED"
 >res</FONT
 >
 のスコープが終わるまで存在することが ATS の型システムによって要求されます。
-より具体的には、もし型 T の変数 x が宣言されていたら、L がアドレス x のとき view <FONT
+より具体的には、もし型 T の変数 x が宣言されていたら、L がアドレス x のとき観 <FONT
 COLOR="RED"
 >T?@L</FONT
 >
 の線形証明は、x のスコープの終わりに型検査が到達するまで有効でなければなりません。
 この要求は、確保されたスタックの割り当てが終わった後、もはや変数にアクセスできないことを保証します。
-その変数に関連した at-view の線形証明がその時点では無効なのです。
+その変数に関連した駐観の線形証明がその時点では無効なのです。
 
 </P
 ><P
@@ -299,12 +299,12 @@ val () = println! ("A * B = ", dotprod (A, B)) // A * B = 6.0
 >
 
 
-変数 A に関連した at-view は <FONT
+変数 A に関連した駐観は <FONT
 COLOR="RED"
 >(@[double][3])@A</FONT
 > です。
 このとき A は 値 A のアドレスもまた参照しています。
-同様に変数 B に関連した at-view は <FONT
+同様に変数 B に関連した駐観は <FONT
 COLOR="RED"
 >(@[double][3])@B</FONT
 > です。
