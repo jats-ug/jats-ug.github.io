@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>参照</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="例外"
+HREF="c281.html"><LINK
+REL="NEXT"
+TITLE="永続化配列"
+HREF="c387.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c281.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c387.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="reference"
+></A
+>Chapter 10. 参照</H1
+><P
+>&#13;参照とは本質的にヒープに確保されたサイズ 1 の配列です。
+手動で解放できない参照の内容を保管するために確保されたメモリであるという意味で、参照は永続的です。
+その代わりに、参照はガベージコレクション (GC) を通じてのみ (安全に) 回収されます。
+
+</P
+><P
+>&#13;viewtype VT が与えられたとき、viewtype VT
+の値への参照の型は <FONT
+COLOR="RED"
+>ref</FONT
+>(VT) です。
+利便性のために、ATS では型コンストラクタ <FONT
+COLOR="RED"
+>ref</FONT
+> は抽象として宣言されます。
+けれども、次のような定義は可能です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN322"
+></A
+><PRE
+CLASS="programlisting"
+>typedef ref (a:vt@ype) = [l:addr] (vbox (a @ l) | ptr l)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+参照に対する様々な関数インターフェイスを
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/reference.sats"
+TARGET="_top"
+>prelude/SATS/reference.sats</A
+>
+で見つけることができます。
+</P
+><P
+>参照を生成するために、次のインターフェイスを持つ関数テンプレート <FONT
+COLOR="RED"
+>ref_make_elt</FONT
+> を呼び出すことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN327"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt@ype} ref_make_elt (x: a):&#60;!wrt&#62; ref a
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>ref_make_elt</FONT
+> に対して略記 <FONT
+COLOR="RED"
+>ref</FONT
+> を使うこともできます。
+<FONT
+COLOR="RED"
+>ref_make_elt</FONT
+> が呼び出されるといわゆる
+<FONT
+COLOR="RED"
+>wrt</FONT
+>-効果 が発生する可能性があることを、記号 <FONT
+COLOR="RED"
+>!wrt</FONT
+>
+が示すことに注意してください。
+
+</P
+><P
+>&#13;参照を通した読み書きのために、
+関数テンプレート <FONT
+COLOR="RED"
+>ref_get_elt</FONT
+> と <FONT
+COLOR="RED"
+>ref_set_elt</FONT
+>
+を使うことができます。
+これらにはそれぞれ次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN337"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype} ref_get_elt (r: ref a):&#60;!ref&#62; a
+fun{a:t@ype} ref_set_elt (r: ref a, x: a):&#60;!refwrt&#62; void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>ref_get_elt</FONT
+> が評価されるといわゆる ref-効果
+が発生する可能性があることを、記号 <FONT
+COLOR="RED"
+>!ref</FONT
+> が示すことに注意してください。
+同様に、<FONT
+COLOR="RED"
+>ref_set_elt</FONT
+> が評価されると ref-効果 と
+wrt-効果の両方が起きる可能性があることを、<FONT
+COLOR="RED"
+>!refwrt</FONT
+> は意味しています。
+
+参照 <FONT
+COLOR="RED"
+>r</FONT
+> と値 <FONT
+COLOR="RED"
+>v</FONT
+> が与えられたとき、<FONT
+COLOR="RED"
+>ref_get_elt(r)</FONT
+>
+と <FONT
+COLOR="RED"
+>ref_set_elt(r, v)</FONT
+> はそれぞれ <FONT
+COLOR="RED"
+>!r</FONT
+> と <FONT
+COLOR="RED"
+>!r := v</FONT
+>
+のように書くことができます。
+</P
+><P
+>&#13;典型的に、参照は永続化状態を記録するのに使われます。
+例えば、次のコードはそのような例です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN350"
+></A
+><PRE
+CLASS="programlisting"
+>local
+//
+#define BUFSZ 128
+//
+val count = ref&#60;int&#62; (0)
+//
+in (* in of [local] *)
+
+fun genNewName
+  (prfx: string): string = let
+  val n = !count
+  val () = !count := n + 1
+  var res = @[byte][BUFSZ]((*void*))
+  val err =
+  $extfcall (
+    int, "snprintf", addr@res, BUFSZ, "%s%i", prfx, n
+  ) (* end of [$extfcall] *)
+in
+  strptr2string(string0_copy($UNSAFE.cast{string}(addr@res)))
+end // end of [genNewName]
+
+end // end of [local]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数 <FONT
+COLOR="RED"
+>genNewName</FONT
+> は新しい名前を生成するために呼び出されます。
+参照 <FONT
+COLOR="RED"
+>count</FONT
+> の内容物である整数は <FONT
+COLOR="RED"
+>genNewName</FONT
+>
+が呼び出される度に更新されるので、<FONT
+COLOR="RED"
+>genNewName</FONT
+>
+が返すそれぞれの名前は以前生成されたものとは異なることが保証されます。
+C言語の関数 <FONT
+COLOR="RED"
+>snprintf</FONT
+> を直接呼び出すために、<FONT
+COLOR="RED"
+>$extfcall</FONT
+>
+が使用されていることに注意してください。
+
+</P
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>参照の誤用</I
+></SPAN
+>
+参照は誤用されることが実際にあります。
+次のプログラムは、命令型プログラミングを既に学んだ関数型プログラミングの初学者がしばしば書いてしまうものです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN360"
+></A
+><PRE
+CLASS="programlisting"
+>fun fact
+  (n: int): int = let
+  val res = ref&#60;int&#62; (1)
+  fun loop (n: int):&#60;cloref1&#62; void =
+    if n &#62; 0 then !res := n * !res else ()
+  val () = loop (n)
+in
+  !res
+end // end of [fact]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数 <FONT
+COLOR="RED"
+>fact</FONT
+> は次のC言語コードを少々直訳したスタイルで書かれています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN363"
+></A
+><PRE
+CLASS="programlisting"
+>int fact (int n) {
+  int res = 1 ;
+  while (n &#62; 0) res = n * res ;
+  return res ;
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ATS における <FONT
+COLOR="RED"
+>fact</FONT
+> の実装では、<FONT
+COLOR="RED"
+>res</FONT
+>
+はヒープに確保された参照で、<FONT
+COLOR="RED"
+>fact</FONT
+>
+呼び出しが返った後には (GC によって回収されるのを待つ) ゴミになります。
+一方、<FONT
+COLOR="RED"
+>fact</FONT
+> のC言語実装における値 <FONT
+COLOR="RED"
+>res</FONT
+> はスタックに確保
+(もしくはレジスタにマップされることさえあり得ます)
+され、<FONT
+COLOR="RED"
+>fact</FONT
+> 呼び出しが返った後にゴミは生成されません。
+このC実装を ATS に適切に翻訳すると、次のような参照を使わない実装になるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN371"
+></A
+><PRE
+CLASS="programlisting"
+>fun fact
+  (n: int): int = let
+  fun loop (n: int, res: int): int =
+    if n &#62; 0 then loop (n, n * res) else res
+  // end of [loop]
+in
+  loop (n, 1)
+end // end of [fact]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;強い正当な理由なしに (動的に生成される) 参照を広範囲にわたる使用することは、しばしば悪いコーディングスタイルの兆しです。
+
+</P
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>静的に確保された参照</I
+></SPAN
+>
+<FONT
+COLOR="RED"
+>ref_make_elt</FONT
+> を呼び出して参照を生成すると、動的なメモリ確保が必要になります。
+もしこれが望ましくなかたったり容認できなかったりするなら、
+次のように参照の生成に静的なメモリ確保を使うことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN377"
+></A
+><PRE
+CLASS="programlisting"
+>var myvar: int = 0
+val myref = ref_make_viewptr (view@(myvar) | addr@(myvar))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数 <FONT
+COLOR="RED"
+>ref_make_viewptr</FONT
+> はポインタとそのポインタに関連した at-view
+の証明を取り、その証明を消費した後の参照を返します。
+<FONT
+COLOR="RED"
+>ref_make_viewptr</FONT
+> はキャスト関数なので、実行時のオーバーヘッドはありません。
+上記のコードでは、<FONT
+COLOR="RED"
+>myvar</FONT
+> は静的に確保されていて、その at-view 証明が
+<FONT
+COLOR="RED"
+>ref_make_viewptr</FONT
+> によって消費された後ではもはや有効ではありません。
+C言語では <FONT
+COLOR="RED"
+>myvar</FONT
+> と <FONT
+COLOR="RED"
+>myref</FONT
+> の両方とも単に同じポインタですが、ATS
+ではそれらは本質的に異なる概念の具象であることは興味深いでしょう:
+前者は線形の値であり、後者は非線形の参照なのです。
+
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_reference.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c281.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c387.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例外</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>永続化配列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Dynamic Load</TITLE
+>動的ロード (dynload)</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,17 +75,15 @@ CLASS="chapter"
 ><A
 NAME="dynload"
 ></A
->Chapter 6. Dynamic Load</H1
+>Chapter 6. 動的ロード (dynload)</H1
 ><P
->&#13;In ATS, dynamic load (or dynload for short) refers to some form of
-initialization of a loaded package.
+>&#13;ATS では、動的ロード (もしくは dynload と略します) ロードされたパッケージの初期化を表わします。
 </P
 ><P
->&#13;Suppose that a file named <TT
+>&#13;次のようなコードを含むファイル <TT
 CLASS="filename"
 >foo.dats</TT
-> contains the following
-code:
+> を想定します:
 
 <DIV
 CLASS="informalexample"
@@ -113,17 +111,15 @@ implement sum_x_y_z () = x + y + z
 >
 
 
-Clearly, the names x, y, and z must be bound to some values before a call
-to the function <FONT
+関数 <FONT
 COLOR="RED"
 >sum_x_y_z</FONT
-> can be evaluated.  In order to create
-such bindings, some form of initialization is required.  Let us further
-suppose that a file named <TT
+> の呼び出しが評価される前に、x, y, z
+の名前にはなんらかの値が束縛されていることは明確です。このような束縛を生成するために、なんらかの初期化が必要になります。さらに、次のコードを含むファイル <TT
 CLASS="filename"
 >foo2.dats</TT
-> contains the following
-code:
+>
+を想定してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -149,11 +145,10 @@ val () = assertloc (4003000 = sum_x_y_z())
 >
 
 
-We can now generate an executable file <TT
+これで次のコマンドによって実行ファイル <TT
 CLASS="filename"
 >mytest</TT
-> by issuing
-the following command-line:
+> を生成できます:
 
 <DIV
 CLASS="informalexample"
@@ -174,90 +169,74 @@ CLASS="command"
 ></DIV
 >
 
-Note that <B
-CLASS="command"
->atscc</B
-> may need to be changed to
 <B
 CLASS="command"
+>atscc</B
+> は <B
+CLASS="command"
 >patscc</B
->.
+>
+と読み替える必要があるかもしれないことに、注意してください。
 
 </P
 ><P
->&#13;The line starting with the keyword <FONT
+>&#13;キーワード <FONT
 COLOR="RED"
 >dynload</FONT
-> is referred to as a
-dynload-declaration. If it is deleted from the file <TT
+> で始まる行は dynload 宣言と呼ばれます。 <TT
 CLASS="filename"
 >foo2.dats</TT
->,
-then executing the above command-line leads to link-time reporting of
-undefined reference to a variable of certain name ending with the string
-<SPAN
+> ファイルからこの宣言を削除すると、上記のコマンドによって文字列 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >__dynloadflag</I
 ></SPAN
->. The dynload-declaration for
-<TT
+> で終わるある名前の変数に対する未定義参照のリンク時エラーが発生します。<TT
 CLASS="filename"
 >foo.dats</TT
-> introduces this special variable and then makes a
-call to a special function associated with <TT
+> に対する dynload 宣言はこの特殊な変数を導入し、それから <TT
 CLASS="filename"
 >foo.dats</TT
-> for the
-purpose of performing some form of initialization. This special function
-is referred as a dynload-function (for <TT
+> に関連する初期化を実行するための特別な関数呼び出しを生成します。この特殊関数は (<TT
 CLASS="filename"
 >foo.dats</TT
->), which is
-always idempotent.
+> に対する) dynload 関数と呼ばれます。この関数は常に冪等です。
 
 </P
 ><P
->&#13;There is also a dynload-function generated for <TT
+>&#13;また <TT
 CLASS="filename"
 >foo2.dats</TT
->.
-As the funtion <FONT
+> に対して生成された dynload 関数もあります。特殊な関数 <FONT
+COLOR="RED"
+>main</FONT
+> の一種である <FONT
 COLOR="RED"
 >main0</FONT
->, a variant of the special function
-<FONT
-COLOR="RED"
->main</FONT
->, is implemented in <TT
+> 関数が <TT
 CLASS="filename"
 >foo2.dats</TT
->, the
-dynload-function for <TT
+> で実装されているので、<TT
 CLASS="filename"
 >foo2.dats</TT
-> is automatically called inside
-the body of the <FONT
+> に対する dynload 関数は <FONT
 COLOR="RED"
 >main</FONT
-> function.
+> 関数の本体中から自動的に呼び出されます。
 
 </P
 ><P
->&#13;If there is a reason to suppress the generation of a dynload-function, one
-can set the value of the flag <FONT
+>&#13;もし dynload 関数の生成を抑制する理由があるのであれば、<FONT
 COLOR="RED"
 >ATS_DYNLOADFLAG</FONT
-> to 0. For
-instance, no dynload-function for <TT
+> フラグを 0 に設定することができます。例えば、次の行を <TT
 CLASS="filename"
 >foo.dats</TT
-> is generated if the
-following line is added into <TT
+> に追加すれば、<TT
 CLASS="filename"
 >foo.dats</TT
->:
+> に対する dynload 関数は生成されません:
 
 <DIV
 CLASS="informalexample"
@@ -276,28 +255,22 @@ CLASS="programlisting"
 >
 
 
-Of course, skipping proper initialization for <TT
+もちろん、<TT
 CLASS="filename"
 >foo.dats</TT
-> means
-that an erroneous result is expected if the function <FONT
+> に対する適切な初期化を行なわないということは、<FONT
 COLOR="RED"
 >sum_x_y_z</FONT
->
-is ever called.
-
+> が呼び出されると結果は誤った結果になることを意味しています。
 </P
 ><P
->&#13;If there is a reason to call the dynload-function for
-<TT
+>&#13;<TT
 CLASS="filename"
 >foo2.dats</TT
-> explicitly, one can introduce an alias for it and then
-call the alias. For instance, if the following line is added to
-<TT
+> に対する dynload 関数を明示的に呼び出したい場合には、dynload 関数に別名を付けて、その別名の関数を呼び出すことができます。例えば、<TT
 CLASS="filename"
 >foo2.dats</TT
->:
+> に次の行を追加すると:
 
 <DIV
 CLASS="informalexample"
@@ -316,23 +289,21 @@ CLASS="programlisting"
 >
 
 
-then the dynload-function for <TT
+このとき <TT
 CLASS="filename"
 >foo2.dats</TT
-> is given an alias
-<FONT
+> に対する dynload 関数には <FONT
 COLOR="RED"
 >foo2_dynload</FONT
->.
+> という別名が与えられます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章のコード全体は <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/CHAP_DYNLOAD/."
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV

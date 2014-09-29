@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>サイズを伴う永続化配列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="永続化配列"
+HREF="c391.html"><LINK
+REL="NEXT"
+TITLE="永続化行列"
+HREF="c487.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c391.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c487.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="arrszref"
+></A
+>Chapter 12. サイズを伴う永続化配列</H1
+><P
+>&#13;サイズ情報が付属した永続化配列を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>サイズを伴う配列 (array-with-size)</I
+></SPAN
+> と呼びます。
+viewtype VT が与えられたとき、viewtype VT の N
+個の値を含むサイズを伴う配列の型は <FONT
+COLOR="RED"
+>arrszref(VT, N)</FONT
+> です。
+本質的に、この型の値は型 <FONT
+COLOR="RED"
+>arrayref(VT, N)</FONT
+> と <FONT
+COLOR="RED"
+>size_t(N)</FONT
+>
+の2つを構成要素とするボッスク化ペアです。
+サイズを伴う永続化配列に対する様々な関数のインターフェイスを
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
+TARGET="_top"
+>prelude/SATS/arrayref.sats</A
+>
+に見つけることができます。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>arrszref_make_arrpsz</FONT
+> と <FONT
+COLOR="RED"
+>arrszref_make_arrayref</FONT
+>
+を呼び出すことで、サイズを伴う配列を生成することができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN463"
+></A
+><PRE
+CLASS="programlisting"
+>fun{}
+arrszref_make_arrpsz
+  {a:vt0p}{n:int} (arrpsz (INV(a), n)): arrszref(a)
+fun{}
+arrszref_make_arrayref
+  {a:vt0p}{n:int} (arrayref (a, n), size_t(n)): arrszref(a)
+// end of [arrszref_make_arrayref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+例として、次のコードは全ての10進数の数字を含むような、サイズを伴う配列を生成しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN465"
+></A
+><PRE
+CLASS="programlisting"
+>val DIGITS = (arrszref)$arrpsz{int}(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>arrszref</FONT
+> は <FONT
+COLOR="RED"
+>arrszref_make_arrpsz</FONT
+>
+によって多重定義されていることに注意してください。
+
+</P
+><P
+>&#13;サイズを伴う配列を読み書きするために、関数テンプレート
+<FONT
+COLOR="RED"
+>arrszref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>arrszref_set_at</FONT
+>
+をそれぞれ使うことができます。
+これらの関数テンプレートには次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN472"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+arrszref_get_at (A: arrszref (a), i: size_t): (a)
+fun{a:t@ype}
+arrszref_set_at (A: arrszref (a), i: size_t, x: a): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+サイズを伴う配列 A, インデックス i, 値 v
+が与えられたとき、<FONT
+COLOR="RED"
+>arrszref_get_at(A, i)</FONT
+> と
+<FONT
+COLOR="RED"
+>arrszref_set_at(A, i, v)</FONT
+> はそれぞれ
+<FONT
+COLOR="RED"
+>A[i]</FONT
+> と <FONT
+COLOR="RED"
+>A[i] := v</FONT
+>
+のように書くことができます。
+<FONT
+COLOR="RED"
+>arrszref_get_at</FONT
+> もしくは <FONT
+COLOR="RED"
+>arrszref_set_at</FONT
+>
+が呼び出されると実行時に配列の範囲検査が行なわれ、配列の添字指定の範囲外アクセスを検出すると例外
+<FONT
+COLOR="RED"
+>ArraySubscriptExn</FONT
+> が発生することに注意してください。
+
+</P
+><P
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う配列の中身を逆順にする関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN482"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+arrszref_reverse
+(
+  A: arrszref (a)
+) : void = let
+//
+val n = A.size
+val n2 = half (n)
+//
+fun loop
+  (i: size_t): void = let
+in
+  if i &#60; n2 then let
+    val tmp = A[i]
+    val ni = pred(n)-i
+  in
+    A[i] := A[ni]; A[ni] := tmp; loop (succ(i))
+  end else () // end of [if]
+end // end of [loop]
+//
+in
+  loop (i2sz(0))
+end // end of [arrszref_reverse]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;配列を用いたプログラミングが要求される実装のプロトタイピングに、サイズを伴う配列はうってつけです。
+また、依存型にまだ精通していないプログラマにとって、配列よりもサイズを伴う配列の方が明らかに簡単に使えるでしょう。
+ATS におけるプログラミングでは、私はサイズを伴う配列からはじめて、それからその恩恵が明確になってから配列で置き換えることがしばしばあります。
+</P
+><P
+>&#13;この章で紹介したコード全体は
+<A
+HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_arrszref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c391.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c487.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>永続化配列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>永続化行列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
