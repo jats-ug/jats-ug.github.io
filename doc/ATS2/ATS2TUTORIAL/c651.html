@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Extvar-Declaration</TITLE
+>extvar 宣言</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -75,22 +75,19 @@ CLASS="chapter"
 ><A
 NAME="extvar-declaration"
 ></A
->Chapter 18. Extvar-Declaration</H1
+>Chapter 18. extvar 宣言</H1
 ><P
->&#13;ATS puts great emphasis on interacting with other programming
-languages.
+>&#13;ATS は他のプログラミング言語との相互利用を重要視しています。
 
 </P
 ><P
->&#13;Suppose that I have in some C code a (global) integer variable of the name
-<FONT
+>&#13;C言語コード中に <FONT
 COLOR="RED"
 >foo</FONT
-> and I want to increase in some ATS code the value stored in
-<FONT
+> という名前の (グローバルの) 整数変数を持ち、ATS コード中で <FONT
 COLOR="RED"
 >foo</FONT
-> by 1. This can be done as follows:
+> に保管された値を 1 増加させたいとします。これは次のように書けます:
 
 <DIV
 CLASS="informalexample"
@@ -111,13 +108,10 @@ val () = $UNSAFE.ptr_set&#60;int&#62; (p_foo, x0 + 1) // update foo
 >
 
 
-where the address-of operator (&#38;) in C is needed for taking the address
-of <FONT
+このとき <FONT
 COLOR="RED"
 >foo</FONT
->. If I want to interact in ATS with a language that does
-not support the address-of operator (e.g., JavaScript and Python), then I
-can do it as follows:
+> のアドレスを得るためにC言語のアドレス演算子 (&#38;) が必要です。もしアドレス演算子をサポートしていない言語 (例: JavaScript や Python) と ATS を相互利用するのであれば、次のように書くことができます:
 
 <DIV
 CLASS="informalexample"
@@ -136,14 +130,10 @@ CLASS="programlisting"
 >
 
 
-where the keyword <FONT
+このときキーワード <FONT
 COLOR="RED"
 >extvar</FONT
-> indicates that the string following it
-refers to an external variable (or left-value) that should be updated with
-the value of the expression on the right-hand side of the equality symbol
-following the string. This so-called-extvar declaration can also be written
-as follow:
+> は続く文字列が外部の変数 (もしくは左辺値) を参照していることを示しています。その変数は、その文字列に続く等式記号の右辺の式の値で更新されます。このいわゆる extvar 宣言は次のように書くこともできます:
 
 <DIV
 CLASS="informalexample"
@@ -162,32 +152,29 @@ CLASS="programlisting"
 >
 
 
-where <FONT
+このとき <FONT
 COLOR="RED"
 >extvar</FONT
-> expands into <FONT
+> は <FONT
 COLOR="RED"
 >extern var</FONT
->.
+> に展開されています。
 
 </P
 ><P
->&#13;As for another example, let us suppose that <FONT
+>&#13;もう1つの例として、<FONT
 COLOR="RED"
 >foo2</FONT
-> is a record
-variable that contains two integer fields named <FONT
+> が <FONT
 COLOR="RED"
 >first</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >second</FONT
->. Then the following code assigns integers 1 and 2 to
-these two fields of <FONT
+> という名前で2つの整数フィールドを持つレコード変数であるとしてみましょう。すると次のコードは、整数 1 と 2 を <FONT
 COLOR="RED"
 >foo2</FONT
->:
+> の2つのフィールドに割り当てます:
 
 <DIV
 CLASS="informalexample"
@@ -207,17 +194,15 @@ extvar "foo2.second" = 2
 >
 
 
-By its very own nature, the feature of extvar-declaration is inherently
-unsafe, and it should only be used with caution.
+ことがことだけに、extvar 宣言の機能は本質的に安全ではなく、慎重に使う必要があります。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で紹介したコード全体は <A
 HREF="http://www.ats-lang.org/DOCUMENT/ATS2TUTORIAL/CODE/chap_extvar.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code presented in this chapter.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
