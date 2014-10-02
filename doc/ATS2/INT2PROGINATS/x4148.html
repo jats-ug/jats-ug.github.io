@@ -18,7 +18,7 @@ TITLE="例: 配列を用いたリングバッファ"
 HREF="x4111.html"><LINK
 REL="NEXT"
 TITLE="Locking and Unlocking Shared Resources"
-HREF="x4208.html"></HEAD
+HREF="x4212.html"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x4208.html"
+HREF="x4212.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -373,32 +373,58 @@ end // end of [mergeSort]
 
 </P
 ><P
->&#13;配列に対するマージソートの実装全体とテストコードは
-<A
-HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
-TARGET="_top"
->オンライン</A
->
-から入手できます。
-
-</P
-><P
->&#13;The following function <FONT
-COLOR="RED"
->array_ptr_alloca_tsz</FONT
-> is the
-same as <FONT
+>&#13;また、特殊な関数 <FONT
 COLOR="RED"
 >alloca</FONT
-> dynamically but it is given a type that
-is often more convenient to use:
+> を呼び出すことでコールスタックにメモリを確保する関数も作ることができます。それには ATS では次のような型が与えられます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4196"
+NAME="AEN4193"
+></A
+><PRE
+CLASS="programlisting"
+>(*
+staload "libc/SATS/alloa.sats"
+*)
+fun alloca
+  {dummy:addr}{n:int} (
+  pf: void@dummy | n: size_t (n)
+) : [l:addr] (bytes(n) @ l, bytes(n) @ l -&#62; void@dummy | ptr(l))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>alloca</FONT
+> に割り当てられた型は、型付けされた ATS コードが <FONT
+COLOR="RED"
+>alloca</FONT
+> 関数呼び出しが返った後に誤ってその関数呼び出しから得られたメモリにアクセスすることを防止します。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>array_ptr_alloca_tsz</FONT
+> は動的には <FONT
+COLOR="RED"
+>alloca</FONT
+> と同じです。しかしより便利な型が付けられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4200"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -415,18 +441,17 @@ array_ptr_alloca_tsz
 >
 
 
-As an example, the function template <FONT
+例として、上記で実装された関数テンプレート <FONT
 COLOR="RED"
 >mergeSort</FONT
-> implemented
-above can also be implemented as follows:
+> 次のように実装することもできます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4199"
+NAME="AEN4203"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -451,38 +476,32 @@ end // end of [mergeSort]
 >
 
 
-where the array used as a scratch area during merge-sort is allocated on
-the call-stack of <FONT
+ここではマージを行なうのに必要なスクラッチ領域として使われる配列を <FONT
 COLOR="RED"
 >mergeSort</FONT
->. While this implementation of
-<FONT
+> のコールスタックに確保しています。この <FONT
 COLOR="RED"
 >mergeSort</FONT
-> may seem interesting, it is actually inferior to the
-previous implementation as calling <FONT
+> の実装は興味深いものですが、実際には以前の実装より劣っています。多きなメモリチャンクを確保する <FONT
 COLOR="RED"
 >alloca</FONT
-> to allocate a large
-chunk of memory can readily lead to a crash for which the cause is often
-very difficult to determine. In general, choosing <FONT
-COLOR="RED"
->alloca</FONT
-> over
-<FONT
+> 呼び出しはクラッシュをたやすく引き起こし、その原因を見つけ出すのはしばしば困難です。一般に、<FONT
 COLOR="RED"
 >malloc</FONT
-> is difficult to justify, and any call to the former
-should be scrutinized.
+> よりも <FONT
+COLOR="RED"
+>alloca</FONT
+> を使うことは正当化しずらく、前者に対する呼び出しは綿密に精査すべきです。
 
 </P
 ><P
->&#13;The entire implementation of merge-sort on arrays plus some testing code
-is available <A
+>&#13;配列に対するマージソートの実装全体とテストコードは
+<A
 HREF="http://www.ats-lang.org/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
@@ -520,7 +539,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x4208.html"
+HREF="x4212.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
