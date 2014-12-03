@@ -29,6 +29,10 @@
 
 <H1>atsdoc</H1>
 
+<P>
+(元記事は <a href="http://www.cs.bu.edu/~hwxi/ATS/DOCUMENT/atsdocman.html">http://www.cs.bu.edu/~hwxi/ATS/DOCUMENT/atsdocman.html</a> です)
+</P>
+
 <HR SIZE=2 ALIGN=LEFT></HR>
 
 <!-- ****** ****** -->
@@ -79,31 +83,47 @@ TFC's:
 
 </P><!--para-->
 
+<!--
 <H2>Text Laden with TFC's</H2>
+-->
+<H2>TFC's を含むテキスト</H2>
 
+<!--
 <P>Let us coin a word <I>atext</I> to refer to text laden with
 TFC's. Suppose that following is the content of a file named <I>foo.atxt</I>:
+-->
+<P>
+TFC's を含むテキストを表わすのに <I>atext</I> という単語を使うことにしましょう。ファイル <I>foo.atxt</I> の内容が次のようだとします:
 
 <PRE class="textpre">Author: #author()
 Time of the last modification: #timestamp[NOW]()
 </PRE>
 </P><!--para-->
 
+<!--
 <P>If we execute the following command-line:
+-->
+<P>もし次のコマンドを実行したなら:
 
 <PRE class="textpre"><B>atsdoc</B> --outcode foo_atxt.dats --outdata foo_atxt.txt -i foo.atxt
 </PRE><!--textpre-->
 
+<!--
 then two files named <I>foo_atxt.dats</I> and <I>foo_atxt.txt</I>
 are generated. It is also possible to do the same thing by executing the
 following command-line:
+-->
+すると2つのファイル <I>foo_atxt.dats</I> と <I>foo_atxt.txt</I> が生成されます。また、次のコマンドを実行しても同じ結果が得られます:
 
 <PRE class="textpre"><B>atsdoc</B> --outcode foo_atxt.dats -i foo.atxt > foo_atxt.txt
 </PRE><!--textpre-->
 
 </P><!--para-->
 
+<!--
 <P>The content of <I>foo_atxt.dats</I> is listed as follows:
+-->
+<P><I>foo_atxt.dats</I> の中は次のようになるでしょう:
 
 <pre class="atsyntax">
 <span class="comment">(*
@@ -120,10 +140,14 @@ foo.atxt: 51(line=2, offs=33) -- 67(line=2, offs=49)
 </pre>
 <!--ats2xhtmld-->
 
+<!--
 Note that the name of the identifier <span class="code">__tok1</span> is generated
 automatically while the name of the identifer <span class="code">NOW</span> is taken from
 the input. The embedded location information in <I>foo_atxt.dats</I>
 is present primarily for the purpose of debugging.
+-->
+Note that the name of the identifier <span class="code">__tok1</span> is generated automatically while the name of the identifer <span class="code">NOW</span> is taken from the input.
+The embedded location information in <I>foo_atxt.dats</I> is present primarily for the purpose of debugging.
 
 </P><!--para-->
 
