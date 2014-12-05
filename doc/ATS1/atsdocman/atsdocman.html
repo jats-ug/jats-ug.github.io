@@ -146,23 +146,29 @@ automatically while the name of the identifer <span class="code">NOW</span> is t
 the input. The embedded location information in <I>foo_atxt.dats</I>
 is present primarily for the purpose of debugging.
 -->
-Note that the name of the identifier <span class="code">__tok1</span> is generated automatically while the name of the identifer <span class="code">NOW</span> is taken from the input.
-The embedded location information in <I>foo_atxt.dats</I> is present primarily for the purpose of debugging.
+識別子 <span class="code">__tok1</span> の名前は自動的に生成されており、識別子 <span class="code">NOW</span> の名前は入力から取ることに注意してください。<I>foo_atxt.dats</I> コメントで書かれている位置情報は主にデバッグに使います。
 
 </P><!--para-->
 
+<!--
 <P>The content of <I>foo_atxt.txt</I> is listed as follows:
+-->
+<P><I>foo_atxt.txt</I> の中身は次のようになるでしょう:
 
 <PRE class="textpre">
 Author: #__tok1$
 Time of the last modification: #NOW$
 </PRE><!--textpre-->
 
+<!--
 Note that each marked token in <I>foo_atxt.txt</I> is formed
 by placing an identifier between the char '#' and the char '$'.
+-->
+<I>foo_atxt.txt</I> におけるそれぞれのトークンは、識別子を '#' と '$' で囲まれたものであることに注意してください。
 </P>
 
 <P>
+<!--
 The plan is to compile <I>foo_atxt.dats</I> into an executable that
 can generate a text file by replacing each marked token in
 <I>foo_atxt.txt</I> with some text attached to it. However, the
@@ -170,6 +176,12 @@ can generate a text file by replacing each marked token in
 the functions <span class="code">author</span> and <span class="code">timestamp</span> are not available.  By
 embedding proper ATS source code into <I>foo.atxt</I>, we can readily
 resolve these issues and fulfill the plan.
+-->
+The plan is to compile <I>foo_atxt.dats</I> into an executable that can generate a text file by replacing each marked token in <I>foo_atxt.txt</I> with some text attached to it.
+However, the <span class="code">main</span> function is not present in <I>foo_atxt.dats</I>.
+Also, the functions <span class="code">author</span> and <span class="code">timestamp</span> are not available.
+By embedding proper ATS source code into <I>foo.atxt</I>,
+we can readily resolve these issues and fulfill the plan.
 
 </P><!--para-->
 
