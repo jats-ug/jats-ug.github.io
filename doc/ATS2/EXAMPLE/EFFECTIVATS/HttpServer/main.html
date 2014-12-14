@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>EFFECTIVATS-HttpServer</title>
+
+<style type="text/css">
+  .patsyntax {width:99%;margin:auto;}
+  .patsyntax {color:#808080;background-color:#E0E0E0;}
+  .patsyntax span.keyword {color:#000000;font-weight:bold;}
+  .patsyntax span.comment {color:#787878;font-style:italic;}
+  .patsyntax span.extcode {color:#A52A2A;}
+  .patsyntax span.neuexp  {color:#800080;}
+  .patsyntax span.staexp  {color:#0000F0;}
+  .patsyntax span.prfexp  {color:#603030;}
+  .patsyntax span.dynexp  {color:#F00000;}
+  .patsyntax span.stalab  {color:#0000F0;font-style:italic}
+  .patsyntax span.dynlab  {color:#F00000;font-style:italic}
+  .patsyntax span.dynstr  {color:#008000;font-style:normal}
+  .patsyntax span.stacstdec  {text-decoration:none;}
+  .patsyntax span.stacstuse  {color:#0000CF;text-decoration:underline;}
+  .patsyntax span.dyncstdec  {text-decoration:none;}
+  .patsyntax span.dyncstuse  {color:#B80000;text-decoration:underline;}
+  .patsyntax span.dyncst_implement  {color:#B80000;text-decoration:underline;}
+</style>
+
+<!--php-->
+</head>
+
+<body>
+
+<h1>
+Effective ATS:<br>
+Implementing a minimal http-server
+</h1>
+
+<p>
+In this article, I would like to present an implementation
+of a minimal http-server. This is also a good occasion for me
+to advocate refinement-based programming.
+</p>
+
+<h2>
+A simplistic abstract server
+</h2>
+
+<p>
+As I have said repeatedly, I, like many others, feel that the most
+challenging issue in programming (and many other forms of engineering) is
+to keep the inherent complexity of the implemented system under
+control. What may sound ironic is that keeping-it-simple is probably the
+hardest thing to do. I hope that programmers can rely on the support for
+abstract types in ATS to make this hardest thing significantly easier to
+manage.
+</p>
+
+<p>
+Let us first take a look at the following self-explanatory implementation
+of a simplistic abstract server:
+</p>
+
+<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<!--php-->
+
+<p>
+Basically, [myserver] implements a server; it does some form of
+initializating by calling [myserver_init] and then starts a loop for
+handling requests by calling [myserver_loop]. The function
+[myserver_waitfor_request] is supposed to be blocked until a request
+is available, and the function [myserver_process_request] processes a
+given request.
+</p>
+
+<h2>
+Turning abstract into concrete
+</h2>
+
+<p>
+The three functions that need to be implemented
+(in order to get a running server)
+are [myserver_init], [myserver_waitfor_request], and
+[myserver_waitfor_process]. For someone familiar with
+BSD sockets, the following code should be readily accessible:
+</p>
+
+<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<!--php-->
+
+<p>
+Essentially, [myserver_init] creates a server-side socket
+that is allowed to accept connection from any party, and then
+listens on the socket. Note that the file descriptor of the
+created socket is stored in a global variable [theSockID].
+The function [atslib_bind_exn] calls [bind]; it
+exits if the call to [bind] results in an error; otherwise,
+it returns normally.
+Similarly, the function [atslib_listen_exn] calls [listen]; it
+exits if the call to [listen] results in an error; otherwise,
+it returns normally.
+</p>
+
+<p>
+The function [myserver_waitfor_request] can be implemented
+as follows:
+</p>
+
+<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<!--php-->
+
+<p>
+A call to [accept] is blocked until a connection between the server and a
+client is established. What is returned by [accept] is the file descriptor of
+a socket that can be used to communicate with the client.
+</p>
+
+<p>
+The function [myserver_process_request] is implemented as follows:
+</p>
+
+<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<!--php-->
+
+<p>
+The implementation of [myserver_process_request] reads into a
+buffer whatever is sent by the client; it generates an HTML page
+containing the content of the buffer plus a time stamp and then
+sends the page to the client.
+</p>
+
+<h2>
+Testing
+</h2>
+
+<p>
+The entirety of the code for this implementation is contained in
+<u>myserver.dats</u>. There is also a Makefile available for building
+the server. Please click the link
+<a href="http://127.0.0.1:8888">http://127.0.0.1:8888</a>
+to test after the server is started running locally.
+</p>
+
+<h2>
+A side note
+</h2>
+
+<p>
+For someone interested in <a href="http://www.zeromq.org">ZMQ</a>,
+please find in the file <u>myserver2.dats</u> a ZMQ-based implementation
+of a http-server that is essentially equivalent to the one given above.
+</p>
+
+<hr size="2">
+
+This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
+
+</body>
+</html>
