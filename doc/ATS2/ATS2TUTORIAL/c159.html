@@ -18,7 +18,7 @@ TITLE="結合性宣言"
 HREF="c93.html"><LINK
 REL="NEXT"
 TITLE="動的ロード (dynload)"
-HREF="c162.html"></HEAD
+HREF="c194.html"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -60,7 +60,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c162.html"
+HREF="c194.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -78,6 +78,218 @@ NAME="staload"
 >Chapter 5. 静的ロード (staload)</H1
 ><P
 >ATS では、静的ロード (もしくは staload と略します) はロードされるパッケージ中で宣言された名前に対する名前空間を生成します。
+</P
+><P
+>&#13;Suppose that a file named <TT
+CLASS="filename"
+>foo.sats</TT
+> contains the
+following code:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN164"
+></A
+><PRE
+CLASS="programlisting"
+>//
+datatype
+aDatatype =
+| A | B of (int, int)
+//
+val aValue: int
+fun aFunction: int -&#62; int
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The following staload-declaration introduces a namespace
+<FONT
+COLOR="RED"
+>FOO</FONT
+> for the names declared in <TT
+CLASS="filename"
+>foo.sats</TT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN168"
+></A
+><PRE
+CLASS="programlisting"
+>staload FOO = "foo.sats"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+The prefix <FONT
+COLOR="RED"
+>$FOO.</FONT
+> needs to be attached to a name in the
+namespace <FONT
+COLOR="RED"
+>FOO</FONT
+> in order for it to be referenced. For instance,
+the names available in the namespace <FONT
+COLOR="RED"
+>FOO</FONT
+> are all referenced in
+the following code:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN173"
+></A
+><PRE
+CLASS="programlisting"
+>val a: $FOO.aDatatype = $FOO.A()
+val b: $FOO.aDatatype = $FOO.B(0, $FOO.aFunction($FOO.aValue))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;If the file <TT
+CLASS="filename"
+>foo.sats</TT
+> is staloaded as follows for the second
+time:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN177"
+></A
+><PRE
+CLASS="programlisting"
+>staload FOO2 = "foo.sats"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+then <TT
+CLASS="filename"
+>foo.sats</TT
+> is not actually loaded by the compiler. Instead,
+<FONT
+COLOR="RED"
+>FOO2</FONT
+> is simply made to be an alias of <FONT
+COLOR="RED"
+>FOO</FONT
+>.
+
+</P
+><P
+>&#13;It is also allowed for <TT
+CLASS="filename"
+>foo.sats</TT
+> to be staloaded as follows:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN184"
+></A
+><PRE
+CLASS="programlisting"
+>staload "foo.sats"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+In this case, the namespace for the names declared in <TT
+CLASS="filename"
+>foo.sats</TT
+>
+is opened. For instance, the following code shows that these names can now
+be referenced directly:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN187"
+></A
+><PRE
+CLASS="programlisting"
+>val a: aDatatype = A()
+val b: aDatatype = B(0, aFunction(aValue))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;Let us suppose that we have the following sequence of declarations:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN190"
+></A
+><PRE
+CLASS="programlisting"
+>val aValue = 0
+staload "foo.sats"
+val anotheValue = aValue + 1
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Does the second occurrence of <FONT
+COLOR="RED"
+>aValue</FONT
+> refer to the one
+introduced in the first declaration, or it refers to the one declared
+inside <TT
+CLASS="filename"
+>foo.sats</TT
+>? The answer may be a bit surprising: It refers
+to the one introduced in the first declaration as a binding for the
+occurrence of a name is resolved in ATS by searching first through the
+available names delcared in the same file.
+
 </P
 ></DIV
 ><DIV
@@ -114,7 +326,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c162.html"
+HREF="c194.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
