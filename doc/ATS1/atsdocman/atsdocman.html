@@ -177,16 +177,15 @@ the functions <span class="code">author</span> and <span class="code">timestamp<
 embedding proper ATS source code into <I>foo.atxt</I>, we can readily
 resolve these issues and fulfill the plan.
 -->
-The plan is to compile <I>foo_atxt.dats</I> into an executable that can generate a text file by replacing each marked token in <I>foo_atxt.txt</I> with some text attached to it.
-However, the <span class="code">main</span> function is not present in <I>foo_atxt.dats</I>.
-Also, the functions <span class="code">author</span> and <span class="code">timestamp</span> are not available.
-By embedding proper ATS source code into <I>foo.atxt</I>,
-we can readily resolve these issues and fulfill the plan.
+この後の工程では <I>foo_atxt.dats</I> を、<I>foo_atxt.txt</I> 中のトークンをなんらかのテキストで置換されたテキストファイルを生成する実行可能バイナリへコンパイルすることになります。けれども、<I>foo_atxt.dats</I> には <span class="code">main</span> 関数がありません。また、関数 <span class="code">author</span> と <span class="code">timestamp</span> も有効ではありません。<I>foo.atxt</I> に適切な ATS ソースコードを組み込むことで、これらの問題を解決できます。
 
 </P><!--para-->
 
 <P>
+<!--
 Let <I>foo2.atxt</I> be a file of the following content:
+-->
+次のような内容のファイル <I>foo2.atxt</I> を考えてみましょう:
 
 <PRE class="textpre">%{
 //
@@ -225,26 +224,38 @@ implement main () = fprint_filsub (stdout_ref, "foo2_atxt.txt")
 %}
 </PRE><!--textpre-->
 
+<!--
 Any text surrounded by the special symbols '%{' and '%}' is copied into
 <I>foo2_atxt.dats</I> after the following command-line is executed:
+-->
+次のコマンドラインを実行すると、特別な記号 '%{' と '%}' で囲まれたテキストは <I>foo2_atxt.dats</I> 中にコピーされます:
 
 <PRE class="textpre"><B>atsdoc</B> -do foo2_atxt.dats -i foo2.atxt > foo2_atxt.txt
 </PRE>
 
+<!--
 The function <span class="code">fprint_filsub</span> is called to replace each marked token
 in <I>foo2_atxt.txt</I> with the string attached to it.
+-->
+関数 <span class="code">fprint_filsub</span> は呼び出されると、<I>foo2_atxt.txt</I> 中のトークンをテキストで置換します。
 
 </P><!--para-->
 
 <P>
+<!--
 We can now compile <I>foo2_atxt.dats</I> into <I>foo2</I>
 and then dump the output from executing <I>foo2</I> into <I>foo2.output</I>:
+-->
+これで <I>foo2_atxt.dats</I> を <I>foo2</I> にコンパイルして、<I>foo2</I> の実行結果を <I>foo2.output</I> にダンプすることができるようになります:
 
 <PRE class="textpre">atscc -o foo2 foo2_atxt.dats -latsdoc
 ./foo2 > foo2.output
 </PRE>
 
+<!--
 As can be expected, following is the content of <I>foo2.output</I>:
+-->
+予想通り、<I>foo2.output</I> の内容は次のようになるはずです:
 
 <PRE class="textpre">Author: John Doe
 Time of the last modification: Wed Aug 24 20:31:59 2011
