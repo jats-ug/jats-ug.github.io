@@ -262,13 +262,19 @@ Time of the last modification: Wed Aug 24 20:31:59 2011
 </PRE>
 </P><!--para-->
 
+<!--
 <H2>Representation for Texts</H2>
+-->
+<H2>テキストの表現</H2>
 
 <P>
+<!--
 The functions <span class="code">author</span> and <span class="code">timestamp</span> presented above do not
 return strings. Instead, they return values of the type <span class="code">text</span>,
 which is declared in <a href="../../IMPLEMENT/Anairiats/libatsdoc/SATS/libatsdoc_atext.sats">libatsdoc/SATS/libatsdoc_atext.sats</a> as
 follows:
+-->
+上記で示した関数 <span class="code">author</span> と <span class="code">timestamp</span> は文字列を返していません。その代わりに、<a href="https://github.com/githwxi/ATS-Lang/blob/master/libatsdoc/SATS/libatsdoc_atext.sats">libatsdoc/SATS/libatsdoc_atext.sats</a> で宣言された <span class="code">atext</span> 型の値を返します:
 
 <pre class="atsyntax">
 <span class="keyword">datatype</span> <span class="staexp"><span id="loc9"><span class="stacstdec">atext</span></span></span> <span class="keyword">=</span>
@@ -295,6 +301,7 @@ follows:
 </pre>
 <!--ats2xhtmls-->
 
+<!--
 The meaning of all the data constructors associated with the datatype
 <span class="code">atext</span> should be easily understood except <span class="code">ATEXTstrsub</span>, which
 indicates that its (string) argument may contain marked tokens, that is,
@@ -304,15 +311,20 @@ string str, we must replace each marked token in str with the string it
 represents. For further details, please see the implementation of
 <span class="code">fprint_strsub</span> in
 <a href="../../IMPLEMENT/Anairiats/libatsdoc/DATS/libatsdoc_atext.dats">libatsdoc/DATS/libatsdoc_atext.dats</a>.
+-->
+<span class="code">ATEXTstrsub</span> を除けば、データ型 <span class="code">atext</span> に関連するデータコンストラクタの意味を理解するのは容易でしょう。この <span class="code">ATEXTstrsub</span> はその文字列型の引数が、2つの文字 '#' と '$' で囲まれた識別子で囲まれたトークンを含む可能性があることを示しています。なんらかの文字列 str を <span class="code">ATEXTstrsub</span>(str) の形の値で文字列化する時、str 内のトークンをそれが表現する文字列で置換する必要があります。より詳しくは <a href="https://github.com/githwxi/ATS-Lang/blob/master/libatsdoc/DATS/libatsdoc_atext.dats">libatsdoc/DATS/libatsdoc_atext.dats</a> 内にある <span class="code">fprint_strsub</span> 関数の実装を見てください。
 
 </P><!--para-->
 
 <HR SIZE=2 ALIGN=LEFT></HR>
 
 <P>
+<!--
 Please find <a href="../../DOCUMENT/atsdocman/TEST">on-line</a> all the files involved in the
 above presentation.  The atext file for producing the current html file is
 also available <a href="../../DOCUMENT/atsdocman/atsdocman.atxt">on-line</a>.
+-->
+上記で示した例を含むファイル群は <a href="http://ats-lang.sourceforge.net/htdocs-old/DOCUMENT/atsdocman/TEST/">オンライン</a> から入手できます。この HTML ファイルを生成する atext ファイルも <a href="http://ats-lang.sourceforge.net/htdocs-old/DOCUMENT/atsdocman/atsdocman.atxt">オンライン</a> から入手できます。
 
 </P>
 
