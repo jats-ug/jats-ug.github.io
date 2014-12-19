@@ -59,7 +59,66 @@ Let us first take a look at the following self-explanatory implementation
 of a simplistic abstract server:
 </p>
 
-<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<pre class="patsyntax">
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> myserver <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> myserver_init <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> myserver_loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+myserver <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> myserver_init <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> myserver_loop <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [myserver] *)</span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+myserver_init <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="comment">// HX: it is a dummy for now</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">println!</span> <span class="keyword">(</span><span class="dynstr">"myserver_init: start"</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">println!</span> <span class="keyword">(</span><span class="dynstr">"myserver_init: finish"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [myserver_init] *)</span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="staexp"><span class="keyword">abstype</span> request</span>
+
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> myserver_waitfor_request <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">request</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> myserver_process_request <span class="keyword">(</span><span class="staexp">request</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+myserver_loop <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> req <span class="keyword">=</span>
+myserver_waitfor_request <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+myserver_process_request <span class="keyword">(</span>req<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> myserver_loop <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [myserver_loop] *)</span>
+<span class="comment">//</span></pre>
 <!--php-->
 
 <p>
@@ -83,7 +142,52 @@ are [myserver_init], [myserver_waitfor_request], and
 BSD sockets, the following code should be readily accessible:
 </p>
 
-<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<pre class="patsyntax">
+<span class="comment">//</span>
+<span class="extcode"><span class="extcode">%{^
+int theSockID = -1;
+%}</span></span> <span class="comment">// end of [%{^]</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="neuexp"><span class="keyword">#define</span> MYPORT 8888</span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+myserver_init <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> inport <span class="keyword">=</span> in_port_nbo<span class="keyword">(</span>MYPORT<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> inaddr <span class="keyword">=</span> in_addr_hbo2nbo <span class="keyword">(</span>INADDR_ANY<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">var</span> servaddr
+  <span class="keyword">:</span> <span class="staexp">sockaddr_in_struct</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span>
+sockaddr_in_init
+  <span class="keyword">(</span>servaddr<span class="keyword">,</span> AF_INET<span class="keyword">,</span> inaddr<span class="keyword">,</span> inport<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+sockfd <span class="keyword">=</span>
+<span class="dynexp"><span class="keyword">$extfcall</span>
+<span class="keyword">(</span>
+  int<span class="keyword">,</span> "socket"<span class="keyword">,</span> AF_INET<span class="keyword">,</span> SOCK_STREAM<span class="keyword">,</span> 0
+<span class="keyword">)</span></span></span> <span class="comment">(* end of [val] *)</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>sockfd &gt;= <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">extvar</span> "theSockID" <span class="keyword">=</span> sockfd
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="dynexp"><span class="keyword">$extfcall</span>
+<span class="keyword">(</span>
+  void<span class="keyword">,</span> "atslib_bind_exn"<span class="keyword">,</span> sockfd<span class="keyword">,</span> <span class="keyword">addr@</span>servaddr<span class="keyword">,</span> socklen_in
+<span class="keyword">)</span></span></span> <span class="comment">(* end of [val] *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>void<span class="keyword">,</span> "atslib_listen_exn"<span class="keyword">,</span> sockfd<span class="keyword">,</span> 5<span class="comment">(*LISTENQSZ*)</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [myserver_init] *)</span>
+<span class="comment">//</span></pre>
 <!--php-->
 
 <p>
@@ -104,7 +208,19 @@ The function [myserver_waitfor_request] can be implemented
 as follows:
 </p>
 
-<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<pre class="patsyntax">
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span>
+myserver_waitfor_request
+  <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> fd <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>int<span class="keyword">,</span> "theSockID"<span class="keyword">)</span></span></span>
+<span class="dynexp"><span class="keyword">val</span> fd2 <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>int<span class="keyword">,</span> "accept"<span class="keyword">,</span> fd<span class="keyword">,</span> 0<span class="comment">(*addr*)</span><span class="keyword">,</span> 0<span class="comment">(*addrlen*)</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>request<span class="keyword">}</span></span><span class="keyword">(</span>fd2<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [myserver_waitfor_request]</span>
+<span class="comment">//</span></pre>
 <!--php-->
 
 <p>
@@ -117,7 +233,90 @@ a socket that can be used to communicate with the client.
 The function [myserver_process_request] is implemented as follows:
 </p>
 
-<b>Pats2xhtmlization failed</b><br>sh: 1: pats2xhtml: not found
+<pre class="patsyntax">
+<span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#define</span> BUFSZ 1024</span>
+<span class="neuexp"><span class="keyword">#define</span> BUFSZ2 1280</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">val</span>
+theRespFmt <span class="keyword">=</span> <span class="dynstr">"\
+HTTP/1.0 200 OK\r\n\
+Content-type: text/html\r\n\r\n\
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=\"UTF-8\"&gt;
+&lt;meta http-equiv=\"Content-Type\" content=\"text/html\"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;
+Hello from myserver!
+&lt;/h1&gt;
+&lt;pre&gt;
+%s
+&lt;/pre&gt;
+&lt;pre&gt;
+&lt;u&gt;The time stamp&lt;/u&gt;: &lt;b&gt;%s&lt;/b&gt;
+&lt;/pre&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"</span></span> <span class="comment">// end of [val]</span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="extcode"><span class="extcode">%{^
+typedef char *charptr;
+%}</span></span> <span class="comment">// end of [%{^]</span>
+<span class="staexp"><span class="keyword">abstype</span> charptr <span class="keyword">=</span> <span class="keyword">$extype</span>"charptr"</span>
+
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+myserver_process_request
+  <span class="keyword">(</span>req<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> fd2 <span class="keyword">=</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>req<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">var</span> buf <span class="keyword">=</span> <span class="dynexp"><span class="keyword">@[</span>byte<span class="keyword">]</span><span class="keyword">[</span>BUFSZ<span class="keyword">]</span><span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="keyword">var</span> buf2 <span class="keyword">=</span> <span class="dynexp"><span class="keyword">@[</span>byte<span class="keyword">]</span><span class="keyword">[</span>BUFSZ2<span class="keyword">]</span><span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> bufp <span class="keyword">=</span> <span class="dynexp"><span class="keyword">addr@</span></span>buf <span class="keyword">and</span> bufp2 <span class="keyword">=</span> <span class="dynexp"><span class="keyword">addr@</span></span>buf2</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> nread <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span> <span class="keyword">(</span>ssize_t<span class="keyword">,</span> "read"<span class="keyword">,</span> fd2<span class="keyword">,</span> bufp<span class="keyword">,</span> BUFSZ<span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="comment">(*
+val () = println! ("myserver_process_request: nread = ", nread)
+*)</span>
+<span class="comment">//</span>
+<span class="keyword">var</span> time <span class="keyword">=</span> time_get<span class="keyword">(</span><span class="keyword">)</span>
+<span class="dynexp"><span class="keyword">val</span> tmstr <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>charptr<span class="keyword">,</span> "ctime"<span class="keyword">,</span> <span class="keyword">addr@</span>time<span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">if</span>
+nread &gt;= <span class="dynexp">0</span>
+<span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">[</span><span class="staexp">n<span class="keyword">:</span>int</span><span class="keyword">]</span> n <span class="keyword">=</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>Size<span class="keyword">}</span></span><span class="keyword">(</span>nread<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_set_at&lt;<span class="staexp">char</span><span class="keyword">&gt;</span> <span class="keyword">(</span>bufp<span class="keyword">,</span> n<span class="keyword">,</span> <span class="dynexp">'\000'</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> nbyte <span class="keyword">=</span>
+    <span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>int<span class="keyword">,</span> "snprintf"<span class="keyword">,</span> bufp2<span class="keyword">,</span> BUFSZ2<span class="keyword">,</span> theRespFmt<span class="keyword">,</span> bufp<span class="keyword">,</span> tmstr<span class="keyword">)</span></span></span>
+  <span class="comment">// end of [val]</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> nwrit <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>ssize_t<span class="keyword">,</span> "write"<span class="keyword">,</span> fd2<span class="keyword">,</span> bufp2<span class="keyword">,</span> min<span class="keyword">(</span>nbyte<span class="keyword">,</span> BUFSZ2<span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [then]</span>
+<span class="comment">//</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> err <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span> <span class="keyword">(</span>int<span class="keyword">,</span> "close"<span class="keyword">,</span> fd2<span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [myserver_process_request]</span>
+<span class="comment">//</span></pre>
 <!--php-->
 
 <p>
