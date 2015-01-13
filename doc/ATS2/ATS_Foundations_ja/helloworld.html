@@ -64,19 +64,19 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="preface.html">1. はじめに</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preface.html#id3">1.1. ATS言語について</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#id4">1.2. ATSコンパイラのインストール</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#id5">1.3. 参考となる資料</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#id4">1.2. 参考となる資料</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. ATSコンパイラのインストール</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linuxへのインストール</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windowsへのインストール</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS Xへのインストール</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS X</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">3. はじめてのATSプログラム</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#id1">3.1. 何もしないプログラム</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">3.2. 文字列をコンソールの表示するには</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">3.2. コンパイルと実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">3.3. 文字列をコンソールに表示するには</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. 基本的なデータ型</a><ul>
@@ -122,7 +122,7 @@
 <h1>3. はじめてのATSプログラム<a class="headerlink" href="#ats" title="このヘッドラインへのパーマリンク">¶</a></h1>
 <p>ATS 言語はコンパイラを使ってそのソースコードを実行します。
 別の言い方をすると OCaml のようにインタプリタを持っていません。
-ATS のプログラミングをはじめる前に、単純なプログラムを作ってコンパイルしてみましょう。</p>
+この章では、ATS のプログラミングをはじめる前に、単純なプログラムを作ってコンパイルしてみましょう。</p>
 <div class="section" id="id1">
 <h2>3.1. 何もしないプログラム<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <p>最小のプログラムとは何でしょうか？
@@ -131,9 +131,46 @@ ATS のプログラミングをはじめる前に、単純なプログラムを�
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
+<p>これは何もしない main 関数を持つ ATS プログラムです。
+ソースコードを詳しく解説すると以下のようになるでしょう。</p>
+<ul class="simple">
+<li>ATSプログラムは &#8220;main0&#8221; 関数から開始されます。</li>
+<li>キーワード &#8220;implement&#8221; を使って新しい関数 &#8220;main0&#8221; を定義しています。</li>
+<li>&#8220;main0&#8221; 関数は宣言済みで引数は無く、返り値は void 型です。</li>
+<li>上記の &#8220;main0&#8221; 関数本体では何もしないまま &#8220;()&#8221; を返しています。この &#8220;()&#8221; は void 型の唯一の値です。</li>
+</ul>
 </div>
 <div class="section" id="id2">
-<h2>3.2. 文字列をコンソールの表示するには<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<h2>3.2. コンパイルと実行<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>さっそく先の &#8220;何もしない ATS プログラム&#8221; をコンパイルしてみましょう。
+まずは先のソースコードを &#8220;nothing.dats&#8221; の名前でテキストファイルに保存しましょう。
+その後、次のコマンドを入力してください。</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>$ ls
+nothing.dats
+$ patscc nothing.dats
+$ ls
+a.out  nothing.dats  nothing_dats.c
+$ ./a.out
+$
+</pre></div>
+</td></tr></table></div>
+<p>実行ファイル &#8220;a.out&#8221; が生成されました。
+もちろん何もしないプログラムなので、実行してもコンソールには何も表示されません。</p>
+<p>ソースコード &#8220;nothing.dats&#8221; のコンパイルに &#8220;patsopt&#8221; というコマンドを使いました。
+このコマンドはどのように動作するのでしょうか？</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/patsopt.png"><img alt="_images/patsopt.png" src="_images/patsopt.png" style="width: 420.0px; height: 387.8px;" /></a>
+</div>
+<p>xxx</p>
+</div>
+<div class="section" id="id3">
+<h2>3.3. 文字列をコンソールに表示するには<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
@@ -141,6 +178,7 @@ ATS のプログラミングをはじめる前に、単純なプログラムを�
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
+<p>xxx</p>
 </div>
 </div>
 
