@@ -119,84 +119,93 @@
             
   <div class="section" id="id1">
 <h1>4. 基本的なデータ型<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>この章では、ATS であつかう基本的なデータ型を紹介します。また、ATS コンパイラの使い方を覚えます。</p>
+<p>この章では、ATS であつかう基本的なデータ型を紹介します。
+また ATS 言語の型について、少しだけ勉強しましょう。</p>
 <div class="section" id="id2">
 <h2>4.1. 整数<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>まず、以下のような内容のテキストファイル &#8220;print_int.dats&#8221; を作ってみましょう。</p>
-<div class="highlight-ocaml"><div class="highlight"><pre><span class="k">val</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">3</span>
-
-<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">v</span>
-</pre></div>
-</div>
-<p>そして、以下のようなコマンドを実行して、先の &#8220;print_int.dats&#8221; をコンパイルして実行ファイル形式にしてみましょう。</p>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>ls
-print_int.dats
-<span class="nv">$ </span>patscc print_int.dats
-<span class="nv">$ </span>ls
-a.out  print_int.dats  print_int_dats.c
-</pre></div>
-</div>
-<p>ATS ソースコード &#8220;print_int.dats&#8221; をコンパイルすることで、&#8221;print_int_dats.c&#8221; と &#8220;a.out&#8221; という2つのファイルが生成されました。それでは生成された実行ファイル &#8220;a.out&#8221; を実行してみましょう。</p>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>./a.out
-3
-</pre></div>
-</div>
-<p>意図通り、&#8221;3&#8221; がコンソールに表示されました。</p>
-<p>xxx val, implement, main0, println!などのキーワードについて説明</p>
-<p>xxx コンパイルフローについて簡単に説明</p>
-<p>ところで、ATS ではこの &#8220;3&#8221; という値の型は何になるのでしょうか？それは &#8220;$showtype&#8221; 命令で確かめることができます。先程のソースコードを修正して、以下のような内容の &#8220;showtype_int.dats&#8221; ファイルを作ってみましょう。</p>
-<div class="highlight-ocaml"><div class="highlight"><pre><span class="k">val</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="n">v</span>
-
-<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">v</span>
-</pre></div>
-</div>
-<p>この &#8220;showtype_int.dats&#8221; ファイルをコンパイルしてみましょう。</p>
-<div class="highlight-ocaml"><div class="highlight"><pre><span class="o">$</span> <span class="n">patscc</span> <span class="n">showtype_int</span><span class="o">.</span><span class="n">dats</span>
-<span class="o">**</span><span class="nc">SHOWTYPE</span><span class="o">**(/</span><span class="n">tmp</span><span class="o">/</span><span class="n">showtype_int</span><span class="o">.</span><span class="n">dats</span><span class="o">:</span> <span class="mi">29</span><span class="o">(</span><span class="n">line</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">offs</span><span class="o">=</span><span class="mi">19</span><span class="o">)</span> <span class="o">--</span> <span class="mi">30</span><span class="o">(</span><span class="n">line</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">offs</span><span class="o">=</span><span class="mi">20</span><span class="o">)):</span> <span class="nc">S2Eapp</span><span class="o">(</span><span class="nc">S2Ecst</span><span class="o">(</span><span class="n">g1int_int_t0ype</span><span class="o">);</span> <span class="nc">S2Ecst</span><span class="o">(</span><span class="n">int_kind</span><span class="o">),</span> <span class="nc">S2Eintinf</span><span class="o">(</span><span class="mi">3</span><span class="o">))</span>
-</pre></div>
-</div>
-<p>コンパイルしただけであるにもかかわらず、&#8221;**SHOWTYPE**&#8221; で始まるメッセージが表示されています。このメッセージは束縛 &#8220;v&#8221; の型を表わしています。この型は内部表現で &#8220;S2Eapp(S2Ecst(g1int_int_t0ype); S2Ecst(int_kind), S2Eintinf(3))&#8221; ですが、、、おそらく読者は読むことが困難でしょう。そこで少し詳細に踏み込んだ解説をしてみます。</p>
-<ul class="simple">
-<li><cite>S2Ecst</cite> は、int, bool, list などの型定数を表わし、ここでは &#8220;g1int_int_t0ype&#8221; と &#8220;int_kind&#8221; の2つの型乗数を導入しています</li>
-<li><cite>S2Eintinf</cite> は、無限精度整数を表わし、ここでは &#8220;v&#8221; に束縛した定数 &#8220;3&#8221; を導入しています</li>
-<li><cite>S2Eapp</cite> は、関数適用の項を表わし、ここでは &#8220;g1int_int_t0ype&#8221; に2つの引数、&#8221;int_kind&#8221; と &#8220;3&#8221; を適用しています</li>
-</ul>
-<p>つまり、束縛 &#8220;v&#8221; には定数 &#8220;3&#8221; に依存した int 型が割り当てられていることになります。
-しばらくこの &#8220;依存した型&#8221; については深く踏み込みません。
-今は &#8220;3&#8221; を束縛している &#8220;v&#8221; には int 型が割り当てられていることを理解すれば十分です。
-もし、これら型の内部表現について知りたい場合は <a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki/Internal-types">ATS2 wiki の Internal types ページ</a> を参照してください。</p>
-<p>ずいぶん脱線しました。整数型の説明に戻りましょう。
-整数に対する四則演算を行なうこともできます。加算は &#8220;+&#8221;、現在は &#8220;-&#8220;、乗算は &#8220;*&#8221; です。
-さっそく次のようなファイル &#8220;int_op.dats&#8221; を作りましょう。</p>
-<div class="highlight-ocaml"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
-
-<span class="k">val</span> <span class="n">v1</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="k">val</span> <span class="n">v2</span> <span class="o">=</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">)</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="k">val</span> <span class="n">v3</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span>
-
-<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="n">v1</span>
-<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="n">v2</span>
-<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="n">v3</span>
-
-<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">v1</span>
-<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">v2</span>
-<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">v3</span>
+<p>まず、以下のような内容のテキストファイル print_int.dats を作ってみましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">3</span>
 
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
-</div>
-<p>そしてコンパイル/実行してみましょう。</p>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
-**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 113<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 115<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>21<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4135-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>+<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4136-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>mul_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))))</span>
-**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 134<span class="o">(</span><span class="nv">line</span><span class="o">=</span>8, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 136<span class="o">(</span><span class="nv">line</span><span class="o">=</span>8, <span class="nv">offs</span><span class="o">=</span>21<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4141-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>*<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4142-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>add_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4139-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4140-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))))</span>, S2EVar<span class="o">(</span>4143-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>
-**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 155<span class="o">(</span><span class="nv">line</span><span class="o">=</span>9, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 157<span class="o">(</span><span class="nv">line</span><span class="o">=</span>9, <span class="nv">offs</span><span class="o">=</span>21<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4144-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>-<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4145-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))</span>, S2EVar<span class="o">(</span>4146-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))))</span>
+</td></tr></table></div>
+<p>コンパイル実行してみましょう。</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>patscc print_int.dats
+<span class="nv">$ </span>./a.out
+3
+</pre></div>
+</td></tr></table></div>
+<p>意図通り、&#8221;3&#8221; がコンソールに表示されました。</p>
+<p>ところで、ATS ではこの &#8220;3&#8221; という値の型は何になるのでしょうか？それは $showtype 命令を使って確かめることができます。先程のソースコードを修正して、以下のような内容の showtype_int.dats ファイルを作ってみましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">3</span>
+<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="mi">3</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>この showtype_int.dats ファイルをコンパイルしてみましょう。</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>patscc showtype_int.dats
+**SHOWTYPE**<span class="o">(</span>/tmp/showtype_int.dats: 39<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 40<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>20<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">)</span>, S2Eintinf<span class="o">(</span>3<span class="o">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>コンパイルしただけであるにもかかわらず、**SHOWTYPE** で始まるメッセージが表示されています。このメッセージは整数のリテラル 3 の型を表わしています。このメッセージは型の内部表現で S2Eapp(S2Ecst(g1int_int_t0ype); S2Ecst(int_kind), S2Eintinf(3)) ですが、、、おそらく読者は読むことが困難でしょう。そこで少し詳細に踏み込んだ解説をしてみます。</p>
+<ul class="simple">
+<li><cite>S2Ecst</cite> は、int, bool, list などの型定数を表わし、ここでは g1int_int_t0ype と int_kind の2つの型定数を導入しています</li>
+<li><cite>S2Eintinf</cite> は、無限精度整数を表わし、ここでは定数 &#8220;3&#8221; を導入しています</li>
+<li><cite>S2Eapp</cite> は、関数適用の項を表わし、ここでは g1int_int_t0ype に2つの引数 int_kind と 3 を適用しています</li>
+</ul>
+<p>つまり、整数リテラル 3 には定数 3 に依存した int 型が割り当てられていることになります。
+しばらくこの &#8220;依存した型&#8221; については深く踏み込みません。
+今は 3 には int 型が割り当てられていることを理解すれば十分です。
+もし、これら型の内部表現について知りたい場合は <a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki/Internal-types">ATS2 wiki の Internal types ページ</a> を参照してください。</p>
+<p>ずいぶん脱線しました。整数型の説明に戻りましょう。
+整数に対する四則演算を行なうこともできます。加算は +、現在は -、乗算は * です。
+次のようなファイル int_op.dats を作りましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span><span class="o">)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>$showtype 命令は引数をそのまま返すので、上記のように通常の関数の中に自由に埋め込むことができます。
+突然 share/atspre_staload.hats というファイルをインクルードしていますが、これは ATS のテンプレートを使うために必要になります。
++ のような演算子は ATS ではテンプレートとして実装されています。</p>
+<p>上記のソースコードをコンパイル/実行してみましょう。</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 68<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>30<span class="o">)</span> -- 77<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>39<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4135-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>+<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4136-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>mul_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))))</span>
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 109<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>31<span class="o">)</span> -- 119<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>41<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4141-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>*<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4142-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>add_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4139-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4140-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))))</span>, S2EVar<span class="o">(</span>4143-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 150<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>30<span class="o">)</span> -- 155<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>35<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4144-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>-<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4145-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))</span>, S2EVar<span class="o">(</span>4146-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))))</span>
 <span class="nv">$ </span>./a.out
 11
 14
 -1
 </pre></div>
-</div>
+</td></tr></table></div>
+<p>xxx</p>
 </div>
 </div>
 

@@ -123,17 +123,81 @@
 <p>この本は単なる読み物、というよりも読者が実際に ATS 言語のコードを書いて試してみることを前提にしています。
 コンピュータの上で ATS ソースコードを動作させるには ATS 言語のコンパイラが必要になります。</p>
 <p>この章では、最新の ATS コンパイラである ATS/Postiats (通常 &#8220;ATS2&#8221; と呼ばれます) をインストールしてみましょう。</p>
+<p>使っているプラットフォームの説明に進む前に、ATS コンパイラのソースコードをダウンロードしておきましょう。</p>
+<ul class="simple">
+<li><a class="reference external" href="http://sourceforge.net/projects/ats2-lang/files/">http://sourceforge.net/projects/ats2-lang/files/</a> から ATS2-Postiats-X.Y.Z.tgz</li>
+<li><a class="reference external" href="http://sourceforge.net/projects/ats2-lang-contrib/files/">http://sourceforge.net/projects/ats2-lang-contrib/files/</a> から ATS2-Postiats-contrib-X.Y.Z.tgz</li>
+</ul>
 <div class="section" id="linux">
 <h2>2.1. Linux<a class="headerlink" href="#linux" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>xxx</p>
+<p><a class="reference external" href="https://www.debian.org/">Debian GNU/Linux</a> を例に説明します。</p>
+<p>はじめに ATS2 のインストールに必要なパッケージ群をインストールしてください。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install gcc libgc-dev libgmp-dev make
+</pre></div>
+</div>
+<p>次に、ATS コンパイラのソースコードを解凍して、環境変数を設定しましょう。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>最後に、ATS コンパイラをコンパイルします。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make
+</pre></div>
+</div>
 </div>
 <div class="section" id="windows">
 <h2>2.2. Windows<a class="headerlink" href="#windows" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>xxx</p>
+<p>Windows 環境に ATS2 をインストールするには <a class="reference external" href="https://cygwin.com/">Cygwin</a> が必要です。
+<a class="reference external" href="http://cygwin.com/setup-x86.exe">setup-x86.exe</a> もしくは <a class="reference external" href="http://cygwin.com/setup-x86_64.exe">setup-x86_64.exe</a> をダウンロードして Cygwin をインストールしてください。
+以降は setup-x86_64.exe を使った場合について説明します。</p>
+<p>はじめに、setup-x86_64.exe を再度起動して、 ATS2 のインストールに必要な以下のパッケージ群をインストールしてください。</p>
+<ul class="simple">
+<li>gcc-core</li>
+<li>libgc-devel</li>
+<li>libgmp-devel</li>
+<li>make</li>
+</ul>
+<p>次に、Cygwin コンソールを起動し、ATS コンパイラのソースコードを解凍して、環境変数を設定しましょう。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>最後に、ATS コンパイラをコンパイルします。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make
+</pre></div>
+</div>
 </div>
 <div class="section" id="mac-os-x">
 <h2>2.3. Mac OS X<a class="headerlink" href="#mac-os-x" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>xxx</p>
+<p><a class="reference external" href="http://brew.sh/">Homebrew</a> がインストールされていることを前提に説明します。</p>
+<p>はじめに、ATS2 のインストールに必要なパッケージ群をインストールしてください。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>brew install gmp bdw-gc
+</pre></div>
+</div>
+<p>次に、ATS コンパイラのソースコードを解凍して、環境変数を設定しましょう。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>最後に、ATS コンパイラをコンパイルします。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make
+</pre></div>
+</div>
 </div>
 </div>
 
