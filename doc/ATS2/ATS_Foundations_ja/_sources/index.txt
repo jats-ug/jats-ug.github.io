@@ -10,8 +10,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   :numbered:
 
    preface
+   install_ats
+   helloworld
    basic_datatype
 
 Indices and tables

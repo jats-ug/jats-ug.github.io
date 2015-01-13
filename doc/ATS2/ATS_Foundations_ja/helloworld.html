@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. はじめに &mdash; ATSプログラミングの基礎 0.1.0 ドキュメント</title>
+  <title>3. はじめてのATSプログラム &mdash; ATSプログラミングの基礎 0.1.0 ドキュメント</title>
   
 
   
@@ -29,8 +29,8 @@
 
   
     <link rel="top" title="ATSプログラミングの基礎 0.1.0 ドキュメント" href="index.html"/>
-        <link rel="next" title="2. ATSコンパイラのインストール" href="install_ats.html"/>
-        <link rel="prev" title="「ATSプログラミングの基礎」" href="index.html"/> 
+        <link rel="next" title="4. 基本的なデータ型" href="basic_datatype.html"/>
+        <link rel="prev" title="2. ATSコンパイラのインストール" href="install_ats.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -62,9 +62,10 @@
           
           
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">1. はじめに</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id3">1.1. ATS言語について</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">1.2. 参考となる資料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. はじめに</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#id3">1.1. ATS言語について</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#id4">1.2. ATSコンパイラのインストール</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#id5">1.3. 参考となる資料</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. ATSコンパイラのインストール</a><ul>
@@ -73,9 +74,9 @@
 <li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS Xへのインストール</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="helloworld.html">3. はじめてのATSプログラム</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="helloworld.html#id1">3.1. 何もしないプログラム</a></li>
-<li class="toctree-l2"><a class="reference internal" href="helloworld.html#id2">3.2. 文字列をコンソールの表示するには</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">3. はじめてのATSプログラム</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">3.1. 何もしないプログラム</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">3.2. 文字列をコンソールの表示するには</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. 基本的なデータ型</a><ul>
@@ -106,10 +107,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>1. はじめに</li>
+    <li>3. はじめてのATSプログラム</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/preface.rst" class="fa fa-github"> Edit on GitHub</a>
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/helloworld.rst" class="fa fa-github"> Edit on GitHub</a>
         
       </li>
   </ul>
@@ -117,26 +118,29 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="id1">
-<h1>1. はじめに<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>ようこそ。 <a class="reference external" href="http://www.ats-lang.org/">ATS</a> プログラミングの世界へ!</p>
-<p>この本は <a class="reference external" href="https://ocaml.org/">OCaml</a> 言語の良い入門書として著名な本である <a class="reference external" href="http://pllab.is.ocha.ac.jp/~asai/book/Top.html">プログラミングの基礎</a> を題材にした、ATS プログラミングの入門書です。</p>
-<div class="section" id="id3">
-<h2>1.1. ATS言語について<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>xxx</p>
+  <div class="section" id="ats">
+<h1>3. はじめてのATSプログラム<a class="headerlink" href="#ats" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>ATS 言語はコンパイラを使ってそのソースコードを実行します。
+別の言い方をすると OCaml のようにインタプリタを持っていません。
+ATS のプログラミングをはじめる前に、単純なプログラムを作ってコンパイルしてみましょう。</p>
+<div class="section" id="id1">
+<h2>3.1. 何もしないプログラム<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>最小のプログラムとは何でしょうか？
+見方によりますが、多くの場合は何もしない main 関数だけを持つようなプログラムでしょう。
+さっそく &#8220;何もしない ATS プログラム&#8221; を作ってみましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
 </div>
-<div class="section" id="id4">
-<h2>1.2. 参考となる資料<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<ul class="simple">
-<li><a class="reference external" href="http://www.ats-lang.org/">http://www.ats-lang.org/</a></li>
-<li><a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki">https://github.com/githwxi/ATS-Postiats/wiki</a></li>
-<li><a class="reference external" href="http://jats-ug.metasepi.org/doc/ATS2/INT2PROGINATS/">http://jats-ug.metasepi.org/doc/ATS2/INT2PROGINATS/</a></li>
-<li><a class="reference external" href="http://jats-ug.metasepi.org/doc/ATS2/ATS2TUTORIAL/">http://jats-ug.metasepi.org/doc/ATS2/ATS2TUTORIAL/</a></li>
-<li><a class="reference external" href="https://github.com/jats-ug/translate/blob/master/Manual/EffectiveATS.md">https://github.com/jats-ug/translate/blob/master/Manual/EffectiveATS.md</a></li>
-<li><a class="reference external" href="https://github.com/jats-ug/translate/blob/master/Web/cs.likai.org/ats/ml-programmers-guide-to-ats.md">https://github.com/jats-ug/translate/blob/master/Web/cs.likai.org/ats/ml-programmers-guide-to-ats.md</a></li>
-<li><a class="reference external" href="http://jats-ug.metasepi.org/">http://jats-ug.metasepi.org/</a></li>
-</ul>
-<p>xxx</p>
+<div class="section" id="id2">
+<h2>3.2. 文字列をコンソールの表示するには<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 </div>
 
@@ -146,10 +150,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="install_ats.html" class="btn btn-neutral float-right" title="2. ATSコンパイラのインストール">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="basic_datatype.html" class="btn btn-neutral float-right" title="4. 基本的なデータ型">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="「ATSプログラミングの基礎」"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install_ats.html" class="btn btn-neutral" title="2. ATSコンパイラのインストール"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
