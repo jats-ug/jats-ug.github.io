@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. “Hello, world!” on ATS &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
+        <link rel="next" title="4. Basic data types" href="basic_datatype.html"/>
+        <link rel="prev" title="2. Install ATS compiler" href="install_ats.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> ATS Programming Foundations</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS X</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">3. &#8220;Hello, world!&#8221; on ATS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ats-program-to-do-nothing">3.1. ATS program to do nothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compile-and-run-it">3.2. Compile and run it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#print-character-string-on-console">3.3. Print character string on console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. Basic data types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#integer">4.1. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#real-number">4.2. Real number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#character-string">4.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#boolean-value">4.4. Boolean value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.5. The other data types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">8.4. Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">ATS Programming Foundations</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>3. &#8220;Hello, world!&#8221; on ATS</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/helloworld.rst" class="fa fa-github"> Edit on GitHub</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="hello-world-on-ats">
+<h1>3. &#8220;Hello, world!&#8221; on ATS<a class="headerlink" href="#hello-world-on-ats" title="Permalink to this headline">¶</a></h1>
+<p>ATS compiler is needed to run ATS program.
+In other words, ATS language doesn&#8217;t have interpreter such like OCaml language.
+We try to compile some simple ATS program on this chapter, before learn full-featured ATS programming.</p>
+<div class="section" id="ats-program-to-do-nothing">
+<h2>3.1. ATS program to do nothing<a class="headerlink" href="#ats-program-to-do-nothing" title="Permalink to this headline">¶</a></h2>
+<p>What is the minimum program?
+It&#8217;s mostly a program has nothing without a empty main function.
+Let&#8217;s create such &#8220;ATS program to do nothing&#8221;.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is the ATS program has a main function doing nothing.
+Detail of the code is explained as following:</p>
+<ul class="simple">
+<li>Any ATS programs start at <tt class="docutils literal"><span class="pre">main0</span></tt> function</li>
+<li>Keyword <tt class="docutils literal"><span class="pre">implement</span></tt> defines a new function <tt class="docutils literal"><span class="pre">main0</span></tt> at the code</li>
+<li><tt class="docutils literal"><span class="pre">main0</span></tt> function has been declared in ATS language implementation</li>
+<li><tt class="docutils literal"><span class="pre">main0</span></tt> has no arguments and return value is <tt class="docutils literal"><span class="pre">void</span></tt> type</li>
+<li>The body of the <tt class="docutils literal"><span class="pre">main0</span></tt> function does nothing and return <tt class="docutils literal"><span class="pre">()</span></tt></li>
+<li>The <tt class="docutils literal"><span class="pre">()</span></tt> is the only value of <tt class="docutils literal"><span class="pre">void</span></tt> type</li>
+</ul>
+</div>
+<div class="section" id="compile-and-run-it">
+<h2>3.2. Compile and run it<a class="headerlink" href="#compile-and-run-it" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s compile the &#8220;ATS program to do nothing&#8221;.
+Save it as <tt class="docutils literal"><span class="pre">nothing.dats</span></tt> and run following commands:</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>$ ls
+nothing.dats
+$ patscc nothing.dats
+$ ls
+a.out  nothing.dats  nothing_dats.c
+$ ./a.out
+$
+</pre></div>
+</td></tr></table></div>
+<p>An executable <tt class="docutils literal"><span class="pre">a.out</span></tt> is created by ATS compiler <tt class="docutils literal"><span class="pre">patscc</span></tt>.
+Of course, the executable prints nothing on console while running.</p>
+<p>By the way, how does the <tt class="docutils literal"><span class="pre">patscc</span></tt> command work?</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/patsopt.png"><img alt="_images/patsopt.png" src="_images/patsopt.png" style="width: 420.0px; height: 387.8px;" /></a>
+</div>
+<p>As in the figure, the <tt class="docutils literal"><span class="pre">patscc</span></tt> internally calls two commands.</p>
+<p>The first command is <tt class="docutils literal"><span class="pre">patsopt</span></tt> that compile ATS language code to C language,
+while the <tt class="docutils literal"><span class="pre">patsopt</span></tt> does typecheck the ATS code and reports type errors.
+The compilation ATS to C is aborted, if typechecking found some type errors.</p>
+<p>The second command is <tt class="docutils literal"><span class="pre">gcc</span></tt> that is familiar to everyone.
+C language code created by <tt class="docutils literal"><span class="pre">patsopt</span></tt> is compiled to executable by the <tt class="docutils literal"><span class="pre">gcc</span></tt> command.</p>
+</div>
+<div class="section" id="print-character-string-on-console">
+<h2>3.3. Print character string on console<a class="headerlink" href="#print-character-string-on-console" title="Permalink to this headline">¶</a></h2>
+<p>We learn how to use <tt class="docutils literal"><span class="pre">patscc</span></tt> command in the previous sub chapter.
+Let&#8217;s try &#8220;Hello, world!&#8221; program.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>This code includes following new items:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">val</span></tt> defines binding between name and value</li>
+<li>The <tt class="docutils literal"><span class="pre">val</span></tt> at the code binds function return value of the function <tt class="docutils literal"><span class="pre">println!</span></tt> as <tt class="docutils literal"><span class="pre">void</span></tt> value</li>
+<li><tt class="docutils literal"><span class="pre">println!</span></tt> is a special keyword that prints the argument on console and return <tt class="docutils literal"><span class="pre">void</span></tt> value</li>
+</ul>
+<p>Then, the code prints the character string <tt class="docutils literal"><span class="pre">&quot;Hello,</span> <span class="pre">world!&quot;</span></tt> on console.</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>patscc helloworld.dats
+<span class="nv">$ </span>./a.out
+Hello, world!
+</pre></div>
+</td></tr></table></div>
+<p>This result may sound strange for a beginner of functional programming who has already learned imperative programming.
+Conceptually, what happens at run-time in a call-by-value language such as ATS is following:</p>
+<ol class="arabic simple">
+<li>The expression <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">&quot;Hello,</span> <span class="pre">world!&quot;</span></tt> is evaluated to the value <tt class="docutils literal"><span class="pre">()</span></tt>, while it prints the character string <tt class="docutils literal"><span class="pre">&quot;Hello,</span> <span class="pre">world!&quot;</span></tt> on console</li>
+<li><tt class="docutils literal"><span class="pre">val</span></tt> creates a bind between <tt class="docutils literal"><span class="pre">()</span></tt> at left side of <tt class="docutils literal"><span class="pre">=</span></tt> and the result value of the expression <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">&quot;Hello,</span> <span class="pre">world!&quot;</span></tt></li>
+<li>The function <tt class="docutils literal"><span class="pre">main0</span></tt> is evaluated and does nothing</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="basic_datatype.html" class="btn btn-neutral float-right" title="4. Basic data types">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install_ats.html" class="btn btn-neutral" title="2. Install ATS compiler"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Metasepi team. This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License..
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

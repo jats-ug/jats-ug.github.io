@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Basic data types &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
+        <link rel="next" title="5. Name definition" href="name_definition.html"/>
+        <link rel="prev" title="3. “Hello, world!” on ATS" href="helloworld.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> ATS Programming Foundations</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS X</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="helloworld.html">3. &#8220;Hello, world!&#8221; on ATS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#ats-program-to-do-nothing">3.1. ATS program to do nothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#compile-and-run-it">3.2. Compile and run it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#print-character-string-on-console">3.3. Print character string on console</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">4. Basic data types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#integer">4.1. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#real-number">4.2. Real number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#character-string">4.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#boolean-value">4.4. Boolean value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-other-data-types">4.5. The other data types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype">8.1. $showtype命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#id1">8.2. 整数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#id2">8.3. 文字列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#id3">8.4. 関数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">ATS Programming Foundations</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>4. Basic data types</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/basic_datatype.rst" class="fa fa-github"> Edit on GitHub</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="basic-data-types">
+<h1>4. Basic data types<a class="headerlink" href="#basic-data-types" title="Permalink to this headline">¶</a></h1>
+<p>In the chapter, we learn some basic datatypes on ATS.</p>
+<div class="section" id="integer">
+<h2>4.1. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
+<p>First, let&#8217;s create a text file named print_int.dats has following context:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">3</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>This program prints integer 3 on console. Then compile it.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_int.dats
+<span class="nv">$ </span>./a.out
+3
+</pre></div>
+</div>
+<p>You get the result just as our intended.</p>
+<p>It&#8217;s available doing basic arithmetic operations on integers.
+Addition operator is <tt class="docutils literal"><span class="pre">+</span></tt>, subtraction is <tt class="docutils literal"><span class="pre">-</span></tt> and multiplication is <tt class="docutils literal"><span class="pre">*</span></tt>.
+let&#8217;s create a text file named int_op.dats has following context:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">((</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span><span class="o">)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>The int_op.dats file includes share/atspre_staload.hats file that is needes to use ATS&#8217;s template.
+Some operators such like <tt class="docutils literal"><span class="pre">+</span></tt> are implemented using the template on ATS language implementation.</p>
+<p>You will get following intended result, by compiling the code and running it.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
+<span class="nv">$ </span>./a.out
+11
+14
+-1
+</pre></div>
+</div>
+<p>Multiplication and division are given priority over addition and subtraction, without parentheses.</p>
+<p>You can also do division <tt class="docutils literal"><span class="pre">/</span></tt> and modulus <tt class="docutils literal"><span class="pre">%</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">7</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">7</span> <span class="o">%</span> <span class="mi">2</span><span class="o">)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Let&#8217;s compile and run it.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc divmod_op.dats
+<span class="nv">$ </span>./a.out
+3
+1
+</pre></div>
+</div>
+<p>By the way, what happen if you do division with 0 as divisor?</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">7</span> <span class="o">/</span> <span class="o">(</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">))</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Interestingly, divzero.dats occurs an error on compiling time,
+even though many programming language take care division with 0 as runtime error.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc divzero.dats
+/tmp/divzero.dats: 60<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>22<span class="o">)</span> -- 61<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>23<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: unsolved constraint: C3NSTRprop<span class="o">(</span>main<span class="p">;</span> S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>!<span class="o">=)</span><span class="p">;</span> S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>sub_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>, S2Eintinf<span class="o">(</span>0<span class="o">)))</span>
+typechecking has failed: there are some unsolved constraints: please inspect the above reported error message<span class="o">(</span>s<span class="o">)</span> <span class="k">for</span> information.
+<span class="nb">exit</span><span class="o">(</span>ATS<span class="o">)</span>: uncaught exception: _2home_2user_2src_2ATS_2dPostiats_2src_2pats_error_2esats__FatalErrorExn<span class="o">(</span>1025<span class="o">)</span>
+</pre></div>
+</div>
+<p>However, the compilation error message is hard to understand for the reader on this chapter.
+I&#8217;ll explain detail of the error messages elsewhere.</p>
+</div>
+<div class="section" id="real-number">
+<h2>4.2. Real number<a class="headerlink" href="#real-number" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="character-string">
+<h2>4.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="boolean-value">
+<h2>4.4. Boolean value<a class="headerlink" href="#boolean-value" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="the-other-data-types">
+<h2>4.5. The other data types<a class="headerlink" href="#the-other-data-types" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="name_definition.html" class="btn btn-neutral float-right" title="5. Name definition">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="helloworld.html" class="btn btn-neutral" title="3. “Hello, world!” on ATS"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Metasepi team. This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License..
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

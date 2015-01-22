@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>8. Showing types &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
+        <link rel="next" title="9. Understanding error messages" href="error_message.html"/>
+        <link rel="prev" title="7. Conditionals" href="conditional.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> ATS Programming Foundations</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS X</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="helloworld.html">3. &#8220;Hello, world!&#8221; on ATS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#ats-program-to-do-nothing">3.1. ATS program to do nothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#compile-and-run-it">3.2. Compile and run it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#print-character-string-on-console">3.3. Print character string on console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. Basic data types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#integer">4.1. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#real-number">4.2. Real number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#character-string">4.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#boolean-value">4.4. Boolean value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.5. The other data types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#function">8.4. Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">ATS Programming Foundations</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>8. Showing types</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/showtype.rst" class="fa fa-github"> Edit on GitHub</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="showing-types">
+<h1>8. Showing types<a class="headerlink" href="#showing-types" title="Permalink to this headline">¶</a></h1>
+<p>これまで ATS における式には型がついていることを学びました。
+この章では、ソースコード中の式の型を表示する方法と、その型を理解する方法を身に付けましょう。</p>
+<div class="section" id="showtype-directive">
+<h2>8.1. $showtype directive<a class="headerlink" href="#showtype-directive" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="integer">
+<h2>8.2. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
+<p>ところで、ATS ではこの 3 という値の型は何になるのでしょうか？それは $showtype 命令を使って確かめることができます。先程のソースコードを修正して、以下のような内容の showtype_int.dats ファイルを作ってみましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">3</span>
+<span class="k">val</span> <span class="o">_</span> <span class="o">=</span> <span class="o">$</span><span class="n">showtype</span> <span class="mi">3</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>この showtype_int.dats ファイルをコンパイルしてみましょう。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc showtype_int.dats
+**SHOWTYPE**<span class="o">(</span>/tmp/showtype_int.dats: 39<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 40<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>20<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">)</span>, S2Eintinf<span class="o">(</span>3<span class="o">))</span>
+</pre></div>
+</div>
+<p>コンパイルしただけであるにもかかわらず、**SHOWTYPE** で始まるメッセージが表示されています。このメッセージは整数のリテラル 3 の型を表わしています。このメッセージ S2Eapp(S2Ecst(g1int_int_t0ype); S2Ecst(int_kind), S2Eintinf(3)) は型の内部表現ですが、、、おそらく読者は読むことが困難でしょう。そこで少し詳細に踏み込んだ解説をしてみます。</p>
+<ul class="simple">
+<li><cite>S2Ecst</cite> は、int, bool, list などの型定数を表わし、ここでは g1int_int_t0ype と int_kind の2つの型定数を導入しています</li>
+<li><cite>S2Eintinf</cite> は、無限精度整数を表わし、ここでは定数 3 を導入しています</li>
+<li><cite>S2Eapp</cite> は、関数適用の項を表わし、ここでは g1int_int_t0ype に2つの引数 int_kind と 3 を適用しています</li>
+</ul>
+<p>上記の内部表現を ATS のソースコード形式に戻してみましょう。</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="n">g1int_int_t0ype</span><span class="o">(</span><span class="n">int_kind</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>つまり、整数リテラル 3 には定数 3 に依存した int 型が割り当てられていることになります。
+このような値に依存した型は <strong>依存型</strong> と呼ばれます。
+この本では、しばらく依存型については深く踏み込みません。
+今は 3 には int 型が割り当てられていることを理解すれば十分です。
+もし、これら型の内部表現について知りたい場合は <a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki/Internal-types">ATS2 wiki の Internal types ページ</a> を参照してください。</p>
+<p>整数に対する四則演算を行うこともできました。
+次のようなファイル int_op.dats を作りましょう。</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">($</span><span class="n">showtype</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span><span class="o">)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>$showtype 命令は引数をそのまま返すので、上記のように通常の関数の中に自由に埋め込むことができます。
+突然 share/atspre_staload.hats というファイルをインクルードしていますが、これは ATS のテンプレートを使うために必要になります。
++ のような演算子は ATS ではテンプレートとして実装されています。</p>
+<p>上記のソースコードをコンパイル/実行してみましょう。</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 68<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>30<span class="o">)</span> -- 77<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>39<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4135-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>+<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4136-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>mul_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))))</span>
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 109<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>31<span class="o">)</span> -- 119<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>41<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4141-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>*<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4142-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>add_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4139-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4140-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))))</span>, S2EVar<span class="o">(</span>4143-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>
+**SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 150<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>30<span class="o">)</span> -- 155<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>35<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4144-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>-<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4145-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))</span>, S2EVar<span class="o">(</span>4146-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))))</span>
+<span class="nv">$ </span>./a.out
+11
+14
+-1
+</pre></div>
+</div>
+<p>実行結果は意図したものでしょう。しかし $showtype 命令によって表示された型は単純な整数リテラルよりもかなり複雑です。3 + 4 * 2 の型を表わす内部表現を ATS のソースコード形式に戻してみましょう。</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="n">g1int</span><span class="o">(</span><span class="n">atstype_int</span><span class="o">,</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="o">(</span><span class="n">mul_int_int</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="mi">2</span><span class="o">))))</span>
+</pre></div>
+</div>
+<p>g1int の最初の引数はこの型が int 型であることを示しています。
+g1int の最後の引数は 3 + 4 * 2 をそのまま表わしています。
+mul_int_int は int 型に対する型レベルの乗算関数です。
+依存型では同じ int 型でも、文脈に依存して型が変化しているようです。
+つまり当該の int 型の値がどのようにして算出されたのか、 <strong>ATS の型システムは知っているのです</strong> 。</p>
+<p>このような依存型はどのような場面で役立つのでしょうか？</p>
+<p>xxx 除算について</p>
+</div>
+<div class="section" id="character-string">
+<h2>8.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="function">
+<h2>8.4. Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="error_message.html" class="btn btn-neutral float-right" title="9. Understanding error messages">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="conditional.html" class="btn btn-neutral" title="7. Conditionals"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Metasepi team. This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License..
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

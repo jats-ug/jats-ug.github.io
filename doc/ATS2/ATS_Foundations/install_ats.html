@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Install ATS compiler &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
+        <link rel="next" title="3. “Hello, world!” on ATS" href="helloworld.html"/>
+        <link rel="prev" title="1. Preface" href="preface.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> ATS Programming Foundations</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">2. Install ATS compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#linux">2.1. Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows">2.2. Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mac-os-x">2.3. Mac OS X</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="helloworld.html">3. &#8220;Hello, world!&#8221; on ATS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#ats-program-to-do-nothing">3.1. ATS program to do nothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#compile-and-run-it">3.2. Compile and run it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helloworld.html#print-character-string-on-console">3.3. Print character string on console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. Basic data types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#integer">4.1. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#real-number">4.2. Real number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#character-string">4.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#boolean-value">4.4. Boolean value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.5. The other data types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">8.4. Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">ATS Programming Foundations</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>2. Install ATS compiler</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/install_ats.rst" class="fa fa-github"> Edit on GitHub</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="install-ats-compiler">
+<h1>2. Install ATS compiler<a class="headerlink" href="#install-ats-compiler" title="Permalink to this headline">¶</a></h1>
+<p>This book is not only for reading, but also trying to write some ATS code.
+To run ATS code on your computer, you need ATS lanugage compiler.</p>
+<p>In his chapter, let&#8217;s install the ATS lanugage compiler named ATS/Postiats (ATS2).</p>
+<p>Please download source codes of the ATS compiler, before read following sub chapters.</p>
+<ul class="simple">
+<li>ATS2-Postiats-X.Y.Z.tgz <a class="reference external" href="http://sourceforge.net/projects/ats2-lang/files/">http://sourceforge.net/projects/ats2-lang/files/</a></li>
+<li>ATS2-Postiats-contrib-X.Y.Z.tgz <a class="reference external" href="http://sourceforge.net/projects/ats2-lang-contrib/files/">http://sourceforge.net/projects/ats2-lang-contrib/files/</a></li>
+</ul>
+<div class="section" id="linux">
+<h2>2.1. Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h2>
+<p>As an example, ATS2 installation on <a class="reference external" href="https://www.debian.org/">Debian GNU/Linux</a> is explained here.</p>
+<p>First, install some packages needed to install ATS2.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install gcc libgc-dev libgmp-dev make
+</pre></div>
+</div>
+<p>Next, uncompress the source codes of the ATS compiler, and set some environment variables.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>Finally, compile the ATS compiler.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make
+</pre></div>
+</div>
+</div>
+<div class="section" id="windows">
+<h2>2.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p>Installing ATS2 on Windows needs <a class="reference external" href="https://cygwin.com/">Cygwin</a> that should be installed by <a class="reference external" href="http://cygwin.com/setup-x86.exe">setup-x86.exe</a> or <a class="reference external" href="http://cygwin.com/setup-x86_64.exe">setup-x86_64.exe</a> program.</p>
+<p>First, install following packages needed to install ATS2 with running setup-x86.exe or setup-x86_64.exe again.</p>
+<ul class="simple">
+<li>gcc-core</li>
+<li>libgc-devel</li>
+<li>libgmp-devel</li>
+<li>make</li>
+</ul>
+<p>Next, uncompress the source codes of the ATS compiler on Cygwin console, and set some environment variables.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>Finally, compile the ATS compiler.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make
+</pre></div>
+</div>
+</div>
+<div class="section" id="mac-os-x">
+<h2>2.3. Mac OS X<a class="headerlink" href="#mac-os-x" title="Permalink to this headline">¶</a></h2>
+<p>First, set up <a class="reference external" href="http://brew.sh/">Homebrew</a> and install some packages needed to install ATS2.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>brew install gmp bdw-gc
+</pre></div>
+</div>
+<p>Next, uncompress the source codes of the ATS compiler, and set some environment variables.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>tar xf ATS2-Postiats-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOME</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-X.Y.Z
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+<span class="nv">$ </span>tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATSHOMERELOC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/ATS2-Postiats-contrib-X.Y.Z
+</pre></div>
+</div>
+<p>Finally, compile the ATS compiler.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> <span class="si">${</span><span class="nv">PATSHOME</span><span class="si">}</span>
+<span class="nv">$ </span>./configure
+<span class="nv">$ </span>make <span class="nv">GCFLAG</span><span class="o">=</span>-D_ATS_NGC
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="helloworld.html" class="btn btn-neutral float-right" title="3. “Hello, world!” on ATS">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="preface.html" class="btn btn-neutral" title="1. Preface"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Metasepi team. This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License..
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
