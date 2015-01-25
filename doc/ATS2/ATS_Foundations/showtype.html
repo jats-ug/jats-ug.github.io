@@ -64,7 +64,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-goal-of-this-book">1.2. The goal of this book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.3. The other documents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
@@ -135,15 +136,17 @@
             
   <div class="section" id="showing-types">
 <h1>8. Showing types<a class="headerlink" href="#showing-types" title="Permalink to this headline">¶</a></h1>
-<p>これまで ATS における式には型がついていることを学びました。
-この章では、ソースコード中の式の型を表示する方法と、その型を理解する方法を身に付けましょう。</p>
+<p>We learned that any values have a type on ATS.
+This chapter explains how to show type of the value on your ATS code and understand the type.</p>
 <div class="section" id="showtype-directive">
 <h2>8.1. $showtype directive<a class="headerlink" href="#showtype-directive" title="Permalink to this headline">¶</a></h2>
 <p>xxx</p>
 </div>
 <div class="section" id="integer">
 <h2>8.2. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
-<p>ところで、ATS ではこの 3 という値の型は何になるのでしょうか？それは $showtype 命令を使って確かめることができます。先程のソースコードを修正して、以下のような内容の showtype_int.dats ファイルを作ってみましょう。</p>
+<p>We learned that the of literal <tt class="docutils literal"><span class="pre">3</span></tt> is <tt class="docutils literal"><span class="pre">int</span></tt>.
+By the way, we can directly watch the type of values using the <tt class="docutils literal"><span class="pre">$showtype</span></tt>.
+Let&#8217;s write following code named <tt class="docutils literal"><span class="pre">showtype_int.dats</span></tt>:</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -153,28 +156,30 @@
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>この showtype_int.dats ファイルをコンパイルしてみましょう。</p>
+<p>Then, compile it.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc showtype_int.dats
 **SHOWTYPE**<span class="o">(</span>/tmp/showtype_int.dats: 39<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>19<span class="o">)</span> -- 40<span class="o">(</span><span class="nv">line</span><span class="o">=</span>2, <span class="nv">offs</span><span class="o">=</span>20<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">)</span>, S2Eintinf<span class="o">(</span>3<span class="o">))</span>
 </pre></div>
 </div>
-<p>コンパイルしただけであるにもかかわらず、**SHOWTYPE** で始まるメッセージが表示されています。このメッセージは整数のリテラル 3 の型を表わしています。このメッセージ S2Eapp(S2Ecst(g1int_int_t0ype); S2Ecst(int_kind), S2Eintinf(3)) は型の内部表現ですが、、、おそらく読者は読むことが困難でしょう。そこで少し詳細に踏み込んだ解説をしてみます。</p>
+<p>The console shows a message with <tt class="docutils literal"><span class="pre">**SHOWTYPE**</span></tt>.
+The message explains the type of integer literal <tt class="docutils literal"><span class="pre">3</span></tt>,
+and &#8220;S2Eapp(S2Ecst(g1int_int_t0ype); S2Ecst(int_kind), S2Eintinf(3))&#8221; is a internal representation of the ATS&#8217;s type.
+However, it&#8217;s hard to read by a beginner.
+Let&#8217;s learn more detail.</p>
 <ul class="simple">
-<li><cite>S2Ecst</cite> は、int, bool, list などの型定数を表わし、ここでは g1int_int_t0ype と int_kind の2つの型定数を導入しています</li>
-<li><cite>S2Eintinf</cite> は、無限精度整数を表わし、ここでは定数 3 を導入しています</li>
-<li><cite>S2Eapp</cite> は、関数適用の項を表わし、ここでは g1int_int_t0ype に2つの引数 int_kind と 3 を適用しています</li>
+<li><cite>S2Ecst</cite> is a type constant (for instance, int, bool, list, etc.) For now, it introduces two type constants <tt class="docutils literal"><span class="pre">g1int_int_t0ype</span></tt> and <tt class="docutils literal"><span class="pre">int_kind</span></tt>.</li>
+<li><cite>S2Eintinf</cite> is an infinite precision integer. For now, it introduces the constant <tt class="docutils literal"><span class="pre">3</span></tt>.</li>
+<li><cite>S2Eapp</cite> is an application term. For now, it applies two arguments <tt class="docutils literal"><span class="pre">int_kind</span></tt> and <tt class="docutils literal"><span class="pre">3</span></tt> to <tt class="docutils literal"><span class="pre">g1int_int_t0ype</span></tt>.</li>
 </ul>
-<p>上記の内部表現を ATS のソースコード形式に戻してみましょう。</p>
+<p>Let&#8217;s do pretty-print the message such like ATS code style.</p>
 <div class="highlight-ocaml"><div class="highlight"><pre><span class="n">g1int_int_t0ype</span><span class="o">(</span><span class="n">int_kind</span><span class="o">,</span> <span class="mi">3</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>つまり、整数リテラル 3 には定数 3 に依存した int 型が割り当てられていることになります。
-このような値に依存した型は <strong>依存型</strong> と呼ばれます。
-この本では、しばらく依存型については深く踏み込みません。
-今は 3 には int 型が割り当てられていることを理解すれば十分です。
-もし、これら型の内部表現について知りたい場合は <a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki/Internal-types">ATS2 wiki の Internal types ページ</a> を参照してください。</p>
-<p>整数に対する四則演算を行うこともできました。
-次のようなファイル int_op.dats を作りましょう。</p>
+<p>That is the value of integer literal <tt class="docutils literal"><span class="pre">3</span></tt> is applied <tt class="docutils literal"><span class="pre">int</span></tt> type depending on integer literal <tt class="docutils literal"><span class="pre">3</span></tt>.
+The type depending on some value is called as <strong>dependent type</strong>.
+Please read <a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki/Internal-types">&#8220;Internal types&#8221; page at ATS2 wiki</a>, if you understand more of the internal representation of dependent type.</p>
+<p>We learned addition, subtraction and multiplication on integers.
+Create a new file <tt class="docutils literal"><span class="pre">int_op.dats</span></tt> to watch the type using <tt class="docutils literal"><span class="pre">$showtype</span></tt> directive.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -190,10 +195,9 @@
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>$showtype 命令は引数をそのまま返すので、上記のように通常の関数の中に自由に埋め込むことができます。
-突然 share/atspre_staload.hats というファイルをインクルードしていますが、これは ATS のテンプレートを使うために必要になります。
-+ のような演算子は ATS ではテンプレートとして実装されています。</p>
-<p>上記のソースコードをコンパイル/実行してみましょう。</p>
+<p>We can inject $showtype directive into ATS code such like <tt class="docutils literal"><span class="pre">int_op.dats</span></tt>,
+because the <tt class="docutils literal"><span class="pre">$showtype</span></tt> directive directly returns the argument.
+Let&#8217;s compile and run it.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
 **SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 68<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>30<span class="o">)</span> -- 77<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>39<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4135-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>+<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4136-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>mul_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))))</span>
 **SHOWTYPE**<span class="o">(</span>/tmp/int_op.dats: 109<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>31<span class="o">)</span> -- 119<span class="o">(</span><span class="nv">line</span><span class="o">=</span>4, <span class="nv">offs</span><span class="o">=</span>41<span class="o">))</span>: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4141-&gt;S2Eextkind<span class="o">(</span>atstype_int<span class="o">))</span>, S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>*<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4142-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>add_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4139-&gt;S2Eintinf<span class="o">(</span>3<span class="o">))</span>, S2EVar<span class="o">(</span>4140-&gt;S2Eintinf<span class="o">(</span>4<span class="o">))))</span>, S2EVar<span class="o">(</span>4143-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>
@@ -204,23 +208,26 @@
 -1
 </pre></div>
 </div>
-<p>実行結果は意図したものでしょう。しかし $showtype 命令によって表示された型は単純な整数リテラルよりもかなり複雑です。3 + 4 * 2 の型を表わす内部表現を ATS のソースコード形式に戻してみましょう。</p>
+<p>Result of running executable is intended by readers.
+However, the type printed by <tt class="docutils literal"><span class="pre">$showtype</span></tt> is more complex than simple integer literal.
+Let&#8217;s pretty-print the internal type representation of <tt class="docutils literal"><span class="pre">3</span> <span class="pre">+</span> <span class="pre">4</span> <span class="pre">*</span> <span class="pre">2</span></tt>.</p>
 <div class="highlight-ocaml"><div class="highlight"><pre><span class="n">g1int</span><span class="o">(</span><span class="n">atstype_int</span><span class="o">,</span> <span class="o">(</span><span class="mi">3</span> <span class="o">+</span> <span class="o">(</span><span class="n">mul_int_int</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="mi">2</span><span class="o">))))</span>
 </pre></div>
 </div>
-<p>g1int の最初の引数はこの型が int 型であることを示しています。
-g1int の最後の引数は 3 + 4 * 2 をそのまま表わしています。
-mul_int_int は int 型に対する型レベルの乗算関数です。
-依存型では同じ int 型でも、文脈に依存して型が変化しているようです。
-つまり当該の int 型の値がどのようにして算出されたのか、 <strong>ATS の型システムは知っているのです</strong> 。</p>
-<p>このような依存型はどのような場面で役立つのでしょうか？</p>
-<p>xxx 除算について</p>
+<p>First argument of <tt class="docutils literal"><span class="pre">g1int</span></tt> explains this type is <tt class="docutils literal"><span class="pre">int</span></tt> type.
+Second argument of <tt class="docutils literal"><span class="pre">g1int</span></tt> directly explains the calculation <tt class="docutils literal"><span class="pre">3</span> <span class="pre">+</span> <span class="pre">4</span> <span class="pre">*</span> <span class="pre">2</span></tt>.
+<tt class="docutils literal"><span class="pre">mul_int_int</span></tt> is for the function doing multiplication on type-level.
+That is <strong>ATS&#8217;s dependent type knows</strong> how the value of <tt class="docutils literal"><span class="pre">int</span></tt> type is computed.</p>
+<p>What kinds of situations is these dependent type good for?</p>
+<p>xxx About division operator</p>
 </div>
 <div class="section" id="character-string">
 <h2>8.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 <div class="section" id="function">
 <h2>8.4. Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 </div>
 

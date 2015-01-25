@@ -64,7 +64,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.2. The other documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-goal-of-this-book">1.2. The goal of this book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.3. The other documents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
@@ -138,7 +139,7 @@
 <p>In the chapter, we learn some basic datatypes on ATS.</p>
 <div class="section" id="integer">
 <h2>4.1. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
-<p>First, let&#8217;s create a text file named print_int.dats has following context:</p>
+<p>First, let&#8217;s create a text file named <tt class="docutils literal"><span class="pre">print_int.dats</span></tt> has following context:</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">3</span>
@@ -146,16 +147,17 @@
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>This program prints integer 3 on console. Then compile it.</p>
+<p>This program prints integer <tt class="docutils literal"><span class="pre">3</span></tt> on console. Then compile it.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_int.dats
 <span class="nv">$ </span>./a.out
 3
 </pre></div>
 </div>
-<p>You get the result just as our intended.</p>
+<p>You get the result just as our intended.
+The <tt class="docutils literal"><span class="pre">3</span></tt> in the <tt class="docutils literal"><span class="pre">print_int.dats</span></tt> file is a literal, and type of the value is <tt class="docutils literal"><span class="pre">int</span></tt>.</p>
 <p>It&#8217;s available doing basic arithmetic operations on integers.
 Addition operator is <tt class="docutils literal"><span class="pre">+</span></tt>, subtraction is <tt class="docutils literal"><span class="pre">-</span></tt> and multiplication is <tt class="docutils literal"><span class="pre">*</span></tt>.
-let&#8217;s create a text file named int_op.dats has following context:</p>
+let&#8217;s create a text file named <tt class="docutils literal"><span class="pre">int_op.dats</span></tt> has following context:</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -171,7 +173,7 @@ let&#8217;s create a text file named int_op.dats has following context:</p>
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>The int_op.dats file includes share/atspre_staload.hats file that is needes to use ATS&#8217;s template.
+<p>The <tt class="docutils literal"><span class="pre">int_op.dats</span></tt> file includes <tt class="docutils literal"><span class="pre">share/atspre_staload.hats</span></tt> file that is needed to use ATS&#8217;s template.
 Some operators such like <tt class="docutils literal"><span class="pre">+</span></tt> are implemented using the template on ATS language implementation.</p>
 <p>You will get following intended result, by compiling the code and running it.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc int_op.dats
@@ -203,7 +205,7 @@ Some operators such like <tt class="docutils literal"><span class="pre">+</span>
 1
 </pre></div>
 </div>
-<p>By the way, what happen if you do division with 0 as divisor?</p>
+<p>By the way, what happen if you do division with <tt class="docutils literal"><span class="pre">0</span></tt> as divisor on a new code <tt class="docutils literal"><span class="pre">divzero.dats</span></tt>?</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -215,8 +217,8 @@ Some operators such like <tt class="docutils literal"><span class="pre">+</span>
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>Interestingly, divzero.dats occurs an error on compiling time,
-even though many programming language take care division with 0 as runtime error.</p>
+<p>Interestingly, <tt class="docutils literal"><span class="pre">divzero.dats</span></tt> occurs an error on compiling time,
+even though many programming language take care division with <tt class="docutils literal"><span class="pre">0</span></tt> as run-time error.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc divzero.dats
 /tmp/divzero.dats: 60<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>22<span class="o">)</span> -- 61<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>23<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: unsolved constraint: C3NSTRprop<span class="o">(</span>main<span class="p">;</span> S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>!<span class="o">=)</span><span class="p">;</span> S2EVar<span class="o">(</span>4137-&gt;S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>sub_int_int<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4133-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))</span>, S2EVar<span class="o">(</span>4134-&gt;S2Eintinf<span class="o">(</span>2<span class="o">))))</span>, S2Eintinf<span class="o">(</span>0<span class="o">)))</span>
 typechecking has failed: there are some unsolved constraints: please inspect the above reported error message<span class="o">(</span>s<span class="o">)</span> <span class="k">for</span> information.
@@ -228,15 +230,19 @@ I&#8217;ll explain detail of the error messages elsewhere.</p>
 </div>
 <div class="section" id="real-number">
 <h2>4.2. Real number<a class="headerlink" href="#real-number" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 <div class="section" id="character-string">
 <h2>4.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 <div class="section" id="boolean-value">
 <h2>4.4. Boolean value<a class="headerlink" href="#boolean-value" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 <div class="section" id="the-other-data-types">
 <h2>4.5. The other data types<a class="headerlink" href="#the-other-data-types" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
 </div>
 </div>
 
