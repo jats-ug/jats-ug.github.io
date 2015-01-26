@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>“ATS Programming Foundations” &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>6. Character string &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -28,8 +28,9 @@
   
 
   
-    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="#"/>
-        <link rel="next" title="1. Preface" href="preface.html"/> 
+    <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
+        <link rel="next" title="7. Function definition" href="function_definition.html"/>
+        <link rel="prev" title="5. Name definition" href="name_definition.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -44,7 +45,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
         
-          <a href="#" class="fa fa-home"> ATS Programming Foundations</a>
+          <a href="index.html" class="fa fa-home"> ATS Programming Foundations</a>
         
         
 <div role="search">
@@ -60,7 +61,7 @@
         
           
           
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preface.html#the-goal-of-this-book">1.2. The goal of this book</a></li>
@@ -88,9 +89,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="string.html">6. Character string</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">6.1. Immutable string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">6.2. Mutable string</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">6. Character string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#immutable-string">6.1. Immutable string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mutable-string">6.2. Mutable string</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="function_definition.html">7. Function definition</a></li>
@@ -116,7 +117,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">ATS Programming Foundations</a>
+        <a href="index.html">ATS Programming Foundations</a>
       </nav>
 
 
@@ -125,12 +126,12 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>&#8220;ATS Programming Foundations&#8221;</li>
+    <li>6. Character string</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/index.rst" class="fa fa-github"> Edit on GitHub</a>
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/string.rst" class="fa fa-github"> Edit on GitHub</a>
         
       </li>
   </ul>
@@ -138,62 +139,51 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="ats-programming-foundations">
-<h1>&#8220;ATS Programming Foundations&#8221;<a class="headerlink" href="#ats-programming-foundations" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#the-goal-of-this-book">1.2. The goal of this book</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.3. The other documents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#linux">2.1. Linux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#windows">2.2. Windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install_ats.html#mac-os-x">2.3. Mac OS X</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="helloworld.html">3. &#8220;Hello, world!&#8221; on ATS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="helloworld.html#ats-program-to-do-nothing">3.1. ATS program to do nothing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="helloworld.html#compile-and-run-it">3.2. Compile and run it</a></li>
-<li class="toctree-l2"><a class="reference internal" href="helloworld.html#print-character-string-on-console">3.3. Print character string on console</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="basic_datatype.html">4. Basic data types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#integer">4.1. Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#real-number">4.2. Real number</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#character-string">4.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#boolean-value">4.4. Boolean value</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.5. The other data types</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="string.html">6. Character string</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">6.1. Immutable string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">6.2. Mutable string</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">7. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">8. Conditionals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="showtype.html">9. Showing types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">9.1. $showtype directive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">9.2. Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">9.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">9.4. Function</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="error_message.html">10. Understanding error messages</a></li>
-</ul>
+  <div class="section" id="character-string">
+<h1>6. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="immutable-string">
+<h2>6.1. Immutable string<a class="headerlink" href="#immutable-string" title="Permalink to this headline">¶</a></h2>
+<p>Literal of character string is wrapped with double quotes such like <tt class="docutils literal"><span class="pre">&quot;foo&quot;</span></tt>, and the type is <tt class="docutils literal"><span class="pre">string</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: print_foo.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;foo&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_foo.dats
+<span class="nv">$ </span>./a.out
+foo
+</pre></div>
 </div>
+<p>xxx</p>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
+<div class="section" id="mutable-string">
+<h2>6.2. Mutable string<a class="headerlink" href="#mutable-string" title="Permalink to this headline">¶</a></h2>
+<p>How to concatenate two strings? Please use <tt class="docutils literal"><span class="pre">string_append</span></tt> function.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: try_string_append.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">s3</span> <span class="o">=</span> <span class="n">string_append</span> <span class="o">(</span><span class="s2">&quot;Yokohama&quot;</span><span class="o">,</span> <span class="s2">&quot;Station&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">s3</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>xxx</p>
+</div>
 </div>
 
 
@@ -202,8 +192,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="preface.html" class="btn btn-neutral float-right" title="1. Preface">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="function_definition.html" class="btn btn-neutral float-right" title="7. Function definition">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="name_definition.html" class="btn btn-neutral" title="5. Name definition"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
