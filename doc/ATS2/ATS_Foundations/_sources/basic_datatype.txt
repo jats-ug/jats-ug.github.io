@@ -65,7 +65,14 @@ even though many programming language take care division with ``0`` as run-time 
 However, the compilation error message is hard to understand for the reader on this chapter.
 I'll explain detail of the error messages elsewhere.
 
-xxx Exercise: (1) 7-3*4 (2) 7÷2*2 (3) 7*2÷2
+Exercise
+--------
+
+Calculate following expressions on ATS language.
+
+A. :math:`7 - 3 \times 4`
+B. :math:`7 \div 2 \times 2`
+C. :math:`7 \times 2 \div 2`
 
 Real number
 ===========
@@ -108,30 +115,61 @@ ATS is different to OCaml, and can use operators between different types (such l
 
 This mixing is based on ATS template system.
 
-xxx Exercise: (1) 2*3.14*10 (2) 1.73*1.73 (3) 7/2
+Exercise
+--------
 
-Character string
-================
+Calculate following expressions on ATS language.
 
-Literal of character string is wrapped with double quotes such like ``"foo"``, and the type is ``string``.
-
-.. literalinclude:: code/basic_datatype/print_foo.dats
-   :language: ocaml
-   :linenos:
-
-.. literalinclude:: code/basic_datatype/print_foo_compile.txt
-   :language: shell
-
-How to concatenate two strings? Please use ``string_append`` function.
-
-xxx
+A. :math:`2 \times 3.14 \times 10`
+B. :math:`1.73 \times 1.73`
+C. :math:`7 / 2`
 
 Boolean value
 =============
 
-xxx
+Boolean value is a value for true or false.
+On ATS language, ``true`` is for true and ``false`` for false.
+Type of the boolean value is ``bool``.
+
+.. literalinclude:: code/basic_datatype/print_bool.dats
+   :language: ocaml
+   :linenos:
+
+.. literalinclude:: code/basic_datatype/print_bool_compile.txt
+   :language: shell
+
+We can use logical operations on the boolean value.x
+``&&`` is for "and", ``||`` for "or" and ``not`` for "negation", in the order of descending priorities.
+
+.. literalinclude:: code/basic_datatype/bool_op.dats
+   :language: ocaml
+   :linenos:
+
+.. literalinclude:: code/basic_datatype/bool_op_compile.txt
+   :language: shell
+
+``true`` and ``false`` are rarely used on real programming.
+Normally, we use them to test whether some conditions hold.
+Examples of the test operators are: ``=`` is for "equality", ``!=`` for "inequality", ``>`` for "greater than", ``<`` for "less than", ``>=`` for "greater than or equal", and ``<=`` "less than or equal".
+
+.. literalinclude:: code/basic_datatype/bool_test.dats
+   :language: ocaml
+   :linenos:
+
+.. literalinclude:: code/basic_datatype/bool_test_compile.txt
+   :language: shell
+
+Exercise
+--------
+
+Test conditions of following sentences on ATS language.
+
+A. ":math:`2` is greater than :math:`3`."
+B. "The second power of :math:`3.1415` is not less than :math:`10`."
+C. "The remainder obtained by dividing :math:`8` by :math:`3` is equal to :math:`2`."
+D. ":math:`3 + 4 + 5` is equal to :math:`4 \times 3`."
 
 The other data types
 ====================
 
-xxx
+Character string and the other data types are explained later.

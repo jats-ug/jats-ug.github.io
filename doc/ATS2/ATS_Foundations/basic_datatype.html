@@ -83,9 +83,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="">4. Basic data types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#integer">4.1. Integer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#real-number">4.2. Real number</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#character-string">4.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#boolean-value">4.4. Boolean value</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-other-data-types">4.5. The other data types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#boolean-value">4.3. Boolean value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-other-data-types">4.4. The other data types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
@@ -240,7 +239,15 @@ typechecking has failed: there are some unsolved constraints: please inspect the
 </div>
 <p>However, the compilation error message is hard to understand for the reader on this chapter.
 I&#8217;ll explain detail of the error messages elsewhere.</p>
-<p>xxx Exercise: (1) 7-3*4 (2) 7÷2*2 (3) 7*2÷2</p>
+<div class="section" id="exercise">
+<h3>4.1.1. Exercise<a class="headerlink" href="#exercise" title="Permalink to this headline">¶</a></h3>
+<p>Calculate following expressions on ATS language.</p>
+<ol class="upperalpha simple">
+<li><span class="math">\(7 - 3 \times 4\)</span></li>
+<li><span class="math">\(7 \div 2 \times 2\)</span></li>
+<li><span class="math">\(7 \times 2 \div 2\)</span></li>
+</ol>
+</div>
 </div>
 <div class="section" id="real-number">
 <h2>4.2. Real number<a class="headerlink" href="#real-number" title="Permalink to this headline">¶</a></h2>
@@ -314,21 +321,123 @@ Please see following <tt class="docutils literal"><span class="pre">float_op.dat
 </pre></div>
 </div>
 <p>This mixing is based on ATS template system.</p>
-<p>xxx Exercise: (1) 2*3.14*10 (2) 1.73*1.73 (3) 7/2</p>
+<div class="section" id="id1">
+<h3>4.2.1. Exercise<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Calculate following expressions on ATS language.</p>
+<ol class="upperalpha simple">
+<li><span class="math">\(2 \times 3.14 \times 10\)</span></li>
+<li><span class="math">\(1.73 \times 1.73\)</span></li>
+<li><span class="math">\(7 / 2\)</span></li>
+</ol>
 </div>
-<div class="section" id="character-string">
-<h2>4.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
-<p>Literal of character string is wrapped with double quotes such like <tt class="docutils literal"><span class="pre">&quot;foo&quot;</span></tt>, and the type is <tt class="docutils literal"><span class="pre">string</span></tt>.</p>
-<p>How to concatenate two strings? Please use <tt class="docutils literal"><span class="pre">string_append</span></tt> function.</p>
-<p>xxx</p>
 </div>
 <div class="section" id="boolean-value">
-<h2>4.4. Boolean value<a class="headerlink" href="#boolean-value" title="Permalink to this headline">¶</a></h2>
-<p>xxx</p>
+<h2>4.3. Boolean value<a class="headerlink" href="#boolean-value" title="Permalink to this headline">¶</a></h2>
+<p>Boolean value is a value for true or false.
+On ATS language, <tt class="docutils literal"><span class="pre">true</span></tt> is for true and <tt class="docutils literal"><span class="pre">false</span></tt> for false.
+Type of the boolean value is <tt class="docutils literal"><span class="pre">bool</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: print_bool.dats *)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="bp">true</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="bp">false</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_bool.dats
+<span class="nv">$ </span>./a.out
+<span class="nb">true</span>
+<span class="nb">false</span>
+</pre></div>
+</div>
+<p>We can use logical operations on the boolean value.x
+<tt class="docutils literal"><span class="pre">&amp;&amp;</span></tt> is for &#8220;and&#8221;, <tt class="docutils literal"><span class="pre">||</span></tt> for &#8220;or&#8221; and <tt class="docutils literal"><span class="pre">not</span></tt> for &#8220;negation&#8221;, in the order of descending priorities.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: bool_op.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="bp">true</span> <span class="o">&amp;&amp;</span> <span class="bp">true</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="bp">true</span> <span class="o">&amp;&amp;</span> <span class="bp">false</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="bp">true</span> <span class="o">||</span> <span class="bp">false</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="bp">false</span> <span class="o">||</span> <span class="bp">false</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">not</span> <span class="bp">true</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">not</span> <span class="bp">false</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">not</span> <span class="o">(</span><span class="bp">false</span> <span class="o">||</span> <span class="n">not</span> <span class="bp">false</span> <span class="o">&amp;&amp;</span> <span class="n">not</span> <span class="bp">false</span><span class="o">))</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">not</span> <span class="o">(</span><span class="bp">false</span> <span class="o">||</span> <span class="o">(</span><span class="n">not</span> <span class="bp">false</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">not</span> <span class="bp">false</span><span class="o">)))</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc bool_op.dats
+<span class="nv">$ </span>./a.out
+<span class="nb">true</span>
+<span class="nb">false</span>
+<span class="nb">true</span>
+<span class="nb">false</span>
+<span class="nb">false</span>
+<span class="nb">true</span>
+<span class="nb">false</span>
+<span class="nb">false</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">true</span></tt> and <tt class="docutils literal"><span class="pre">false</span></tt> are rarely used on real programming.
+Normally, we use them to test whether some conditions hold.
+Examples of the test operators are: <tt class="docutils literal"><span class="pre">=</span></tt> is for &#8220;equality&#8221;, <tt class="docutils literal"><span class="pre">!=</span></tt> for &#8220;inequality&#8221;, <tt class="docutils literal"><span class="pre">&gt;</span></tt> for &#8220;greater than&#8221;, <tt class="docutils literal"><span class="pre">&lt;</span></tt> for &#8220;less than&#8221;, <tt class="docutils literal"><span class="pre">&gt;=</span></tt> for &#8220;greater than or equal&#8221;, and <tt class="docutils literal"><span class="pre">&lt;=</span></tt> &#8220;less than or equal&#8221;.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: bool_test.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">||</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">=</span> <span class="mi">3</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span>
+<span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">not</span> <span class="o">(</span><span class="mi">3</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">))</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc bool_test.dats
+<span class="nv">$ </span>./a.out
+<span class="nb">true</span>
+<span class="nb">false</span>
+<span class="nb">true</span>
+<span class="nb">true</span>
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h3>4.3.1. Exercise<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Test conditions of following sentences on ATS language.</p>
+<ol class="upperalpha simple">
+<li>&#8220;<span class="math">\(2\)</span> is greater than <span class="math">\(3\)</span>.&#8221;</li>
+<li>&#8220;The second power of <span class="math">\(3.1415\)</span> is not less than <span class="math">\(10\)</span>.&#8221;</li>
+<li>&#8220;The remainder obtained by dividing <span class="math">\(8\)</span> by <span class="math">\(3\)</span> is equal to <span class="math">\(2\)</span>.&#8221;</li>
+<li>&#8220;<span class="math">\(3 + 4 + 5\)</span> is equal to <span class="math">\(4 \times 3\)</span>.&#8221;</li>
+</ol>
+</div>
 </div>
 <div class="section" id="the-other-data-types">
-<h2>4.5. The other data types<a class="headerlink" href="#the-other-data-types" title="Permalink to this headline">¶</a></h2>
-<p>xxx</p>
+<h2>4.4. The other data types<a class="headerlink" href="#the-other-data-types" title="Permalink to this headline">¶</a></h2>
+<p>Character string and the other data types are explained later.</p>
 </div>
 </div>
 
