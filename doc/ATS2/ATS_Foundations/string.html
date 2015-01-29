@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>6. Character string &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>12. Character string &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -29,8 +29,8 @@
 
   
     <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
-        <link rel="next" title="7. Function definition" href="function_definition.html"/>
-        <link rel="prev" title="5. Name definition" href="name_definition.html"/> 
+        <link rel="next" title="13. Recursive functions" href="recursive_function.html"/>
+        <link rel="prev" title="11. Records" href="record.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -87,22 +87,27 @@
 <li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.4. The other data types</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">6. Character string</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#immutable-string">6.1. Immutable string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mutable-string">6.2. Mutable string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constant_var_definition.html">5. Constant variable definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">8.4. Function</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">7. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">8. Conditionals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="showtype.html">9. Showing types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">9.1. $showtype directive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">9.2. Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">9.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">9.4. Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuple.html">10. Tuples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="record.html">11. Records</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">12. Character string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#immutable-string">12.1. Immutable string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="error_message.html">10. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -127,7 +132,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>6. Character string</li>
+    <li>12. Character string</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/string.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -139,9 +144,9 @@
           <div role="main" class="document">
             
   <div class="section" id="character-string">
-<h1>6. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h1>
+<h1>12. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="immutable-string">
-<h2>6.1. Immutable string<a class="headerlink" href="#immutable-string" title="Permalink to this headline">¶</a></h2>
+<h2>12.1. Immutable string<a class="headerlink" href="#immutable-string" title="Permalink to this headline">¶</a></h2>
 <p>Literal of character string is wrapped with double quotes such like <tt class="docutils literal"><span class="pre">&quot;foo&quot;</span></tt>, and the type is <tt class="docutils literal"><span class="pre">string</span></tt>.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -164,7 +169,7 @@ foo
 <p>xxx</p>
 </div>
 <div class="section" id="mutable-string">
-<h2>6.2. Mutable string<a class="headerlink" href="#mutable-string" title="Permalink to this headline">¶</a></h2>
+<h2>12.2. Mutable string<a class="headerlink" href="#mutable-string" title="Permalink to this headline">¶</a></h2>
 <p>How to concatenate two strings? Please use <tt class="docutils literal"><span class="pre">string_append</span></tt> function.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -191,10 +196,10 @@ foo
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="function_definition.html" class="btn btn-neutral float-right" title="7. Function definition">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recursive_function.html" class="btn btn-neutral float-right" title="13. Recursive functions">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="name_definition.html" class="btn btn-neutral" title="5. Name definition"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="record.html" class="btn btn-neutral" title="11. Records"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>9. Showing types &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>8. Showing types &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -29,8 +29,8 @@
 
   
     <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
-        <link rel="next" title="10. Understanding error messages" href="error_message.html"/>
-        <link rel="prev" title="8. Conditionals" href="conditional.html"/> 
+        <link rel="next" title="9. Understanding error messages" href="error_message.html"/>
+        <link rel="prev" title="7. Conditionals" href="conditional.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -87,22 +87,27 @@
 <li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.4. The other data types</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="string.html">6. Character string</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">6.1. Immutable string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">6.2. Mutable string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constant_var_definition.html">5. Constant variable definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#function">8.4. Function</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">7. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">8. Conditionals</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">9. Showing types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#showtype-directive">9.1. $showtype directive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integer">9.2. Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#character-string">9.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#function">9.4. Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuple.html">10. Tuples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="record.html">11. Records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="string.html">12. Character string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">12.1. Immutable string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="error_message.html">10. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -127,7 +132,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>9. Showing types</li>
+    <li>8. Showing types</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/showtype.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -139,15 +144,15 @@
           <div role="main" class="document">
             
   <div class="section" id="showing-types">
-<h1>9. Showing types<a class="headerlink" href="#showing-types" title="Permalink to this headline">¶</a></h1>
+<h1>8. Showing types<a class="headerlink" href="#showing-types" title="Permalink to this headline">¶</a></h1>
 <p>We learned that any values have a type on ATS.
 This chapter explains how to show type of the value on your ATS code and understand the type.</p>
 <div class="section" id="showtype-directive">
-<h2>9.1. $showtype directive<a class="headerlink" href="#showtype-directive" title="Permalink to this headline">¶</a></h2>
+<h2>8.1. $showtype directive<a class="headerlink" href="#showtype-directive" title="Permalink to this headline">¶</a></h2>
 <p>xxx</p>
 </div>
 <div class="section" id="integer">
-<h2>9.2. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
+<h2>8.2. Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
 <p>We learned that the of literal <tt class="docutils literal"><span class="pre">3</span></tt> is <tt class="docutils literal"><span class="pre">int</span></tt>.
 By the way, we can directly watch the type of values using the <tt class="docutils literal"><span class="pre">$showtype</span></tt>.
 Let&#8217;s write following code named <tt class="docutils literal"><span class="pre">showtype_int.dats</span></tt>:</p>
@@ -230,11 +235,11 @@ That is <strong>ATS&#8217;s dependent type knows</strong> how the value of <tt c
 <p>xxx About division operator</p>
 </div>
 <div class="section" id="character-string">
-<h2>9.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
+<h2>8.3. Character string<a class="headerlink" href="#character-string" title="Permalink to this headline">¶</a></h2>
 <p>xxx</p>
 </div>
 <div class="section" id="function">
-<h2>9.4. Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+<h2>8.4. Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
 <p>xxx</p>
 </div>
 </div>
@@ -245,10 +250,10 @@ That is <strong>ATS&#8217;s dependent type knows</strong> how the value of <tt c
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="error_message.html" class="btn btn-neutral float-right" title="10. Understanding error messages">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="error_message.html" class="btn btn-neutral float-right" title="9. Understanding error messages">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="conditional.html" class="btn btn-neutral" title="8. Conditionals"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="conditional.html" class="btn btn-neutral" title="7. Conditionals"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

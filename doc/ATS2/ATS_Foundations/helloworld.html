@@ -87,22 +87,27 @@
 <li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.4. The other data types</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="name_definition.html">5. Name definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="string.html">6. Character string</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">6.1. Immutable string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">6.2. Mutable string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constant_var_definition.html">5. Constant variable definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">8.3. Character string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">8.4. Function</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">7. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">8. Conditionals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="showtype.html">9. Showing types</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">9.1. $showtype directive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">9.2. Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#character-string">9.3. Character string</a></li>
-<li class="toctree-l2"><a class="reference internal" href="showtype.html#function">9.4. Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="error_message.html">9. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tuple.html">10. Tuples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="record.html">11. Records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="string.html">12. Character string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="string.html#immutable-string">12.1. Immutable string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="error_message.html">10. Understanding error messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -230,6 +235,38 @@ Conceptually, what happens at run-time in a call-by-value language such as ATS i
 <li><tt class="docutils literal"><span class="pre">val</span></tt> creates a bind between <tt class="docutils literal"><span class="pre">()</span></tt> at left side of <tt class="docutils literal"><span class="pre">=</span></tt> and the result value of the expression <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">&quot;Hello,</span> <span class="pre">world!&quot;</span></tt></li>
 <li>The function <tt class="docutils literal"><span class="pre">main0</span></tt> is evaluated and does nothing</li>
 </ol>
+<p>The &#8220;Hello, world!&#8221; program can be written in <tt class="docutils literal"><span class="pre">main0</span></tt> function using <tt class="docutils literal"><span class="pre">where</span></tt> keyword, as following:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: helloworld2.dats *)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span> <span class="n">where</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also, because <tt class="docutils literal"><span class="pre">main0</span></tt> function returns <tt class="docutils literal"><span class="pre">void</span></tt> value, we can drop <tt class="docutils literal"><span class="pre">()</span> <span class="pre">where</span></tt> as following:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: helloworld3.dats *)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>More simply, we can alos write following, because <tt class="docutils literal"><span class="pre">println!</span></tt> return <tt class="docutils literal"><span class="pre">void</span></tt> value as same as the value will be returned by <tt class="docutils literal"><span class="pre">main0</span></tt> function.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: helloworld4.dats *)</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;Hello, world!&quot;</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 </div>
 
