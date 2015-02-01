@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5. Constant variable definition &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>5. Constant definition &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -87,7 +87,11 @@
 <li class="toctree-l2"><a class="reference internal" href="basic_datatype.html#the-other-data-types">4.4. The other data types</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">5. Constant variable definition</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">5. Constant definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#constant-immutable-variable">5.1. Constant (immutable) variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mutable-variable">5.2. (Mutable) variable</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
@@ -132,7 +136,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>5. Constant variable definition</li>
+    <li>5. Constant definition</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/constant_var_definition.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -143,8 +147,95 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="constant-variable-definition">
-<h1>5. Constant variable definition<a class="headerlink" href="#constant-variable-definition" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="constant-definition">
+<h1>5. Constant definition<a class="headerlink" href="#constant-definition" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="constant-immutable-variable">
+<h2>5.1. Constant (immutable) variable<a class="headerlink" href="#constant-immutable-variable" title="Permalink to this headline">¶</a></h2>
+<p>Constant variable can be defined following:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: val_pi.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">val</span> <span class="n">pi</span> <span class="o">=</span> <span class="mi">3</span><span class="o">.</span><span class="mi">1415</span> <span class="k">in</span>
+    <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">end</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc val_pi.dats
+<span class="nv">$ </span>./a.out
+6.283000
+</pre></div>
+</div>
+<p>Also we can define it using <tt class="docutils literal"><span class="pre">{}</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: val_pi2.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">pi</span> <span class="o">=</span> <span class="mi">3</span><span class="o">.</span><span class="mi">1415</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The constant variables should not be changed, but able to be overwrited.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: val_overwrite.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">val</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">a</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">b</span>
+  <span class="k">val</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">a</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">b</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>First, this program creates a binding between <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">1</span></tt>.
+Secondly, it creates another binding between <tt class="docutils literal"><span class="pre">b</span></tt> and <strong>old</strong> <tt class="docutils literal"><span class="pre">a</span></tt>.
+Finally, it creates new binding between <strong>new</strong> <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">2</span></tt>.</p>
+<p>At line number 7 of <tt class="docutils literal"><span class="pre">val_overwrite.dats</span></tt>, <tt class="docutils literal"><span class="pre">println!</span></tt> shows a value of <strong>old</strong> <tt class="docutils literal"><span class="pre">a</span></tt>.
+On the one hand, at line number 10, it shows a value of <strong>new</strong> <tt class="docutils literal"><span class="pre">a</span></tt>.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc val_overwrite.dats
+<span class="nv">$ </span>./a.out
+1
+1
+2
+1
+</pre></div>
+</div>
+<p>The name binding of code <tt class="docutils literal"><span class="pre">val_overwrite.dats</span></tt> is represented as following figure:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/name_binding.png"><img alt="_images/name_binding.png" src="_images/name_binding.png" style="width: 420.0px; height: 349.3px;" /></a>
+</div>
+</div>
+<div class="section" id="mutable-variable">
+<h2>5.2. (Mutable) variable<a class="headerlink" href="#mutable-variable" title="Permalink to this headline">¶</a></h2>
+<p>Mutable variable is ready on ATS language, however it&#8217;s rarely used on ATS programming.</p>
+</div>
 </div>
 
 
