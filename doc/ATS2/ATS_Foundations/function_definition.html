@@ -29,7 +29,7 @@
 
   
     <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
-        <link rel="next" title="7. Conditionals" href="conditional.html"/>
+        <link rel="next" title="7. Conditional branch" href="conditional.html"/>
         <link rel="prev" title="5. Constant definition" href="constant_var_definition.html"/> 
 
   
@@ -92,8 +92,15 @@
 <li class="toctree-l2"><a class="reference internal" href="constant_var_definition.html#mutable-variable">5.2. (Mutable) variable</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">6. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">6. Function definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#syntax-to-define-function">6.1. Syntax to define function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typechecking">6.2. Typechecking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditional branch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="conditional.html#syntax-to-define-conditional-branch">7.1. Syntax to define conditional branch</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
@@ -109,9 +116,10 @@
 <li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list.html">13. List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">14. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">15. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">16. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -149,6 +157,138 @@
             
   <div class="section" id="function-definition">
 <h1>6. Function definition<a class="headerlink" href="#function-definition" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="syntax-to-define-function">
+<h2>6.1. Syntax to define function<a class="headerlink" href="#syntax-to-define-function" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s write a function <tt class="docutils literal"><span class="pre">f</span></tt> to triple the argument.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: func_syntax.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">fun</span> <span class="n">f</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">):</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">f</span> <span class="mi">4</span><span class="o">)</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc func_syntax.dats
+<span class="nv">$ </span>./a.out
+12
+</pre></div>
+</div>
+<p>The function <tt class="docutils literal"><span class="pre">f</span></tt> is typed as following figure that explains the argument <tt class="docutils literal"><span class="pre">x</span></tt> is typed with <tt class="docutils literal"><span class="pre">int</span></tt> and the return value is also typed with <tt class="docutils literal"><span class="pre">int</span></tt>. The function <tt class="docutils literal"><span class="pre">f</span></tt> is typed with <tt class="docutils literal"><span class="pre">(int)</span> <span class="pre">-&gt;</span> <span class="pre">int</span></tt>.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/func_syntax.png"><img alt="_images/func_syntax.png" src="_images/func_syntax.png" style="width: 540.0px; height: 194.4px;" /></a>
+</div>
+<p>A function having two arguments can be written with following:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: two_arguments.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">fun</span> <span class="n">g</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">,</span> <span class="n">y</span><span class="o">:</span><span class="kt">int</span><span class="o">):</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">4</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">g</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc two_arguments.dats
+<span class="nv">$ </span>./a.out
+9
+</pre></div>
+</div>
+<p>The function <tt class="docutils literal"><span class="pre">g</span></tt> is typed with following figure, and it&#8217;s not curried form.
+However, currying is rarely used at ATS programming.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/two_arguments.png"><img alt="_images/two_arguments.png" src="_images/two_arguments.png" style="width: 540.0px; height: 275.4px;" /></a>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Exercise</strong>: Write a function <tt class="docutils literal"><span class="pre">bmi</span></tt> that takes a meter tall and a kilogram weight then returns the body mass index (BMI). The BMI is calculated with dividing the kilogram weight by the square of the meter tall.</p>
+</div>
+</div>
+<div class="section" id="typechecking">
+<h2>6.2. Typechecking<a class="headerlink" href="#typechecking" title="Permalink to this headline">¶</a></h2>
+<p>What happen if the function <tt class="docutils literal"><span class="pre">f</span></tt> takes a value typed <tt class="docutils literal"><span class="pre">double</span></tt>?</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: f_takes_double.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">fun</span> <span class="n">f</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">):</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">r</span>  <span class="o">=</span> <span class="n">f</span> <span class="mi">4</span><span class="o">.</span><span class="mi">0</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">r</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc f_takes_double.dats
+/home/kiwamu/doc/ATS_Foundations/source/code/function_definition/f_takes_double.dats: 135<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>14<span class="o">)</span> -- 138<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>17<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: the dynamic expression cannot be assigned the <span class="nb">type</span> <span class="o">[</span>S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g0int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">))]</span>.
+/home/kiwamu/doc/ATS_Foundations/source/code/function_definition/f_takes_double.dats: 135<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>14<span class="o">)</span> -- 138<span class="o">(</span><span class="nv">line</span><span class="o">=</span>7, <span class="nv">offs</span><span class="o">=</span>17<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: mismatch of static terms <span class="o">(</span>tyleq<span class="o">)</span>:
+The actual term is: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g0float_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>double_kind<span class="o">))</span>
+The needed term is: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g0int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">))</span>
+patsopt<span class="o">(</span>TRANS3<span class="o">)</span>: there are <span class="o">[</span>1<span class="o">]</span> errors in total.
+<span class="nb">exit</span><span class="o">(</span>ATS<span class="o">)</span>: uncaught exception: _2home_2kiwamu_2src_2ATS_2dPostiats_2src_2pats_error_2esats__FatalErrorExn<span class="o">(</span>1025<span class="o">)</span>
+</pre></div>
+</div>
+<p>A compile error occurs at the code <tt class="docutils literal"><span class="pre">val</span> <span class="pre">r</span>&nbsp; <span class="pre">=</span> <span class="pre">f</span> <span class="pre">4.0</span></tt> while typechecking.
+It means the function <tt class="docutils literal"><span class="pre">f</span></tt> takes <tt class="docutils literal"><span class="pre">double</span></tt> type that not match type of <tt class="docutils literal"><span class="pre">f</span></tt> as following figure:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/f_takes_double.png"><img alt="_images/f_takes_double.png" src="_images/f_takes_double.png" style="width: 540.0px; height: 226.8px;" /></a>
+</div>
+<p>You should create a new function <tt class="docutils literal"><span class="pre">f2</span></tt> to maintain <tt class="docutils literal"><span class="pre">double</span></tt> type on the function <tt class="docutils literal"><span class="pre">f</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: f_takes_double2.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">fun</span> <span class="n">f2</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="n">double</span><span class="o">):</span> <span class="n">double</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">r</span>  <span class="o">=</span> <span class="n">f2</span> <span class="mi">4</span><span class="o">.</span><span class="mi">0</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">r</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc f_takes_double2.dats
+<span class="nv">$ </span>./a.out
+12.000000
+</pre></div>
+</div>
+<p>The code <tt class="docutils literal"><span class="pre">f_takes_double2.dats</span></tt> can be compiled. The function <tt class="docutils literal"><span class="pre">f2</span></tt> is typed as following figure:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/f_takes_double2.png"><img alt="_images/f_takes_double2.png" src="_images/f_takes_double2.png" style="width: 540.0px; height: 217.8px;" /></a>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Exercise</strong>: Write a function that takes a number of cranes and returns the total of their legs. (Crane has two legs.)</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Exercise</strong>: Write a function that takes a number of tortoises and returns the total of their legs. (Tortoise has four legs.)</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Exercise</strong>: Finally, write a function that takes the total of cranes and tortoises and the total of their legs, and return the total of the cranes.</p>
+</div>
+</div>
 </div>
 
 
@@ -157,7 +297,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="conditional.html" class="btn btn-neutral float-right" title="7. Conditionals">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="conditional.html" class="btn btn-neutral float-right" title="7. Conditional branch">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="constant_var_definition.html" class="btn btn-neutral" title="5. Constant definition"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>7. Conditionals &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>7. Conditional branch &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -92,8 +92,15 @@
 <li class="toctree-l2"><a class="reference internal" href="constant_var_definition.html#mutable-variable">5.2. (Mutable) variable</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_definition.html#syntax-to-define-function">6.1. Syntax to define function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_definition.html#typechecking">6.2. Typechecking</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">7. Conditional branch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#syntax-to-define-conditional-branch">7.1. Syntax to define conditional branch</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
@@ -109,9 +116,10 @@
 <li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list.html">13. List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">14. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">15. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">16. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -136,7 +144,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>7. Conditionals</li>
+    <li>7. Conditional branch</li>
       <li class="wy-breadcrumbs-aside">
         
           <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/conditional.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -147,8 +155,48 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="conditionals">
-<h1>7. Conditionals<a class="headerlink" href="#conditionals" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="conditional-branch">
+<h1>7. Conditional branch<a class="headerlink" href="#conditional-branch" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="syntax-to-define-conditional-branch">
+<h2>7.1. Syntax to define conditional branch<a class="headerlink" href="#syntax-to-define-conditional-branch" title="Permalink to this headline">¶</a></h2>
+<p>ATS can define a conditional branch using <tt class="docutils literal"><span class="pre">if</span></tt>, like as the other programming language.
+The syntax is following:</p>
+<div class="highlight-ocaml"><div class="highlight"><pre><span class="k">if</span> <span class="nc">CONDITION</span> <span class="k">then</span> <span class="nc">EXPRESSION_A</span> <span class="k">else</span> <span class="nc">EXPRESSION_B</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> and <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt> are typed with same type.
+Also, the part <tt class="docutils literal"><span class="pre">else</span> <span class="pre">EXPRESSION_B</span></tt> is optional, if type of the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> is <tt class="docutils literal"><span class="pre">void</span></tt>.</p>
+<p>Let&#8217;s write some code using <tt class="docutils literal"><span class="pre">if</span></tt> keyword.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: if_then_else.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">a</span>  <span class="o">=</span> <span class="k">if</span> <span class="bp">true</span>  <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+  <span class="k">val</span> <span class="n">b</span>  <span class="o">=</span> <span class="k">if</span> <span class="bp">false</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">a</span><span class="o">:</span><span class="kt">int</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">b</span><span class="o">:</span><span class="kt">int</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc if_then_else.dats
+<span class="nv">$ </span>./a.out
+1
+2
+</pre></div>
+</div>
+<p>The execution result is able to understand for us.</p>
+<p>BTW, why needs some type assignments such like <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">(a:int)</span></tt>?
+Type inference on ATS language can&#8217;t understand type of everything.
+Sometimes we should tell the type inferencer the type of values.</p>
+</div>
 </div>
 
 

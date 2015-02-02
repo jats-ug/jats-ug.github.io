@@ -92,8 +92,15 @@
 <li class="toctree-l2"><a class="reference internal" href="constant_var_definition.html#mutable-variable">5.2. (Mutable) variable</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditionals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="function_definition.html">6. Function definition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_definition.html#syntax-to-define-function">6.1. Syntax to define function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function_definition.html#typechecking">6.2. Typechecking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">7. Conditional branch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="conditional.html#syntax-to-define-conditional-branch">7.1. Syntax to define conditional branch</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#showtype-directive">8.1. $showtype directive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="showtype.html#integer">8.2. Integer</a></li>
@@ -109,9 +116,10 @@
 <li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">13. Recursive functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">14. Recursion on natural numbers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">15. Dijkstra&#8217;s algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list.html">13. List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive_function.html">14. Recursive functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">15. Recursion on natural numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">16. Dijkstra&#8217;s algorithm</a></li>
 </ul>
 
           
@@ -248,10 +256,10 @@ typechecking has failed: there are some unsolved constraints: please inspect the
 </div>
 <p>However, the compilation error message is hard to understand for the reader on this chapter.
 I&#8217;ll explain detail of the error messages elsewhere.</p>
-<div class="section" id="exercise">
-<h3>4.1.1. Exercise<a class="headerlink" href="#exercise" title="Permalink to this headline">¶</a></h3>
-<p>Calculate following expressions on ATS language.</p>
-<ol class="upperalpha simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Exercise</strong>: Calculate following expressions on ATS language.</p>
+<ol class="last upperalpha simple">
 <li><span class="math">\(7 - 3 \times 4\)</span></li>
 <li><span class="math">\(7 \div 2 \times 2\)</span></li>
 <li><span class="math">\(7 \times 2 \div 2\)</span></li>
@@ -260,30 +268,30 @@ I&#8217;ll explain detail of the error messages elsewhere.</p>
 </div>
 <div class="section" id="real-number">
 <h2>4.2. Real number<a class="headerlink" href="#real-number" title="Permalink to this headline">¶</a></h2>
-<p>Literal of real number is represented using a decimal point, and the type is <tt class="docutils literal"><span class="pre">float</span></tt>.</p>
+<p>Literal of real number is represented using a decimal point, and the type is <tt class="docutils literal"><span class="pre">double</span></tt>.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: print_float.dats *)</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: print_double.dats *)</span>
 <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="mi">2</span><span class="o">.</span><span class="mi">718</span>
 
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
 <p>A value of real number is able to be printed using <tt class="docutils literal"><span class="pre">println!</span></tt>.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_float.dats
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc print_double.dats
 <span class="nv">$ </span>./a.out
 2.718000
 </pre></div>
 </div>
 <p>Addition operator <tt class="docutils literal"><span class="pre">+</span></tt>, subtraction <tt class="docutils literal"><span class="pre">-</span></tt>, multiplication <tt class="docutils literal"><span class="pre">*</span></tt> and division <tt class="docutils literal"><span class="pre">/</span></tt> can be used on real number.
-Please see following <tt class="docutils literal"><span class="pre">float_op.dats</span></tt>:</p>
+Please see following <tt class="docutils literal"><span class="pre">double_op.dats</span></tt>:</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: float_op.dats *)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: double_op.dats *)</span>
 <span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
 
 <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">((</span><span class="mi">3</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="mi">5</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span> <span class="o">*</span> <span class="mi">8</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="mi">3</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span>
@@ -291,7 +299,7 @@ Please see following <tt class="docutils literal"><span class="pre">float_op.dat
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc float_op.dats
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc double_op.dats
 <span class="nv">$ </span>./a.out
 21.333333
 </pre></div>
@@ -302,7 +310,7 @@ Please see following <tt class="docutils literal"><span class="pre">float_op.dat
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: float_op_nozero.dats *)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: double_op_nozero.dats *)</span>
 <span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
 
 <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">((</span><span class="mi">3</span><span class="o">.</span> <span class="o">+</span> <span class="mi">5</span><span class="o">.)</span> <span class="o">*</span> <span class="mi">8</span><span class="o">.</span> <span class="o">/</span> <span class="mi">3</span><span class="o">.)</span>
@@ -310,13 +318,13 @@ Please see following <tt class="docutils literal"><span class="pre">float_op.dat
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<p>ATS is different to OCaml, and can use operators between different types (such like <tt class="docutils literal"><span class="pre">int</span></tt> and <tt class="docutils literal"><span class="pre">float</span></tt>).</p>
+<p>ATS is different to OCaml, and can use operators between different types (such like <tt class="docutils literal"><span class="pre">int</span></tt> and <tt class="docutils literal"><span class="pre">double</span></tt>).</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: float_int_op.dats *)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: double_int_op.dats *)</span>
 <span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
 
 <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">((</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">5</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">/</span> <span class="mi">3</span><span class="o">.</span><span class="mi">0</span><span class="o">)</span>
@@ -324,16 +332,16 @@ Please see following <tt class="docutils literal"><span class="pre">float_op.dat
 <span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="bp">()</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc float_int_op.dats 
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc double_int_op.dats
 <span class="nv">$ </span>./a.out
 21.333333
 </pre></div>
 </div>
 <p>This mixing is based on ATS template system.</p>
-<div class="section" id="id1">
-<h3>4.2.1. Exercise<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>Calculate following expressions on ATS language.</p>
-<ol class="upperalpha simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Exercise</strong>: Calculate following expressions on ATS language.</p>
+<ol class="last upperalpha simple">
 <li><span class="math">\(2 \times 3.14 \times 10\)</span></li>
 <li><span class="math">\(1.73 \times 1.73\)</span></li>
 <li><span class="math">\(7 / 2\)</span></li>
@@ -433,10 +441,10 @@ Examples of the test operators are: <tt class="docutils literal"><span class="pr
 <span class="nb">true</span>
 </pre></div>
 </div>
-<div class="section" id="id2">
-<h3>4.3.1. Exercise<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>Test conditions of following sentences on ATS language.</p>
-<ol class="upperalpha simple">
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Exercise</strong>: Test conditions of following sentences on ATS language.</p>
+<ol class="last upperalpha simple">
 <li>&#8220;<span class="math">\(2\)</span> is greater than <span class="math">\(3\)</span>.&#8221;</li>
 <li>&#8220;The second power of <span class="math">\(3.1415\)</span> is not less than <span class="math">\(10\)</span>.&#8221;</li>
 <li>&#8220;The remainder obtained by dividing <span class="math">\(8\)</span> by <span class="math">\(3\)</span> is equal to <span class="math">\(2\)</span>.&#8221;</li>

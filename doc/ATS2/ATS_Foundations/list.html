@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. Preface &mdash; ATS Programming Foundations 0.2.0 documentation</title>
+  <title>13. List &mdash; ATS Programming Foundations 0.2.0 documentation</title>
   
 
   
@@ -29,8 +29,8 @@
 
   
     <link rel="top" title="ATS Programming Foundations 0.2.0 documentation" href="index.html"/>
-        <link rel="next" title="2. Install ATS compiler" href="install_ats.html"/>
-        <link rel="prev" title="“ATS Programming Foundations”" href="index.html"/> 
+        <link rel="next" title="14. Recursive functions" href="recursive_function.html"/>
+        <link rel="prev" title="12. Character string" href="string.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -62,10 +62,10 @@
           
           
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">1. Preface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-goal-of-this-book">1.2. The goal of this book</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-other-documents">1.3. The other documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. Preface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#what-is-ats-programming-language">1.1. What is ATS programming language?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-goal-of-this-book">1.2. The goal of this book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface.html#the-other-documents">1.3. The other documents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install_ats.html">2. Install ATS compiler</a><ul>
@@ -116,7 +116,7 @@
 <li class="toctree-l2"><a class="reference internal" href="string.html#mutable-string">12.2. Mutable string</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="list.html">13. List</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">13. List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="recursive_function.html">14. Recursive functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nat_recursion.html">15. Recursion on natural numbers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dijkstras_algorithm.html">16. Dijkstra&#8217;s algorithm</a></li>
@@ -144,10 +144,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>1. Preface</li>
+    <li>13. List</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/preface.rst" class="fa fa-github"> Edit on GitHub</a>
+          <a href="https://github.com/jats-ug/ATS_Foundations/blob/master/source/list.rst" class="fa fa-github"> Edit on GitHub</a>
         
       </li>
   </ul>
@@ -155,46 +155,8 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="preface">
-<h1>1. Preface<a class="headerlink" href="#preface" title="Permalink to this headline">¶</a></h1>
-<p>Welcome to <a class="reference external" href="http://www.ats-lang.org/">ATS</a> programming world!</p>
-<p>This book is a beginning guide for ATS programming based on the book <a class="reference external" href="http://pllab.is.ocha.ac.jp/~asai/book/Top.html">プログラミングの基礎 (Programming Foundations)</a> that is recognized as a good beginning guide for <a class="reference external" href="https://ocaml.org/">OCaml</a>.</p>
-<div class="section" id="what-is-ats-programming-language">
-<h2>1.1. What is ATS programming language?<a class="headerlink" href="#what-is-ats-programming-language" title="Permalink to this headline">¶</a></h2>
-<p>Sometimes, you know <a class="reference external" href="https://ocaml.org/">OCaml</a> or <a class="reference external" href="http://haskell.org/">Haskell</a> as functional and strongly typed language.
-Why do we need to learn a new functional language?
-There are some reason:</p>
-<ul class="simple">
-<li>These languages can&#8217;t run without any GC</li>
-<li>These languages needs some runtime</li>
-<li>These languages can&#8217;t use type out of their heap</li>
-<li>These languages can&#8217;t capture program invariant using dependent type</li>
-</ul>
-<p>ATS has more strong type than theirs, and can run without any runtime.
-This characteristic of ATS language wides the application range of functional programming.</p>
-<p>The characteristic of ATS language is found at <a class="reference external" href="http://www.ats-lang.org/">The ATS Programming Language</a> site.</p>
-</div>
-<div class="section" id="the-goal-of-this-book">
-<h2>1.2. The goal of this book<a class="headerlink" href="#the-goal-of-this-book" title="Permalink to this headline">¶</a></h2>
-<p>The goal of this book is &#8220;You become able to read <a class="reference external" href="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/INT2PROGINATS-BOOK.html">Introduction to Programming in ATS</a> alone.&#8221;</p>
-<p>ATS language society already has some good documents.
-<a class="reference external" href="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/INT2PROGINATS-BOOK.html">Introduction to Programming in ATS</a> is one of them.
-However, it&#8217;s hard to read for beginners, because ATS&#8217;s value is strongly typed using dependent type.
-The dependent type appears in normal code, and it means the beginners can&#8217;t understand type error message on ATS.</p>
-<p>I believe understanding the error message is a shortcut to become a good programmer on ATS.</p>
-</div>
-<div class="section" id="the-other-documents">
-<h2>1.3. The other documents<a class="headerlink" href="#the-other-documents" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference external" href="http://www.ats-lang.org/">The ATS Programming Language</a></li>
-<li><a class="reference external" href="https://github.com/githwxi/ATS-Postiats/wiki">Wiki for ATS2</a></li>
-<li><a class="reference external" href="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/INT2PROGINATS-BOOK.html">Introduction to Programming in ATS</a></li>
-<li><a class="reference external" href="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/HTML/ATS2TUTORIAL-BOOK.html">A Tutorial on Programming Features in ATS</a></li>
-<li><a class="reference external" href="http://ats-lang.sourceforge.net/EXAMPLE/EFFECTIVATS/">Effective ATS</a></li>
-<li><a class="reference external" href="http://cs.likai.org/ats/ml-programmers-guide-to-ats">ML programmer&#8217;s guide to ATS</a></li>
-<li><a class="reference external" href="http://jats-ug.metasepi.org/">Japan ATS User Group</a></li>
-</ul>
-</div>
+  <div class="section" id="list">
+<h1>13. List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -203,10 +165,10 @@ The dependent type appears in normal code, and it means the beginners can&#8217;
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="install_ats.html" class="btn btn-neutral float-right" title="2. Install ATS compiler">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recursive_function.html" class="btn btn-neutral float-right" title="14. Recursive functions">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="“ATS Programming Foundations”"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="string.html" class="btn btn-neutral" title="12. Character string"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
