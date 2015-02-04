@@ -164,8 +164,8 @@ The syntax is following:</p>
 <div class="highlight-ocaml"><div class="highlight"><pre><span class="k">if</span> <span class="nc">CONDITION</span> <span class="k">then</span> <span class="nc">EXPRESSION_A</span> <span class="k">else</span> <span class="nc">EXPRESSION_B</span>
 </pre></div>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> and <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt> are typed with same type.
-Also, the part <tt class="docutils literal"><span class="pre">else</span> <span class="pre">EXPRESSION_B</span></tt> is optional, if type of the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> is <tt class="docutils literal"><span class="pre">void</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">CONDITION</span></tt> should be a value of <tt class="docutils literal"><span class="pre">bool</span></tt> type.
+Also, the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> and <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt> should be typed with same type.</p>
 <p>Let&#8217;s write some code using <tt class="docutils literal"><span class="pre">if</span></tt> keyword.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -192,10 +192,133 @@ Also, the part <tt class="docutils literal"><span class="pre">else</span> <span 
 2
 </pre></div>
 </div>
-<p>The execution result is able to understand for us.</p>
-<p>BTW, why needs some type assignments such like <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">(a:int)</span></tt>?
+<p>The execution result is able to understand for us.
+BTW, why needs some type assignments such like <tt class="docutils literal"><span class="pre">println!</span> <span class="pre">(a:int)</span></tt>?
 Type inference on ATS language can&#8217;t understand type of everything.
 Sometimes we should tell the type inferencer the type of values.</p>
+<p>We can also write any values of <tt class="docutils literal"><span class="pre">bool</span></tt> type at <tt class="docutils literal"><span class="pre">CONDITION</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: if_then_else2.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">a</span>  <span class="o">=</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">2</span>  <span class="k">then</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">4</span>
+  <span class="k">val</span> <span class="n">b</span>  <span class="o">=</span> <span class="k">if</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">a</span><span class="o">:</span><span class="kt">int</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">b</span><span class="o">:</span><span class="kt">int</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc if_then_else2.dats
+<span class="nv">$ </span>./a.out
+3
+2
+</pre></div>
+</div>
+<p>Line number 5 of the code <tt class="docutils literal"><span class="pre">if_then_else2.dats</span></tt> has the type drawn following figure:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/if_then_else2.png"><img alt="_images/if_then_else2.png" src="_images/if_then_else2.png" style="width: 540.0px; height: 198.0px;" /></a>
+</div>
+<p>However, a compile error occurs with writing a value of the other type at <tt class="docutils literal"><span class="pre">CONDITION</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: if_not_bool.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">a</span>  <span class="o">=</span> <span class="k">if</span> <span class="mi">1</span> <span class="k">then</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">3</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">a</span><span class="o">:</span><span class="kt">int</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc if_not_bool.dats
+/home/kiwamu/doc/ATS_Foundations/source/code/conditional/if_not_bool.dats: 105<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>15<span class="o">)</span> -- 106<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>16<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: the dynamic expression cannot be assigned the <span class="nb">type</span> <span class="o">[</span>S2Ecst<span class="o">(</span>bool_t0ype<span class="o">)]</span>.
+/home/kiwamu/doc/ATS_Foundations/source/code/conditional/if_not_bool.dats: 105<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>15<span class="o">)</span> -- 106<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>16<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: mismatch of static terms <span class="o">(</span>tyleq<span class="o">)</span>:
+The actual term is: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g1int_int_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>int_kind<span class="o">)</span>, S2Eintinf<span class="o">(</span>1<span class="o">))</span>
+The needed term is: S2Ecst<span class="o">(</span>bool_t0ype<span class="o">)</span>
+patsopt<span class="o">(</span>TRANS3<span class="o">)</span>: there are <span class="o">[</span>1<span class="o">]</span> errors in total.
+<span class="nb">exit</span><span class="o">(</span>ATS<span class="o">)</span>: uncaught exception: _2home_2kiwamu_2src_2ATS_2dPostiats_2src_2pats_error_2esats__FatalErrorExn<span class="o">(</span>1025<span class="o">)</span>
+</pre></div>
+</div>
+<p>It&#8217;s caused with the following type error:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/if_not_bool.png"><img alt="_images/if_not_bool.png" src="_images/if_not_bool.png" style="width: 540.0px; height: 153.9px;" /></a>
+</div>
+<p>And also, type check error occurs while the type of <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> is different from the type of <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: different_expr.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">a</span>  <span class="o">=</span> <span class="k">if</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc different_expr.dats
+/home/kiwamu/doc/ATS_Foundations/source/code/conditional/different_expr.dats: 130<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>37<span class="o">)</span> -- 133<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>40<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: the dynamic expression cannot be assigned the <span class="nb">type</span> <span class="o">[</span>S2EVar<span class="o">(</span>4140<span class="o">)]</span>.
+/home/kiwamu/doc/ATS_Foundations/source/code/conditional/different_expr.dats: 130<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>37<span class="o">)</span> -- 133<span class="o">(</span><span class="nv">line</span><span class="o">=</span>5, <span class="nv">offs</span><span class="o">=</span>40<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: mismatch of static terms <span class="o">(</span>tyleq<span class="o">)</span>:
+The actual term is: S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>g0float_t0ype<span class="o">)</span><span class="p">;</span> S2Ecst<span class="o">(</span>double_kind<span class="o">))</span>
+The needed term is: S2EVar<span class="o">(</span>4140<span class="o">)</span>
+patsopt<span class="o">(</span>TRANS3<span class="o">)</span>: there are <span class="o">[</span>1<span class="o">]</span> errors in total.
+<span class="nb">exit</span><span class="o">(</span>ATS<span class="o">)</span>: uncaught exception: _2home_2kiwamu_2src_2ATS_2dPostiats_2src_2pats_error_2esats__FatalErrorExn<span class="o">(</span>1025<span class="o">)</span>
+</pre></div>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/different_expr.png"><img alt="_images/different_expr.png" src="_images/different_expr.png" style="width: 540.0px; height: 205.2px;" /></a>
+</div>
+<p>We can write <tt class="docutils literal"><span class="pre">println!</span></tt> in <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> or <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: println_expr.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="k">if</span> <span class="mi">7</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">then</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;It&#39;s true.&quot;</span> <span class="k">else</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre>$ patscc println_expr.dats
+$ ./a.out
+It&#39;s true.
+</pre></div>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/println_expr.png"><img alt="_images/println_expr.png" src="_images/println_expr.png" style="width: 540.0px; height: 170.1px;" /></a>
+</div>
+<p>The part <tt class="docutils literal"><span class="pre">else</span> <span class="pre">EXPRESSION_B</span></tt> is optional, if type of the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> is <tt class="docutils literal"><span class="pre">void</span></tt>.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: println_without_else.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="k">if</span> <span class="mi">7</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">then</span> <span class="n">println</span><span class="o">!</span> <span class="s2">&quot;It&#39;s true.&quot;</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>Exercise</strong>: What type is assigned on following conditional branch? Or, where is a type error issue on the expression?</p>
+<ol class="last upperalpha simple">
+<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">2</span> <span class="pre">&lt;</span> <span class="pre">1</span> <span class="pre">then</span> <span class="pre">3</span> <span class="pre">else</span> <span class="pre">4</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">&quot;true&quot;</span> <span class="pre">then</span> <span class="pre">3.14</span> <span class="pre">else</span> <span class="pre">2.72</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">(3</span> <span class="pre">=</span> <span class="pre">4)</span> <span class="pre">then</span> <span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">2</span> <span class="pre">else</span> <span class="pre">1</span> <span class="pre">&gt;</span> <span class="pre">2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">println!</span> <span class="pre">&quot;false&quot;</span> <span class="pre">then</span> <span class="pre">true</span> <span class="pre">else</span> <span class="pre">false</span></tt></li>
+</ol>
+</div>
 </div>
 </div>
 
