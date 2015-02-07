@@ -99,6 +99,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">7. Conditional branch</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#syntax-to-define-conditional-branch">7.1. Syntax to define conditional branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conditional-branch-is-also-an-expression">7.2. Conditional branch is also an expression</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="showtype.html">8. Showing types</a><ul>
@@ -165,7 +166,7 @@ The syntax is following:</p>
 </pre></div>
 </div>
 <p>The <tt class="docutils literal"><span class="pre">CONDITION</span></tt> should be a value of <tt class="docutils literal"><span class="pre">bool</span></tt> type.
-Also, the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> and <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt> should be typed with same type.</p>
+Also, the <tt class="docutils literal"><span class="pre">EXPRESSION_A</span></tt> and <tt class="docutils literal"><span class="pre">EXPRESSION_B</span></tt> should be typed with same type, that becomes the type of the whole conditional branch expression.</p>
 <p>Let&#8217;s write some code using <tt class="docutils literal"><span class="pre">if</span></tt> keyword.</p>
 <div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -319,6 +320,36 @@ It&#39;s true.
 <li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">println!</span> <span class="pre">&quot;false&quot;</span> <span class="pre">then</span> <span class="pre">true</span> <span class="pre">else</span> <span class="pre">false</span></tt></li>
 </ol>
 </div>
+</div>
+<div class="section" id="conditional-branch-is-also-an-expression">
+<h2>7.2. Conditional branch is also an expression<a class="headerlink" href="#conditional-branch-is-also-an-expression" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s see following code:</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">(* File: duplicate_code.dats *)</span>
+<span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="k">fun</span> <span class="n">f</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">):</span> <span class="kt">int</span> <span class="o">=</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="k">then</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span>
+                               <span class="k">else</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="o">(</span><span class="n">f</span> <span class="mi">20</span><span class="o">)</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc duplicate_code.dats
+<span class="nv">$ </span>./a.out
+210
+</pre></div>
+</div>
+<p>The code is runnable. However, the codes <tt class="docutils literal"><span class="pre">10</span> <span class="pre">+</span> <span class="pre">x</span> <span class="pre">*</span></tt> are duplicated.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/duplicate_code.png"><img alt="_images/duplicate_code.png" src="_images/duplicate_code.png" style="width: 540.0px; height: 252.9px;" /></a>
+</div>
+<p>We can avoid the duplication, because conditional branch is also an expression.</p>
+<p>xxx</p>
 </div>
 </div>
 
