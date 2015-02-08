@@ -9,7 +9,7 @@ NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="ATSプログラミング入門"
-HREF="index.html"><LINK
+HREF="book1.html"><LINK
 REL="UP"
 TITLE="線形な dataprop としての dataview"
 HREF="c3453.html"><LINK
@@ -18,7 +18,10 @@ TITLE="分離 view"
 HREF="x3476.html"><LINK
 REL="NEXT"
 TITLE="片方向リストの view"
-HREF="x3577.html"></HEAD
+HREF="x3577.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./INT2PROGINATS-BOOK.css"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -75,7 +78,7 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear_arrays"
->14.3. 線形配列の view</A
+>線形配列の view</A
 ></H1
 ><P
 >&#13;ほとんどのプログラミング言語と異なり、ATS では配列はプリミティブなデータ構造ではありません。
@@ -208,7 +211,8 @@ NAME="AEN3539"
 ></A
 ><PRE
 CLASS="programlisting"
->implement{a}
+>implement
+{a}(*tmp*)
 arrget (pf | p, i) =
   if i &#62; 0 then let
     prval array_v_cons (pf1, pf2) = pf
@@ -312,7 +316,8 @@ NAME="AEN3555"
 ></A
 ><PRE
 CLASS="programlisting"
->implement{a}
+>implement
+{a}(*tmp*)
 arrget{l}{n,i}
   (pf | p, i) = x where {
   prval (pf1, pf2) = array_v_split{a}{l}{n,i}(pf)
@@ -320,9 +325,10 @@ arrget{l}{n,i}
   val x = ptr_get1&#60;a&#62; (pf21 | ptr_add&#60;a&#62; (p, i))
   prval pf2 = array_v_cons (pf21, pf22)
   prval () = pf := array_v_unsplit{a}{l}{i,n-i}(pf1, pf2)
-} // end of [arrget]
+} (* end of [arrget] *)
 
-implement{a}
+implement
+{a}(*tmp*)
 arrset{l}{n,i}
   (pf | p, i, x) = () where {
   prval (pf1, pf2) = array_v_split{a}{l}{n,i}(pf)
@@ -330,7 +336,7 @@ arrset{l}{n,i}
   val () = ptr_set1&#60;a&#62; (pf21 | ptr_add&#60;a&#62; (p, i), x)
   prval pf2 = array_v_cons (pf21, pf22)
   prval () = pf := array_v_unsplit{a}{l}{i,n-i}(pf1, pf2)
-} // end of [arrset]
+} (* end of [arrset] *)
 </PRE
 ><P
 ></P
@@ -496,7 +502,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="index.html"
+HREF="book1.html"
 ACCESSKEY="H"
 >Home</A
 ></TD

@@ -9,7 +9,7 @@ NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="ATSプログラミング入門"
-HREF="index.html"><LINK
+HREF="book1.html"><LINK
 REL="UP"
 TITLE="現実のプログラミングに対するサポート"
 HREF="p1362.html"><LINK
@@ -20,7 +20,10 @@ TITLE="
 HREF="x1967.html"><LINK
 REL="NEXT"
 TITLE="ATSにおける外部の型と値"
-HREF="x2059.html"></HEAD
+HREF="x2059.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./INT2PROGINATS-BOOK.css"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -78,6 +81,50 @@ CLASS="chapter"
 NAME="Cinteraction"
 ></A
 >Chapter 8. C言語との相互呼び出し</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c1995.html#external_name"
+>外部のグローバル名</A
+></DT
+><DT
+><A
+HREF="x2059.html"
+>ATSにおける外部の型と値</A
+></DT
+><DT
+><A
+HREF="x2074.html"
+>ATSに外部コードを含める</A
+></DT
+><DT
+><A
+HREF="x2095.html"
+>ATSにおける外部関数呼び出し</A
+></DT
+><DT
+><A
+HREF="x2107.html"
+>安全ではないC言語スタイルのATSプログラミング</A
+></DT
+><DT
+><A
+HREF="x2157.html"
+>ATSの型をエクスポートしてC言語から使う</A
+></DT
+><DT
+><A
+HREF="x2201.html"
+>例: 静的に確保されたリストをコンストラクトする</A
+></DT
+></DL
+></DIV
 ><P
 >&#13;ATSとC言語は全く同じネイティブ/フラット/アンボックスなデータ表現を共有しています。
 結果的に、ATSで実装された関数をC言語から呼び出す際にラップ/アンラップやボックス化/アンボックス化したりする必要はありません。
@@ -112,7 +159,7 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="external_name"
->8.1. 外部のグローバル名</A
+>外部のグローバル名</A
 ></H1
 ><P
 >&#13;ATSで宣言された関数にはC言語スタイルのグローバル名が与えれらます。
@@ -443,7 +490,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="index.html"
+HREF="book1.html"
 ACCESSKEY="H"
 >Home</A
 ></TD

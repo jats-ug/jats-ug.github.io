@@ -9,7 +9,7 @@ NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="ATSプログラミング入門"
-HREF="index.html"><LINK
+HREF="book1.html"><LINK
 REL="UP"
 TITLE="ATS/LF を使った定理証明"
 HREF="c2842.html"><LINK
@@ -18,7 +18,10 @@ TITLE="ATS/LF を使った定理証明"
 HREF="c2842.html"><LINK
 REL="NEXT"
 TITLE="例: 乗法の分配法則を証明する"
-HREF="x2958.html"></HEAD
+HREF="x2958.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./INT2PROGINATS-BOOK.css"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -75,7 +78,7 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="constructing_proofs_as_total_functions"
->11.2. 全域関数として証明をコンストラクトする</A
+>全域関数として証明をコンストラクトする</A
 ></H1
 ><P
 >ATS/LF では、定理は型 (もしくはより正確に証明) によって表現されます。
@@ -104,7 +107,7 @@ ATS/LF において定理の証明をコンストラクトすることは、ATS/
 このスタイルの定理証明はまだ体験していない人にはやや風変わりに見えるかもしれません。
 </P
 ><P
->はじめに単純な初歩の例として、次のインターフェイスで与えられる ATS/LF の証明関数をコンストラクトしてみましょう:
+>はじめに単純で初歩的な例として、次のインターフェイスで与えられる ATS/LF の証明関数をコンストラクトしてみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -130,7 +133,7 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >mul_istot</FONT
-> は次の型 (より正確には prop) で宣言されていることに注意してください:
+> は次の型 (より正確には証明) で宣言されていることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -149,7 +152,7 @@ CLASS="programlisting"
 >
 
 
-これは本質的に整数の乗法が全域関数であると言っています:
+これは本質的に整数の乗法が全域関数であると言っています。
 2つのどのような整数 m と n が与えられても、構造的帰納的に定義 <FONT
 COLOR="RED"
 >MUL</FONT
@@ -394,7 +397,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="index.html"
+HREF="book1.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
