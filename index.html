@@ -122,8 +122,7 @@
                     <header>
                         <h1 id="install">最初の一歩</h1>
                         <p>なにはともあれ使ってみましょう。
-                           インストール手順については <a href="https://github.com/githwxi/ATS-Postiats/wiki/Building-and-installing">公式wiki</a> も参考にしてください。
-                           また <a href="https://packages.debian.org/sid/ats2-lang">Debian</a> と <a href="http://packages.ubuntu.com/utopic/ats2-lang">Ubuntu</a> ではパッケージを使ってATS2をインストールすることもできます。</p>
+                           インストール手順については <a href="https://github.com/githwxi/ATS-Postiats/wiki/Building-and-installing">公式wiki</a> も参考にしてください。</p>
                     </header>
                     <section>
                       <h2>1. ダウンロード</h2>
@@ -133,20 +132,57 @@
                     </section>
                     <section>
                       <h2>2. インストール</h2>
-                      <p>ダウンロードしたATS2-Postiatsをコンパイルして、/usr/local以下にインストールします。</p>
-<pre><code>$ tar xf ATS2-Postiats-0.0.7.tgz
-$ cd ATS2-Postiats-0.0.7
+                      <h3>Linuxの場合</h3>
+                      <p>ここでは<a href="https://www.debian.org/">Debian GNU/Linux</a>を例に説明します。はじめに、ATS2のインストールに必要なパッケージをインストールします。</p>
+<pre><code>$ sudo apt-get install gcc libgc-dev libgmp-dev make
+</code></pre>
+                      <p>次に、先程ダウンロードしたATS2-PostiatsとATS2-Postiats-contribを解凍し、環境変数を設定します。</p>
+<pre><code>$ tar xf ATS2-Postiats-X.Y.Z.tgz
+$ export PATSHOME=`pwd`/ATS2-Postiats-X.Y.Z
+$ export PATH=${PATSHOME}/bin:${PATH}
+$ tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+$ export PATSHOMERELOC=`pwd`/ATS2-Postiats-contrib-X.Y.Z
+</code></pre>
+                      <p>最後に、ATSコンパイラをコンパイルします。</p>
+<pre><code>$ cd ${PATSHOME}
 $ ./configure
 $ make
-$ sudo make install
-$ which patscc
-/usr/local/bin/patscc
 </code></pre>
-                      <p>ATS2-PostiatsをインストールしたディレクトリにATS2-Postiats-contribをコピーします。</p>
-<pre><code>$ tar xf ATS2-Postiats-contrib-0.0.7.tgz
-$ cp -r ATS2-Postiats-contrib-0.0.7/contrib /usr/local/lib/ats2-postiats-0.0.7/
-$ export PATSHOME=/usr/local/lib/ats2-postiats-0.0.7
-$ export PATSHOMERELOC=$PATSHOME
+                      <h3>Windowsの場合</h3>
+                      <p>ATS2をWindowsにインストールするには<a href="https://cygwin.com/">Cygwin</a>が必要です。はじめに、次のリストに挙げたパッケージを<a href="http://cygwin.com/setup-x86.exe">setup-x86.exe</a>もしくは<a href="http://cygwin.com/setup-x86_64.exe">setup-x86_64.exe</a>を使ってインストールします。</p>
+                      <ul>
+                        <li>gcc-core</li>
+                        <li>libgc-devel</li>
+                        <li>libgmp-devel</li>
+                        <li>make</li>
+                      </ul>
+                      <p>次にCygwinコンソール上で、先程ダウンロードしたATS2-PostiatsとATS2-Postiats-contribを解凍し、環境変数を設定します。</p>
+<pre><code>$ tar xf ATS2-Postiats-X.Y.Z.tgz
+$ export PATSHOME=`pwd`/ATS2-Postiats-X.Y.Z
+$ export PATH=${PATSHOME}/bin:${PATH}
+$ tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+$ export PATSHOMERELOC=`pwd`/ATS2-Postiats-contrib-X.Y.Z
+</code></pre>
+                      <p>最後に、ATSコンパイラをコンパイルします。</p>
+<pre><code>$ cd ${PATSHOME}
+$ ./configure
+$ make
+</code></pre>
+                      <h3>Mac OS Xの場合</h3>
+                      <p>はじめに、<a href="http://brew.sh/">Homebrew</a>を使って、ATS2のインストールに必要なパッケージをインストールします。</p>
+<pre><code>$ brew install gmp bdw-gc
+</code></pre>
+                      <p>次に、先程ダウンロードしたATS2-PostiatsとATS2-Postiats-contribを解凍し、環境変数を設定します。</p>
+<pre><code>$ tar xf ATS2-Postiats-X.Y.Z.tgz
+$ export PATSHOME=`pwd`/ATS2-Postiats-X.Y.Z
+$ export PATH=${PATSHOME}/bin:${PATH}
+$ tar xf ATS2-Postiats-contrib-X.Y.Z.tgz
+$ export PATSHOMERELOC=`pwd`/ATS2-Postiats-contrib-X.Y.Z
+</code></pre>
+                      <p>最後に、ATSコンパイラをコンパイルします。</p>
+<pre><code>$ cd ${PATSHOME}
+$ ./configure
+$ make GCFLAG=-D_ATS_NGC
 </code></pre>
                     </section>
                     <section>
