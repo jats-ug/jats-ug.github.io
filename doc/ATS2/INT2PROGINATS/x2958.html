@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->例: 乗法の分配法則を証明する</TITLE
+>例: 乗法の分配法則</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,11 +17,11 @@ REL="PREVIOUS"
 TITLE="全域関数として証明をコンストラクトする"
 HREF="x2904.html"><LINK
 REL="NEXT"
-TITLE="datasort"
+TITLE="Example: Commutativity of Multiplication"
 HREF="x2973.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
-HREF="./INT2PROGINATS-BOOK.css"></HEAD
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
 ><BODY
 CLASS="sect1"
 BGCOLOR="#FFFFFF"
@@ -77,8 +77,8 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="example_proving_distributivity_of_multiplication"
->例: 乗法の分配法則を証明する</A
+NAME="example_distributivity_of_multiplication"
+>例: 乗法の分配法則</A
 ></H1
 ><P
 >加法に対する乗法の分配法則は次の等式を意味しています:
@@ -112,12 +112,12 @@ NAME="AEN2963"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
+>//
 prfun
 mul_distribute
-  {m:int}{n1,n2:int}{p1,p2:int}
-  (pf1: MUL (m, n1, p1), pf2: MUL (m, n2, p2)): MUL (m, n1+n2, p1+p2)
-// end of [mul_distribute]
+  {m,n1,n2:int}{p1,p2:int}
+  (MUL(m, n1, p1), MUL(m, n2, p2)): MUL(m, n1+n2, p1+p2)
+//
 </PRE
 ><P
 ></P
@@ -143,27 +143,35 @@ NAME="AEN2966"
 CLASS="programlisting"
 >primplement
 mul_distribute
-  {m}{n1,n2}{p1,p2} (pf1, pf2) = let
-  prfun aux
-    {m:nat}
-    {n1,n2:int}
-    {p1,p2:int}
-    .&#60;m&#62;. (
-    pf1: MUL (m, n1, p1), pf2: MUL (m, n2, p2)
-  ) : MUL (m, n1+n2, p1+p2) =
-    case+ (pf1, pf2) of
-    | (MULbas (), MULbas ()) =&#62; MULbas ()
-    | (MULind pf1, MULind pf2) =&#62; MULind (aux (pf1, pf2))
-  // end of [aux]
+{m,n1,n2}{p1,p2}
+  (pf1, pf2) = let
+//
+prfun
+auxnat
+{m:nat}{p1,p2:int} .&#60;m&#62;.
+(
+  pf1: MUL(m, n1, p1), pf2: MUL(m, n2, p2)
+) : MUL(m, n1+n2, p1+p2) =
+(
+  case+ (pf1, pf2) of
+  | (MULbas(), MULbas()) =&#62; MULbas()
+  | (MULind pf1, MULind pf2) =&#62; MULind(auxnat (pf1, pf2))
+) (* end of [auxnat] *)
+//
 in
-  sif m &#62;= 0 then
-    aux (pf1, pf2)
-  else let
-    prval MULneg (pf1) = pf1
-    prval MULneg (pf2) = pf2
-  in
-    MULneg (aux (pf1, pf2))
-  end
+//
+sif
+m &#62;= 0
+then (
+  auxnat (pf1, pf2)
+) // end of [then]
+else let
+  prval MULneg(pf1) = pf1
+  prval MULneg(pf2) = pf2
+in
+  MULneg(auxnat (pf1, pf2))
+end // end of [else]
+//
 end // end of [mul_distribute]
 </PRE
 ><P
@@ -175,7 +183,7 @@ end // end of [mul_distribute]
 本質的に、
 内部の関数 <FONT
 COLOR="RED"
->aux</FONT
+>auxnat</FONT
 > は次の等式を満たす数学的帰納法の証明を素直にエンコードしています:
 
 <DIV
@@ -201,7 +209,7 @@ COLOR="RED"
 >mul_distribute</FONT
 > は <FONT
 COLOR="RED"
->aux</FONT
+>auxnat</FONT
 > を使ってすぐに実装できます。
 </P
 ></DIV
@@ -263,7 +271,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->datasort</TD
+>Example: Commutativity of Multiplication</TD
 ></TR
 ></TABLE
 ></DIV
