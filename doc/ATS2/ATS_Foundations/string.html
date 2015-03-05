@@ -179,7 +179,11 @@
 foo
 </pre></div>
 </div>
-<p>xxx</p>
+<p>However, immutable string can&#8217;t do such like following:</p>
+<ul class="simple">
+<li>append</li>
+<li>reverse</li>
+</ul>
 </div>
 <div class="section" id="mutable-string">
 <h2>12.2. Mutable string<a class="headerlink" href="#mutable-string" title="Permalink to this headline">¶</a></h2>
@@ -199,6 +203,37 @@ foo
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
+<p>However the code causes following compile error:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc try_string_append.dats
+/home/kiwamu/tmp/try_string_append.dats: 60<span class="o">(</span><span class="nv">line</span><span class="o">=</span>3, <span class="nv">offs</span><span class="o">=</span>22<span class="o">)</span> -- 135<span class="o">(</span><span class="nv">line</span><span class="o">=</span>6, <span class="nv">offs</span><span class="o">=</span>2<span class="o">)</span>: error<span class="o">(</span>3<span class="o">)</span>: the linear dynamic variable <span class="o">[</span>s3<span class="nv">$3509</span><span class="o">(</span>-1<span class="o">)]</span> needs to be consumed but it is preserved with the <span class="nb">type</span> <span class="o">[</span>S2Eapp<span class="o">(</span>S2Ecst<span class="o">(</span>strptr_addr_vtype<span class="o">)</span><span class="p">;</span> S2EVar<span class="o">(</span>4175<span class="o">))]</span> instead.
+patsopt<span class="o">(</span>TRANS3<span class="o">)</span>: there are <span class="o">[</span>1<span class="o">]</span> errors in total.
+<span class="nb">exit</span><span class="o">(</span>ATS<span class="o">)</span>: uncaught exception: _2home_2kiwamu_2src_2ATS_2dPostiats_2src_2pats_error_2esats__FatalErrorExn<span class="o">(</span>1025<span class="o">)</span>
+</pre></div>
+</div>
+<p>Why does the error occur? Because we forget to free the mutable string.</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">s3</span> <span class="o">=</span> <span class="n">string_append</span> <span class="o">(</span><span class="s2">&quot;Yokohama&quot;</span><span class="o">,</span> <span class="s2">&quot;Station&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">println</span><span class="o">!</span> <span class="n">s3</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">free</span> <span class="n">s3</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc string_append.dats -DATS_MEMALLOC_LIBC
+<span class="nv">$ </span>./a.out
+YokohamaStation
+</pre></div>
+</div>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/string_append.png"><img alt="_images/string_append.png" src="_images/string_append.png" style="width: 540.0px; height: 328.5px;" /></a>
+</div>
 <p>xxx</p>
 </div>
 </div>

@@ -158,6 +158,62 @@
             
   <div class="section" id="list">
 <h1>13. List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h1>
+<p>Type of list can be figured as following:</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/list_vt_type.png"><img alt="_images/list_vt_type.png" src="_images/list_vt_type.png" style="width: 360.0px; height: 216.0px;" /></a>
+</div>
+<p>xxx</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">l</span> <span class="o">=</span> <span class="n">list_vt_make_pair</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_list_vt</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">list_vt_free</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc make_pair.dats -DATS_MEMALLOC_LIBC
+<span class="nv">$ </span>./a.out
+1, 2
+</pre></div>
+</div>
+<div class="figure">
+<img alt="_images/list_vt_make_pair.png" src="_images/list_vt_make_pair.png" />
+</div>
+<p>xxx</p>
+<div class="highlight-ocaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">#</span><span class="k">include</span> <span class="s2">&quot;share/atspre_staload.hats&quot;</span>
+
+<span class="n">implement</span> <span class="n">main0</span> <span class="bp">()</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">l1</span> <span class="o">=</span> <span class="n">list_vt_make_pair</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">list_vt_make_sing</span> <span class="mi">3</span>
+  <span class="k">val</span> <span class="n">l3</span> <span class="o">=</span> <span class="n">list_vt_append</span> <span class="o">(</span><span class="n">l2</span><span class="o">,</span> <span class="n">l1</span><span class="o">)</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">print_list_vt</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l3</span>
+  <span class="k">val</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">list_vt_free</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l3</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>patscc append_list.dats -DATS_MEMALLOC_LIBC
+<span class="nv">$ </span>./a.out
+3, 1, 2
+</pre></div>
+</div>
+<div class="figure">
+<img alt="_images/list_vt_append.png" src="_images/list_vt_append.png" />
+</div>
 </div>
 
 
