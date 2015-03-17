@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 安全な行列の添字演算</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="定理証明によるプログラミング"
+HREF="c3128.html"><LINK
+REL="PREVIOUS"
+TITLE="定理証明によるプログラミング"
+HREF="c3128.html"><LINK
+REL="NEXT"
+TITLE="強化された正確性を使って明記する"
+HREF="x3189.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c3128.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. 定理証明によるプログラミング</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3189.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_safe_matrix_subscripting"
+>例: 安全な行列の添字演算</A
+></H1
+><P
+>&#13;内部では、次元 m x n の行列はサイズ m*n の配列として表現されます。
+行列の添字演算のために、次のインターフェイスの関数テンプレートを実装する必要があります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3173"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun{
+a:t@ype
+} matrix_get
+  {m,n:int}{i,j:nat | i &#60; m; j &#60; n}
+  (A: arrayref (a, m*n), col: int n, i: int i, j: int j): a
+// end of [matrix_get]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+行列が行優先スタイルで表現されていると仮定しましょう。
+すると、その行列の i と j で指定された要素は、その行列を表現する配列では i*n + j で指定されることになります。
+ここで、i と j はそれぞれ m と n より小さい自然数です。
+けれども、次の実装の型検査には失敗します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3175"
+></A
+><PRE
+CLASS="programlisting"
+>implement{a}
+matrix_get (A, n, i, j) = A[i*n+j] // it fails to typecheck!!!
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この推論失敗の簡単な理由は、i*n+j が m*n より正確に小さい自然数であることを、
+ATS の制約ソルバが自動的に検査できないためです。
+型検査を通る <FONT
+COLOR="RED"
+>matrix_get</FONT
+> の実装は次のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3178"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+matrix_get
+  {m,n}{i,j}
+  (A, n, i, j) = let
+//
+  val (pf_i_n | _i_n) = imul2 (i, n)
+  prval () = mul_nat_nat_nat (pf_i_n)
+  prval () = mul_gte_gte_gte{m-1-i,n} ()
+  prval () = mul_elim (pf_i_n)
+//
+in
+  A[_i_n+j]
+end // end of [matrix_get]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>matrix_get</FONT
+> の本体から呼び出される関数には次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3181"
+></A
+><PRE
+CLASS="programlisting"
+>fun imul2{i,j:int}
+  (i: int i, j: int j): [ij:int] (MUL (i, j, ij) | int ij)
+
+prfun mul_nat_nat_nat
+  {i,j:nat}{ij:int} (pf: MUL (i, j, ij)): [ij &#62;= 0] void
+
+prfun mul_gte_gte_gte
+  {m,n:int | m &#62;= 0; n &#62;= 0} ((*void*)): [m*n &#62;= 0] void
+
+prfun mul_elim
+  {i,j:int}{ij:int} (pf: MUL (i, j, ij)): [i*j==ij] void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+m と n が自然数で、i と j がそれぞれ m と n より小さい自然数であると仮定します。
+i*n+j &#60; m*n を示すために <FONT
+COLOR="RED"
+>matrix_get</FONT
+> の実装で用いられている証明コードは、
+(m-1-i)*n &#62;= 0 を証明しています。
+これは明確に m*n &#62;= i*n+n &#62; i*n+j を暗示しています。
+
+</P
+><P
+>&#13;
+様々な証明関数が <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/arith_prf.sats"
+TARGET="_top"
+>arith_prf.sats</A
+>
+で宣言されていることに注意してください。
+これらの証明は算術演算を含む定理を証明するのに役に立ちます。
+ATSにおける証明の構成例として、<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/DATS/arith_prf.dats"
+TARGET="_top"
+>arith_prf.dats</A
+>
+にある証明関数の実装を参照してください。
+</P
+><P
+>&#13;この章のコード全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/matget.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c3128.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3189.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>定理証明によるプログラミング</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3128.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>強化された正確性を使って明記する</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

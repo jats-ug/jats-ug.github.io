@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->代数的 datasort</TITLE
+>代数的なデータ種 (datasort)</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="ATS/LF を使った定理証明"
 HREF="c2842.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Commutativity of Multiplication"
+TITLE="例: 乗法の交換法則"
 HREF="x2973.html"><LINK
 REL="NEXT"
 TITLE="例: ブラウンツリーの性質を確立する"
@@ -78,17 +78,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="datasorts"
->代数的 datasort</A
+>代数的なデータ種 (datasort)</A
 ></H1
 ><P
->datasort は datatype に少し似ています。
-けれども、後者は ATS の動的な宣言ですが、前者はATSの静的な宣言です。
-datasort の典型的な用途を見るために、
+>データ種 (datasort) はデータ型 (datatype) に少し似ています。
+けれども、後者は ATS の動的な宣言ですが、前者は ATS の静的な宣言です。
+データ種の典型的な用途を見るために、
 s と h がそれぞれ与えられた二分木のサイズと高さであるなら、s がきっちり 2<SUP
 >h</SUP
 >
 より小さくなることを示す定理を ATS でエンコードしてみましょう。
-二分木を静的に表わすために、まず次の datasort を宣言しましょう:
+二分木を静的に表わすために、まず次のデータ種を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -107,7 +107,7 @@ CLASS="programlisting"
 >
 
 
-宣言した datasort の名前は <FONT
+宣言した データ種 の名前は <FONT
 COLOR="RED"
 >tree</FONT
 > で、関連する2つのコンストラクタがあります:
@@ -129,7 +129,7 @@ COLOR="RED"
 E と B で作った木は全くデータを保持しない骨だけの木であることに注意してください。
 </P
 ><P
->次のように木のサイズと高さの概念を捕捉するために2つの dataprop を宣言しましょう:
+>次のように木のサイズと高さの概念を捕捉するために2つのデータ命題を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -164,7 +164,7 @@ HT (tree, int) =
 同様に、木 t と整数 h が与えられた時、HZ(t, h) は t の高さが h に等しいという関係をエンコードします。
 </P
 ><P
->2を底にした累乗関数は ATS の静的な部分にはないので、それを捕捉する次の dataprop を宣言します:
+>2を底にした累乗関数は ATS の静的な部分にはないので、それを捕捉する次のデータ命題を宣言します:
 
 <DIV
 CLASS="informalexample"
@@ -266,7 +266,7 @@ prfun pow2_inc
 明確に、<FONT
 COLOR="RED"
 >pow2_istot</FONT
-> は dataprop <FONT
+> はデータ命題 <FONT
 COLOR="RED"
 >POW2</FONT
 >
@@ -361,7 +361,7 @@ COLOR="RED"
 キーワード <FONT
 COLOR="RED"
 >scase</FONT
-> は (宣言された datasort に関連するコンストラクタで構築される)
+> は (宣言された データ種 に関連するコンストラクタで構築される)
 静的な項のcase判定をする動的な式を作るのに使われます。
 そのため、<FONT
 COLOR="RED"
@@ -427,7 +427,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Commutativity of Multiplication</TD
+>例: 乗法の交換法則</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

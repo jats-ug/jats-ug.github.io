@@ -1,0 +1,548 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>線形配列の dataview</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形な dataprop としての dataview"
+HREF="c3527.html"><LINK
+REL="PREVIOUS"
+TITLE="分離 view"
+HREF="x3550.html"><LINK
+REL="NEXT"
+TITLE="Dataview for Linear Strings"
+HREF="x3651.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3550.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. 線形な dataprop としての dataview</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3651.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="linear_arrays"
+>線形配列の dataview</A
+></H1
+><P
+>&#13;ほとんどのプログラミング言語と異なり、ATS では配列はプリミティブなデータ構造ではありません。
+もっと正確に言えば、永続的な配列はプログラマが安全に解放できる線形配列を用いて実装できます。
+その線形配列は at-view を用いて実装できます。
+直観的には、N 個の at-view からなる 型 T の N 個の要素が保存されている配列の view :
+T@L<SUB
+>0</SUB
+>, T@L<SUB
+>1</SUB
+>, ..., T@L<SUB
+>N-1</SUB
+> です。
+ここで、L<SUB
+>0</SUB
+> は配列の開始アドレスで、L に続くそれぞれの要素は直前の要素に T
+のサイズを加えたものと等しくなります。
+すなわち、型 T の値を保存するのに必要なバイト数です。
+次に宣言する dataview <FONT
+COLOR="RED"
+>array_v</FONT
+> はこの直感を正確に捕捉しています:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3599"
+></A
+><PRE
+CLASS="programlisting"
+>dataview
+array_v (
+  a:t@ype+ // covariant argument
+, addr(*beg*)
+, int(*size*)
+) = // array_v
+  | {l:addr}
+    array_v_nil (a, l, 0)
+  | {l:addr}{n:nat}
+    array_v_cons (a, l, n+1) of (a @ l, array_v (a, l+sizeof(a), n))
+// end of [array_v]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;型 T, アドレス L, 整数 N が与えられた時、<FONT
+COLOR="RED"
+>array_v(T, L, N)</FONT
+>
+は型 T の N 個の要素を保存する L からはじまる配列の view です。
+すぐに予想できることですが、
+配列をアクセスしたり更新する関数テンプレートは次のインターフェイスで与えられます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3603"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} arrget{l:addr}{n,i:nat | i &#60; n}
+  (pf: !array_v (a, l, n) | p: ptr l, i: int i): a
+// end of [arrget] // end of [fun]
+
+fun{
+a:t@ype
+} arrset{l:addr}{n,i:nat | i &#60; n}
+  (pf: !array_v (a, l, n) | p: ptr l, i: int i, x: a): void
+// end of [arrset] // end of [fun]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>arrget</FONT
+> と <FONT
+COLOR="RED"
+>arrset</FONT
+>
+を実装する前に、空でない配列の最初の要素にアクセスする関数テンプレートを実装する次のコードを紹介します:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3608"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} arrgetfst{l:addr}{n:pos}
+(
+  pf: !array_v (a, l, n) | p: ptr l
+) : a = x where {
+  prval array_v_cons (pf1, pf2) = pf
+  // pf1: a @ l; pf2: array_v (a, l+sizeof(a), n-1)
+  val x = !p
+  prval () = pf := array_v_cons (pf1, pf2)
+} // end of [arrgetfst]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;明らかに、関数テンプレート <FONT
+COLOR="RED"
+>arrget</FONT
+> は <FONT
+COLOR="RED"
+>arrgetfst</FONT
+> を用いて実装することができます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3613"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+arrget (pf | p, i) =
+  if i &#62; 0 then let
+    prval array_v_cons (pf1, pf2) = pf
+    val x = arrget (pf2 | ptr_succ&#60;a&#62; (p), i-1)
+    prval () = pf := array_v_cons (pf1, pf2)
+  in
+    x
+  end else
+    arrgetfst (pf | p)
+  // end of [if]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;これは末尾再帰的な実装で時間的計算量は O(n) です。
+けれども、配列の重要なメリットは O(1) の時間でアクセスと更新操作ができることにあります。
+(実行時のコストなしに) view の変更をサポートするような証明関数をコンストラクトする必要性に気づき、私は最初にそのような即時的な操作を実装することに注力しました。
+
+</P
+><P
+>&#13;明確に、型 T の N 個の要素を保存する L から開始する配列は2つの方法で考えることができます:
+一つは I 個の要素が L から保管されている考える方法で、もう一つは N-I 個の要素が L+I*sizeof(T)
+から保管されていると考える方法です。このとき I は N 以下の自然数です。
+形式的には、この文は証明関数 <FONT
+COLOR="RED"
+>array_v_split</FONT
+> の型にエンコードできます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3618"
+></A
+><PRE
+CLASS="programlisting"
+>prfun
+array_v_split
+  {a:t@ype}
+  {l:addr}{n,i:nat | i &#60;= n}
+(
+  pfarr: array_v (a, l, n)
+) : (array_v (a, l, i), array_v (a, l+i*sizeof(a), n-i))
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;上記の文のもう一方は証明関数 <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> の型にエンコードできます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3622"
+></A
+><PRE
+CLASS="programlisting"
+>prfun
+array_v_unsplit
+  {a:t@ype}
+  {l:addr}{n1,n2:nat}
+(
+  pf1arr: array_v (a, l, n1), pf2arr: array_v (a, l+n1*sizeof(a), n2)
+) : array_v (a, l, n1+n2)
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>array_v_split</FONT
+> と <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> を使って、
+O(1) 時間の <FONT
+COLOR="RED"
+>arrget</FONT
+> と <FONT
+COLOR="RED"
+>arrset</FONT
+> をたやすく実装することができます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3629"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+arrget{l}{n,i}
+  (pf | p, i) = x where {
+  prval (pf1, pf2) = array_v_split{a}{l}{n,i}(pf)
+  prval array_v_cons (pf21, pf22) = pf2
+  val x = ptr_get1&#60;a&#62; (pf21 | ptr_add&#60;a&#62; (p, i))
+  prval pf2 = array_v_cons (pf21, pf22)
+  prval () = pf := array_v_unsplit{a}{l}{i,n-i}(pf1, pf2)
+} (* end of [arrget] *)
+
+implement
+{a}(*tmp*)
+arrset{l}{n,i}
+  (pf | p, i, x) = () where {
+  prval (pf1, pf2) = array_v_split{a}{l}{n,i}(pf)
+  prval array_v_cons (pf21, pf22) = pf2
+  val () = ptr_set1&#60;a&#62; (pf21 | ptr_add&#60;a&#62; (p, i), x)
+  prval pf2 = array_v_cons (pf21, pf22)
+  prval () = pf := array_v_unsplit{a}{l}{i,n-i}(pf1, pf2)
+} (* end of [arrset] *)
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;もちろん、証明関数 <FONT
+COLOR="RED"
+>array_v_split</FONT
+> と <FONT
+COLOR="RED"
+>array_v_split</FONT
+> はまだ実装されていません。
+これは、view の変更に関するトピックを紹介するときに説明します。
+
+</P
+><P
+>&#13;型 T, アドレス L, 自然数 N が与えられた時、
+view <FONT
+COLOR="RED"
+>array_v(T?, L, N)</FONT
+> の証明は関数 <FONT
+COLOR="RED"
+>malloc</FONT
+> と <FONT
+COLOR="RED"
+>free</FONT
+>
+をそれぞれ使って獲得と解放をすることができます。
+これについては別の章で詳細を解説します。
+ここで、次のような配列を初期化する関数テンプレートの実装を見てみましょう:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3638"
+></A
+><PRE
+CLASS="programlisting"
+>typedef natLt (n:int) = [i:nat | i &#60; n] int (i)
+
+fun{a:t@ype}
+array_ptr_tabulate
+  {l:addr}{n:nat}
+(
+  pf: !array_v (a?,l,n) &#62;&#62; array_v (a,l,n)
+| p: ptr (l), n: int (n), f: natLt(n) -&#60;cloref1&#62; a
+) : void = let
+  fun loop{l:addr}
+    {i:nat | i &#60;= n} .&#60;n-i&#62;.
+  (
+    pf: !array_v (a?,l,n-i) &#62;&#62; array_v (a,l,n-i)
+  | p: ptr l, n: int n, f: natLt(n) -&#60;cloref1&#62; a, i: int i
+  ) : void =
+    if i &#60; n then let
+      prval array_v_cons (pf1, pf2) = pf
+      val () = !p := f (i)
+      val () = loop (pf2 | ptr_succ&#60;a&#62; (p), n, f, i+1)
+    in
+      pf := array_v_cons (pf1, pf2)
+    end else let
+      prval array_v_nil () = pf in pf := array_v_nil {a} ()
+    end // end of [if]
+  // end of [loop]
+in
+  loop (pf | p, n, f, 0)
+end // end of [array_ptr_tabulate]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;自然数 n が与えられた時、型 <FONT
+COLOR="RED"
+>natLt(n)</FONT
+> は n より小さい全ての自然数です。
+型 T が与えられた時、関数 <FONT
+COLOR="RED"
+>array_ptr_tabulate&#60;T&#62;</FONT
+> は未初期化配列へのポインタ、
+その配列のサイズ、そして型 T の値に n より小さい自然数それぞれをマップする関数 f を取ります。
+そしてこの関数は配列を f(0), f(1), ..., f(n-1) の値のシーケンスで初期化します。
+言い方をかえると、初期化が終わるとこの配列は与えられた関数 f の表を保存していることになります。
+
+</P
+><P
+>&#13;型 T と自然数 N が与えられた時、@[T][N] は ATS のビルトイン型で 型 T の N 個連続した値を表わします。
+したがって、与えられたアドレス L について at-view @[T][N]@L は配列 view <FONT
+COLOR="RED"
+>array_v(T, L, N)</FONT
+>
+と等価です。
+参照渡しの機能を使えば、以前示した関数 <FONT
+COLOR="RED"
+>arrget</FONT
+> と <FONT
+COLOR="RED"
+>arrset</FONT
+>
+に次のインターフェイスを割り当てることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3647"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} arrget {n,i:nat | i &#60; n} (A: &#38;(@[a][n]), i: int i): a
+
+fun{
+a:t@ype
+} arrset {n,i:nat | i &#60; n} (A: &#38;(@[a][n]), i: int i, x: a): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+配列引数が配置された場所を明示的に示す必要がないので、これらのインターフェイスはより簡潔です。
+
+</P
+><P
+>&#13;上記で紹介したコードの全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/array.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3550.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3651.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>分離 view</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3527.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Dataview for Linear Strings</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

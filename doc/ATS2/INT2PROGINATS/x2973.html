@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Commutativity of Multiplication</TITLE
+>例: 乗法の交換法則</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="例: 乗法の分配法則"
 HREF="x2958.html"><LINK
 REL="NEXT"
-TITLE="代数的 datasort"
+TITLE="代数的なデータ種 (datasort)"
 HREF="x2990.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,11 +78,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="example_commutativity_of_multiplication"
->Example: Commutativity of Multiplication</A
+>例: 乗法の交換法則</A
 ></H1
 ><P
->The commutativity of multiplication means that the following equation
-holds
+>乗法の交換法則は次の等式を意味しています:
 
 <DIV
 CLASS="informalexample"
@@ -100,8 +99,7 @@ CLASS="programlisting"
 >
 
 
-for m and n ranging over integers. A direct encoding of this equation
-is given by the following (proof) function interface:
+このとき m と n は整数の範囲を持ちます。この等式を直接エンコードすると次のような (証明の) 関数インターフェイスが得られます:
 
 <DIV
 CLASS="informalexample"
@@ -123,10 +121,10 @@ mul_commute{m,n:int}{p:int}(MUL(m, n, p)): MUL(n, m, p)
 >
 
 
-An implementation of <FONT
+<FONT
 COLOR="RED"
 >mul_commute</FONT
-> is given as follows:
+> の実装は次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -173,7 +171,7 @@ end // end of [mul_commute]
 >
 
 
-where the following proof functions are called:
+このとき、次の証明関数が使われています:
 
 <DIV
 CLASS="informalexample"
@@ -202,12 +200,10 @@ mul_neg_2
 >
 
 
-The inner function <FONT
+内部の関数 <FONT
 COLOR="RED"
 >auxnat</FONT
-> encodes a straighforward
-proof based on mathematical induction that establishes the following
-equation:
+> は次の等式を満たす数学的帰納法の証明を素直にエンコードしています:
 
 <DIV
 CLASS="informalexample"
@@ -225,15 +221,13 @@ CLASS="programlisting"
 >
 
 
-for m ranging over natural numbers and n ranging over integers.
-The function <FONT
+このとき m は自然数の範囲を、n は整数の範囲を取ります。関数 <FONT
 COLOR="RED"
 >mul_commute</FONT
-> can then be implemented immediately
-based on <FONT
+> は <FONT
 COLOR="RED"
 >auxnat</FONT
->.</P
+> を使ってすぐに実装できるでしょう。</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -293,7 +287,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->代数的 datasort</TD
+>代数的なデータ種 (datasort)</TD
 ></TR
 ></TABLE
 ></DIV

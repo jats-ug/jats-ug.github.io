@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->全域関数として証明をコンストラクトする</TITLE
+>全域関数を使って証明を組み立てる</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -78,11 +78,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="constructing_proofs_as_total_functions"
->全域関数として証明をコンストラクトする</A
+>全域関数を使って証明を組み立てる</A
 ></H1
 ><P
->ATS/LF では、定理は型 (もしくはより正確に証明) によって表現されます。
-例えば、次の証明は整数の乗法が可換であると言っています:
+>ATS/LF では、定理は型 (もしくはより正確に命題) によって表現されます。
+例えば、次の命題は整数の乗法が可換であると言っています:
 
 <DIV
 CLASS="informalexample"
@@ -101,7 +101,7 @@ CLASS="programlisting"
 >
 
 
-ATS/LF において定理の証明をコンストラクトすることは、ATS/LF
+ATS/LF において定理に対する証明をコンストラクトすることは、ATS/LF
 内にエンコーディングされた定理である型の全域値 (ほぼ全域関数になるでしょう) を実装することを意味します。
 ここでの全域とは純粋で停止することを意味しています。
 このスタイルの定理証明はまだ体験していない人にはやや風変わりに見えるかもしれません。
@@ -133,7 +133,7 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >mul_istot</FONT
-> は次の型 (より正確には証明) で宣言されていることに注意してください:
+> は次の型 (より正確には命題) で宣言されていることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -173,13 +173,15 @@ NAME="AEN2918"
 ><PRE
 CLASS="programlisting"
 >primplement
-mul_istot {m,n} () = let
-  prfun istot
-    {m:nat;n:int} .&#60;m&#62;. (): [p:int] MUL (m, n, p) =
-    sif m &#62; 0 then MULind (istot {m-1,n} ()) else MULbas ()
-  // end of [istot]
+mul_istot{m,n}() = let
+//
+prfun istot
+  {m:nat;n:int} .&#60;m&#62;. (): [p:int] MUL(m, n, p) =
+  sif m &#62; 0 then MULind(istot{m-1,n}()) else MULbas()
+// end of [istot]
+//
 in
-  sif m &#62;= 0 then istot {m,n} () else MULneg (istot {~m,n} ())
+  sif m &#62;= 0 then istot{m,n}() else MULneg(istot{~m,n}())
 end // end of [mul_istot]  
 </PRE
 ><P
@@ -225,7 +227,7 @@ COLOR="RED"
 COLOR="RED"
 >istot</FONT
 > で 証明された補題が m, n, p が関係していることを示しています;
-もし m が負の数なら、同じ補題がなんらかの整数 p1 について ~m, n, p1 が関係しているこを示していて、したがって
+もし m が負の数なら、同じ補題がなんらかの整数 p1 について ~m, n, p1 が関係していることを示していて、したがって
 m, n, p は関係していて <FONT
 COLOR="RED"
 >MULneg</FONT
@@ -250,27 +252,27 @@ CLASS="programlisting"
 >prfn mul_isfun
   {m,n:int}{p1,p2:int}
 (
-  pf1: MUL (m, n, p1), pf2: MUL (m, n, p2)
+  pf1: MUL(m, n, p1), pf2: MUL(m, n, p2)
 ) : [p1==p2] void = let
   prfun isfun
     {m:nat;n:int}{p1,p2:int} .&#60;m&#62;.
   (
-    pf1: MUL (m, n, p1), pf2: MUL (m, n, p2)
+    pf1: MUL(m, n, p1), pf2: MUL(m, n, p2)
   ) : [p1==p2] void =
     case+ pf1 of
-    | MULind (pf1prev) =&#62; let
-        prval MULind (pf2prev) = pf2 in isfun (pf1prev, pf2prev)
+    | MULind(pf1prev) =&#62; let
+        prval MULind(pf2prev) = pf2 in isfun (pf1prev, pf2prev)
       end // end of [MULind]
-    | MULbas () =&#62; let
-        prval MULbas () = pf2 in ()
+    | MULbas() =&#62; let
+        prval MULbas() = pf2 in ()
       end // end of [MULbas]
   // end of [isfun]
 in
   case+ pf1 of
-  | MULneg (pf1nat) =&#62; let
-      prval MULneg (pf2nat) = pf2 in isfun (pf1nat, pf2nat)
+  | MULneg(pf1nat) =&#62; let
+      prval MULneg(pf2nat) = pf2 in isfun (pf1nat, pf2nat)
     end // end of [MULneg]
-  | _ =&#62;&#62; isfun (pf1, pf2)
+  | _ (*non-MULneg*) =&#62;&#62; isfun (pf1, pf2)
 end // end of [mul_isfun]
 </PRE
 ><P
@@ -286,7 +288,7 @@ COLOR="RED"
 またキーワード <FONT
 COLOR="RED"
 >prval</FONT
-> は証明の式、つまり prop 型の式、に関連する名前を束縛します。
+> は証明の式、つまり命題型の式に関連する名前を束縛します。
 網羅的なパターンマッチの範囲では、<FONT
 COLOR="RED"
 >prval</FONT
@@ -294,7 +296,7 @@ COLOR="RED"
 COLOR="RED"
 >val+</FONT
 > と等価です
-(証明はパターンマッチの失敗のような効果を含むことができません)。
+(証明はパターンマッチの失敗のような作用を含むことができません)。
 </P
 ><P
 >&#13;<FONT
@@ -312,10 +314,10 @@ COLOR="RED"
 >MUL</FONT
 >
 によって関係しているなら、p1 と p2 は等しくなります。
-この文は、m が自然数であるという仮定で内部の証明関数 <FONT
+これは、m が自然数であるという仮定で内部の証明関数 <FONT
 COLOR="RED"
 >isfun</FONT
-> によって1番目に証明されます。
+> によって最初に証明されます。
 そしてその後この仮定は破棄されます。
 ここで <FONT
 COLOR="RED"

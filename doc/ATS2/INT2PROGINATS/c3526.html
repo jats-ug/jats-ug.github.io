@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->線形な dataprop としての dataview</TITLE
+>線形なデータ命題としてのデータ観 (dataview)</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -78,7 +78,7 @@ CLASS="chapter"
 ><A
 NAME="dataviews"
 ></A
->Chapter 14. 線形な dataprop としての dataview</H1
+>Chapter 14. 線形なデータ命題としてのデータ観 (dataview)</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -89,7 +89,7 @@ CLASS="TOC"
 ><DT
 ><A
 HREF="c3526.html#optional_views"
->選択 view</A
+>オプショナル観</A
 ></DT
 ><DT
 ><A
@@ -122,11 +122,10 @@ HREF="x3708.html"
 >&#13;型 T とアドレス L について <FONT
 COLOR="RED"
 >T@L</FONT
-> をなす at-view は他の形の view
-をコンストラクトするブロックを形成します。
-そのような形成されたブロックを一緒に配置するメカニズムは dataview として宣言されます
-大部分においてそれは dataprop の宣言と同じです。
-この章ではいくつかの一般な dataview とその使い方を紹介します。
+> をなす駐観 (at-view) は他の形の観をコンストラクトするブロックを形成します。
+そのような形成されたブロックを一緒に配置するメカニズムはデータ観 (dataview) として宣言されます。
+大部分においてそれはデータ命題 (dataprop) の宣言と同じです。
+この章ではいくつかの一般なデータ観とその使い方を紹介します。
 
 </P
 ><P
@@ -145,10 +144,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="optional_views"
->選択 view</A
+>オプショナル観</A
 ></H1
 ><P
->&#13;dataview <FONT
+>&#13;データ観 <FONT
 COLOR="RED"
 >option_v</FONT
 > は次のように宣言されます:
@@ -171,7 +170,7 @@ CLASS="programlisting"
 >
 
 
-この宣言は dataview <FONT
+この宣言はデータ観 <FONT
 COLOR="RED"
 >option_v</FONT
 > が1番目の引数に対して共変で、
@@ -182,23 +181,22 @@ COLOR="RED"
 COLOR="RED"
 >None_v</FONT
 > があることを示しています。
-view V が与えられ、b がブールの時、<FONT
+観 V が与えられ、b がブールの時、<FONT
 COLOR="RED"
 >option_v(V, b)</FONT
-> はしばしば選択 view (optional view)
+> はしばしばオプショナル観 (optional view)
 と呼ばれます。
-明確に view <FONT
+明確に観 <FONT
 COLOR="RED"
 >option_v(V, true)</FONT
-> の証明は view V の証明を含んでいますが、
-証明 view <FONT
+> の証明は観 V の証明を含んでいますが、観 <FONT
 COLOR="RED"
 >option_v(V, false)</FONT
-> は何も含んでいません。
+> の証明は何も含んでいません。
 
 </P
 ><P
->&#13;例として、次の関数インターフェイスは選択 view の典型的な使用例です:
+>&#13;例として、次の関数インターフェイスはオプショナル観の典型的な使用例です:
 
 <DIV
 CLASS="informalexample"
@@ -222,13 +220,13 @@ ptr_alloc_opt (): [l:addr] (option_v (a? @ l, l &#62; null) | ptr l)
 関数 <FONT
 COLOR="RED"
 >ptr_alloc_opt&#60;T&#62;</FONT
-> は選択 view の証明とポインタのペアを返します;
+> はオプショナル観の証明とポインタのペアを返します;
 もし返されたポインタが NULL でなければ、
-ポインタが指す場所 L についてその証明は view <FONT
+ポインタが指す場所 L についてその証明は観 <FONT
 COLOR="RED"
 >T?@L</FONT
 > の証明に成ることができます;
-そうでなければ、返されたポインタに関連する at-view は含まれません。
+そうでなければ、返されたポインタに関連する駐観は含まれません。
 
 </P
 ></DIV
