@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->片方向リストの dataview</TITLE
+>片方向リストのデータ観</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="線形なデータ命題としてのデータ観 (dataview)"
 HREF="c3526.html"><LINK
 REL="PREVIOUS"
-TITLE="Dataview for Linear Strings"
+TITLE="線形文字列のデータ観"
 HREF="x3650.html"><LINK
 REL="NEXT"
-TITLE="view 変更のための証明関数"
+TITLE="観変化のための証明関数"
 HREF="x3708.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,10 +78,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="singly-linked_lists"
->片方向リストの dataview</A
+>片方向リストのデータ観</A
 ></H1
 ><P
->&#13;次の dataview <FONT
+>&#13;次のデータ観 <FONT
 COLOR="RED"
 >slseg_v</FONT
 > は片方向リストの部分の概念を捕捉しています:
@@ -151,8 +151,7 @@ slseg_v_cons :
 COLOR="RED"
 >agz</FONT
 > は NULL ではないアドレスのサブセット種であることに注意してください。
-型 T, 2つのアドレス L1 と L2, 自然数 N が与えられた時、
-view <FONT
+型 T, 2つのアドレス L1 と L2, 自然数 N が与えられた時、観 <FONT
 COLOR="RED"
 >slseg_v(T, L1, L2, N)</FONT
 > は L1 からはじまり L2 で終わるような型 T の N
@@ -177,11 +176,10 @@ CLASS="programlisting"
 ></P
 ></DIV
 ><P
->&#13;型 T が与えられた時、L を指すポインタと自然数 N について view <FONT
+>&#13;型 T が与えられた時、L を指すポインタと自然数 N について観 <FONT
 COLOR="RED"
 >slist_v(T, L, N)</FONT
-> の証明は、
-C言語において次に宣言された構造体型 <FONT
+> の証明は、C言語において次に宣言された構造体型 <FONT
 COLOR="RED"
 >slist_struct</FONT
 > へのポインタと本質的に同じです:
@@ -506,16 +504,16 @@ slist_ptr_reverse
 ></P
 ></DIV
 ><P
->&#13;ここで宣言した dataview <FONT
+>&#13;ここで宣言したデータ観 <FONT
 COLOR="RED"
 >slseg_v</FONT
 >
 はリストのノードを確保/解放する問題に対処していないことを指摘しておこうと思います。
 これは複雑な表現を避けることを意図しています。
-確保と解放を扱うような片方向リストの dataview もまた ATS で宣言することができます。
-しかし dataviewtype で宣言することでそのようなリストをより使い易くすることができます。
-けれども、dataview は根本的に dataviewtype よりも一般的で柔軟です。
-多くの一般的なデータ構造 (例: 双方向リスト) は ATS において dataview を用いてのみ適切に取り扱うことができます。
+確保と解放を扱うような片方向リストのデータ観もまた ATS で宣言することができます。
+しかしデータ観型 (dataviewtype) で宣言することでそのようなリストをより使い易くすることができます。
+けれども、データ観は根本的にデータ観型よりも一般的で柔軟です。
+多くの一般的なデータ構造 (例: 双方向リスト) は ATS においてデータ観を用いてのみ適切に取り扱うことができます。
 
 </P
 ></DIV
@@ -563,7 +561,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Dataview for Linear Strings</TD
+>線形文字列のデータ観</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -577,7 +575,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->view 変更のための証明関数</TD
+>観変化のための証明関数</TD
 ></TR
 ></TABLE
 ></DIV

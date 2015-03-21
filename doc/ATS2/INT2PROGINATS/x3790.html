@@ -11,10 +11,10 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="線形 datatype としての dataviewtype"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
 HREF="c3761.html"><LINK
 REL="PREVIOUS"
-TITLE="線形 datatype としての dataviewtype"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
 HREF="c3761.html"><LINK
 REL="NEXT"
 TITLE="例: 線形リストのマージソート"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 15. 線形 datatype としての dataviewtype</TD
+>Chapter 15. 線形データ型としてのデータ観型 (dataviewtype)</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -81,12 +81,12 @@ NAME="linear_lists"
 >線形リスト</A
 ></H1
 ><P
->&#13;線形リストは dataview <FONT
+>&#13;線形リストはデータ観 <FONT
 COLOR="RED"
 >slist_v</FONT
 > で表現された片方向リストと本質的に同じです。
 けれども、以前の実装ではできなかったリストノードのメモリ確保と解放が可能になります。
-次の宣言は線形 datatype <FONT
+次の宣言は線形データ型 <FONT
 COLOR="RED"
 >list_vt</FONT
 > を導入しています。
@@ -125,7 +125,7 @@ COLOR="RED"
 
 </P
 ><P
->&#13;ある dataviewtype に関連する <SPAN
+>&#13;あるデータ観型に関連する <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
@@ -138,23 +138,23 @@ CLASS="emphasis"
 CLASS="emphasis"
 >foo</I
 ></SPAN
-> のアリティのとき、n+1 個のアドレスを取り viewtype を作るような、一致する
+> のアリティのとき、n+1 個のアドレスを取り観型 (viewtype) を作るような、一致する
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
 >foo_unfold</I
 ></SPAN
-> という名前の viewtype コンストラクタがあります。
-例えば、viewtype コンストラクタ <FONT
+> という名前の観型コンストラクタがあります。
+例えば、観型コンストラクタ <FONT
 COLOR="RED"
 >list_vt_cons_unfold</FONT
 > は3つのアドレス L0, L1, L2
-を取り、viewtype <FONT
+を取り、観型 <FONT
 COLOR="RED"
 >list_vt_cons_unfold(L0, L1, L2)</FONT
 > を作ります。
-この viewtype は、リストノードが L0 に配置されていて、<FONT
+この観型は、リストノードが L0 に配置されていて、<FONT
 COLOR="RED"
 >list_vt_cons</FONT
 > の2つの引数が L1 と L2
@@ -162,7 +162,7 @@ COLOR="RED"
 COLOR="RED"
 >list_vt_cons</FONT
 > を呼び出して作られたリストノードを表わします。
-このとき L1 と L2 に関連する at-view の証明は現在有効な証明として保管されます。
+このとき L1 と L2 に関連する駐観の証明は現在有効な証明として保管されます。
 
 </P
 ><P
@@ -258,7 +258,7 @@ COLOR="RED"
 ><P
 >&#13;リストノードに保管された中身を修正したくなったとしましょう。
 例えば、線形の整数リストに保管されているそれぞれの整数の値を2倍したいかもしれません。
-次のコードは、このようなことを行なうたに <FONT
+次のコードは、このようなことを行なう <FONT
 COLOR="RED"
 >list_vt_2x</FONT
 > という名前の関数を実装しています:
@@ -358,7 +358,7 @@ COLOR="RED"
 > は <FONT
 COLOR="RED"
 >xs</FONT
-> に対して呼び出され、それを畳み込むと同時に L1 と L2 に付属した at-view の証明を線形リストにします。
+> に対して呼び出され、それを畳み込むと同時に L1 と L2 に付属した駐観の証明を線形リストにします。
 
 </P
 ><P
@@ -447,7 +447,7 @@ COLOR="RED"
 
 </P
 ><P
->&#13;変数が dataviewtype に関連するコンストラクタで作られたパターンにマッチした後に、線形変数はそのまま残して
+>&#13;変数がデータ観型に関連するコンストラクタで作られたパターンにマッチした後に、線形変数はそのまま残して
 (またはスケルトンとも呼ばれます)
 ノードを明示的に解放するために特殊関数 <FONT
 COLOR="RED"
@@ -551,11 +551,10 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >free@{a}{0}(xs)</FONT
-> 呼び出しを型検査すると at-view <FONT
+> 呼び出しを型検査すると駐観 <FONT
 COLOR="RED"
 >a?@L1</FONT
-> と
-at-view <FONT
+> と駐観 <FONT
 COLOR="RED"
 >list_vt(a, 0)?@L2</FONT
 > の証明を暗黙的に消費します。
@@ -636,12 +635,12 @@ COLOR="RED"
 COLOR="RED"
 >revapp</FONT
 > は末尾再帰であることに注意してください。
-線形リストの逆順のこの実装は、以前示した dataview <FONT
+線形リストの逆順のこの実装は、以前示したデータ観 <FONT
 COLOR="RED"
 >slseg_v</FONT
 > (これは片方向リストでした)
 を使った実装に直接対応しています。
-これら2つの実装を比較すると、dataviewtype を使った実装は型レベルで著しく単純化されています。
+これら2つの実装を比較すると、データ観型を使った実装は型レベルで著しく単純化されています。
 例えば、関数 <FONT
 COLOR="RED"
 >reverse</FONT
@@ -744,12 +743,11 @@ COLOR="RED"
 
 </P
 ><P
->&#13;リスト連結のこの実装は、以前紹介した dataview <FONT
+>&#13;リスト連結のこの実装は、以前紹介したデータ観 <FONT
 COLOR="RED"
 >slseg_v</FONT
 > を用いた実装と本質的に一致しています。
-これら2つの比較すると、上記の実装がはるかに単純できれいで、dataview に対する dataviewtype
-の利点を具体的に立証していることがわかるでしょう。
+これら2つの比較すると、上記の実装がはるかに単純できれいで、データ観に対するデータ観型の利点を具体的に立証していることがわかるでしょう。
 
 </P
 ><P
@@ -854,10 +852,10 @@ COLOR="RED"
 COLOR="RED"
 >list_cons(L0, L1, L2)</FONT
 > が割り当てられています。
-このとき、at-view <FONT
+このとき、駐観 <FONT
 COLOR="RED"
 >a@L1</FONT
-> と at-view <FONT
+> と駐観 <FONT
 COLOR="RED"
 >list(a, 0)?@L2</FONT
 > の証明が現在有効な証明として保存されます。
@@ -909,11 +907,10 @@ NAME="linear-list-summary"
 >要約</A
 ></H2
 ><P
->&#13;datatype に関連付けれられているパターンマッチの利便性を、dataviewtype
-を用いて明示的なメモリ管理をサポートする際にも享受することができました。
-dataview と比較すると dataviewtype は一般的ではありません。
-けれども、もし dataviewtype を用いて問題を解決できれば、
-その解決策は dataview を用いた時よりしばしばきわめて単純できれいになります。
+>&#13;データ型に関連付けれられているパターンマッチの利便性を、データ観型を用いて明示的なメモリ管理をサポートする際にも享受することができました。
+データ観と比較するとデータ観型は一般的ではありません。
+けれども、もしデータ観型を用いて問題を解決できれば、
+その解決策はデータ観を用いた時よりしばしばきわめて単純できれいになります。
 
 </P
 ></DIV
@@ -962,7 +959,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->線形 datatype としての dataviewtype</TD
+>線形データ型としてのデータ観型 (dataviewtype)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

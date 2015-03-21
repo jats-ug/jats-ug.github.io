@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Array-Based Circular Buffers</TITLE
+>ロックとアンロック</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,14 +11,14 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="抽象 view と viewtype"
+TITLE="抽象観と観型 (viewtype)"
 HREF="c4136.html"><LINK
 REL="PREVIOUS"
-TITLE="メモリの確保と解放"
-HREF="x4225.html"><LINK
+TITLE="例: 配列を用いたリングバッファ"
+HREF="x4252.html"><LINK
 REL="NEXT"
-TITLE="Locking and Unlocking"
-HREF="x4326.html"><LINK
+TITLE="非同期 IPC のための線形チャネル"
+HREF="x4337.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x4225.html"
+HREF="x4252.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -57,13 +57,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 16. 抽象 view と viewtype</TD
+>Chapter 16. 抽象観と観型 (viewtype)</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x4326.html"
+HREF="x4337.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -77,33 +77,30 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="array-based-circular-buffers"
->Example: Array-Based Circular Buffers</A
+NAME="locking-and-unlocking"
+>ロックとアンロック</A
 ></H1
 ><P
->&#13;Array-based circular buffers are of common use in practice. For instance,
-in a typical client/server model, a circular buffer can be employed to hold
-requests issued by multiple clients that are then processed by the server
-according to the first-in-first-out (FIFO) policy. In a case where each
-request needs to be given a priority (chosen from a fixed set), a circular
-buffer can be created for each priority to hold requests of that particular
-priority.
+>&#13;並行プログラミングでは、共有リソースに対する安全なロックとアンロックは本質的で意欲的な課題です。
+この章では、線形型がこの課題を解決するのに有効であることを具体的に説明します。
+
 </P
 ><P
->&#13;Let us declare a linear abstract type (that is, abstract viewtype) as
-follows for values representing circular buffers:
+>&#13;はじめに、次のような線形抽象型 <FONT
+COLOR="RED"
+>shared</FONT
+> を導入しましょう:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4293"
+NAME="AEN4294"
 ></A
 ><PRE
 CLASS="programlisting"
->absvtype
-cbufObj (a:vt@ype+, m:int, n: int) = ptr
+>absvtype shared(a:vtype) = ptr
 </PRE
 ><P
 ></P
@@ -111,22 +108,14 @@ cbufObj (a:vt@ype+, m:int, n: int) = ptr
 >
 
 
-Such values are considered simple linear objects (as inheritance is not an
-issue to be dealt with in this setting). Given a viewtype VT and two
-integers M and N, the viewtype <FONT
+(なんらかのリソースに対する) 観型 VT が与えられたとき、型 <FONT
 COLOR="RED"
->cbufObj(VT, M, N)</FONT
-> is for a given
-buffer of maximal capacity M that currently holds N elements of the type
-VT.
-
-</P
-><P
->&#13;Some properties on the parameters of <FONT
+>shared(VT)</FONT
+> の値は、本質的に、型 VT のリソースとなんらかのロックを含んだボックス化レコードです。
+リソースを共有リソースにするために、次のような関数 <FONT
 COLOR="RED"
->cbufObj</FONT
-> can be captured
-by introducing the following proof function:
+>shared_make</FONT
+> が呼ばれます。
 
 <DIV
 CLASS="informalexample"
@@ -137,12 +126,7 @@ NAME="AEN4298"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-prfun
-lemma_cbufObj_param
-  {a:vt0p}{m,n:int}
-  (buf: !cbufObj(a, m, n)): [m&#62;=n; n&#62;=0] void
-//
+>fun shared_make{a:vtype}(x: a): shared(a)  
 </PRE
 ><P
 ></P
@@ -150,26 +134,66 @@ lemma_cbufObj_param
 >
 
 
-The interface for the following two function templates indicates that they
-can be called to compute the capacity and current size of a buffer:
+型 <FONT
+COLOR="RED"
+>shared(VT)</FONT
+> それ自身が線形であることに注意してください。
+実装では、スピンロックで保護された線形共有リソースにはリファレンスカウントが内在しています。
+関数 <FONT
+COLOR="RED"
+>shared_ref</FONT
+> と <FONT
+COLOR="RED"
+>shared_unref</FONT
+> は共有リソース内のリファレンスカウントを増減させます:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4300"
+NAME="AEN4303"
+></A
+><PRE
+CLASS="programlisting"
+>fun shared_ref{a:vtype}(!shared(a)): shared(a)
+fun shared_unref{a:vtype}(shared(a)): Option_vt(a)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+もし共有リソースのリファレンスカウントが 1 であったら、その共有リソースへの <FONT
+COLOR="RED"
+>shared_unref</FONT
+> 呼び出しはそれらの表現で使われていたメモリを解放し、その共有リソースに保存されていたリソースを返します。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>shared_lock</FONT
+> は与えられた共有リソースからリソースを獲得し、関数 <FONT
+COLOR="RED"
+>shared_unlock</FONT
+> はその反対です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4309"
 ></A
 ><PRE
 CLASS="programlisting"
 >//
-fun{a:vt0p}
-cbufObj_get_cap
-  {m,n:int} (buf: !cbufObj(a, m, n)): size_t(m)
+absview locked_v
 //
-fun{a:vt0p}
-cbufObj_get_size
-  {m,n:int}(buf: !cbufObj(a, m, n)): size_t(n)
+fun shared_lock{a:vtype}(!shared(a)): (locked_v | a)
+fun shared_unlock{a:vtype}(locked_v | !shared(a), x: a): void
 //
 </PRE
 ><P
@@ -178,200 +202,254 @@ cbufObj_get_size
 >
 
 
+抽象観 <FONT
+COLOR="RED"
+>locked_v</FONT
+> が線形証明として導入されていることに注意してください。この線形証明は共有リソースは獲得の後に解放しなければならないことを、プログラマに気付かせます。
+
 </P
 ><P
->&#13;While it is straightforward to use <FONT
+>&#13;予想できることですが共有リソースは、スピンロック、リファレンスカウントと (保管されたリソースを差す) ポインタから成る、ボックス化タプルとして実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4313"
+></A
+><PRE
+CLASS="programlisting"
+>//
+datavtype
+shared_ (a:vtype) =
+  SHARED of (spin1_vt(*lock*), int(*count*), ptr)
+//
+assume shared = shared_
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+型 <FONT
 COLOR="RED"
->cbufObj_get_cap</FONT
-> and
+>spin1_vt</FONT
+> は線形スピンロックを表わすことに注意してください。関数 <FONT
+COLOR="RED"
+>shared_ref</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4317"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+shared_ref
+  {a}(sh) = let
+//
+val+@SHARED
+  (spin, count, _) = sh
+//
+val
+spin = // for temp. use
+  unsafe_spin_vt2t(spin)
+//
+val
+(pf | ()) = spin_lock(spin)
+val c0 = count
+val () = count := c0 + 1
+val ((*void*)) = spin_unlock(pf | spin)
+prval ((*void*)) = fold@sh
+//
+in
+  $UN.castvwtp1{shared(a)}(sh)
+end // end of [shared_ref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この実装が安全でないキャストをいくつか使っていることは明白です。そのようなキャストを使わない実装は可能だとしてもとても複雑になるでしょう。
+そのとき <FONT
+COLOR="RED"
+>c0</FONT
+> と <FONT
+COLOR="RED"
+>count</FONT
+> に保管された整数の間に束縛を作る前にスピンロックを獲得しなければなりません。
+そうでなければレースコーンディションの原因になります。
+関数 <FONT
+COLOR="RED"
+>shared_unref</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4322"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+shared_unref
+  {a}(sh) = let
+//
+val+@SHARED
+  (spin, count, _) = sh
+//
+val
+spin = // for temp. use
+  unsafe_spin_vt2t(spin)
+//
+val
+(pf | ()) = spin_lock(spin)
+val c0 = count
+val () = count := c0 - 1
+val ((*void*)) = spin_unlock(pf | spin)
+prval ((*void*)) = fold@sh
+//
+in
+//
+if
+c0 &#60;= 1
+then let
+  val+~SHARED(spin, _, x) = sh
+  val ((*freed*)) = spin_vt_destroy(spin)
+in
+  Some_vt($UN.castvwtp0{a}(x))
+end // end of [then]
+else let
+  prval () = $UN.cast2void(sh) in None_vt()
+end // end of [else]
+//
+end // end of [shared_unref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+リファレンスカウントが 1 である場合、共有リソースが解放され、その中のスピンロックが破棄され、そして共有リソースの中にあったリソースが返ります。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>shared_lock</FONT
+> と <FONT
+COLOR="RED"
+>shared_unlock</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4327"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+shared_lock
+  {a}(sh) = let
+//
+val+@SHARED(spin, _, x) = sh
+//
+val
+spin =
+  unsafe_spin_vt2t(spin)
+//
+val
+(pf | ()) = spin_lock(spin)
+//
+val x0 = $UN.castvwtp0{a}(x)
+//
+prval () = fold@sh
+//
+in
+  ($UN.castview0(pf) | x0)
+end // end of [shared_lock]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4329"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+shared_unlock
+  {a}(pf | sh, x0) = let
+//
+val+@SHARED(spin, _, x) = sh
+//
+val
+spin =
+  unsafe_spin_vt2t(spin)
+//
+val () = x := $UN.castvwtp0{ptr}(x0)
+//
+val () =
+  spin_unlock($UN.castview0(pf) | spin)
+//
+prval () = fold@sh
+//
+in
+  // nothing
+end // end of [shared_unlock]
+</PRE
+><P
+></P
+></DIV
+>
+
+
 <FONT
 COLOR="RED"
->cbufObj_get_size</FONT
-> to tell whether a buffer is currently empty or
-full, a direct approach is likely to be more efficient. The following two
-function templates check for the emptiness and fullness of a given circular
-buffer:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4305"
-></A
-><PRE
-CLASS="programlisting"
->//
-fun{a:vt0p}
-cbufObj_is_empty
-  {m,n:int}(buf: !cbufObj(a, m, n)): bool(n==0)
-//
-fun{a:vt0p}
-cbufObj_is_full
-  {m,n:int}(buf: !cbufObj(a, m, n)): bool(m==n)
-//
-</PRE
-><P
-></P
-></DIV
->
-
-
-</P
-><P
->&#13;The functions for creating and destroying circular buffers are named
+>shared_lock</FONT
+> において、値 <FONT
+COLOR="RED"
+>x</FONT
+> の中身はスピンロック獲得後に読み出されていることに注目してください。
+これは重要な点で、さもなくばレースコンディションを引き起こします。
 <FONT
 COLOR="RED"
->cbufObj_new</FONT
-> and <FONT
+>shared_unlock</FONT
+> においては、獲得されたスピンロックを解放する前に、値 <FONT
 COLOR="RED"
->cbufObj_free</FONT
->, respectively:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4310"
-></A
-><PRE
-CLASS="programlisting"
->//
-fun{a:vt0p}
-cbufObj_new
-  {m:pos}(m: size_t(m)): cbufObj(a, m, 0)
-//
-fun cbufObj_free
-  {a:vt0p}{m:int}(buf: cbufObj(a, m, 0)): void
-//
-</PRE
-><P
-></P
-></DIV
->
-
-
-Note that a buffer can be freed only if it contains no elements as
-an element (of some viewtype) may contain resources. If elements in
-a buffer are of some (non-linear) type, then the following function
-can be called to clear out all the elements stored in the buffer:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4312"
-></A
-><PRE
-CLASS="programlisting"
->fun
-cbufObj_clear
-  {a:t@ype}{m,n:int}
-  (buf: !cbufObj(a, m, n) &#62;&#62; cbufObj(a, m, 0)): void
-// end of [cbufObj_clear]
-</PRE
-><P
-></P
-></DIV
->
-
-
+>x</FONT
+> の中身を更新しています。
 </P
 ><P
->&#13;The next two functions are for inserting/removing an element into/from a
-given buffer, which are probably the most frequently used operations on
-buffers:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4315"
-></A
-><PRE
-CLASS="programlisting"
->//
-fun{a:vt0p}
-cbufObj_insert
-  {m,n:int | n &#60; m}
-(
-  buf: !cbufObj(a, m, n) &#62;&#62; cbufObj(a, m, n+1), x: a
-) : void // end of [cbufObj_insert]
-//
-fun{a:vt0p}
-cbufObj_remove
-  {m,n:int | n &#62; 0}
-  (buf: !cbufObj(a, m, n) &#62;&#62; cbufObj(a, m, n-1)): (a)
-//
-</PRE
-><P
-></P
-></DIV
+>&#13;この章で紹介したコード全体を含む <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/shared_vt.dats"
+TARGET="_top"
+>shared_vt.dats</A
 >
-
-
-</P
-><P
->&#13;Please find on-line the file
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
->
-containing the entirety of the interface for functions creating, destroying
-and manipulating circular buffers.
-</P
-><P
->&#13;There are many simple and practical ways to implement the abstract type
-<FONT
-COLOR="RED"
->cbufObj</FONT
-> and the functions declared in
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
->.  In the file
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.dats"
-TARGET="_top"
->circbuf.dats</A
->, I give an
-implementation that employs four pointers p_beg, p_end, p_frst and p_last
-to represent a circular buffer: p_beg and p_end are the starting and
-finishing addresses of the underline array, respectively, and p_frst and
-p_last are the starting addresses of the occupied and unoccupied segments
-(in the array), respectively. What is special about this implementation is
-its employing a style of programming that deliberately eschews the need for
-proof construction. While code written in this style is not guaranteed to
-be type-safe, the style can nonetheless be of great practical value in a
-setting where constructing formal proofs is deemed too costly a requirement
-to be fully fulfilled. Anyone who tries to give a type-safe implementation
-for the functions declared in <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
-> should likely find some genuine appreciation for this
-point.
-
-</P
-><P
->&#13;In the file <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf2.dats"
-TARGET="_top"
->circbuf2.dats</A
->, I
-give another implementation in which a circular buffer is represented as a
-pointer p_beg plus three integers m, n and f: p_beg points to the starting
-location of the underline array, m is the size of the array (that is, the
-capacity of the buffer), n is the number of elements currently stored in
-the buffer and f is the total number of elements that have so far been
-removed from the buffer. Again, proof construction is delibrately eschewed
-in this implementation.
-
+ファイルはオンラインから入手できます。
+また、このファイルはロックを保持した動作が: スレッド0が動作し; スレッド1が動作し; スレッド2が動作し; スレッド0が動作し; スレッド1が動作し; スレッド2が動作し; というように動く3つのスレッドの実装も含んでいます。
 </P
 ></DIV
 ><DIV
@@ -390,7 +468,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x4225.html"
+HREF="x4252.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -408,7 +486,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x4326.html"
+HREF="x4337.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -418,7 +496,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->メモリの確保と解放</TD
+>例: 配列を用いたリングバッファ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -432,7 +510,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Locking and Unlocking</TD
+>非同期 IPC のための線形チャネル</TD
 ></TR
 ></TABLE
 ></DIV

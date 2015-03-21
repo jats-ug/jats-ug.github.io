@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->view 変更のための証明関数</TITLE
+>観変化のための証明関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="線形なデータ命題としてのデータ観 (dataview)"
 HREF="c3526.html"><LINK
 REL="PREVIOUS"
-TITLE="片方向リストの dataview"
+TITLE="片方向リストのデータ観"
 HREF="x3654.html"><LINK
 REL="NEXT"
-TITLE="線形 datatype としての dataviewtype"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
 HREF="c3761.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,29 +78,26 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="view-changes"
->view 変更のための証明関数</A
+>観変化のための証明関数</A
 ></H1
 ><P
 >&#13;<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->view 変更 (view-change)</I
+>観変化 (view-change)</I
 ></SPAN
-> という言いまわしは、関数を一連の view の証明に適用してそれらを別の
-view の証明に変換することを意味しています。
-この関数自身も証明関数なので、view 変更それぞれに関連する実行時のコストはありません。
-例えば、
-どこかのアドレス L について at-view int32@L の証明は4つの at-view: int8@L, int8@L+1, int8@L+2, int8@L+3
+> という言いまわしは、関数を一連の観の証明に適用してそれらを別の観の証明に変換することを意味しています。
+この関数自身も証明関数なので、観変化それぞれに関連する実行時のコストはありません。
+例えば、どこかのアドレス L について駐観 int32@L の証明は4つの駐観: int8@L, int8@L+1, int8@L+2, int8@L+3
 からなるタプルに変化できます。
 このとき int32 と int8 はそれぞれ32ビットと8ビット整数の型です。
-しばしばより興味深い view 変更が証明関数としてそれぞれ定義されています。
+より興味深い観変化が証明関数としてそれぞれ定義されています。
 この章の残りではそのようないくつかの例を紹介します。
 
 </P
 ><P
->&#13;配列の添字操作を O(1) 時間で実装するには、1つの配列の view を2つの隣接した配列の view
-に変換する証明関数と、その逆の変換を行なう別の証明関数が必要です。
+>&#13;配列の添字操作を O(1) 時間で実装するには、1つの配列の観を2つの隣接した配列の観に変換する証明関数と、その逆の変換を行なう別の証明関数が必要です。
 形式的に言うと、次の2つの証明関数 <FONT
 COLOR="RED"
 >array_v_split</FONT
@@ -108,7 +105,7 @@ COLOR="RED"
 COLOR="RED"
 >array_v_unsplit</FONT
 >
-をコンストラクトする必要があるのです:
+を作る必要があるのです:
 
 </P
 ><DIV
@@ -246,7 +243,7 @@ COLOR="RED"
 
 </P
 ><P
->&#13;ここで view 変更を行なうより興味深い証明関数を見てみましょう。
+>&#13;ここで観変化を行なうより興味深い証明関数を見てみましょう。
 証明関数 <FONT
 COLOR="RED"
 >array_v_takeout</FONT
@@ -274,7 +271,7 @@ array_v_takeout
 ></P
 ></DIV
 ><P
->&#13;次の型は、at-view の証明を取り配列 view の証明を返すような線形証明関数を表わすことに注意してください:
+>&#13;次の型は、駐観の証明を取り配列観の証明を返すような線形証明関数を表わすことに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -297,8 +294,7 @@ CLASS="programlisting"
 <FONT
 COLOR="RED"
 >array_v_takeout</FONT
-> は配列の view を (1つの要素に対する) at-view と配列の残りを表わす view
-に変更すると、表現することができます。
+> は配列の観を (1つの要素に対する) 駐観と配列の残りを表わす観に変更すると、表現することができます。
 <FONT
 COLOR="RED"
 >array_v_takeout</FONT
@@ -386,8 +382,8 @@ COLOR="RED"
 
 </P
 ><P
->&#13;これまで示してきた view 変更のための証明関数はは全て配列 view の操作でした。
-次のコードはこれらとは異なり、片方向リストを表わす2つの view を1つに結合するものと考えることができます:
+>&#13;これまで示してきた観変化のための証明関数はは全て配列観の操作でした。
+次のコードはこれらとは異なり、片方向リストを表わす2つの観を1つに結合するものと考えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -528,7 +524,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->片方向リストの dataview</TD
+>片方向リストのデータ観</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -542,7 +538,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->線形 datatype としての dataviewtype</TD
+>線形データ型としてのデータ観型 (dataviewtype)</TD
 ></TR
 ></TABLE
 ></DIV

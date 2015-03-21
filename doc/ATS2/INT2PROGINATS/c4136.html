@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->抽象 view と viewtype</TITLE
+>抽象観と観型 (viewtype)</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="線形観と線形型を使ったプログラミング"
 HREF="p3294.html"><LINK
 REL="PREVIOUS"
-TITLE="datatype から dataviewtype への翻訳"
+TITLE="データ型からデータ観型への翻訳"
 HREF="x4104.html"><LINK
 REL="NEXT"
-TITLE="例: 配列を用いたリングバッファ"
+TITLE="メモリの確保と解放"
 HREF="x4188.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,7 +78,7 @@ CLASS="chapter"
 ><A
 NAME="abstract_views_viewtypes"
 ></A
->Chapter 16. 抽象 view と viewtype</H1
+>Chapter 16. 抽象観と観型 (viewtype)</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -94,39 +94,32 @@ HREF="c4136.html#simple-linear-objects"
 ><DT
 ><A
 HREF="x4188.html"
->例: 配列を用いたリングバッファ</A
-></DT
-><DT
-><A
-HREF="x4225.html"
 >メモリの確保と解放</A
 ></DT
 ><DT
 ><A
+HREF="x4252.html"
+>例: 配列を用いたリングバッファ</A
+></DT
+><DT
+><A
 HREF="x4289.html"
->Example: Array-Based Circular Buffers</A
+>ロックとアンロック</A
 ></DT
 ><DT
 ><A
-HREF="x4326.html"
->Locking and Unlocking</A
-></DT
-><DT
-><A
-HREF="x4374.html"
->Linear Channels for Asynchronous IPC</A
+HREF="x4337.html"
+>非同期 IPC のための線形チャネル</A
 ></DT
 ></DL
 ></DIV
 ><P
->&#13;今までは、at-view と at-view の上に構築された view にもっぱら注目した view の表現を見てきました。
-at-view が実際にもっとも広く使われる view の形であり、また ATS がサポートした view
-の最初の形であることが、その大きな理由です。
-けれども、抽象的な view の他の形を ATS に導入することができます。
-view を at-view (もしくは view の他の形) を元にして定義できる場合においてさえ、(view
-変更する証明関数をともなう) 抽象 view として導入したいと思うかもしれません。
-しばしばプログラマが本当に必要とすることは、抽象的に定義された view
-とそれらを操作する証明関数が実際に意味をなすかどうか、<SPAN
+>&#13;今までは、駐観と駐観の上に構築された観にもっぱら注目して観の表現を見てきました。
+駐観が実際にもっとも広く使われる観の形であり、また ATS がサポートした観の最初の形であることが、その大きな理由です。
+けれども、抽象的な観の他の形を ATS に導入することもできます。
+観を駐観 (もしくは観の他の形) を元にして定義できる場合においてさえ、(観変化する証明関数をともなう)
+抽象観として導入したいと思うかもしれません。
+しばしばプログラマが本当に必要とすることは、抽象的に定義された観とそれらを操作する証明関数が実際に意味をなすかどうか、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
@@ -135,7 +128,7 @@ CLASS="emphasis"
 > 理解することです。
 これは関数が計算可能かどうか根拠を示すことに少し似ています:
 例え、計算可能であることを立証するためにチューリングマシンに関数を実際にエンコードするとしても、まれにその必要があります。
-私見ですが、抽象 view と抽象 viewtype の適切な使い方を学ぶことは、実際にリソースに関連するプログラミングの問題に取り組むために、効果的に線形型を使うのに必要なステップです。
+私見ですが、抽象観と抽象的な観型 (viewtype) の適切な使い方を学ぶことは、実際にリソースに関連するプログラミングの問題に取り組むために、効果的に線形型を使うのに必要なステップです。
 
 </P
 ><DIV
@@ -150,12 +143,12 @@ NAME="simple-linear-objects"
 >&#13;物理世界のオブジェクトが線形であることははっきりしています:
 それらは無から生成することはできませんし、単に消し去って無へと帰すこともできません。
 従って、物理オブジェクトを表現する値に線形型を割り当てることは極めて自然です。
-継承をサポートするビルトインの仕組みを含まないようなある種のオブジェクトを表わす線形値を参照するのに、ここでは
+継承をサポートするビルトインの仕組みを含まないようなある種のオブジェクトを表わす線形値を表わすのに、ここでは
 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->単純な線形オブジェクト</I
+>単純な線形オブジェクト (simple linear object)</I
 ></SPAN
 > という名前を使います。
 </P
@@ -219,7 +212,7 @@ timer_struct = @{
 >
 
 
-次の線形 datatype <FONT
+次の線形データ型 <FONT
 COLOR="RED"
 >timer</FONT
 > はタイマーのために宣言され、また抽象型 <FONT
@@ -331,7 +324,7 @@ end // end of [timer_start]
 このとき <FONT
 COLOR="RED"
 >the_current_tick_get</FONT
-> は (ティックの数として表現される) 現在時間を読む関数です:
+> は (ティックの数で表わされた) 現在時間を読む関数です:
 
 <DIV
 CLASS="informalexample"
@@ -625,7 +618,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->datatype から dataviewtype への翻訳</TD
+>データ型からデータ観型への翻訳</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -639,7 +632,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->例: 配列を用いたリングバッファ</TD
+>メモリの確保と解放</TD
 ></TR
 ></TABLE
 ></DIV

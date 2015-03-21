@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Generic Operations on Numbers</TITLE
+>Example: Templates for Loop Construction</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="From Genericity to Late-Binding"
-HREF="c4467.html"><LINK
+HREF="c4404.html"><LINK
 REL="PREVIOUS"
-TITLE="From Genericity to Late-Binding"
-HREF="c4467.html"><LINK
-REL="NEXT"
 TITLE="Templates as a Special Form of Functors"
-HREF="x4564.html"><LINK
+HREF="x4501.html"><LINK
+REL="NEXT"
+TITLE="Template-Based Support for Late-Binding"
+HREF="x4584.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="c4467.html"
+HREF="x4501.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x4564.html"
+HREF="x4584.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -77,36 +77,67 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="generic-operations-on-numbers"
->Example: Generic Operations on Numbers</A
+NAME="template-for-loop-construction"
+>Example: Templates for Loop Construction</A
 ></H1
 ><P
->&#13;There are many types of numbers in ATS. With function templates, we can
-greatly enhance code sharing in numerical computation. For example, we can
-give a generic implementation of matrix multiplication of the following
-interface:
+>&#13;Beginners in functional programming (FP) who have already acquired some
+knowledge of imperative programming often ask about ways to construct
+for-loops and while-loops in FP. A commonly given answer is that loop
+constructs are unnecessary in FP as they can be readily replaced with
+higher-order functions. Let us first see some thorny issues with this
+answer.
+</P
+><P
+>&#13;The following code in C implements a function that returns the sum
+of the first n natural numbers when applied to a natural number n:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4534"
+NAME="AEN4535"
+></A
+><PRE
+CLASS="programlisting"
+>int
+tally (int n) {
+  int i, res;
+  for (i = 0, res = 0; i &#60; n; i += 1) res += i;
+  return res;
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+This function <FONT
+COLOR="RED"
+>tally</FONT
+> can be given the following
+equivalent implementation in ATS:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4538"
 ></A
 ><PRE
 CLASS="programlisting"
 >fun
-{a:t@ype}
-matrix_mul
-  {p,q,r:int}
+tally
 (
-  p: int(p)
-, q: int(q)
-, r: int(r)
-, A: &#38;matrix(a, p, q)
-, B: &#38;matrix(a, q, r)
-, C: &#38;matrix(a?, p, r) &#62;&#62; matrix(a, p, r)
-) : void // end of [matrix_mul]
+  n: int
+) : int = loop (0, 0) where
+{
+  fun loop (i: int, res: int): int =
+    if i &#60; n then loop (i + 1, res + i) else res
+}
 </PRE
 ><P
 ></P
@@ -114,35 +145,36 @@ matrix_mul
 >
 
 
-and then use it to immediately obtain implementations of matrix
-multiplication for matrices of integers, matrices of floating point
-numbers, matrices of floating point complex numbers, etc. This approach is
-clearly far superior to relying on error-prone macros in C.
+where the tail-recursive function <FONT
+COLOR="RED"
+>loop</FONT
+> is just a translation
+of the for-loop in C.
 
 </P
 ><P
->&#13;Let us take a look at a concrete example involving generic operations on
-numbers. The following code gives a standard implementation of the
-factorial function:
+>&#13;When someone claims that loop constructs can be replaced with higher-order
+functions, he or she probably means to construct loops with a function like
+the following one:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4537"
+NAME="AEN4542"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-extern
-fun fact(n: int): int
-//
-implement
-fact(n) =
-  if n &#62; 0 then n * fact(n-1) else 1
-// end of [fact]
-//
+>fun
+for_loop
+(
+  count: int, limit: int, fwork: (int) -&#60;cloref1&#62; void
+) : void = (
+if count &#60; limit
+  then (fwork(count); for_loop(count+1, limit, fwork)) else ()
+// end of [if]
+) (* end of [for_loop] *)
 </PRE
 ><P
 ></P
@@ -150,45 +182,99 @@ fact(n) =
 >
 
 
-When applied to 100, <FONT
+For example, the following function <FONT
 COLOR="RED"
->fact</FONT
-> is likely to return 0. This can be
-easily understood as the true value of the factorial of 100 is a multiple
-of 2<SUP
->32</SUP
-> and the multiplication operation on integers of the type
+>tally2</FONT
+> is directly based
+on <FONT
+COLOR="RED"
+>for_loop</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4546"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+tally2
+(
+  n: int
+) : int = let
+  val res = ref&#60;int&#62; (0)
+in
+  for_loop (0, n, lam (i) =&#62; !res := !res + i); !res
+end // end of [tally2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+While both <FONT
+COLOR="RED"
+>tally</FONT
+> and <FONT
+COLOR="RED"
+>tally2</FONT
+> return the same result
+when applied to a given natural number, they behave very differently at
+run-time. In particular, each call to <FONT
+COLOR="RED"
+>tally2</FONT
+> creates a
+(persistent) reference on heap for temporary use; the reference becomes
+garbage immediately after the call returns. Compared to <FONT
+COLOR="RED"
+>tally</FONT
+>,
 <FONT
 COLOR="RED"
->int</FONT
-> is probably modulo 2<SUP
->32</SUP
->. Suppose that we want to
-replace this multiplication operation with the one on floating point
-numbers of double precision. This can be done by implementing a slight variant
-of <FONT
+>tally2</FONT
+> is inefficient both time-wise and memory-wise.
+</P
+><P
+>&#13;To eliminate the need for reference creation in <FONT
 COLOR="RED"
->fact</FONT
-> as follows
+>tally2</FONT
+>, we
+turn <FONT
+COLOR="RED"
+>for_loop</FONT
+> into the following function template
+<FONT
+COLOR="RED"
+>for_loop2</FONT
+>:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4544"
+NAME="AEN4557"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-extern
-fun factd(n: int): double
-
-implement
-factd(n) =
-  if n &#62; 0 then n * factd(n-1) else 1.0
-// end of [factd]
-//
+>fun{
+env:t@ype
+} for_loop2
+(
+  count: int, limit: int
+, env: &#38;env &#62;&#62; _, fwork: (int, &#38;env &#62;&#62; _) -&#60;cloref1&#62; void
+) : void = (
+if
+count &#60; limit
+then (
+  fwork(count, env); for_loop2&#60;env&#62; (count+1, limit, env, fwork)
+) else ()
+// end of [if]
+) (* end of [for_loop2] *)
 </PRE
 ><P
 ></P
@@ -196,78 +282,36 @@ factd(n) =
 >
 
 
-When applied to 100, <FONT
+We can further turn <FONT
 COLOR="RED"
->factd</FONT
-> should return a large floating point
-number. Obviously, there is a great deal of code duplication between the
-implementations of <FONT
+>tally2</FONT
+> into the following <FONT
 COLOR="RED"
->fact</FONT
-> and <FONT
-COLOR="RED"
->factd</FONT
->. We can readily
-eliminate this duplication by introducing a generic implementation of the
-factorial function as follows:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4549"
-></A
-><PRE
-CLASS="programlisting"
->//
-extern
-fun{a:t@ype} gfact(n: int): a
-//
-implement
-{a}(*tmp*)
-gfact(n) = (
-//
-if n &#62; 0
-then gmul_int_val&#60;a&#62;(n, gfact&#60;a&#62;(n-1))
-else gnumber_int&#60;a&#62;(1)
-//
-) (* end of [gfact] *)
-//
-</PRE
-><P
-></P
-></DIV
+>tally3</FONT
 >
-
-
-With a bit of help from the support for
-overloading in ATS, we can rewrite <FONT
+based on <FONT
 COLOR="RED"
->gfact</FONT
-> as follows:
+>for_loop2</FONT
+>:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4552"
+NAME="AEN4562"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
-{a}(*tmp*)
-gfact(n) = let
-//
-overload * with gmul_int_val
-//
+>fun
+tally3
+(
+  n: int
+) : int = let
+  var res: int = 0
 in
-//
-if n &#62; 0
-then n * gfact&#60;a&#62;(n-1) else gnumber_int&#60;a&#62;(1)
-//
-end (* end of [gfact] *)
+  for_loop2&#60;int&#62; (0, n, res, lam (i, res) =&#62; res := res + i); res
+end // end of [tally3]
 </PRE
 ><P
 ></P
@@ -275,12 +319,93 @@ end (* end of [gfact] *)
 >
 
 
-We can now implement <FONT
+While <FONT
 COLOR="RED"
->fact</FONT
-> and <FONT
+>tally3</FONT
+> improves upon <FONT
 COLOR="RED"
->factd</FONT
+>tally2</FONT
+>, it is still a
+bit unsatisfactory. Clearly, the closure function formed before
+<FONT
+COLOR="RED"
+>tally3</FONT
+> calls <FONT
+COLOR="RED"
+>for_loop2</FONT
+> becomes garbage immediately
+after the call returns. It is plausible to expect an optimizing C compiler
+(e.g., gcc and clang) can eliminate the need for actual closure formation
+when it is called on the C code generated from ATS source, but there is
+no guarantee. In order to have such a guarantee, we can evolve
+<FONT
+COLOR="RED"
+>for_loop2</FONT
+> into the following function template
+<FONT
+COLOR="RED"
+>for_loop3:</FONT
+> 
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4570"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+env:t@ype
+} for_loop3
+(
+  count: int, limit: int, env: &#38;env &#62;&#62; _
+) : void = (
+if
+count &#60; limit
+then (
+  for_loop3$fwork&#60;env&#62;(count, env); for_loop3&#60;env&#62;(count+1, limit, env)
+) else ()
+// end of [if]
+) (* end of [for_loop3] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+where <FONT
+COLOR="RED"
+>for_loop3$fwork</FONT
+> is given the interface below:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4573"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+env:t@ype
+} for_loop3$fwork(count: int, env: &#38;env &#62;&#62; _): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+Finally, we can turn <FONT
+COLOR="RED"
+>tally3</FONT
+> into <FONT
+COLOR="RED"
+>tally4</FONT
 >
 as follows:
 
@@ -289,14 +414,24 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4556"
+NAME="AEN4577"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-implement fact(n) = gfact&#60;int&#62;(n)
-implement factd(n) = gfact&#60;double&#62;(n)
+>fun
+tally4
+(
+  n: int
+) : int = let
 //
+var res: int = 0
+//
+implement
+for_loop3$fwork&#60;int&#62; (i, res) = res := res + i
+//
+in
+  for_loop3&#60;int&#62; (0, n, res); res
+end // end of [tally4]
 </PRE
 ><P
 ></P
@@ -304,68 +439,32 @@ implement factd(n) = gfact&#60;double&#62;(n)
 >
 
 
-There is support in ATS based on the GNU multiple precision arithmetic
-library (GMPLIB) for integers of unlimited precision. The following code
-presents a way to compute the true value of the factorial of 100:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4558"
-></A
-><PRE
-CLASS="programlisting"
->//
-staload _(*T*) =
-"{$LIBATSHWXI}/intinf/DATS/intinf_t.dats"
-staload _(*VT*) =
-"{$LIBATSHWXI}/intinf/DATS/intinf_vt.dats"
-//
-staload GINTINF =
-"{$LIBATSHWXI}/intinf/DATS/gintinf_t.dats"
-//
-typedef intinf = $GINTINF.intinf
-overload print with $GINTINF.print_intinf
-//
-val () =
-println! ("gfact&#60;intinf&#62;(100) = ", gfact&#60;intinf&#62;(100))
-//
-</PRE
-><P
-></P
-></DIV
->
-
-
-I only list some leading digits of the result:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4560"
-></A
-><PRE
-CLASS="programlisting"
->gfact&#60;intinf&#62;(100) = 933262154439441526816992388562667[...omitted...]
-</PRE
-><P
-></P
-></DIV
->
+By inspecting the C code generated by <B
+CLASS="command"
+>atsopt</B
+> from compiling
+<FONT
+COLOR="RED"
+>tally4</FONT
+>, we can see that the C code is essentially equivalent to
+the implementation of <FONT
+COLOR="RED"
+>tally</FONT
+> in C (given at the beginning of
+this section).
 
 </P
 ><P
->&#13;Please find on-line the file
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/gnumber.dats"
+>&#13;By now, the reader probably agrees with me if I say the statement should at
+least be considered grossly inaccurate that claims loop constructs in FP
+can be readily replaced with higher-order functions.  Please find on-line
+the file <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/loopcons.dats"
 TARGET="_top"
->gnumber.dats</A
-> containing the
-entirety of the code presented in this section plus some testing code.
+>loopcons.dats</A
+>
+containing the entirety of the code presented in this section plus some
+testing code.
 </P
 ></DIV
 ><DIV
@@ -384,7 +483,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="c4467.html"
+HREF="x4501.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -402,7 +501,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x4564.html"
+HREF="x4584.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -412,13 +511,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->From Genericity to Late-Binding</TD
+>Templates as a Special Form of Functors</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c4467.html"
+HREF="c4404.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -426,7 +525,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Templates as a Special Form of Functors</TD
+>Template-Based Support for Late-Binding</TD
 ></TR
 ></TABLE
 ></DIV

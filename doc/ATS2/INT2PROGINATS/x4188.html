@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->例: 配列を用いたリングバッファ</TITLE
+>メモリの確保と解放</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,14 +11,14 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="抽象 view と viewtype"
+TITLE="抽象観と観型 (viewtype)"
 HREF="c4136.html"><LINK
 REL="PREVIOUS"
-TITLE="抽象 view と viewtype"
+TITLE="抽象観と観型 (viewtype)"
 HREF="c4136.html"><LINK
 REL="NEXT"
-TITLE="メモリの確保と解放"
-HREF="x4225.html"><LINK
+TITLE="例: 配列を用いたリングバッファ"
+HREF="x4252.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -57,13 +57,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 16. 抽象 view と viewtype</TD
+>Chapter 16. 抽象観と観型 (viewtype)</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x4225.html"
+HREF="x4252.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -77,64 +77,35 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="array-based-circular-buffer"
->例: 配列を用いたリングバッファ</A
+NAME="memory-allocation-deallocation"
+>メモリの確保と解放</A
 ></H1
 ><P
->&#13;配列を用いたリングバッファは実用でも一般的に使われます。
-例えば、典型的なクライアントサーバモデルにおいて、first-in-first-out (FIFO)
-に従ってサーバが処理するべき複数のクライアントによる要求を保持するためにリングバッファを用いることができます。
-それぞれの要求に (決まった範囲から選択することで) 優先度をつける必要がある場合、
-特定の優先度の要求を保持するためにそれぞれの優先度にリングバッファを生成することができます。
-</P
-><P
->&#13;リングバッファを表現する値のために、次のような線形抽象型 (つまり抽象 viewtype) を宣言してみましょう:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4192"
-></A
-><PRE
-CLASS="programlisting"
->absvtype
-cbufObj (a:vt@ype+, m:int, n: int) = ptr
-</PRE
-><P
-></P
-></DIV
->
-
-
-このような値は (状態を継承によって扱わない) 単純な線形オブジェクトであると考えられます。
-viewtype VT と2つの整数 M と N が与えられた時、viewtype <FONT
-COLOR="RED"
->cbufObj(VT, M, N)</FONT
->
-は型 VT の要素を N 個 持つ最大容量 M のバッファを表わします。
+>&#13;メモリの確保と解放にまつわる問題は、実行時のガベージコレクション (GC)
+が許されないシステムプログラミングにおいて最重要です。
+メモリ管理を安全にかつ効率よく扱うことは、プログラミングの挑戦において長期にわたる未解決問題です。
+そして ATS におけるその新しい解決策は、定理証明によるプログラミング (PwTP) のパラダイムに堅く根差しています。
 
 </P
 ><P
->&#13;<FONT
+>&#13;次の関数 <FONT
 COLOR="RED"
->cbufObj</FONT
-> のパラメータの性質のいくつかは、次の証明関数を導入することで捕捉できます:
+>malloc_gc</FONT
+> がメモリ確保のために ATS では用意されています:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4197"
+NAME="AEN4193"
 ></A
 ><PRE
 CLASS="programlisting"
->prfun
-lemma_cbufObj_param
-  {a:vt0p}{m,n:int}
-  (buf: !cbufObj (a, m, n)): [m&#62;=n; n&#62;=0] void
+>fun malloc_gc
+  {n:nat}(n: size_t n)
+  : [l:agz] (b0ytes n @ l, mfree_gc_v (l) | ptr l)
+// end of [malloc_gc]
 </PRE
 ><P
 ></P
@@ -142,105 +113,92 @@ lemma_cbufObj_param
 >
 
 
-次の2つの関数テンプレートのインターフェイスは、それらが容量とバッファの現在のサイズを算出するために呼び出されることを示しています:
+種 <FONT
+COLOR="RED"
+>agz</FONT
+> は NULL でないアドレスとして定義されたサブセット種です:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4199"
+NAME="AEN4196"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:vt0p}
-cbufObj_get_cap
-  {m,n:int} (buf: !cbufObj (a, m, n)): size_t (m)
-
-fun{a:vt0p}
-cbufObj_get_size
-  {m,n:int} (buf: !cbufObj (a, m, n)): size_t (n)
+>sortdef agz = {a:addr | a &#62; null} // [gz] for great-than-zero
 </PRE
 ><P
 ></P
 ></DIV
 >
 
+
+整数 N が与えられた時、
+型 <FONT
+COLOR="RED"
+>b0ytes(N)</FONT
+> は N バイトの未初期化の配列を表わす <FONT
+COLOR="RED"
+>@[byte?][N]</FONT
+> の略記です
+従って、駐観 <FONT
+COLOR="RED"
+>b0ytes(N)@L</FONT
+> は L をメモリ位置とすると、配列観
+<FONT
+COLOR="RED"
+>array_v(byte?, L, N)</FONT
+> と同じです。
+観コンストラクタ <FONT
+COLOR="RED"
+>mfree_gc_v</FONT
+> は抽象的です。
+与えられた位置 L について、観 <FONT
+COLOR="RED"
+>mfree_gc_v(L)</FONT
+> は次の関数 <FONT
+COLOR="RED"
+>mfree_gc</FONT
+> によって解放されるべき位置 L に確保したメモリを許可する能力を表わします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4205"
+></A
+><PRE
+CLASS="programlisting"
+>fun mfree_gc
+  {l:addr}{n:nat}
+  (pfat: b0ytes(n) @ l, pfgc: mfree_gc_v (l) | p: ptr l): void
+// end of [free_gc]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+今まで紹介してきた中では、<FONT
+COLOR="RED"
+>mfree_gc_v(L)</FONT
+> はどのような駐観の上にも構築されていないはじめての観の形であることに注意してください。
 
 </P
 ><P
->&#13;現在のバッファが空か満杯であるかを判定するのに <FONT
+>&#13;実際には、バイト数を直接扱うのはいくぶん面倒です。
+(ある型の) 単一の値を保管するメモリを確保する関数 <FONT
 COLOR="RED"
->cbufObj_get_cap</FONT
-> と <FONT
+>ptr_alloc</FONT
+> と、そのようなメモリを解放する関数
+<FONT
 COLOR="RED"
->cbufObj_get_size</FONT
->
-を単純に使うこともできますが、直接的なアプローチがより効率的です。
-次の2つの関数テンプレートは、与えられたリングバッファが空であるか満杯であるかを判定します:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4204"
-></A
-><PRE
-CLASS="programlisting"
->//
-fun{a:vt0p}
-cbufObj_is_empty
-  {m,n:int} (buf: !cbufObj (a, m, n)): bool (n==0)
-//
-fun{a:vt0p}
-cbufObj_is_full
-  {m,n:int} (buf: !cbufObj (a, m, n)): bool (m==n)
-//
-</PRE
-><P
-></P
-></DIV
->
-
-
-</P
-><P
->&#13;リングバッファの生成と解放を行なう関数はそれぞれ <FONT
-COLOR="RED"
->cbufObj_new</FONT
-> と <FONT
-COLOR="RED"
->cbufObj_free</FONT
->
-という名前です:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN4209"
-></A
-><PRE
-CLASS="programlisting"
->fun{a:vt0p}
-cbufObj_new
-  {m:pos} (m: size_t m): cbufObj (a, m, 0)
-//
-fun cbufObj_free
-  {a:vt0p}{m:int} (buf: cbufObj (a, m, 0)): void
-</PRE
-><P
-></P
-></DIV
->
-
-
-
-バッファがリソースを含む可能性がある (なんらかの viewtype の)
-要素を含まない時に限って、そのバッファを解放できることに注意してください。
-バッファ中の要素がなんらかの線形でない型である場合、次の関数を呼び出してバッファ中に保管されている全ての要素を捨てることができます:
+>ptr_free</FONT
+> が用意されています:
 
 <DIV
 CLASS="informalexample"
@@ -251,10 +209,15 @@ NAME="AEN4211"
 ></A
 ><PRE
 CLASS="programlisting"
->fun cbufObj_clear
-  {a:t@ype}{m,n:int}
-  (buf: !cbufObj (a, m, n) &#62;&#62; cbufObj (a, m, 0)): void
-// end of [cbufObj_clear]
+>fun{a:vt0p}
+ptr_alloc ()
+  :&#60;&#62; [l:agz] (a? @ l, mfree_gc_v (l) | ptr l)
+// end of [ptr_alloc]
+
+fun ptr_free
+  {a:t@ype}{l:addr}
+  (pfgc: mfree_gc_v (l), pfat: a @ l | p: ptr l):&#60;&#62; void = "mac#%"
+// end of [ptr_free]
 </PRE
 ><P
 ></P
@@ -262,33 +225,40 @@ CLASS="programlisting"
 >
 
 
-</P
-><P
->&#13;次の2つの関数は、与えられたバッファに対する要素の挿入と削除を行ないます。
-おそらくこれらはバッファに対して最も頻繁に使われる操作でしょう:
+さらに、(ある型の) 値の配列を格納するメモリを確保する関数 <FONT
+COLOR="RED"
+>array_ptr_alloc</FONT
+>
+と、そのようなメモリを解放する関数 <FONT
+COLOR="RED"
+>array_ptr_free</FONT
+> があります:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4214"
+NAME="AEN4215"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-fun{a:vt0p}
-cbufObj_insert
-  {m,n:int | n &#60; m}
+>fun{a:vt0p}
+array_ptr_alloc
+  {n:int}
 (
-  buf: !cbufObj (a, m, n) &#62;&#62; cbufObj (a, m, n+1), x: a
-) : void // end of [cbufObj_insert]
-//
-fun{a:vt0p}
-cbufObj_remove
-  {m,n:int | n &#62; 0}
-  (buf: !cbufObj (a, m, n) &#62;&#62; cbufObj (a, m, n-1)) : (a)
-//
+  asz: size_t n
+) : [l:agz]
+(
+  array_v (a?, l, n), mfree_gc_v (l) | ptr l
+) // end of [array_ptr_alloc]
+
+fun{}
+array_ptr_free
+  {a:vt0p}{l:addr}{n:int}
+(
+  array_v (a?, l, n), mfree_gc_v (l) | ptr l
+) : void // end of [array_ptr_free]
 </PRE
 ><P
 ></P
@@ -298,52 +268,242 @@ cbufObj_remove
 
 </P
 ><P
->&#13;リングバッファの生成/削除/操作の関数インターフェイス全体を含むファイルは
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
->
-から入手できます。
-</P
-><P
->&#13;抽象型 <FONT
+>&#13;ここで配列の確保と解放の両方を必要とする現実的で興味深い例を紹介します。
+次の2つの関数テンプレート <FONT
 COLOR="RED"
->cbufObj</FONT
-> と <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
+>msort1</FONT
+> と <FONT
+COLOR="RED"
+>msort2</FONT
+> は与えられた配列をマージソートします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4220"
+></A
+><PRE
+CLASS="programlisting"
+>typedef cmp (a:t@ype) = (&#38;a, &#38;a) -&#62; int
+
+extern
+fun{
+a:t@ype
+} msort1 {n:nat}
+  (A: &#38;(@[a][n]), n: size_t n, B: &#38;(@[a?][n]), cmp: cmp(a)): void
+// end of [msort1]
+
+extern
+fun{
+a:t@ype
+} msort2 {n:nat}
+  (A: &#38;(@[a][n]), n: size_t n, B: &#38;(@[a?][n]) &#62;&#62; @[a][n], cmp: cmp(a)): void
+// end of [msort2]
+</PRE
+><P
+></P
+></DIV
 >
-で宣言されている関数を実装する簡単で実用的な方法はたくさんあります。
-ファイル <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.dats"
-TARGET="_top"
->circbuf.dats</A
+
+
+与えられた配列の2つのソート済み部分をマージするには追加領域が必要になることがよく知られています。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> が配列 A と B に対して呼び出された時、配列 A はソートされる対象で、配列 B
+は (ソート済みの配列の領域の) マージを行なうのに必要なスクラッチ領域の一種です。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> 呼び出しが返ると、A のソートされたバージョンはまだ A に保管されています。
+<FONT
+COLOR="RED"
+>msort2</FONT
+> が行なうことも同様ですが、<FONT
+COLOR="RED"
+>msort2</FONT
+> 呼び出しが返ると A のソートされたバージョンは
+B に保管されます。
+興味を持った読者には、良い練習問題として <FONT
+COLOR="RED"
+>msort1</FONT
+> と <FONT
+COLOR="RED"
+>msort2</FONT
 >
-では、リングバッファを表現するのに4つのポインタ p_beg, p_end, p_frst, p_last を用いる実装を与えました:
-p_beg と p_end はそれぞれ下敷にする配列の開始と終了アドレスで、p_frst と p_last はそれぞれ (その配列中の)
-占有している部分と空いている部分の開始アドレスです。
-この実装の特殊な点は、証明の構築を意識的に避けたプログラミングスタイルであることです。
-このスタイルで書かれたコードは型安全が保証されていませんが、正式な証明を構築することが高コストであるような状況下では、このスタイルにも大きな実用上の価値があります。
-<A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf.sats"
-TARGET="_top"
->circbuf.sats</A
+の相互再帰的な実装をしてみることをおすすめします。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> を用いたマージソートの実装は次のようにたやすく与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4229"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun{
+a:t@ype
+} mergeSort{n:nat}
+  (A: &#38;(@[a][n]), n: size_t n, cmp: cmp(a)): void
+// end of [mergeSort]
+
+implement
+{a}(*tmp*)
+mergeSort (A, n, cmp) = let
+  val (pfat, pfgc | p) = array_ptr_alloc&#60;a&#62; (n)
+  val ((*void*)) = msort1 (A, n, !p, cmp)
+  val ((*void*)) = array_ptr_free (pfat, pfgc | p)
+in
+  // nothing
+end // end of [mergeSort]
+</PRE
+><P
+></P
+></DIV
 >
-で宣言された関数について型安全な実装を得ようと試してみれば、この点において誠実な評価を実感できるはずです。
+
+
+明確に、配列は (スクラッチ領域として使われるために) はじめに確保され、それからもはや使わなくなった後に解放されます。
 
 </P
 ><P
->&#13;ファイル <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/circbuf2.dats"
+>&#13;また、特殊な関数 <FONT
+COLOR="RED"
+>alloca</FONT
+> を呼び出すことでコールスタックにメモリを確保する関数も作ることができます。それには ATS では次のような型が与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4233"
+></A
+><PRE
+CLASS="programlisting"
+>(*
+staload "libc/SATS/alloa.sats"
+*)
+fun alloca
+  {dummy:addr}{n:int} (
+  pf: void@dummy | n: size_t (n)
+) : [l:addr] (bytes(n) @ l, bytes(n) @ l -&#62; void@dummy | ptr(l))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>alloca</FONT
+> に割り当てられた型は、型付けされた ATS コードが <FONT
+COLOR="RED"
+>alloca</FONT
+> 関数呼び出しが返った後に誤ってその関数呼び出しから得られたメモリにアクセスすることを防止します。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>array_ptr_alloca_tsz</FONT
+> は動的には <FONT
+COLOR="RED"
+>alloca</FONT
+> と同じです。しかしより便利な型が付けられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4240"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+array_ptr_alloca_tsz
+  {a:vt0p}{dummy:addr}{n:int}
+(
+  pf: void@dummy | asz: size_t(n), tsz: sizeof_t(a)
+) : [l:addr] (array(a?,n)@l, array(a?,n)@l -&#62; void@dummy | ptr(l))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+例として、上記で実装された関数テンプレート <FONT
+COLOR="RED"
+>mergeSort</FONT
+> 次のように実装することもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4243"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+mergeSort (A, n, cmp) = let
+  val tsz = sizeof&#60;a&#62;
+  var dummy: void = ()
+  prval pf = view@dummy
+  val (
+    pfat, fpfat | p
+  ) = array_ptr_alloca_tsz{a}(pf | n, tsz)
+  val ((*void*)) = msort1&#60;a&#62; (A, n, !p, cmp)
+  prval ((*void*)) = view@dummy := fpfat (pfat)
+in
+  // nothing
+end // end of [mergeSort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここではマージを行なうのに必要なスクラッチ領域として使われる配列を <FONT
+COLOR="RED"
+>mergeSort</FONT
+> のコールスタックに確保しています。この <FONT
+COLOR="RED"
+>mergeSort</FONT
+> の実装は興味深いものですが、実際には以前の実装より劣っています。多きなメモリチャンクを確保する <FONT
+COLOR="RED"
+>alloca</FONT
+> 呼び出しはクラッシュをたやすく引き起こし、その原因を見つけ出すのはしばしば困難です。一般に、<FONT
+COLOR="RED"
+>malloc</FONT
+> よりも <FONT
+COLOR="RED"
+>alloca</FONT
+> を使うことは正当化しずらく、前者に対する呼び出しは綿密に精査すべきです。
+
+</P
+><P
+>&#13;配列に対するマージソートの実装全体とテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
 TARGET="_top"
->circbuf2.dats</A
-> では、ポインタ p_beg
-と3つの整数 m, n, f によってリングバッファを表現する別の実装を与えています:
-p_beg は下敷にする配列の開始位置を指し、m は配列のサイズ (つまりバッファの容量)、n
-はバッファに現在保存されている要素の数、f は今までにバッファから削除された要素の総数です。
-繰り返しますが、この実装でも故意に証明の構築をしていません。
+>オンライン</A
+>
+から入手できます。
 
 </P
 ></DIV
@@ -381,7 +541,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x4225.html"
+HREF="x4252.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -391,7 +551,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->抽象 view と viewtype</TD
+>抽象観と観型 (viewtype)</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -405,7 +565,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->メモリの確保と解放</TD
+>例: 配列を用いたリングバッファ</TD
 ></TR
 ></TABLE
 ></DIV
