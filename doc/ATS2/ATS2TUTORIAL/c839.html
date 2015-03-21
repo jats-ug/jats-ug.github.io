@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>サイズを伴う永続化行列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="永続化行列"
+HREF="c815.html"><LINK
+REL="NEXT"
+TITLE="Persistent Hashtables"
+HREF="c870.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c815.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c870.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="mtrxszref"
+></A
+>Chapter 18. サイズを伴う永続化行列</H1
+><P
+>&#13;次元情報 (つまり列の数や行の数)
+が付属した永続化行列を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>サイズを伴う行列 (matrix-with-size)</I
+></SPAN
+> と呼びます。
+viewtype VT が与えられたとき、viewtype VT の要素を M 列と N
+行含むサイズを伴う行列の型は <FONT
+COLOR="RED"
+>mtrxszref(VT, M, N)</FONT
+> です。
+本質的に、この型の値は3つの型
+<FONT
+COLOR="RED"
+>arrayref(VT, N)</FONT
+>, <FONT
+COLOR="RED"
+>size_t(M)</FONT
+>, <FONT
+COLOR="RED"
+>size_t(N)</FONT
+>
+を構成要素とするボックス化レコードです。
+サイズを伴う永続化行列に関する様々な関数のインターフェイスを
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
+TARGET="_top"
+>prelude/SATS/matrixref.sats</A
+>
+に見つけることができます。
+
+</P
+><P
+>&#13;次の関数はサイズを伴う行列を生成するのに一般的に使用されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN849"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t0p}
+mtrxszref_make_elt (m: size_t, n: size_t, x0: a): mtrxref (a)
+// end of [mtrxszref_make_elt]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2つのサイズ m, n と要素 x0 が与えられたとき、
+<FONT
+COLOR="RED"
+>mtrxszref_make_elt</FONT
+> はそれぞれの行列セルが与えられた要素 x0 で初期化された次元 m, n のサイズを伴う行列を返します。
+</P
+><P
+>&#13;行列セルの内容物にアクセスしたり更新したりするために、
+次の2つの関数 <FONT
+COLOR="RED"
+>mtrxszref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>mtrxszref_set_at</FONT
+> を使うことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN855"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t0p}
+mtrxszref_get_at (M: mtrxszref(a), i: size_t, j: size_t): (a)
+fun{a:t0p}
+mtrxszref_set_at (M: mtrxszref(a), i: size_t, j: size_t, x: a): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+サイズを伴う行列 M と2つのインデックス i, j と値 v
+が与えられたとき、<FONT
+COLOR="RED"
+>mtrxszref_get_at(M, i, j)</FONT
+> と <FONT
+COLOR="RED"
+>mtrxszref_set_at(M, i, j, v)</FONT
+>
+はそれぞれ <FONT
+COLOR="RED"
+>M[i,j]</FONT
+> と <FONT
+COLOR="RED"
+>M[i,j] := v</FONT
+> のように書くことができます。
+<FONT
+COLOR="RED"
+>mtrxszref_get_at</FONT
+> もしくは <FONT
+COLOR="RED"
+>mtrxszref_set_at</FONT
+>
+が呼び出されると実行時に行列の範囲検査が行なわれ、行列の範囲外アクセスを検出すると例外
+<FONT
+COLOR="RED"
+>MatrixSubscriptExn</FONT
+> が発生することに注意してください。
+
+</P
+><P
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う行列の中身の転置行列を取る関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN865"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun{a:t0p}
+mtrxszref_transpose (M: mtrxszref (a)): void
+//
+implement{a}
+mtrxszref_transpose (M) = let
+//
+val n = M.nrow
+val ((*void*)) = assertloc (M.nrow = M.ncol)
+//
+fun loop
+(
+  i: size_t, j: size_t
+) : void =
+  if j &#60; n then let
+    val x = M[i,j]
+    val () = M[j,i] := M[i,j]
+    val () = M[i,j] := x
+  in
+    loop (i, succ(j))
+  end else let
+    val i1 = succ (i)
+  in
+    if i1 &#60; n then loop (i1, succ(i1)) else ()
+  end // end of [if]
+//
+in
+  if n &#62; 0 then loop (i2sz(0), i2sz(1)) else ()
+end // end of [mtrxszref_transpose]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;サイズを伴う配列と同様に、サイズを伴う行列は依存型行列よりも簡単にプログラミングできます。
+けれども、後者はコンパイル時にエラーを効果的に検出することができず、実行時のコード実行で検出します。
+ATS でプログラミングする際、サイズを伴う行列からはじめて、その恩恵が明確になった後で行列に置き換えるのは妥当でしょう。
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_mtrxszref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c815.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c870.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>永続化行列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Persistent Hashtables</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

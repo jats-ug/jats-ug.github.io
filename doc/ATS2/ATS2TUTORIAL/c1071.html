@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>線形クロージャ関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="高度なチュートリアル"
+HREF="p1044.html"><LINK
+REL="PREVIOUS"
+TITLE="extvar 宣言"
+HREF="c1046.html"><LINK
+REL="NEXT"
+TITLE="線形遅延ストリーム"
+HREF="c1118.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1046.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1118.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="cloptr"
+></A
+>Chapter 24. 線形クロージャ関数</H1
+><P
+>&#13;
+クロージャ関数はボックス化レコードで、無環境関数へのポインタと、その無環境関数内で使われる名前から値をマップする束縛を含んでいます。
+実際には、高階関数の関数引数はしばしば (無環境関数の代わりに) クロージャ関数です。
+例えば、次の高階関数 <FONT
+COLOR="RED"
+>list_map_cloref</FONT
+> はその第2引数としてクロージャ関数を取ります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1075"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype}{b:t@ype
+} list_map_cloref{n:int}
+  (xs: list (a, n), f: (a) -&#60;cloref&#62; b): list_vt (b, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;クロージャ関数は線形にも非線形にも扱うことができ、線形クロージャ関数は安全な作法で明示的に解放することができます。
+キーワード <FONT
+COLOR="RED"
+>-&#60;cloref&#62;</FONT
+> は非線形クロージャ関数の型を作るのに使われます。
+<FONT
+COLOR="RED"
+>list_map_cloref</FONT
+> の変形として、次の高階関数 <FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+>
+はその第2引数として線形クロージャ関数を取ります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1081"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype}{b:t@ype
+} list_map_cloptr{n:int}
+  (xs: list (a, n), f: !(a) -&#60;cloptr&#62; b): list_vt (b, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+容易に推測できることですが、キーワード <FONT
+COLOR="RED"
+>-&#60;cloptr&#62;</FONT
+>
+は線形クロージャ関数の型を作るのに使われます。
+記号 <FONT
+COLOR="RED"
+>!</FONT
+> は、<FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+>
+が返った後でも第2引数がまだ有効であることを示すことに注意してください。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+> の典型的な使用例はは次のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1088"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo{n:int}
+(
+  x0: int, xs: list (int, n)
+) : list_vt (int, n) = res where
+{
+//
+val f = lam (x) =&#60;cloptr&#62; x0 + x
+val res = list_map_cloptr (xs, f)
+val () = cloptr_free ($UNSAFE.cast{cloptr(void)}(f))
+//
+} (* end of [foo] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+線形クロージャは、最初に関数 <FONT
+COLOR="RED"
+>foo</FONT
+>
+の本体で生成されて、使用された後に明示的に解放されていることに注意してください。
+関数 <FONT
+COLOR="RED"
+>cloptr_free</FONT
+> は次のようなインターフェイスです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1092"
+></A
+><PRE
+CLASS="programlisting"
+>fun cloptr_free {a:t0p} (pclo: cloptr (a)): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>cloptr</FONT
+> は抽象的です。
+キャスト <FONT
+COLOR="RED"
+>$UNSAFE.cast{cloptr(void)}(f)</FONT
+>
+は確かにより安全なものに変更できますが、プログラミングがより面倒になるでしょう。
+
+</P
+><P
+>&#13;また、カリー化と線形クロージャ関数の間にはいくつか興味深い相互作用があります。
+関数型プログラミングではカリー化は、複数の引数を同時に取る関数を、それらの引数を連続して取るように変更することを意味します。
+例えば、次のコードの関数 <FONT
+COLOR="RED"
+>acker2</FONT
+> は関数 <FONT
+COLOR="RED"
+>acker</FONT
+> のカリー化されたバージョンです。
+この関数は有名な (原始再帰でない再帰である) アッカーマン関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1099"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+acker(m:int, n:int): int =
+(
+  case+ (m, n) of
+  | (0, _) =&#62; n + 1
+  | (m, 0) =&#62; acker (m-1, 1)
+  | (_, _) =&#62; acker (m-1, acker (m, n-1))
+) (* end of [acker] *)
+
+fun acker2 (m:int) (n:int): int = acker (m, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>acker2</FONT
+> に2つの整数 3 と 4 を適用したとしましょう:
+<FONT
+COLOR="RED"
+>acker2(3)(4)</FONT
+>;
+適用 <FONT
+COLOR="RED"
+>acker2(3)</FONT
+> は (非線形な) クロージャ関数に評価されます;
+このクロージャ関数に 4 を適用すると <FONT
+COLOR="RED"
+>acker(3,4)</FONT
+>
+に評価され、さらに評価されて整数 125 になります。
+<FONT
+COLOR="RED"
+>acker2(3)</FONT
+> を評価して生成されたクロージャ関数はヒープに確保された値で、<FONT
+COLOR="RED"
+>acker2(3)(4)</FONT
+>
+の評価が完了した後ではもはや利用できないことに注意してください。
+そのような値のメモリは GC によって回収される必要があります。
+
+</P
+><P
+>&#13;また <FONT
+COLOR="RED"
+>acker</FONT
+> のカリー化されたバージョンを次のように定義することもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1109"
+></A
+><PRE
+CLASS="programlisting"
+>fun acker3 (m:int) = lam (n:int): int =&#60;cloptr1&#62; acker (m, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>acker3(3)(4)</FONT
+> の評価は <FONT
+COLOR="RED"
+>acker2(3)(4)</FONT
+> と同じ結果になりますが、ATS (ATS/Postiats)
+コンパイラは
+
+<FONT
+COLOR="RED"
+>acker3(3)</FONT
+> の評価によって生成された線形クロージャ関数を
+<FONT
+COLOR="RED"
+>acker3(3)(4)</FONT
+> の評価が完了した後に自動解放するコードを挿入します。
+
+</P
+><P
+>&#13;ATS1 では、GC
+が使えない場面での高階関数利用したプログラミングをサポートするために、線形クロージャ関数は重要な役目を演じます。
+ATS2 は高度なテンプレートをサポートするので、ATS1
+で線形クロージャ関数が演じた役目は非常に弱まりました。
+けれども、もし GC
+が使えないもしくは望まれない場面でクロージャ関数をデータ構造に保存する必要があるのであれば、線形クロージャ関数の利用がメモリリークの危険を避ける解決策になるかもしれません。
+
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_cloptr.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1046.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1118.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>extvar 宣言</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p1044.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形遅延ストリーム</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

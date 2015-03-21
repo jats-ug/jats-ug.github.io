@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->前書き</TITLE
+>末尾再帰</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -10,17 +10,20 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
 TITLE="ATSプログラミングチュートリアル"
 HREF="book1.html"><LINK
-REL="PREVIOUS"
-TITLE="ATSプログラミングチュートリアル"
-HREF="book1.html"><LINK
-REL="NEXT"
+REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="Persistent Hashtables"
+HREF="c872.html"><LINK
+REL="NEXT"
+TITLE="高階関数"
+HREF="c937.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
 ><BODY
-CLASS="preface"
+CLASS="chapter"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000FF"
@@ -46,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="book1.html"
+HREF="c872.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -60,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="p37.html"
+HREF="c937.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -70,26 +73,20 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="preface"
+CLASS="chapter"
 ><H1
 ><A
-NAME="AEN32"
+NAME="Tail-Recursion"
 ></A
->前書き</H1
+>Chapter 20. 末尾再帰</H1
 ><P
->&#13;このチュートリアルは ATS でプログラミングをするとプログラマが出会う典型的な問題を解説しています。
-このほとんどは例による学習のスタイルで書かれています。
-(MLやC言語に馴染んだ読者であれば) このチュートリアルを通してATS のプログラミングを学ぶことは可能ですが、
-一貫した体系的な方法で ATS の外観を得るには
+>&#13;末尾再帰の詳細な説明と、ATS が末尾再帰呼び出しをローカルジャンプに変換することについて
 <A
-HREF="http://jats-ug.metasepi.org/doc/ATS2/INT2PROGINATS/index.html"
+HREF="http://www.ats-lang.org/EXAMPLE/EFFECTIVATS/loop-as-tailrec/main.html"
 TARGET="_top"
->ATSプログラミング入門</A
+>この記事</A
 >
-の方がはるかに適切であると思います。
-もちろんこれら2つの本の間においては重複した解説も少なくないでしょう。
-このチュートリアルの主要な目的は、豊かな ATS のプログラミングの機能についてより多くの洞察をもたらすことです。
-またさらに高品質なプログラムを構築するために、これらの機能を効果的に使った具体的な例を示します。
+を読んでください。
 </P
 ></DIV
 ><DIV
@@ -108,7 +105,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="book1.html"
+HREF="c872.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -126,7 +123,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="p37.html"
+HREF="c937.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -136,17 +133,21 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->ATSプログラミングチュートリアル</TD
+>Persistent Hashtables</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
->&nbsp;</TD
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
 ><TD
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->基本的なチュートリアル</TD
+>高階関数</TD
 ></TR
 ></TABLE
 ></DIV

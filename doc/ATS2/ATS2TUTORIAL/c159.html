@@ -21,7 +21,7 @@ TITLE="動的ロード (dynload)"
 HREF="c194.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
-HREF="./ATS2TUTORIAL-BOOK.css"></HEAD
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
 ><BODY
 CLASS="chapter"
 BGCOLOR="#FFFFFF"
@@ -83,11 +83,10 @@ NAME="staload"
 >ATS では、静的ロード (もしくは staload と略します) はロードされるパッケージ中で宣言された名前に対する名前空間を生成します。
 </P
 ><P
->&#13;Suppose that a file named <TT
+>&#13;<TT
 CLASS="filename"
 >foo.sats</TT
-> contains the
-following code:
+> という名前のファイルが次のコードを含んでいると考えます:
 
 <DIV
 CLASS="informalexample"
@@ -113,14 +112,14 @@ fun aFunction: int -&#62; int
 >
 
 
-The following staload-declaration introduces a namespace
+次の staload 宣言は、<TT
+CLASS="filename"
+>foo.sats</TT
+> で宣言された名前のために、名前空間
 <FONT
 COLOR="RED"
 >FOO</FONT
-> for the names declared in <TT
-CLASS="filename"
->foo.sats</TT
->:
+> を導入します:
 
 <DIV
 CLASS="informalexample"
@@ -139,19 +138,17 @@ CLASS="programlisting"
 >
 
 
-The prefix <FONT
+名前空間 <FONT
+COLOR="RED"
+>FOO</FONT
+> 中の名前を参照するために、接頭辞 <FONT
 COLOR="RED"
 >$FOO.</FONT
-> needs to be attached to a name in the
-namespace <FONT
+> が必要です。
+例えば、名前空間 <FONT
 COLOR="RED"
 >FOO</FONT
-> in order for it to be referenced. For instance,
-the names available in the namespace <FONT
-COLOR="RED"
->FOO</FONT
-> are all referenced in
-the following code:
+> 中で有効な名前は、次のようなコードで参照できます:
 
 <DIV
 CLASS="informalexample"
@@ -173,11 +170,10 @@ val b: $FOO.aDatatype = $FOO.B(0, $FOO.aFunction($FOO.aValue))
 
 </P
 ><P
->&#13;If the file <TT
+>&#13;もしファイル <TT
 CLASS="filename"
 >foo.sats</TT
-> is staloaded as follows for the second
-time:
+> を次のように2度 staload した場合:
 
 <DIV
 CLASS="informalexample"
@@ -196,24 +192,24 @@ CLASS="programlisting"
 >
 
 
-then <TT
+すると <TT
 CLASS="filename"
 >foo.sats</TT
-> is not actually loaded by the compiler. Instead,
-<FONT
-COLOR="RED"
->FOO2</FONT
-> is simply made to be an alias of <FONT
+> は実際にはコンパイラによってロードされません。
+その代わり、<FONT
 COLOR="RED"
 >FOO</FONT
->.
+> の別名として <FONT
+COLOR="RED"
+>FOO2</FONT
+> が単に作られます。
 
 </P
 ><P
->&#13;It is also allowed for <TT
+>&#13;<TT
 CLASS="filename"
 >foo.sats</TT
-> to be staloaded as follows:
+> は次のようにも staload できます:
 
 <DIV
 CLASS="informalexample"
@@ -232,12 +228,11 @@ CLASS="programlisting"
 >
 
 
-In this case, the namespace for the names declared in <TT
+この場合、<TT
 CLASS="filename"
 >foo.sats</TT
->
-is opened. For instance, the following code shows that these names can now
-be referenced directly:
+> で宣言した名前のための名前空間はオープンです。
+例えば、次のコードはこれらの名前を直接参照できることを示しています:
 
 <DIV
 CLASS="informalexample"
@@ -259,7 +254,7 @@ val b: aDatatype = B(0, aFunction(aValue))
 
 </P
 ><P
->&#13;Let us suppose that we have the following sequence of declarations:
+>&#13;次のような宣言を考えてみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -280,18 +275,17 @@ val anotheValue = aValue + 1
 >
 
 
-Does the second occurrence of <FONT
+二番目に出現する <FONT
 COLOR="RED"
 >aValue</FONT
-> refer to the one
-introduced in the first declaration, or it refers to the one declared
-inside <TT
+> は最初の宣言で導入された値を参照するでしょうか？
+それとも、それは <TT
 CLASS="filename"
 >foo.sats</TT
->? The answer may be a bit surprising: It refers
-to the one introduced in the first declaration as a binding for the
-occurrence of a name is resolved in ATS by searching first through the
-available names delcared in the same file.
+> 中で宣言された値を参照するでしょうか？
+その答は少し意外なものかもしれません:
+それは最初の宣言で導入された値を参照します。
+ATS は最初に、同一ファイル中で宣言された有効な名前を検索することで、名前の束縛を解決するからです。
 
 </P
 ></DIV
