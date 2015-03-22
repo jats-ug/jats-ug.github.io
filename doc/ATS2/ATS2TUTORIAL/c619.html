@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例外</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="Functional Maps"
+HREF="x569.html"><LINK
+REL="NEXT"
+TITLE="参照"
+HREF="c654.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x569.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c654.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="exceptions"
+></A
+>Chapter 13. 例外</H1
+><P
+>&#13;
+例外は実用上とても有用ですが、例外を誤用したコードがよく見られることでも知られています。
+
+</P
+><P
+>&#13;一般的に言うと、プログラムの実行を中断終了させるために捕捉されないことを意図した例外と、プログラム実行の流れを変えるために
+(しばしばローカルで宣言した) 捕捉されることを意図した例外があります。
+例えば、例外 <FONT
+COLOR="RED"
+>ArraySubscriptExn</FONT
+>
+は実行時に配列の範囲外を添字指定したことを検出すると発生します。
+この例外が発生すると、通常
+<FONT
+COLOR="RED"
+>ArraySubscriptExn</FONT
+> は捕捉されることを意図していません。
+プログラマが <FONT
+COLOR="RED"
+>ArraySubscriptExn</FONT
+>
+例外を捕捉するコードを書くことを妨げるものはなにもありませんが、そのコードが非常に複雑になってしまう懸念があります。
+次に、発生した後に捕捉されることを意図した例外について説明しようと思います。
+
+</P
+><P
+>&#13;リストの中から与えられた述語を満たす一番右の要素を見つける関数を実装している次のコードを見てみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN627"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun{a:t@ype}
+list_find_rightmost
+  (List (a), (a) -&#60;cloref1&#62; bool): Option_vt (a)
+//
+implement{a}
+list_find_rightmost
+  (xs, pred) = let
+//
+fun aux
+(
+  xs: List(a)
+) : Option_vt (a) =
+  case+ xs of
+  | nil () =&#62; None_vt ()
+  | cons (x, xs) =&#62; let
+      val res = aux (xs)
+    in
+      case+ res of
+      | Some_vt _ =&#62; res
+      | ~None_vt () =&#62;
+          if pred (x) then Some_vt (x) else None_vt ()
+        // end of [None]
+    end (* end of [cons] *)
+//
+in
+  aux (xs)
+end // end of [list_find_rightmost]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+> が長さ (なんらかの自然数) N のリスト xs
+と述語 pred に対して呼び出されたとしましょう。
+この呼び出しの評価は内部関数 <FONT
+COLOR="RED"
+>aux</FONT
+> の呼び出しを引き起こし、
+さらに N 回の <FONT
+COLOR="RED"
+>aux</FONT
+> の再帰呼び出しに変化します。
+xs の最後の要素だけが述語 pred を満たすと仮定しましょう。
+すると pref を満たす一番右の要素が見つかっているのに、まだ N-1 個の
+<FONT
+COLOR="RED"
+>aux</FONT
+> 呼び出しフレームがコールスタックに残っています。
+見つかった要素を大元の <FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+>
+呼び出しへ戻す前に、これらのフレームを<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>一つずつ</I
+></SPAN
+>ほどいてやらねばなりません。
+次の例外を使った実装 <FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+> ではこの非効率な形を取り除いています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN636"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;implement{a}
+list_find_rightmost
+  (xs, pred) = let
+//
+exception Found of (a)
+//
+fun aux
+(
+  xs: List(a)
+) : void =
+  case+ xs of
+  | nil () =&#62; ()
+  | cons (x, xs) =&#62; let
+      val () = aux (xs)
+    in
+      if pred (x) then $raise Found(x) else ()
+    end (* end of [cons] *)
+//
+in
+//
+try let
+  val () = aux (xs)
+in
+  None_vt ()
+end with
+  | ~Found(x) =&#62; Some_vt (x)
+//
+end // end of [list_find_rightmost]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+try-with 式が評価されると、キーワード <FONT
+COLOR="RED"
+>with</FONT
+>
+に続く節 (しばしば例外ハンドラと呼ばれます)
+を評価するのに必要なコールスタックの部分へのラベルが生成されます。
+それからこのラベルは指定されたグローバルスタックにプッシュされます。
+例外が発生すると、例外ハンドラによって発生した例外が捕捉されるまで
+(つまり例外を表わす値が例外ハンドラのパターンガードにマッチするまで)
+、一つずつグローバルスタック内のそのラベル群が試されます。
+もし捕捉されなかった場合は現在のプログラムの評価は中断終了します。
+上記の例外を使った実装 <FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+> では、再帰呼出
+<FONT
+COLOR="RED"
+>aux</FONT
+> で見つかった要素を運搬するために例外を発生させています。
+コールスタックにある (<FONT
+COLOR="RED"
+>aux</FONT
+> への再帰呼出である)
+中間の呼び出しフレームを全て迂回して、1回のジャンプでこの要素を大元の
+<FONT
+COLOR="RED"
+>list_find_rightmost</FONT
+> に返すことができるのです。
+一般に、例外が発生するポイントとその例外を捕捉するポイントの範囲は複数のコールフレームに及んでいるべきです。
+そうでなければ、例外の使用すべきか疑わしいかもしれません。
+
+</P
+><P
+>&#13;例外を実行時にサポートする ATS の実装は
+<TT
+CLASS="filename"
+>alloca.h</TT
+> で宣言されている <FONT
+COLOR="RED"
+>alloca</FONT
+> 関数と
+<TT
+CLASS="filename"
+>setjmp.h</TT
+> で宣言されている <FONT
+COLOR="RED"
+>setjmp</FONT
+> と <FONT
+COLOR="RED"
+>longjmp</FONT
+> 関数を使っています。
+ATS ソースコードから生成されたC言語ソースコードをコンパイルするのに <B
+CLASS="command"
+>gcc</B
+> もしくは <B
+CLASS="command"
+>clang</B
+> を使う場合、
+<TT
+CLASS="filename"
+>alloca.h</TT
+> ヘッダファイルが確実にインクルードするために -D_GNU_SOURCE フラグを渡すことができます。
+
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_exception.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x569.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c654.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Functional Maps</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>参照</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

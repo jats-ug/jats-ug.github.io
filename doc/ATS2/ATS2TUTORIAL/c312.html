@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Recursion</TITLE
+>再帰</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="ドット記号オーバーロード"
 HREF="c263.html"><LINK
 REL="NEXT"
-TITLE="Datatypes"
+TITLE="データ型"
 HREF="c365.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,30 +78,27 @@ CLASS="chapter"
 ><A
 NAME="recursion"
 ></A
->Chapter 9. Recursion</H1
+>Chapter 9. 再帰</H1
 ><P
->&#13;The notion of recursion is ubiquitous in ATS.  For instance, there are
-recursively defined sorts (datasorts) and types (datatypes) in the statics,
-and there are also recursively defined functions in the dynamics.
-Literally, the word <SPAN
+>&#13;ATS において再帰の概念はあちこちに現われます。
+例えば、静的には再帰的に定義された種 (データ種) や型 (データ型) があり、また動的には再帰的に定義された関数があります。
+言葉の上では、単語 <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->recurse</I
+>再帰</I
 ></SPAN
-> means "go back". When an entity is
-defined recursively, it means that the entity being defined can appear in
-its own definition. In the following presentation, I will show several ways
-to define (or implement) recursive functions and non-recursive functions,
-where the latter is just a special case of the former.
+> は "戻る (go back)" を意味しています。
+あるモノが再帰的に定義されているなら、それ自身の定義中にそのモノを書くことができることを意味しています。
+再帰関数と非再帰関数を定義する (もしくは実装する) いくつかの方法を次に示します。
+このとき後者は前者の特殊ケースです。
 </P
 ><P
->&#13;The keyword <FONT
+>&#13;キーワード <FONT
 COLOR="RED"
 >fun</FONT
-> can be used to initiate the definition of
-a recursive function. For instance, following is the definition of a
-recursive function:
+> は再帰関数定義の開始に使います。
+例えば、次のコードは再帰関数の定義です:
 
 <DIV
 CLASS="informalexample"
@@ -123,18 +120,16 @@ fact(x: int): int =
 >
 
 
-A non-recursive function is a special kind of recursive function that
-does make use of itself in its own definition. So one can certainly use
-<FONT
+非再帰関数は、それ自身の定義中でそれ自身を使う再帰関数の特殊形です。
+そのため、もちろん非再帰関数の定義の開始に <FONT
 COLOR="RED"
 >fun</FONT
-> to initiate the definition of a non-recursive function.
-However, if there is a need to indicate explicitly that a non-recursive is being
-defined, then one can use the keyword <FONT
+> を使うこともできます。
+けれども、非再帰として定義されていることを明示的に示す必要があるのであれば、キーワード <FONT
 COLOR="RED"
 >fn</FONT
-> to do so. For
-instance, the definiton of a non-recursive function is given as follows:
+> を使うことができます。
+例えば、非再帰関数の定義は次のように与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -153,8 +148,7 @@ CLASS="programlisting"
 >
 
 
-which is directly translated by the compiler into the following binding
-between a name and a lambda-expression:
+上記の関数は次のような名前とラムダ式を繋ぐ束縛にコンパイラによって変換されます:
 
 <DIV
 CLASS="informalexample"
@@ -173,12 +167,10 @@ CLASS="programlisting"
 >
 
 
-As another example, please note that the two occurrences of the
-symbol <FONT
+別の例として、次のコードでは <FONT
 COLOR="RED"
 >fact</FONT
-> in the following code refer to two distinct
-functions:
+> が二度現われて、2つの別個の関数を差していることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -200,21 +192,19 @@ fact(x: int): int =
 >
 
 
-While the first <FONT
+最初の (等号の左側にある) <FONT
 COLOR="RED"
 >fact</FONT
-> (to the left of the equality symbol)
-refers to the (non-recursive) function being defined, the second one is
-supposed to have been declared previously.
+> 定義済みの (非再帰の)
+関数を参照しており、2番目は以前に宣言されたものを参照しています。
 
 </P
 ><P
->&#13;A recursive function can also be defined as a recursive value. For
-instance, the recursive function <FONT
+>&#13;再帰関数は再帰的な値としても定義できます。
+例えば、上記で定義した再帰関数 <FONT
 COLOR="RED"
 >fact</FONT
-> defined above can
-be defined as follows:
+> は次のように定義することもできます:
 
 <DIV
 CLASS="informalexample"
@@ -238,20 +228,19 @@ lam (x) =&#62;
 >
 
 
-where the keyword <FONT
+このとき、キーワード <FONT
 COLOR="RED"
 >rec</FONT
-> indicates that <FONT
+> は <FONT
 COLOR="RED"
 >fact</FONT
-> is
-defined recursively, that is, it is allowed to appear in its own
-definition. In fact, the former definition of <FONT
+> が再帰的に定義されていることを示しています。
+つまり、それはそれ自身の定義中に現われることができます。
+実際、<FONT
 COLOR="RED"
 >fact</FONT
-> is directly
-translated into the latter one by the compiler. Of course, one may
-also use a reference to implement recursion:
+> の前者の定義は後者にコンパイラによって変換されます。
+もちろん、再帰を実装するのに参照を使うこともできます:
 
 <DIV
 CLASS="informalexample"
@@ -276,12 +265,11 @@ val () =
 >
 
 
-But this is definitely not a style I would like to advocate.
-For the sake of completion, I present yet another way to define
-<FONT
+しかし、これは私の推奨するスタイルではありません。
+不動点式として <FONT
 COLOR="RED"
 >fact</FONT
-> as a fixed-point expression:
+> を定義するまた別の方法を紹介します:
 
 <DIV
 CLASS="informalexample"
@@ -304,31 +292,28 @@ fix f(x: int): int =&#62;
 >
 
 
-Of course, if one wants to, then one can always replace a lambda-expression
-with a fixed-point expression (or simply fix-expression for short). For instance,
-<FONT
+もちろん望むなら、不動点式をラムダ式で置き換えることがいつでも可能です。
+例えば、<FONT
 COLOR="RED"
 >lambda(x:int):int =&#62; x+x</FONT
-> can be written as <FONT
+> は <FONT
 COLOR="RED"
 >fix _(x:int):int =&#62; x+x</FONT
->.
+> のように書くこともできます。
 
 </P
 ><P
->&#13;For defining mutually recursive functions, one can simply use the
-keyword <FONT
+>&#13;相互再帰関数を定義するためには、関数定義の連結にキーワード <FONT
 COLOR="RED"
 >and</FONT
-> to concatenate function definitions. For instance,
-the following code defines two functions <FONT
+> を使います。
+例えば、次のコードは2つの関数 <FONT
 COLOR="RED"
 >isevn</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >isodd</FONT
->
-mutually recursively:
+> を相互再帰的に定義しています:
 
 <DIV
 CLASS="informalexample"
@@ -352,8 +337,7 @@ isodd(x: int): bool =
 >
 
 
-The code, as one may have guessed, is translated by the compiler into the
-following form (for defining two mutually recursive values):
+読者の推測する通りですが、上記のコードは (2つの相互再帰値を定義するために) 次のような形にコンパイラによって変換されます:
 
 <DIV
 CLASS="informalexample"
@@ -378,24 +362,22 @@ isodd : int -&#62; bool =
 >
 
 
-One can certainly use the keyword <FONT
+もちろん非再帰関数の定義を連結するのに、キーワード <FONT
 COLOR="RED"
 >and</FONT
-> to concatenate
-definitions of non-recursive functions, but doing so is probably just a
-curiosity (instead of a meaningful practice).
+> を使うことはできます。
+しかし、そのような使用はまれでしょう。
 </P
 ><P
->&#13;Even at this point, I have not presented all of the possible ways to define
-functions in ATS. For instance, one can also define stack-allocated
-closure-functions in ATS, which may be either recursive or non-recursive.
-I plan to introduce such functions elsewhere in this tutorial.
+>&#13;ここでは、ATS における関数定義の方法全てを紹介しませんでした。
+例えば、ATS ではスタックに確保されたクロージャ関数を定義することもできます。
+そしてこの関数は再帰的にも非再帰的にも定義できるのです。
+このチュートリアルの別の章でそのような関数を紹介するかもしれません。
 
 </P
 ><P
->&#13;Often, the interface (that is, type) for a function is declared at one
-place and its definition (or implementation) is given at another place.
-For instance, one may first introduce the following declaration:
+>&#13;しばしば、ある場所で関数に対するインターフェイス (すなわち型) を宣言し、そしてその定義 (もしくは実装) を別の場所で与えることがあります。
+例えば、はじめに次のような宣言を導入します:
 
 <DIV
 CLASS="informalexample"
@@ -414,10 +396,10 @@ CLASS="programlisting"
 >
 
 
-Later, one can implement <FONT
+その後、上記の宣言に一致する <FONT
 COLOR="RED"
 >fact</FONT
-> according to the above declaration:
+> を実装することができます:
 
 <DIV
 CLASS="informalexample"
@@ -439,28 +421,25 @@ fact (x) =
 >
 
 
-When <FONT
+関数定義の開始に <FONT
 COLOR="RED"
 >implement</FONT
-> is used to initiate the definition of a
-function, any previously declared symbols (including the one that is
-being defined) can appear in the definition. If it is desirable, one
-may replace <FONT
+> が使われると、(それ自身を含む) 前に宣言したシンボルがその定義中に現われることができます。
+好ましいなら、<FONT
 COLOR="RED"
 >implement</FONT
-> with <FONT
+> を <FONT
 COLOR="RED"
 >implmnt</FONT
->.
+> に置き換えることもできます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で使ったコード全体は <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_recursion.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -521,7 +500,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Datatypes</TD
+>データ型</TD
 ></TR
 ></TABLE
 ></DIV

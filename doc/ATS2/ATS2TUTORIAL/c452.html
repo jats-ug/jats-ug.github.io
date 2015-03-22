@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Functional Lists</TITLE
+>関数的なリスト</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,7 +14,7 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Datatypes"
+TITLE="データ型"
 HREF="c365.html"><LINK
 REL="NEXT"
 TITLE="Functional Sets and Maps"
@@ -78,14 +78,13 @@ CLASS="chapter"
 ><A
 NAME="funlist"
 ></A
->Chapter 11. Functional Lists</H1
+>Chapter 11. 関数的なリスト</H1
 ><P
->&#13;A functional list is just a singly-linked list that is immutable
-after its construction. The following datatype declaration introduces
-a type <FONT
+>&#13;関数的なリストは、コンストラクトした後で不変な単純な片方向リストです。
+次のデータ型宣言は、関数的なリストを表わす型 <FONT
 COLOR="RED"
 >list</FONT
-> for functional lists:
+> を導入しています:
 
 <DIV
 CLASS="informalexample"
@@ -110,36 +109,36 @@ list(a:t@ype, int) =
 >
 
 
-Given a type T and an integer N, the type <FONT
+型 T と整数 N が与えられたとき、型 <FONT
 COLOR="RED"
 >list(T,N)</FONT
-> is for a
-list of length N that contains elements of type T.  The interfaces for
-various functions on functional lists can be found in the SATS file
+> は型 T の要素を含む長さ N のリストを表わします。
+
+関数的なリストに対する様々な関数のインターフェイスが、SATS ファイル
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/list.sats"
 TARGET="_top"
 >prelude/SATS/list.sats</A
->, which
-is automatically loaded by <B
+>
+に見つかります。
+このファイルは <B
 CLASS="command"
 >atsopt</B
->.
+> によって自動的にロードされます。
 </P
 ><P
->&#13;There are various functions in ATSLIB for list construction. In practice, a
-list is usually built by making direct use of the constructors
-<FONT
+>&#13;ATSLIB にはリストを生成する様々な関数があります。
+実際には、コンストラクタ <FONT
 COLOR="RED"
 >list_nil</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >list_cons</FONT
->. For instance, the following
-function <FONT
+> を直接使ってリストは生成されます。
+例えば次の関数 <FONT
 COLOR="RED"
 >fromto</FONT
-> builds a list of integers between two given ones:
+> は、与えられた2つの整数の範囲にある整数群を持つリストを生成します:
 
 <DIV
 CLASS="informalexample"
@@ -166,9 +165,8 @@ fromto
 >
 
 
-Traversing a list is commonly done by making use of pattern matching.  For
-instance, the following code implements a function for computing the length
-of a given list:
+リストを辿るには一般にパターンマッチを使います。
+例えば次のコードは、与えられたリストの長さを算出する関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -211,26 +209,24 @@ end // end of [list_length]
 >
 
 
-Given a non-empty list xs, <FONT
+空でないリスト xs が与えられたとき、<FONT
 COLOR="RED"
 >xs.head</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >xs.tail</FONT
->
-refer to the head and tail of xs, respectively, where <FONT
+> はそれぞれ xs の head と tail です。
+このとき、<FONT
 COLOR="RED"
 >.head</FONT
-> and
-<FONT
+> と <FONT
 COLOR="RED"
 >.tail</FONT
-> are overloaded dot-symbols. For instance, the function
-<FONT
+> はオーバーロードされたドット表記です。
+例えば、与えられたリストを左から fold する関数 <FONT
 COLOR="RED"
 >list_foldleft</FONT
-> for folding a given list from the left can be
-implemented as follows:
+> は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -260,12 +256,10 @@ list_foldleft
 >
 
 
-And the function
-<FONT
+また、与えられたリストを右から fold する関数 <FONT
 COLOR="RED"
 >list_foldright</FONT
-> for folding a given list from the right can be
-implemented as follows:
+> は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -295,21 +289,19 @@ list_foldright
 >
 
 
-Note that <FONT
+<FONT
 COLOR="RED"
 >list_foldleft</FONT
-> is tail-recursive but <FONT
+> は末尾再帰ですが、<FONT
 COLOR="RED"
 >list_foldright</FONT
->
-is not.
+> はそうでないことに注意してください。
 </P
 ><P
->&#13;As an application of <FONT
+>&#13;<FONT
 COLOR="RED"
 >list_foldleft</FONT
->, the following code
-implements a function for reversing a given list:
+> の適用例として、次のコードは与えられたリストを逆順にする関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -337,11 +329,10 @@ list_foldleft&#60;List0(a),a&#62;
 >
 
 
-where the type constructor <FONT
+このとき、型コンストラクタ <FONT
 COLOR="RED"
 >List0</FONT
-> is for lists of
-unspecified length:
+> は長さの規定されていないリストを表わします:
 
 <DIV
 CLASS="informalexample"
@@ -360,28 +351,26 @@ CLASS="programlisting"
 >
 
 
-Clearly, <FONT
+明らかに、<FONT
 COLOR="RED"
 >list_reverse</FONT
-> is length-preserving, that is, it always
-returns a list of the same length as its input. Unfortunately, this
-invariant is not captured in the above implementation of
-<FONT
-COLOR="RED"
->list_reverse</FONT
-> based on <FONT
+> は長さを保存します。
+つまり、入力と同じ長さのリストを常に返すのです。
+不幸にも、<FONT
 COLOR="RED"
 >list_foldleft</FONT
->. For the
-purpose of comparison, another implementation of <FONT
+> を用いた <FONT
 COLOR="RED"
 >list_reverse</FONT
-> is
-given as follows that captures the invariant of <FONT
+> の上記実装は、この不変条件を捕捉していません。
+比較のために、<FONT
 COLOR="RED"
 >list_reverse</FONT
->
-being length-preserving:
+> の別実装を次に示します。
+この実装は <FONT
+COLOR="RED"
+>list_reverse</FONT
+> が長さを保存するという不変条件を捕捉しています:
 
 <DIV
 CLASS="informalexample"
@@ -421,11 +410,10 @@ end // end of [list_reverse]
 
 </P
 ><P
->&#13;As an application of <FONT
+>&#13;<FONT
 COLOR="RED"
 >list_foldright</FONT
->, the following code
-implements a function for concatenating two given lists:
+> の適用例として、次のコードは与えられた2つのリストを連結する関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -452,16 +440,14 @@ list_append
 >
 
 
-The type assigned to <FONT
+<FONT
 COLOR="RED"
 >list_append</FONT
-> states that this function
-takes two lists as its arguments and returns one of unspecified length.
-For the purpose of comparison, another implementation of <FONT
+> に割り当てられた型は、この関数が2つのリストを引数として取り、長さが規定されていないリストを返すことを示しています。
+比較のために、<FONT
 COLOR="RED"
 >list_append</FONT
->
-is given as follows:
+> の別実装を次に示します:
 
 <DIV
 CLASS="informalexample"
@@ -493,22 +479,19 @@ case+ xs of
 >
 
 
-where the type assigned to <FONT
+このとき、<FONT
 COLOR="RED"
 >list_append</FONT
-> states that this
-function takes two lists of length m and n, respectively, and returns
-another list of length m+n.
+> に割り当てられた型は、この関数が長さ
+m と n の2つのリストを取り、長さ m+n の別のリストを返すことを示しています。
 
 </P
 ><P
->&#13;One may think of a functional list as a representation for the finite
-mapping that maps each natural number i less than the length of the list to
-element i in the list. The following function <FONT
+>&#13;読者は関数的なリストを、リストの長さより小さい自然数 i からリストの i 番目の要素をマップする連想配列として考えるかもしれません。
+次の関数 <FONT
 COLOR="RED"
 >list_get_at</FONT
-> is
-for accessing a list element at a given position:
+> は、与えられた位置のリスト要素へのアクセスを表わしています:
 
 <DIV
 CLASS="informalexample"
@@ -536,33 +519,30 @@ list_get_at
 >
 
 
-This function can be called through the use of the bracket
-notation. In other words, <FONT
+この関数は角括弧表記を使って呼び出すことができます。
+別の言い方をすると、xs と i がそれぞれリストと整数である時は、<FONT
 COLOR="RED"
 >xs[i]</FONT
-> is automatically interpreted
-as <FONT
+> は自動的に <FONT
 COLOR="RED"
 >list_get_at(xs, i)</FONT
-> whenever xs and i are a list and an integer,
-respectively. Note that the time-complexity of <FONT
+> に解釈されます
+<FONT
 COLOR="RED"
->list_get_at(xs,
-i)</FONT
-> is O(i). If one uses <FONT
+>list_get_at(xs, i)</FONT
+> の時間効率が O(i) であることに注意してください。
+リストの操作に <FONT
 COLOR="RED"
 >list_get_at</FONT
-> frequently when handling
-lists, then it is almost always a sure sign of poor programming style.
+> を頻繁に使うようであれば、それは貧弱なプログラミングスタイルを示すサインです。
 
 </P
 ><P
->&#13;There is no destructive update on a functional list as it is immutable.
-The following function <FONT
+>&#13;不変であるため、関数的なリストに対する破壊的な更新はできません。
+次の関数 <FONT
 COLOR="RED"
 >list_set_at</FONT
-> can be called to construct
-a list that differs from a given one only at a given position:
+> は呼び出されると、与えられた位置にある要素を与えられた要素で置き換えたリストを生成します:
 
 <DIV
 CLASS="informalexample"
@@ -593,26 +573,23 @@ list_set_at
 >
 
 
-While it is fine to call <FONT
+時折 <FONT
 COLOR="RED"
 >list_set_at</FONT
-> occasionally, a need to
-do so repeatedly often indicates that another data structure should probably
-be chosen in place of functional list.
+>
+を呼び出すのであれば良いですが、頻繁に何度も呼び出す必要があるなら、関数的リストの代わりに別のデータ構造を選ぶべきでしょう。
 </P
 ><P
->&#13;Functional lists are by far the most widely used data structure
-in functional programming. However, one should not attempt to use a
-functional list like an array as doing so is inefficient both time-wise and
-memory-wise.
+>&#13;関数プログラミングにおいて、関数的なリストは最も広く使われるデータ構造です。
+けれども、関数的なリストを配列のように使うべきではありません。
+それは時間効率と空間効率の両面で効果的ではありません。
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で使ったコード全体とテストコードは <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_list.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter plus some testing code.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -659,7 +636,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Datatypes</TD
+>データ型</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

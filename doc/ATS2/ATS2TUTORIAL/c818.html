@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>永続化行列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="サイズを伴う永続化配列"
+HREF="c783.html"><LINK
+REL="NEXT"
+TITLE="サイズを伴う永続化行列"
+HREF="c842.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c783.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c842.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="matrixref"
+></A
+>Chapter 17. 永続化行列</H1
+><P
+>&#13;次元 m, n の永続化行列は、単にサイズが m*n の永続化配列です。
+C言語と同様に、ATS における行列表現は列優先 (row-major) です。
+別の言い方をすると、次元 m, n の行列内の要素 (i, j) は、その行列を表現する配列内の要素 i*n+j です。
+
+</P
+><P
+>&#13;観型 VT と2つの整数 M と N が与えられたとき、
+型 <FONT
+COLOR="RED"
+>matrixref(VT, M, N)</FONT
+> は観型 VT の要素を含む次元 M, N の永続化行列を表わします。
+matrixref 値にどのような次元情報も付随しません。
+永続化行列に関する様々な関数のインターフェイスを SATS ファイル
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
+TARGET="_top"
+>prelude/SATS/matrixref.sats</A
+>
+に見つけることができます。
+これは <B
+CLASS="command"
+>atsopt</B
+> によって自動的に読み込まれます。
+
+</P
+><P
+>&#13;次の関数は matrixref 値を生成するのに一般的に使用されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN826"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t0p}
+matrixref_make_elt{m,n:int}
+  (m: size_t m, n: size_t n, x0: a):&#60;!wrt&#62; matrixref (a, m, n)
+// end of [matrixref_make_elt]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2つのサイズ m, n と要素 x0 が与えられたとき、<FONT
+COLOR="RED"
+>matrixref_make_elt</FONT
+>
+はそれぞれのセルが要素 x0 で初期化された次元 m, n の行列を返します。
+</P
+><P
+>&#13;また、次のキャスト関数が呼び出されると、配列を行列に変化させます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN830"
+></A
+><PRE
+CLASS="programlisting"
+>castfn
+arrayref2matrixref
+  {a:vt0p}{m,n:nat} (A: arrayref (a, m*n)):&#60;&#62; matrixref (a, m, n)
+// end of [arrayref2matrixref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;行列セルの内容物にアクセスしたり更新するために、次の2つの関数
+<FONT
+COLOR="RED"
+>matrixref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>matrixref_set_at</FONT
+> を呼び出すことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN835"
+></A
+><PRE
+CLASS="programlisting"
+>//
+fun{a:t0p}
+matrixref_get_at
+  {m,n:int}
+(
+  A: matrixref (a, m, n), i: sizeLt(m), n: size_t(n), j: sizeLt(n)
+) :&#60;!ref&#62; (a) // end of [matrixref_get_at]
+//
+fun{a:t0p}
+matrixref_set_at
+  {m,n:int}
+(
+  A: matrixref (INV(a), m, n), i: sizeLt (m), n: size_t n, j: sizeLt (n), x: a
+) :&#60;!refwrt&#62; void // end of [matrixref_set_at]
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+アクセスするためには単に行列セルの座標を指定するだけでは十分ではないことに注意してください;
+その行列の行の次元も同様に指定する必要があります。
+
+</P
+><P
+>&#13;次は、与えられた正方行列を転置行列にする関数の実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN838"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun{a:t0p}
+matrixref_transpose
+  {n:nat}
+(
+  M: matrixref (a, n, n), n: size_t (n)
+) : void // end of [matrixref_transpose]
+//
+implement{a}
+matrixref_transpose
+  {n} (M, n) = let
+//
+macdef
+mget (i, j) =
+  matrixref_get_at (M, ,(i), n, ,(j))
+macdef
+mset (i, j, x) =
+  matrixref_set_at (M, ,(i), n, ,(j), ,(x))
+//
+fun loop
+  {i,j:nat |
+   i &#60; j; j &#60;= n
+  } .&#60;n-i,n-j&#62;. 
+(
+  i: size_t (i), j: size_t (j)
+) : void =
+  if j &#60; n then let
+    val x = mget(i, j)
+    val () = mset(i, j, mget(j, i))
+    val () = mset(j, i, x)
+  in
+    loop (i, j+1)
+  end else let
+    val i1 = succ (i)
+  in
+    if i1 &#60; n then loop (i1, succ(i1)) else ()
+  end // end of [if]
+//
+in
+  if n &#62; 0 then loop (i2sz(0), i2sz(1)) else ()
+end // end of [matrixref_transpose]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;この章で紹介したコード全体は
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_matrixref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c783.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c842.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>サイズを伴う永続化配列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>サイズを伴う永続化行列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Datatypes</TITLE
+>データ型</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -14,10 +14,10 @@ REL="UP"
 TITLE="基本的なチュートリアル"
 HREF="p37.html"><LINK
 REL="PREVIOUS"
-TITLE="Recursion"
+TITLE="再帰"
 HREF="c312.html"><LINK
 REL="NEXT"
-TITLE="Functional Lists"
+TITLE="関数的なリスト"
 HREF="c452.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,19 +78,17 @@ CLASS="chapter"
 ><A
 NAME="datatypes"
 ></A
->Chapter 10. Datatypes</H1
+>Chapter 10. データ型</H1
 ><P
->&#13;Datatypes are a form of user-defined types for classifying data (or
-values). The support for datatypes and pattern matching in ATS is primarily
-adopted from ML.
+>&#13;データ型は、データ (もしくは値) を分類するためのユーザ定義の型です。
+ATS におけるデータ型とパターンマッチは ML に由来しています。
 
 </P
 ><P
->&#13;The following code declares a datatype of the name <FONT
+>&#13;次のコードは、平日を示す値を表わす、名前 <FONT
 COLOR="RED"
 >weekday</FONT
-> for
-values representing weekdays:
+> のデータ型を宣言しています:
 
 <DIV
 CLASS="informalexample"
@@ -110,11 +108,10 @@ CLASS="programlisting"
 >
 
 
-There are five data constructors associated with <FONT
+ここでは <FONT
 COLOR="RED"
 >weekday</FONT
->, which
-are
+> に関連する5つのデータコンストラクタがあり、それらは
 <FONT
 COLOR="RED"
 >Monday</FONT
@@ -130,29 +127,27 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >Thursday</FONT
->, and
+>,
 <FONT
 COLOR="RED"
 >Friday</FONT
->.
-All of these data constructors are nullary,
-that is, they take no arguments to
-form values (of the type <FONT
+> です。
+
+これらのデータコンストラクタは全て無引数 (nullary) です。
+すなわち、それらは (<FONT
 COLOR="RED"
 >weekday</FONT
->).
+> 型の) 値を作るのに引数を取りません。
 </P
 ><P
->&#13;Each nullary constructor is represented as a small integer
-(e.g., one that is less than 1024). One can use the following
-function <FONT
+>&#13;それぞれの無引数コンストラクタは (例えば 1024 より小さいような) 小さな整数として表現されます。
+次の関数 <FONT
 COLOR="RED"
 >weekday2int</FONT
-> to find out the integers reprsenting
-the constructors associated with <FONT
+> を使うと、<FONT
 COLOR="RED"
 >weekday</FONT
->:
+> に関連するコンストラクタを表わす整数を調べることができます:
 
 <DIV
 CLASS="informalexample"
@@ -177,11 +172,9 @@ weekday2int
 >
 
 
-The small integer representing a nullary constructor is often referred to
-as the tag of the constructor.
+無引数コンストラクタを表わす小さな整数は、コンストラクタのタグとしばしば呼ばれます。
 
-In this case,
-the tags for
+この場合、
 <FONT
 COLOR="RED"
 >Monday</FONT
@@ -197,41 +190,40 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >Thursday</FONT
->, and
+>,
 <FONT
 COLOR="RED"
 >Friday</FONT
 >
-are 0, 1, 2, 3, and 4, respectively.
+に対するタグは、それぞれ 0, 1, 2, 3, 4 になります。
 </P
 ><P
->&#13;Given a nullary constructor <FONT
+>&#13;無引数コンストラクタ <FONT
 COLOR="RED"
 >foo</FONT
->, both <FONT
+> が与えられたとき、<FONT
 COLOR="RED"
 >foo</FONT
-> and
-<FONT
+>
+でコンストラクトされた値を参照するために、<FONT
+COLOR="RED"
+>foo</FONT
+> と <FONT
 COLOR="RED"
 >foo()</FONT
-> can be used to refer the value constructed by
-<FONT
-COLOR="RED"
->foo</FONT
->.  However, only <FONT
+>
+の両方を使うことができます。
+けれどもこの値にマッチするパターンとして使えるのは <FONT
 COLOR="RED"
 >foo()</FONT
-> can be used as the
-pattern that matches this value. For instance, the following function tests
-whether a given value of the type <FONT
+> のみです。
+例えば次の関数は、与えられた型 <FONT
 COLOR="RED"
 >weekday</FONT
-> is formed with the
-constructor <FONT
+> の値がコンストラクタ <FONT
 COLOR="RED"
 >Friday</FONT
->:
+> で作られたかどうか確認しています:
 
 <DIV
 CLASS="informalexample"
@@ -252,23 +244,21 @@ isFriday(x: weekday): bool =
 >
 
 
-Note that the pattern <FONT
+パターン <FONT
 COLOR="RED"
 >Friday()</FONT
-> cannot be replaced
-with <FONT
+> を <FONT
 COLOR="RED"
 >Friday</FONT
-> as the latter is treated as a variable when
-used as a pattern. On the other hand, both of the following
-assertions hold at run-time as <FONT
+> で置き換えられないことに注意してください。
+パターンとして使われると後者は値として使われます。
+一方で、次のアサートは実行時に扱われるので、<FONT
 COLOR="RED"
 >Friday</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >Friday()</FONT
->
-refer to the same value:
+> は同じ値を指します:
 
 <DIV
 CLASS="informalexample"
@@ -290,18 +280,15 @@ val () = assertloc (isFriday(Friday()))
 
 </P
 ><P
->&#13;If there is only one constructor associated with a datatype, then
-there is no tag in the representation for values of this datatype.
+>&#13;データ型に関連したコンストラクタが1つだけの場合、このデータ型の値を表わすタグはありません。
 
 </P
 ><P
->&#13;A datatype is list-like if there are two data constructors associated with
-it such that one is nullary (nil-like) and the other is non-nullary
-(cons-like). For instance, the datatype <FONT
+>&#13;データ型に関連する2つのデータコンストラクタとして一方は無引数 (nil-like) でもう一方が無引数でない (cons-like) があるなら、そのデータ型は list-like です。
+例えば、次のように宣言されたデータ型 <FONT
 COLOR="RED"
 >ab</FONT
-> declared as follows
-is list-like:
+> はリスト的です:
 
 <DIV
 CLASS="informalexample"
@@ -320,30 +307,26 @@ CLASS="programlisting"
 >
 
 
-The values of a list-like datatype are represented in a special way.  Given
-a value of the datatype; if it is constructed with the nil-like
-constructor, then it is represented as the null-pointer; if it is
-constructed with the cons-like constructor, then it is reprenstend as a
-heap-allocated tuple containing all of the arguments passed to the
-constructor.
+list-like なデータ型の値は特別な方法で表現されます。
+そのデータ型の値が与えられたとき;
+もし nil-like なコンストラクタでコンストラクトされていたら、それは NULL ポインタで表現されます;
+もし cons-like なコンストラクタでコンストラクトされていたら、それはそのコンストラクタに渡された引数全てを含む (ヒープに確保された) タプルで表現されます。
 
-In the above case, the value <FONT
+上記の場合、値 <FONT
 COLOR="RED"
 >A()</FONT
-> is represented as the null
-pointer, and the value <FONT
+> は NULL ポインタで表わされ、ブール <FONT
+COLOR="RED"
+>b</FONT
+> に対する値 <FONT
 COLOR="RED"
 >B(b)</FONT
-> for each boolean <FONT
+>
+は <FONT
 COLOR="RED"
 >b</FONT
-> is
-represented as a heap-allocated singleton tuple containing the only
-component <FONT
-COLOR="RED"
->b</FONT
->. This description can be readily verified with
-the following code:
+> のみを含む (ヒープに確保された) シングルトンタプルとして表わされます。
+この説明は次のコードで簡単に確認できます:
 
 <DIV
 CLASS="informalexample"
@@ -366,10 +349,10 @@ val () = assertloc (false = $UN.ptr0_get&#60;bool&#62;($UN.cast{ptr}(B(false))))
 
 </P
 ><P
->&#13;The following declaration introduces a datatype of the name <FONT
+>&#13;次の宣言は名前 <FONT
 COLOR="RED"
 >abc</FONT
->:
+> のデータ型を導入しています:
 
 <DIV
 CLASS="informalexample"
@@ -389,50 +372,47 @@ CLASS="programlisting"
 >
 
 
-The three constructors associated with <FONT
+<FONT
 COLOR="RED"
 >abc</FONT
-> are <FONT
+> に関連する3つのコンストラクタは <FONT
 COLOR="RED"
 >A</FONT
->,
+>, <FONT
+COLOR="RED"
+>B</FONT
+>, <FONT
+COLOR="RED"
+>C</FONT
+> です;
+<FONT
+COLOR="RED"
+>A</FONT
+> は無引数です;
 <FONT
 COLOR="RED"
 >B</FONT
->, and <FONT
-COLOR="RED"
->C</FONT
->; <FONT
-COLOR="RED"
->A</FONT
-> is nullary; <FONT
-COLOR="RED"
->B</FONT
->
-is unary, taking a boolean to form a value (of the type <FONT
+> の引数は1つで、(<FONT
 COLOR="RED"
 >abc</FONT
->);
+> 型の) 値を作るためにブールを取ります;
 <FONT
 COLOR="RED"
 >C</FONT
-> is binary, taking an integer and a float (of double precision)
-to form a value (of the type <FONT
+> の引数は2つで、(<FONT
 COLOR="RED"
 >abc</FONT
->).
+> 型の) 値を作るために整数と (double 制度の) 浮動小数点数を取ります。
 
 </P
 ><P
->&#13;In a general case, if a data constructor is n-ary for some positive n, then
-each value it constructs is a heap-allocated tuple of n+1 components, where
-the first one is the tag assigned to the constructor and the rest are the
-arguments passed to the constructor.  For instance, the following function
-can be called to find out the tags assigned to the constructors associated
-with <FONT
+>&#13;一般に、なんらかの正の整数 n についてデータコンストラクタが n
+個の引数を取るなら、コンストラクトされた値であるヒープに確保されたタプルは n+1 個の要素を持ちます。
+このとき最初の1つはコンストラクタに割り当てられたタグで、残りはコンストラクタに渡された引数です。
+例えば、次の関数を使うと <FONT
 COLOR="RED"
 >abc</FONT
->:
+> に関連するコンストラクタに割り当てられたタグを調べることができます:
 
 <DIV
 CLASS="informalexample"
@@ -461,26 +441,24 @@ end // end of [abc2tag]
 >
 
 
-In this case, the tags assigned to <FONT
+この場合、<FONT
 COLOR="RED"
 >A</FONT
 >, <FONT
 COLOR="RED"
 >B</FONT
->, and
-<FONT
+>, <FONT
 COLOR="RED"
 >C</FONT
-> are 0, 1, and 2, respectively.
+> に割り当てられたタグはそれぞれ 0, 1, 2 です。
 
 </P
 ><P
->&#13;Datatypes can be defined recursively. As an example,
-the following declaration introduces a recursively defined datatype
-<FONT
+>&#13;データ型は再帰的に定義できます。
+例えば、次の宣言は再帰的な定義された (算術整数式を表わす) データ型 <FONT
 COLOR="RED"
 >intexp</FONT
-> (for representing arithemetic integer expressions):
+> を導入しています:
 
 <DIV
 CLASS="informalexample"
@@ -504,23 +482,21 @@ intexp =
 >
 
 
-For instance, <FONT
+例えば、<FONT
 COLOR="RED"
 >(1+2)-3</FONT
->
-can be represented as <FONT
+> は <FONT
 COLOR="RED"
 >Sub(Add(Int(1), Int(2)), Int(3))</FONT
->.
-As another example, the following code introduces two mutually recursively
-defined datatypes <FONT
+> のように表現できます。
+別の例として、次のコードは2つの相互再帰的に定義されたデータ型 <FONT
 COLOR="RED"
 >intexp</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >boolexp</FONT
 >
-(for integer expressions and boolean expressions, respectively):
+(それぞれ整数式とブール式を表わします) を導入しています:
 
 <DIV
 CLASS="informalexample"
@@ -554,15 +530,14 @@ boolexp =
 >
 
 
-The code below implements two mutually recursive functions
+以下コードは、整数式とブール式の評価を表わす2つの相互再帰関数
 <FONT
 COLOR="RED"
 >eval_intexp</FONT
-> and <FONT
+> を <FONT
 COLOR="RED"
 >eval_boolexp</FONT
-> for evaluating integer
-expressions and boolean expressions, respectively:
+> それぞれ実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -623,19 +598,17 @@ case+ e0 of
 >
 
 
-The datatypes presented in this chapter are simple datatypes.
-Other more advanced forms of datatypes include polymorphic datatypes,
-dependent datatypes, and linear datatypes, which will be covered
-elsewhere.
+この章で紹介したデータ型は単純なデータ型です。
+データ型のより進んだ形として、多相データ型, 依存データ型, 線形データ型 があります。
+それらをどこかで紹介することになるでしょう。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で使ったコード全体とテストコードは <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_datatypes.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter plus some code for testing.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
@@ -682,7 +655,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Recursion</TD
+>再帰</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -696,7 +669,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Functional Lists</TD
+>関数的なリスト</TD
 ></TR
 ></TABLE
 ></DIV

@@ -86,7 +86,7 @@ NAME="reference"
 
 </P
 ><P
->&#13;viewtype VT が与えられたとき、viewtype VT
+>&#13;観型 VT が与えられたとき、観型 VT
 の値への参照の型は <FONT
 COLOR="RED"
 >ref</FONT
@@ -456,8 +456,7 @@ val myref = ref_make_viewptr (view@(myvar) | addr@(myvar))
 関数 <FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
-> はポインタとそのポインタに関連した at-view
-の証明を取り、その証明を消費した後の参照を返します。
+> はポインタとそのポインタに関連した駐観の証明を取り、その証明を消費した後の参照を返します。
 <FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
@@ -465,7 +464,7 @@ COLOR="RED"
 上記のコードでは、<FONT
 COLOR="RED"
 >myvar</FONT
-> は静的に確保されていて、その at-view 証明が
+> は静的に確保されていて、その駐観の証明が
 <FONT
 COLOR="RED"
 >ref_make_viewptr</FONT
