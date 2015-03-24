@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Functional Maps</TITLE
+>関数的な写像</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,10 +11,10 @@ REL="HOME"
 TITLE="ATSプログラミングチュートリアル"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="Functional Sets and Maps"
+TITLE="関数的な集合と写像"
 HREF="c520.html"><LINK
 REL="PREVIOUS"
-TITLE="Functional Sets and Maps"
+TITLE="関数的な集合と写像"
 HREF="c520.html"><LINK
 REL="NEXT"
 TITLE="例外"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 12. Functional Sets and Maps</TD
+>Chapter 12. 関数的な集合と写像</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,19 +78,17 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="funsetmap_map"
->Functional Maps</A
+>関数的な写像</A
 ></H1
 ><P
->&#13;Suppose that a map is needed for mapping keys of type
-<FONT
+>&#13;型 <FONT
 COLOR="RED"
 >key_t</FONT
-> to items of type <FONT
+> のキーから型 <FONT
 COLOR="RED"
 >itm_t</FONT
->. The following code
-essentially sets up an interface for creating and operating on such a map
-based on a balanced-tree implementation in ATSLIB/libats:
+> の要素へマップを表わすのに、写像が必要だと考えます。
+次のコードは本質的に、ATSLIB/libats にて平衡木で実装された写像に対する生成と操作のインターフェイスを作っています:
 
 <DIV
 CLASS="informalexample"
@@ -124,39 +122,37 @@ end // end of [local]
 >
 
 
-Please find <A
+関数的な写像を用いたプログラミングを単純化するためのラッパーである HATS ファイルは
+<A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/libats/ML/HATS/myfunmap.hats"
 TARGET="_top"
->on-line</A
-> the
-HATS file mentioned in the code, which is just a convenience wrapper made
-to simplify programming with functional maps. Note that it is assumed here
-that there is a comparison function on values of the type <FONT
-COLOR="RED"
->key_t</FONT
->
-that overloads the symbol <FONT
+>オンライン</A
+> から入手できます。
+シンボル <FONT
 COLOR="RED"
 >compare</FONT
->. If this is not the case, one
-needs to implement such a function.
+> をオーバーロードする型 <FONT
+COLOR="RED"
+>key_t</FONT
+>の値に対する比較関数があることを、ここでは仮定していることに注意してください。
+存在しない場合、そのような関数を実装する必要があります。
 
 </P
 ><P
->&#13;Assume that <FONT
+>&#13;<FONT
 COLOR="RED"
 >key_t</FONT
-> is <FONT
+> が <FONT
 COLOR="RED"
 >string</FONT
-> and <FONT
+> で <FONT
 COLOR="RED"
 >itm_t</FONT
->
-is <FONT
+> が <FONT
 COLOR="RED"
 >int</FONT
->. The following line of code creates an empty functional map:
+> であると仮定します。
+コードの次の行では、要素を含まない (整数の) 関数的な写像を生成しています:
 
 <DIV
 CLASS="informalexample"
@@ -175,11 +171,10 @@ CLASS="programlisting"
 >
 
 
-The following few lines insert some key/item pairs into
-<FONT
+次の数行では、キー/要素のペアを <FONT
 COLOR="RED"
 >mymap</FONT
->:
+> に挿入しています:
 
 <DIV
 CLASS="informalexample"
@@ -209,36 +204,34 @@ val-~Some_vt(2) = mymap.insert("c", 3)
 >
 
 
-The dot-symbol <FONT
+ドット表記 <FONT
 COLOR="RED"
 >.insert</FONT
-> is overloaded with a function of the
-name <FONT
+> は関数 <FONT
 COLOR="RED"
 >myfunmap_insert</FONT
->.  The first line in the above code may
-seem puzzling: Its sole purpose is to create a left-value to be passed as
-the first argument to <FONT
+> によってオーバーロードされています。
+上記コードの最初の行は謎めいて見えるかもしれません:
+その唯一の目的は、<FONT
 COLOR="RED"
 >myfunmap_insert</FONT
->.  Given a key and an
-item, <FONT
+> への最初の引数として渡される左辺値を生成することです。
+キーと要素が与えられたとき、<FONT
 COLOR="RED"
 >mymap.insert</FONT
-> inserts the key/item pair into
-<FONT
+> はキー/要素ペアを <FONT
 COLOR="RED"
 >mymap</FONT
->.  If the key is in the domain of the map represented by
-<FONT
+> に挿入します。
+もしそのキーが挿入前の写像 <FONT
 COLOR="RED"
 >mymap</FONT
-> before insertion, then the original item associated with
-the key is returned. Otherwise, no item is returned. As can be expected,
-the size of <FONT
+> の定義域であるなら、そのキーに関連する元の要素が返ります。
+そうでない場合、なにも要素は返りません。
+予想されることですが、この時点で <FONT
 COLOR="RED"
 >mymap</FONT
-> is 3 at this point:
+> のサイズは 3 になります:
 
 <DIV
 CLASS="informalexample"
@@ -257,16 +250,15 @@ CLASS="programlisting"
 >
 
 
-The dot-symbol <FONT
+ドット表記 <FONT
 COLOR="RED"
 >.size</FONT
-> is overloaded with a function of the name
-<FONT
+> は関数 <FONT
 COLOR="RED"
 >myfunmap_size</FONT
->, which returns the number of key/item pairs
-stored in a given map.  During the course of debugging, one may want to
-print out the key/item pairs in a given map:
+> でオーバーロードされています。
+この関数は与えられた写像に保管されたキー/要素のペアの数を返します。
+デバッグのために、与えられた写像中のキー/要素ペアを印字したいと思うかもしれません:
 
 <DIV
 CLASS="informalexample"
@@ -287,15 +279,14 @@ val () = fprintln! (stdout_ref, "mymap = ", mymap)
 >
 
 
-where the symbol <FONT
+このとき、シンボル <FONT
 COLOR="RED"
 >fprint</FONT
-> is overloaded with
-<FONT
+> は <FONT
 COLOR="RED"
 >fprint_mymap</FONT
->. The next two lines of code show how search with a
-given key operates on a map:
+> でオーバーロードされています。
+次の2行のコードは、与えられたキーで写像を検索する方法を示しています:
 
 <DIV
 CLASS="informalexample"
@@ -318,13 +309,12 @@ val-~Some_vt(1) = mymap.search("a")
 The dot-symbol <FONT
 COLOR="RED"
 >.search</FONT
-> is overloaded with a function of the
-name <FONT
+> is overloaded with a function of the name <FONT
 COLOR="RED"
 >myfunmap_search</FONT
->, which returns the item associated with a
-given key if it is found. The next few lines of code remove some key/item
-pairs from <FONT
+>,
+which returns the item associated with a given key if it is found.
+The next few lines of code remove some key/item pairs from <FONT
 COLOR="RED"
 >mymap</FONT
 >:
@@ -352,45 +342,41 @@ val-~Some_vt(3) = mymap.takeout("c")
 >
 
 
-The dot-symbol <FONT
+ドット表記 <FONT
 COLOR="RED"
 >.remove</FONT
-> is overloaded with a function of the
-name <FONT
+> は、与えらえれたキーに対応するキー/要素ペアを削除を表わす関数
+<FONT
 COLOR="RED"
 >myfunmap_remove</FONT
-> for removing a key/item pair of a given
-key. If a key/item pair is removed, then the function returns
-true. Otherwise, it returns false to indicates that no key/item pair of the
-given key is stored in the map being operated on.  The dot-symbol
-<FONT
+> でオーバーロードされています。
+もし、キー/要素ペアが削除された場合、この関数は true を返します。
+そうでない場合、操作を行なった写像には与えられたキーに対応するキー/要素ペアが見つからなかったことを表わす false を返します。
+ドット表記 <FONT
 COLOR="RED"
 >.takeout</FONT
-> is overloaded with a function of the name
-<FONT
+> は関数 <FONT
 COLOR="RED"
 >myfunmap_takeout</FONT
->, which is similar to <FONT
+> でオーバーロードされています。
+この関数は、削除した要素を返す点を除いて、<FONT
 COLOR="RED"
 >myfunmap_remove</FONT
->
-excepting for returning the removed item.
+> と同じです。
 
 </P
 ><P
->&#13;Various common map operations can be found in
-<A
+>&#13;一般的な各種の写像操作は <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/libats/ML/HATS/myfunmap.hats"
 TARGET="_top"
 >libats/ML/HATS/myfunmap.hats</A
->.  By following the types assigned to these
-operations, one should have no difficulty in figuring out how they are
-supposed to be called. Please find the entirety of the code used in this
-section <A
+> に見つかります。
+これらの操作に割り当てられた型を見れば、それらをどのように呼び出すべきなのか理解するのは難しくないでしょう。
+この章で紹介したコード全体は <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/CODE/chap_funsetmap_map.dats"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> から入手できます。
 
 </P
 ></DIV
@@ -438,7 +424,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Functional Sets and Maps</TD
+>関数的な集合と写像</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
