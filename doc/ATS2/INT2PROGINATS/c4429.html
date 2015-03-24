@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->From Genericity to Late-Binding</TITLE
+>ジェネリックスから遅延束縛へ</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="関数テンプレートを使ったプログラミング"
 HREF="p4427.html"><LINK
 REL="NEXT"
-TITLE="Example: Generic Operations on Numbers"
+TITLE="例: 数に対するジェネリックス演算"
 HREF="x4493.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,7 +78,7 @@ CLASS="chapter"
 ><A
 NAME="from-genericity-to-late-binding"
 ></A
->Chapter 17. From Genericity to Late-Binding</H1
+>Chapter 17. ジェネリックスから遅延束縛へ</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -89,59 +89,55 @@ CLASS="TOC"
 ><DT
 ><A
 HREF="c4429.html#genericity-of-template-implementations"
->Genericity of Template Implementations</A
+>テンプレート実装のジェネリックス</A
 ></DT
 ><DT
 ><A
 HREF="x4493.html"
->Example: Generic Operations on Numbers</A
+>例: 数に対するジェネリックス演算</A
 ></DT
 ><DT
 ><A
 HREF="x4526.html"
->Templates as a Special Form of Functors</A
+>ファンクタの特殊形としてのテンプレート</A
 ></DT
 ><DT
 ><A
 HREF="x4556.html"
->Example: Templates for Loop Construction</A
+>例: ループ生成のためのテンプレート</A
 ></DT
 ><DT
 ><A
 HREF="x4609.html"
->Template-Based Support for Late-Binding</A
+>テンプレートを用いた遅延束縛のサポート</A
 ></DT
 ></DL
 ></DIV
 ><P
->&#13;The support for function templates in ATS is deeply ingrained in the design
-and implementation of ATS. Primarily, function templates are meant to
-provide a general approach to code reuse in ATS that is highly flexible (in
-terms of applicability) while incurring minimal run-time overhead if
-any. Both ATSPRE (that is, ATSLIB/prelude) and ATSLIB/libats are nearly
-entirely template-based, and the templates in these libraries are for use
-by <B
+>&#13;ATS における関数テンプレートのサポートは ATS のデザインと実装に深く根差しています。
+第一に、関数テンプレートは ATS におけるコード再利用の一般的なアプローチを提供しています。
+それは (妥当性の面で) とても柔軟で、必要になる実行時オーバーヘッドは最小のものです。
+ATSPRE (つまり ATSLIB/prelude) と ATSLIB/libats の両方はテンプレートに基いていて、<B
 CLASS="command"
 >atsopt</B
-> to generate C code that implements template
-instances in the ATS source being compiled. The library files of ATS for
-linking (<TT
+>
+によって吐き出されるC言語コードが ATS ソースコード中のテンプレート実体を実装するためにそれらのライブラリにおけるテンプレートは使われます。
+リンクする ATS のライブラリファイル (<TT
 CLASS="filename"
 >libatslib.a</TT
 > and <TT
 CLASS="filename"
 >libatslib.so</TT
->) are minimal, and
-they are not even necessary for compiling ATS source into executable binaries.
+>) は最小のものです。
+それらは ATS ソースコードを実行バイナリにコンパイルするのに不要なことさえあります。
 
 </P
 ><P
->&#13;The code employed for illustration in this chapter plus some additional
-code for testing is available <A
+>&#13;この章で紹介するコードとテストコードは <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/"
 TARGET="_top"
->on-line</A
->.
+>オンライン</A
+> から入手できます。
 </P
 ><DIV
 CLASS="sect1"
@@ -149,17 +145,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="genericity-of-template-implementations"
->Genericity of Template Implementations</A
+>テンプレート実装のジェネリックス</A
 ></H1
 ><P
->&#13;As is briefly explained in Part I of the book, function templates can be
-seen as a natural solution to the problem of supporting parametric
-polymorphism in the presence of native unboxed data. However, function
-templates can do much more than just supporting parametric polymorphism.
-Let <FONT
+>&#13;この本の I 章で概説した通り、ネイティブのアンボックス化されたデータの存在下におけるパラメータ多相に関する問題に対して、関数テンプレートは自然な解決策です。
+けれども、関数テンプレートはパラメータ多相の単なるサポートより多くのことが可能です。
+<FONT
 COLOR="RED"
 >myprint</FONT
-> be a function template of the following interface:
+> が次のインターフェイスの関数テンプレートだとしましょう:
 
 <DIV
 CLASS="informalexample"
@@ -178,15 +172,14 @@ CLASS="programlisting"
 >
 
 
-Given a value, <FONT
+値が与えられたとき、<FONT
 COLOR="RED"
 >myprint</FONT
-> is supposed to print out some kind of
-representation for this value. For example, we can implement
-<FONT
+> はこの値に対するなんらかの表現を印字するものとしましょう。
+例えば、<FONT
 COLOR="RED"
 >myprint</FONT
-> as follows:
+> を次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -205,13 +198,12 @@ CLASS="programlisting"
 >
 
 
-This implementation of <FONT
+<FONT
 COLOR="RED"
 >myprint</FONT
-> is often referred to as a
-(fully) generic template implementation due to no restriction being imposed
-on the template parameter. Following is another way to code the same
-implementation:
+> のこの実装はしばしば (完全な) 総称テンプレート実装と呼ばれます。
+そのテンプレートパラメータに何の制限も課されていないからです。
+次のように同じ実装を書く別の方法もあります:
 
 <DIV
 CLASS="informalexample"
@@ -230,19 +222,17 @@ CLASS="programlisting"
 >
 
 
-Clearly, the above generic implementation of <FONT
+明らかに、上記 <FONT
 COLOR="RED"
 >myprint</FONT
-> is
-unsatisfactory as it outputs no specific information on a given value.  We
-may want to implement <FONT
-COLOR="RED"
->myprint</FONT
-> as follows for only values of the
-type <FONT
+> のジェネリックス実装は、与えられた値について特別な情報を何も印字できないという点において十分ではありません。
+型 <FONT
 COLOR="RED"
 >int</FONT
->:
+> の値のみをサポートする <FONT
+COLOR="RED"
+>myprint</FONT
+> を実装したくなるかもしれません:
 
 <DIV
 CLASS="informalexample"
@@ -261,27 +251,25 @@ CLASS="programlisting"
 >
 
 
-where <FONT
+このとき <FONT
 COLOR="RED"
 >print_int</FONT
-> is called to print out a given integer. This
-implementation of <FONT
-COLOR="RED"
->myprint</FONT
-> is often referred to as a specific
-template implementation due to the template parameter being bound to a
-specific type (that is, <FONT
-COLOR="RED"
->int</FONT
-> in this case). The following code
-implements <FONT
-COLOR="RED"
->myprint</FONT
-> for list-values (that is, values of type
+> は与えられた整数を印字します。
 <FONT
 COLOR="RED"
+>myprint</FONT
+> のこの実装は特殊テンプレート実装としばしば呼ばれます。
+テンプレートパラメータに特別な型 (つまりこの例では <FONT
+COLOR="RED"
+>int</FONT
+>) を割り当てているからです。
+次のコードは、リスト値 (つまりなんらかの型 T に対する型 <FONT
+COLOR="RED"
 >List(T)</FONT
-> for some type T):
+> の値) のための <FONT
+COLOR="RED"
+>myprint</FONT
+> を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -305,24 +293,22 @@ case+ xs of
 >
 
 
-This implementation of <FONT
-COLOR="RED"
->myprint</FONT
-> is often referred to as a
-partially generic template implementation. In order for an instance of
 <FONT
 COLOR="RED"
 >myprint</FONT
-> to use this implementation, the template parameter for
-the instance must be of the form <FONT
-COLOR="RED"
->List(T)</FONT
-> for some type T.
-As an example, the following code calls an instance of <FONT
+> のこの実装は、しばしば部分的な総称テンプレート実装を呼ばれます。
+この実装を使う <FONT
 COLOR="RED"
 >myprint</FONT
->
-to print out a list of two integer lists:
+> のインスタンスのために、そのインスタンスに対するテンプレートパラメータはなんらかの型
+T において <FONT
+COLOR="RED"
+>List(T)</FONT
+> でなければなりません。
+例えば、次のコードは2つの整数のリストのリストを印字するのに <FONT
+COLOR="RED"
+>myprint</FONT
+> のインスタンスを呼び出しています:
 
 <DIV
 CLASS="informalexample"
@@ -349,24 +335,20 @@ val ((*void*)) = print_newline((*void*))
 
 </P
 ><P
->&#13;Implementations of a function template can be ordered according to an
-obvious partial ordering referred to as genericity ordering: The genericity
-of one implementation is less than or equal to that of another one if the
-former implementation is an instance of the latter one. Please note that
-the first-fit (instead of best-fit) strategy is employed to locate the
-template implementation needed for compiling a given template instance.
-More specifically, locating the template implementation for a particular
-template instance follows the standard principle of lexical scoping to
-search for the first one that is available for use.
+>&#13;関数テンプレートの実装はある特定の順序に従って順序付けられます。
+これはジェネリックス順序 (genericity ordering) と呼ばれます:
+もし、ある実装が別の実装のインスタンスであるなら、前者のジェネリックスは後者のジェネリックス以下になります。
+与えられたテンプレートインスタンスをコンパイルするのに必要なテンプレート実装の配置には
+(best-fit ではなく) first-fit 戦略が取られることに注意してください。
+より具体的には、特殊テンレプートインスタンスに対するテンプレート実装の配置では、使用可能な最初の1つを探すのにレキシカルスコープの原理に従っています。
 
 </P
 ><P
->&#13;In practice, there is quite a bit of subtlety in locating a template
-implementation for a template instance. Let <FONT
+>&#13;実際には、テンプレートインスタンスに対するテンプレート実装の配置にはほんの少し巧妙な点があります。
+<FONT
 COLOR="RED"
 >myprint2</FONT
-> be a
-function template of the following interface:
+> を次のようなインターフェイスを持つ関数テンプレートとしましょう:
 
 <DIV
 CLASS="informalexample"
@@ -385,10 +367,10 @@ CLASS="programlisting"
 >
 
 
-Following is a partially generic implementation of <FONT
+次のコードは <FONT
 COLOR="RED"
 >myprint2</FONT
->:
+> の部分的な総称テンプレート実装です:
 
 <DIV
 CLASS="informalexample"
@@ -414,40 +396,36 @@ case+ xs of
 >
 
 
-This template implementation actually behaves very differently from what
-one might have expected. Note that the template parameter of the called
-instance of <FONT
+このテンプレート実装は、実際には予想される共同と違った振舞いをします。
+実装本体で呼び出された <FONT
 COLOR="RED"
 >myprint2</FONT
-> in the body of the implementation is
-synthesized to be a type of the form <FONT
-COLOR="RED"
->list(a, N)</FONT
-> for some static
-term N (of the sort <FONT
+> のインスタンスのテンプレートパラメータは、なんらかの
+(種 <FONT
 COLOR="RED"
 >int</FONT
->). As this form can never match
-<FONT
+> の) 静的な項 N に対する <FONT
+COLOR="RED"
+>list(a, N)</FONT
+> 型になることに注意してください。
+これはどのような型 T に対する <FONT
 COLOR="RED"
 >List(T)</FONT
-> for any type T, the called instance of the template
-<FONT
+> にもマッチしないので、テンプレート <FONT
 COLOR="RED"
 >myprint2</FONT
-> cannot be compiled according to the given template
-implementation of <FONT
+>
+の呼び出されたインスタンスは与えられた <FONT
 COLOR="RED"
 >myprint2</FONT
->. This issue can be readily fixed by
-passing explicity the type <FONT
+> のテンプレート実装に従ってコンパイルできません。
+この問題は、呼び出される <FONT
+COLOR="RED"
+>myprint2</FONT
+> のインスタンスに、明示的に型 <FONT
 COLOR="RED"
 >List(a)</FONT
-> (as a template parameter) to
-the called instance of <FONT
-COLOR="RED"
->myprint2</FONT
->:
+> をテンプレートパラメータとして渡せば簡単に修正できます:
 
 <DIV
 CLASS="informalexample"
@@ -473,23 +451,21 @@ case+ xs of
 >
 
 
-The instance <FONT
+この例におけるインスタンス <FONT
 COLOR="RED"
 >myprint2&#60;List(a)&#62;</FONT
-> in this example is often
-referred to as a recursive instance. In general, it is a good programming
-practice to <SPAN
+> はしばしば再帰的なインスタンスと呼ばれます。
+一般に、再帰的なインスタンスの使用を <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->avoid</I
+>避ける</I
 ></SPAN
-> using recursive instances. For example, the
-following equivalent implementation of <FONT
+> ことは良いプログラミング習慣です。
+例えば、次のような <FONT
 COLOR="RED"
 >myprint2</FONT
-> makes no use of
-recursive instances:
+> に相当する実装は再帰的なインスタンスを使っていません:
 
 <DIV
 CLASS="informalexample"
@@ -526,13 +502,13 @@ end // end of [myprint2&#60;List(a)&#62;]
 
 </P
 ><P
->&#13;Please find on-line the file
+>&#13;この章で紹介したコード全体とテストコードを含む
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/myprint.dats"
 TARGET="_top"
 >myprint.dats</A
-> containing the
-entirety of the code presented in this section plus some testing code.
+>
+はオンラインから入手できます。
 </P
 ></DIV
 ></DIV
@@ -594,7 +570,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Generic Operations on Numbers</TD
+>例: 数に対するジェネリックス演算</TD
 ></TR
 ></TABLE
 ></DIV

@@ -359,8 +359,10 @@ UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
 
-implement{a}
-array_copy_from_list (A, xs) = let
+implement
+{a}(*tmp*)
+array_copy_from_list
+  (A, xs) = let
 //
 fun loop
 (

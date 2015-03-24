@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Generic Operations on Numbers</TITLE
+>例: 数に対するジェネリックス演算</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="From Genericity to Late-Binding"
+TITLE="ジェネリックスから遅延束縛へ"
 HREF="c4429.html"><LINK
 REL="PREVIOUS"
-TITLE="From Genericity to Late-Binding"
+TITLE="ジェネリックスから遅延束縛へ"
 HREF="c4429.html"><LINK
 REL="NEXT"
-TITLE="Templates as a Special Form of Functors"
+TITLE="ファンクタの特殊形としてのテンプレート"
 HREF="x4526.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 17. From Genericity to Late-Binding</TD
+>Chapter 17. ジェネリックスから遅延束縛へ</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,13 +78,12 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="generic-operations-on-numbers"
->Example: Generic Operations on Numbers</A
+>例: 数に対するジェネリックス演算</A
 ></H1
 ><P
->&#13;There are many types of numbers in ATS. With function templates, we can
-greatly enhance code sharing in numerical computation. For example, we can
-give a generic implementation of matrix multiplication of the following
-interface:
+>&#13;ATS には数多くの数値型があります。
+関数テンプレートを用いると、数値演算においてコードの共有を向上させることができます。
+例えば、持つ行列の乗法のジェネリックス実装に次のインターフェイスを与えることができます:
 
 <DIV
 CLASS="informalexample"
@@ -114,16 +113,13 @@ matrix_mul
 >
 
 
-and then use it to immediately obtain implementations of matrix
-multiplication for matrices of integers, matrices of floating point
-numbers, matrices of floating point complex numbers, etc. This approach is
-clearly far superior to relying on error-prone macros in C.
+それからこれを使って、整数の行列, 浮動小数点数の行列, 浮動小数点複素数の行列などの行列乗法の実装をすぐに得られます。
+このアプローチは、エラーを招きやすいC言語マクロの使用よりも明確に優れています。
 
 </P
 ><P
->&#13;Let us take a look at a concrete example involving generic operations on
-numbers. The following code gives a standard implementation of the
-factorial function:
+>&#13;数に対するジェネリックス演算の具体的な例を見てみましょう。
+次のコードは階乗関数の一般的な実装です:
 
 <DIV
 CLASS="informalexample"
@@ -150,26 +146,24 @@ fact(n) =
 >
 
 
-When applied to 100, <FONT
+100 に適用されると、<FONT
 COLOR="RED"
 >fact</FONT
-> is likely to return 0. This can be
-easily understood as the true value of the factorial of 100 is a multiple
-of 2<SUP
+> は 0 を返すでしょう。
+これは 100 の階乗が 2<SUP
 >32</SUP
-> and the multiplication operation on integers of the type
-<FONT
+> の倍数になり、型 <FONT
 COLOR="RED"
 >int</FONT
-> is probably modulo 2<SUP
+>
+の整数に対する乗算が 2<SUP
 >32</SUP
->. Suppose that we want to
-replace this multiplication operation with the one on floating point
-numbers of double precision. This can be done by implementing a slight variant
-of <FONT
+> を法とすることから容易に理解できます。
+この乗法を倍精度の浮動小数点数における乗法に置き換えたいとします。
+これは次のように <FONT
 COLOR="RED"
 >fact</FONT
-> as follows
+> のわずかな偏見を実装するだけで済みます:
 
 <DIV
 CLASS="informalexample"
@@ -196,20 +190,18 @@ factd(n) =
 >
 
 
-When applied to 100, <FONT
+100 に適用されると、<FONT
 COLOR="RED"
 >factd</FONT
-> should return a large floating point
-number. Obviously, there is a great deal of code duplication between the
-implementations of <FONT
+> は大きな浮動小数点数を返します。
+明らかに <FONT
 COLOR="RED"
 >fact</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >factd</FONT
->. We can readily
-eliminate this duplication by introducing a generic implementation of the
-factorial function as follows:
+> の実装の間にはコードの重複があります。
+次のような階乗関数のジェネリックス実装を導入することで、この重複をたやすく取り除くことができます。
 
 <DIV
 CLASS="informalexample"
@@ -241,11 +233,11 @@ else gnumber_int&#60;a&#62;(1)
 >
 
 
-With a bit of help from the support for
-overloading in ATS, we can rewrite <FONT
+ATS でオーバーロードをサポートによって少しきれいにできます。
+<FONT
 COLOR="RED"
 >gfact</FONT
-> as follows:
+> を次のように書き直せます:
 
 <DIV
 CLASS="informalexample"
@@ -275,14 +267,13 @@ end (* end of [gfact] *)
 >
 
 
-We can now implement <FONT
+これで <FONT
 COLOR="RED"
 >fact</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >factd</FONT
->
-as follows:
+> は次のように実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -304,9 +295,8 @@ implement factd(n) = gfact&#60;double&#62;(n)
 >
 
 
-There is support in ATS based on the GNU multiple precision arithmetic
-library (GMPLIB) for integers of unlimited precision. The following code
-presents a way to compute the true value of the factorial of 100:
+GNU multiple precision arithmetic library (GMPLIB) に基づいて多倍長整数を ATS はサポートしています。
+次のコードは 100 の階乗の正しい値を算出する方法を示しています:
 
 <DIV
 CLASS="informalexample"
@@ -339,7 +329,7 @@ println! ("gfact&#60;intinf&#62;(100) = ", gfact&#60;intinf&#62;(100))
 >
 
 
-I only list some leading digits of the result:
+次のような数値が得られました:
 
 <DIV
 CLASS="informalexample"
@@ -359,13 +349,13 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Please find on-line the file
+>&#13;この章で紹介したコード全体とテストコードを含む
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/gnumber.dats"
 TARGET="_top"
 >gnumber.dats</A
-> containing the
-entirety of the code presented in this section plus some testing code.
+>
+はオンラインから入手できます。
 </P
 ></DIV
 ><DIV
@@ -412,7 +402,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->From Genericity to Late-Binding</TD
+>ジェネリックスから遅延束縛へ</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -426,7 +416,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Templates as a Special Form of Functors</TD
+>ファンクタの特殊形としてのテンプレート</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->テンプレートを用いた遅延束縛のサポート</TITLE
+>Template-Based Support for Late-Binding</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,11 +11,11 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="ジェネリックスから遅延束縛へ"
+TITLE="ジェネリックスから遅延バインディングへ"
 HREF="c4429.html"><LINK
 REL="PREVIOUS"
-TITLE="例: ループ生成のためのテンプレート"
-HREF="x4556.html"><LINK
+TITLE="Example: Templates for Loop Construction"
+HREF="x4555.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -46,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x4556.html"
+HREF="x4555.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 17. ジェネリックスから遅延束縛へ</TD
+>Chapter 17. ジェネリックスから遅延バインディングへ</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -71,27 +71,31 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="template-based-support-for-late-binding"
->テンプレートを用いた遅延束縛のサポート</A
+>Template-Based Support for Late-Binding</A
 ></H1
 ><P
->&#13;オブジェクト指向プログラミング (OOP) の意味について聞かれたとき、アラン・ケイは彼にとっての
-OOP はメッセージ、状態プロセスの局所的な保持, 保護, 隠蔽と全てに対する極端な遅延束縛 (late-binding) であると答えました。
+>&#13;When asked about the meaning of object-oriented programming (OOP),
+Alan Kay once said that OOP to him meant only messaging, local retention
+and protection and hiding of state-process, and extreme late-binding of all
+things.
 </P
 ><P
->&#13;ATS では、関数テンプレートは (関数呼び出しの) 遅延束縛に高度に柔軟なアプローチを提供します。
-はじめに、なぜ遅延束縛が魅力的なのか知るために、単純な例を見てみましょう。
-
-次のコードは、整数もしくは (倍精度の) 浮動小数点数を表わすような型である、データ型 <FONT
+>&#13;In ATS, function templates can provide a highly flexible approach to
+supporting late-binding (of function calls). Let us first take a look at a
+simple example to see why late-binding can be so desirable. The following
+code declares a datatype <FONT
 COLOR="RED"
 >intfloat</FONT
-> を宣言しています:
+> such that each value of this
+declared type represents either an integer or a floating point number (of
+double precision):
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4614"
+NAME="AEN4613"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -107,20 +111,21 @@ intfloat =
 >
 
 
-型 <FONT
+In order to print values of the type <FONT
 COLOR="RED"
 >intfloat</FONT
-> の値を印字するために、次のような <FONT
+>, we can implement
+<FONT
 COLOR="RED"
 >print_intfloat</FONT
-> を実装できます:
+> as follows:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4618"
+NAME="AEN4617"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -141,36 +146,39 @@ case+ x of
 >
 
 
-このとき、<FONT
+where <FONT
 COLOR="RED"
 >print_int</FONT
-> と <FONT
+> and <FONT
 COLOR="RED"
 >print_double</FONT
-> は、それぞれ整数と (倍精度の) 浮動小数点数を印字する単相関数です。
-整数と浮動小数点数を印字するにはもちろん数多くの方法があります。
-けれども、<FONT
+> are monomorphic
+functions for printing an integer and a floating point number (of double
+precision), respectively. There are certainly many different ways to print
+integers and floating point numbers, but <FONT
 COLOR="RED"
 >print_intfloat</FONT
-> は唯一1つの印字方法しか使えません。
-すなわち <FONT
+> only
+uses a particular one for integers (via <FONT
 COLOR="RED"
 >print_int</FONT
-> を通じて整数を表わし、<FONT
+>) and a
+particular one for floating point numbers (via <FONT
 COLOR="RED"
 >print_double</FONT
-> を通じて浮動小数点数を表わすしかありません。
-このような柔軟性の欠如を回避する方法の1つは、次のような高階関数 <FONT
+>).
+One possibility of avoiding this form of extreme inflexibility is to define
+a higher-order function <FONT
 COLOR="RED"
 >fprint_intfloat</FONT
-> を定義することです:
+> as follows:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4626"
+NAME="AEN4625"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -195,52 +203,58 @@ case+ x of
 >
 
 
-<FONT
+With <FONT
 COLOR="RED"
 >fprint_intfloat</FONT
-> を用いると、後から <FONT
+>, one can decide to choose implementations
+for <FONT
 COLOR="RED"
 >print_int</FONT
-> と <FONT
+> and <FONT
 COLOR="RED"
 >print_double</FONT
-> の実装を選択できます。
-この点で、高階関数は遅延束縛の一種をサポートしていると言えます。
-けれども、そのような高階関数の使用に問題がないわけではありません。
-基本的に、<FONT
-COLOR="RED"
->print_int</FONT
-> を直接もしくは間接的に呼び出すどのような関数も、高階関数になる必要があります。
-<FONT
-COLOR="RED"
->print_double</FONT
-> についても同様です。
+> at a later stage. In
+this regard, I say that higher-order functions can support a form of
+late-binding. However, using higher-order functions in such a manner is not
+without serious problems. Basically, any function that calls
 <FONT
 COLOR="RED"
 >print_int</FONT
-> や <FONT
+> either directly or indirectly needs to be turned into
+a higher-order function, and the same applies to functions calling
+<FONT
 COLOR="RED"
 >print_double</FONT
->
-のように扱う必要がある関数が増えた場合、高階関数を多様するこのプログラミングスタイルは極端に不恰好なものになりえます。
+> as well. This style of programming with extensive
+use of higher-order functions can soon become extremely unwieldy when the
+number of functions grows large that need to be treated like
+<FONT
+COLOR="RED"
+>print_int</FONT
+> and <FONT
+COLOR="RED"
+>print_double</FONT
+>.
 
 </P
 ><P
->&#13;高階関数を使用する代わりに、テンプレート関数を使って (関数呼び出しの) 遅延束縛をサポートできます。
-例えば、次のコードは型 <FONT
-COLOR="RED"
->intfloat</FONT
-> の値を印字するテンプレート関数 <FONT
+>&#13;Instead of using higher-order functions, we can rely on template functions
+to support late-binding (of function calls). For example, the following
+code implements a template function <FONT
 COLOR="RED"
 >tprint_intfloat</FONT
-> を実装しています:
+> for
+printing values of the type <FONT
+COLOR="RED"
+>intfloat</FONT
+>:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4638"
+NAME="AEN4637"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -279,28 +293,28 @@ case+ x of
 >
 
 
-<FONT
+Please note that the default implementations for <FONT
 COLOR="RED"
 >tprint_int</FONT
-> と <FONT
-COLOR="RED"
->tprint_double</FONT
-> のデフォルト実装はそれぞれ
+> and
 <FONT
 COLOR="RED"
+>tprint_double</FONT
+> are based on <FONT
+COLOR="RED"
 >print_int</FONT
-> と <FONT
+> and <FONT
 COLOR="RED"
 >print_double</FONT
-> であることに注意してください。
-予想されることですが、次のコードは2行印字します:
+>,
+respectively. As can be expected, the following code outputs two lines:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4644"
+NAME="AEN4643"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -320,15 +334,15 @@ val () = (
 >
 
 
-このとき、出力される最初の行は文字列 "0" で、次の行は文字列 "1.000000" になります。
-次のコードもまた2行印字します:
+where the first line consists of the string "0" and the second one
+the string "1.000000". The following code also outputs two lines:
 
 <DIV
 CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN4646"
+NAME="AEN4645"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -357,37 +371,38 @@ end // end of [local]
 >
 
 
-このとき、出力される最初の行は文字列 "INT(0)" で、次の行は文字列 "FLOAT(1.000000)" になります。
-この後者のケースでは、テンプレートインスタンス <FONT
-COLOR="RED"
->tprint_int&#60;&#62;</FONT
-> と <FONT
-COLOR="RED"
->tprint_double&#60;&#62;</FONT
->
-の呼び出しは、キーワード <FONT
-COLOR="RED"
->local</FONT
-> と <FONT
-COLOR="RED"
->in</FONT
-> の間で与えられている
+where the first line consists of the string "INT(0)" and the second one the
+string "FLOAT(1.000000)"). In the latter case, the calls to template instances
 <FONT
 COLOR="RED"
+>tprint_int&#60;&#62;</FONT
+> and <FONT
+COLOR="RED"
+>tprint_double&#60;&#62;</FONT
+> are compiled
+according to the implementations for <FONT
+COLOR="RED"
 >tprint_int</FONT
-> と <FONT
+> and <FONT
 COLOR="RED"
 >tprint_double</FONT
-> の実装に従ってコンパイルされます。
+>
+given between the keywords <FONT
+COLOR="RED"
+>local</FONT
+> and <FONT
+COLOR="RED"
+>in</FONT
+>.
 </P
 ><P
->&#13;この章で紹介したコード全体とテストコードを含む
+>&#13;Please find on-line the file
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/intfloat.dats"
 TARGET="_top"
 >intfloat.dats</A
->
-ファイルはオンラインから入手できます。
+> containing the
+entirety of the code presented in this section plus some testing code.
 </P
 ></DIV
 ><DIV
@@ -406,7 +421,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x4556.html"
+HREF="x4555.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -430,7 +445,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->例: ループ生成のためのテンプレート</TD
+>Example: Templates for Loop Construction</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

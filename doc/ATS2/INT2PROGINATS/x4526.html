@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Templates as a Special Form of Functors</TITLE
+>ファンクタの特殊形としてのテンプレート</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="From Genericity to Late-Binding"
+TITLE="ジェネリックスから遅延束縛へ"
 HREF="c4429.html"><LINK
 REL="PREVIOUS"
-TITLE="Example: Generic Operations on Numbers"
+TITLE="例: 数に対するジェネリックス演算"
 HREF="x4493.html"><LINK
 REL="NEXT"
-TITLE="Example: Templates for Loop Construction"
+TITLE="例: ループ生成のためのテンプレート"
 HREF="x4556.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 17. From Genericity to Late-Binding</TD
+>Chapter 17. ジェネリックスから遅延束縛へ</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,14 +78,13 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="templates-as-a-special-form-of-functors"
->Templates as a Special Form of Functors</A
+>ファンクタの特殊形としてのテンプレート</A
 ></H1
 ><P
->&#13;Many uses of higher-order functions can be readily replaced with function
-templates in ATS.  In particular, higher-order functions are often
-implemented in ATS based on the corresponding function templates.
-Let us start with a concrete example. Following is a standard
-implementation of list mapping as a higher-order function (template):
+>&#13;ATS では、高階関数の使用の多くは関数テンプレートによって容易に置き換えできます。
+特に、高階関数は対応する関数テンプレートを元に実装されることもしばしばです。
+実際の例を最初に見てみましょう。
+次のコードは、高階関数テンプレートとしてのリストのマップの一般的な実装です:
 
 <DIV
 CLASS="informalexample"
@@ -128,24 +127,23 @@ end // end of [list_map_fun]
 >
 
 
-Given a list of cerntain length and a function (which is envless),
+ある長さのリストと (無環境の) 関数が与えられたとき、<FONT
+COLOR="RED"
+>list_map_fun</FONT
+>
+は同じ長さの線形リストを返します。
+不幸にも、リストとクロージャ関数に対して <FONT
+COLOR="RED"
+>list_map_fun</FONT
+> を呼び出すことはできません。
+もちろん、<FONT
+COLOR="RED"
+>list_map_fun</FONT
+> の実装を複製することで、次のインターフェイスを持つ
 <FONT
 COLOR="RED"
 >list_map_fun</FONT
-> returns a linear list of the same
-length. Unfortunately, <FONT
-COLOR="RED"
->list_map_fun</FONT
-> cannot be called on a list and
-a closure-function. We certainly can implement a variant of
-<FONT
-COLOR="RED"
->list_map_fun</FONT
-> of the following interface by essentially duplicating
-the implementation of <FONT
-COLOR="RED"
->list_map_fun</FONT
->:
+> の変種を実装することはできます:
 
 <DIV
 CLASS="informalexample"
@@ -171,26 +169,23 @@ list_map_cloref{n:nat}
 >
 
 
-While <FONT
+<FONT
 COLOR="RED"
 >list_map_cloref</FONT
-> can be called on a list and a
-closure-function, the closure-function that is formed at run-time to be
-passed to a call to <FONT
-COLOR="RED"
->list_map_cloref</FONT
-> most likely becomes garbage
-immediately after the call returns. Without garbage collection (GC), the
-memory for storing the closure is leaked. We surely have many good reasons
-for avoiding using a higher-order function like <FONT
+> はリストとクロージャ関数に対して呼び出せますが、<FONT
 COLOR="RED"
 >list_map_cloref</FONT
 >
-when doing embedded programming in ATS.
+呼び出しに渡されるために実行時に生成されるクロージャ関数は、関数呼び出しが返ると即座にゴミになってしまうでしょう。
+ガベージコレクション (GC) がない場合、そのクロージャを保管していたメモリはリークしてしまいます。
+ATS を使って組み込みプログラミングを行なう際は、<FONT
+COLOR="RED"
+>list_map_cloref</FONT
+> のような高階関数の使用を避けた方が良いでしょう。
 
 </P
 ><P
->&#13;A proper way to implement list mapping (as I see it) is given as follows:
+>&#13;リストのマップを実装する正当な方法は (私の知るかぎり) 次のようなものです:
 
 <DIV
 CLASS="informalexample"
@@ -237,37 +232,34 @@ end // end of [list_map]
 >
 
 
-The function template <FONT
+関数テンプレート <FONT
 COLOR="RED"
 >list_map</FONT
-> is given in a style that is
-often referred to as being functorial: <FONT
+> はファンクタ的 (functorial) と呼ばれるスタイルです:
+<FONT
 COLOR="RED"
 >list_map</FONT
-> can be thought
-of as a functor in Standard ML that applies to a module consisting of a
-single function <FONT
+> は、1つの関数 <FONT
 COLOR="RED"
 >list_map$fopr</FONT
->. In SML, each argument of a
-functor, which itself is a module, needs to be constructed and then passed
-to the functor explcitly. In ATS, the template implementation needed for
-compiling a particular template instance is located through a search
-procedure (that follows the standard principle of lexical scoping).
+> から成るモジュールに適用する Standard ML のファンクタと考えることができます。
+SML では、それ自身がモジュールであるファンクタのそれぞれの引数はコンストラクトされる必要があり、それから明示的にファンクタに渡されます。
+ATS では、特殊テンプレートインスタンスをコンパイルするために必要なテンプレート実装は検索して配置されます。
+(これはレキシカルスコープの原理に従います。)
 
 </P
 ><P
->&#13;With <FONT
+>&#13;<FONT
 COLOR="RED"
 >list_map</FONT
->, we can implement both <FONT
+> を用いて、<FONT
 COLOR="RED"
 >list_map_fun</FONT
->
-and <FONT
+> と <FONT
 COLOR="RED"
 >list_map_cloref</FONT
-> as follows in a straightforward manner:
+>
+の両方を次のようにそのまま実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -306,25 +298,24 @@ end // end of [list_map_cloref]
 >
 
 
-For those who are familiar with functors in SML, the implementation of
-<FONT
+SML におけるファンクタとして馴染みのあるように、<FONT
 COLOR="RED"
 >list_map_fun</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >list_map_cloref</FONT
-> should clearly
-remind them of functor application.
+>
+の実装は明らかにファンクタの適用のそれに似ています。
 
 </P
 ><P
->&#13;Please find on-line the file
+>&#13;この章で紹介したコード全体とテストコードを含む
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/list_map.dats"
 TARGET="_top"
 >list_map.dats</A
-> containing the
-entirety of the code presented in this section plus some testing code.
+>
+ファイルはオンラインから入手できます。
 </P
 ></DIV
 ><DIV
@@ -371,7 +362,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Example: Generic Operations on Numbers</TD
+>例: 数に対するジェネリックス演算</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -385,7 +376,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Example: Templates for Loop Construction</TD
+>例: ループ生成のためのテンプレート</TD
 ></TR
 ></TABLE
 ></DIV
