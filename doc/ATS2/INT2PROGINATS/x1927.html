@@ -95,7 +95,7 @@ COLOR="RED"
 COLOR="RED"
 >rat</FONT
 > 型のそれぞれの値はヒープメモリに保存されます。
-そのメモリはガベージコレクション(GC)によってのみ回収できます。
+そのメモリはガベージコレクション (GC) によってのみ回収できます。
 代わりに、 <FONT
 COLOR="RED"
 >rat</FONT
@@ -150,21 +150,20 @@ CLASS="programlisting"
 >
 
 
-この宣言は、
-<FONT
+この宣言は、<FONT
 COLOR="RED"
 >rat</FONT
 > 型の値の表現は <FONT
 COLOR="RED"
 >(int, int)</FONT
-> 型の値の表現と同じであることを、
-単純にATSコンパイラに伝えています。
-けれども、この情報はATSの型検査器にとって有効ではありません。
+>
+型の値の表現と同じであることを、単純に ATS コンパイラに伝えています。
+けれども、この情報は ATS の型検査器にとって有効ではありません。
 とりわけ、プログラム中で <FONT
 COLOR="RED"
 >rat</FONT
-> 型の値が整数のペアとして扱われると、
-型エラーを引き起こします。 </P
+> 型の値が整数のペアとして扱われると、型エラーを引き起こします。
+</P
 ><P
 ><A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratmod.sats"
@@ -254,7 +253,7 @@ end // end of [rat_make_int_int]
 >
 
 
-整数pとゼロでない整数qの組が与えられた時、
+整数 p とゼロでない整数 q の組が与えられた時、
 関数 <FONT
 COLOR="RED"
 >rat_make_int_int</FONT
@@ -266,14 +265,13 @@ p<SUB
 > を返します。
 ここで、q <SUB
 >1</SUB
-> は正の数で、 p<SUB
+> は正の数で、p<SUB
 >1</SUB
 > と q<SUB
 >1</SUB
 >
 は互いに素です。
-つまり、それらの最大公約数は1で、
-p<SUB
+つまり、それらの最大公約数は1で、p<SUB
 >1</SUB
 >/q<SUB
 >1</SUB

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->ATSの型をエクスポートしてC言語から使う</TITLE
+>ATS の型をエクスポートしてC言語から使う</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -78,11 +78,11 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="exporting_types_and_values"
->ATSの型をエクスポートしてC言語から使う</A
+>ATS の型をエクスポートしてC言語から使う</A
 ></H1
 ><P
->&#13;ATSでは、ATSの型をエクスポートしてC言語から直接使うこともできます。
-次の例では、ATSの <FONT
+>&#13;ATS では、ATS の型をエクスポートしてC言語から直接使うこともできます。
+次の例では、ATS の <FONT
 COLOR="RED"
 >(int, string)</FONT
 > 型が割り当てられた値のために、
@@ -90,7 +90,7 @@ COLOR="RED"
 COLOR="RED"
 >int_and_string</FONT
 >
-の名前のtypedefが宣言されることを期待しています:
+の名前の typedef が宣言されることを期待しています:
 
 <DIV
 CLASS="informalexample"
@@ -138,8 +138,8 @@ struct {
 
 </P
 ><P
->&#13;ときどき、ATSにおけるdatatype宣言の値をC言語でコンストラクトしたいことがあります。
-例えば、iが整数でdが倍精度実浮動小数点数であるような
+>&#13;ときどき、ATS におけるデータ型宣言の値をC言語でコンストラクトしたいことがあります。
+例えば、i が整数で d が倍精度実浮動小数点数であるような
 <FONT
 COLOR="RED"
 >cons2(i, d)</FONT
@@ -147,7 +147,7 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >cons2</FONT
-> は次で宣言されたdatatype <FONT
+> は次で宣言されたデータ型 <FONT
 COLOR="RED"
 >abc</FONT
 > に関連したデータコンストラクタです:
@@ -170,10 +170,10 @@ CLASS="programlisting"
 >
 
 
-データコンストラクタを宣言すると必ず対応する(線形の)型コンストラクタが作られます。
+データコンストラクタを宣言すると必ず対応する (線形の) 型コンストラクタが作られます。
 そのコンストラクタには元のデータコンストラクタの名前と文字列
 "_pstruct" を連結した名前が付けられます。
-そのため上記で宣言したdatatype <FONT
+そのため上記で宣言したデータ型 <FONT
 COLOR="RED"
 >abc</FONT
 > の場合は、
@@ -195,7 +195,7 @@ COLOR="RED"
 
 </P
 ><P
->&#13;次の宣言でATSの <FONT
+>&#13;次の宣言で ATS の <FONT
 COLOR="RED"
 >cons2_pstruct(int, double)</FONT
 > 型が
@@ -229,7 +229,7 @@ COLOR="RED"
 <FONT
 COLOR="RED"
 >cons2_node_</FONT
-> という名前でC言語のtypedefが暗黙のうちに導入されます。
+> という名前でC言語の typedef が暗黙のうちに導入されます。
 結果として次のようなC言語コードが生成されるでしょう:
 
 <DIV
@@ -293,14 +293,14 @@ COLOR="RED"
 > と <FONT
 COLOR="RED"
 >cons2</FONT
-> のconstructor tagはそれぞれ0と1であることに注意してください。
+> のコンストラクタタグはそれぞれ0と1であることに注意してください。
 <FONT
 COLOR="RED"
 >cons1</FONT
 > と <FONT
 COLOR="RED"
 >cons2</FONT
-> は datatype <FONT
+> はデータ型 <FONT
 COLOR="RED"
 >abc</FONT
 >
@@ -308,14 +308,14 @@ COLOR="RED"
 
 </P
 ><P
->&#13;ATS側で <FONT
+>&#13;ATS 側で <FONT
 COLOR="RED"
 >cons2_make</FONT
-> にインターフェイスを割り当てることで、
-<FONT
+> にインターフェイスを割り当てることで、<FONT
 COLOR="RED"
 >cons2_make</FONT
-> の挙動が意図したものかどうかチェックできます:
+>
+の挙動が意図したものかどうかチェックできます:
 
 <DIV
 CLASS="informalexample"
@@ -338,10 +338,9 @@ val-cons2 (1, 2.34) = cons2_make (1, 2.34)
 
 </P
 ><P
->&#13;一般に、低レイヤーのシステムプログラミングにおいてプログラミング言語を使うために、
-その言語の低レベルのデータ表現をしっかり理解することはプログラマにとって不可欠です。
-ATSの低レベルデータ表現はC言語の型の項を使って簡単に解釈できます。
-そのため必要であればC言語の中でATSの値を直接コンストラクトし操作することは容易なのです。
+>&#13;一般に、低レイヤーのシステムプログラミングにおいてプログラミング言語を使うために、その言語の低レベルのデータ表現をしっかり理解することはプログラマにとって不可欠です。
+ATS の低レベルデータ表現はC言語の型の項を使って簡単に解釈できます。
+そのため必要であればC言語の中で ATS の値を直接コンストラクトし操作することは容易なのです。
 
 </P
 ></DIV

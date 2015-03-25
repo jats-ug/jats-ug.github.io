@@ -82,29 +82,29 @@ NAME="matrices"
 ></H1
 ><P
 >&#13;ATSにおける行列とは単に2次元の配列です。
-それは1次元の配列と列優先(row-major)スタイルで表現されます
-(行優先(column-major)スタイルではありません)。
-型Tが与えられたとき、型 <FONT
+それは1次元の配列と列優先 (row-major) スタイルで表現されます
+(行優先 (column-major) スタイルではありません)。
+型 T が与えられたとき、型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
 > は、
-固有の列と行の数によって構成された行列で、行列中の要素は型Tです。
+固有の列と行の数によって構成された行列で、行列中の要素は型 T です。
 これ以降、型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
 > の値をおおざっぱに行列を呼びます。
-混乱する可能性を明示的に避ける必要がある場合には、matrix0値と呼ぶこともあります。
+混乱する可能性を明示的に避ける必要がある場合には、matrix0 値と呼ぶこともあります。
 </P
 ><P
->&#13;次元m,nの行列Mが与えられたとき、
-式 M[i,j] は (i, j) をインデックスとするMのセルの中身を取り出します。
-このときiとjは自然数で、それぞれmとnよりも小さい値でなければなりません。
-式 M[i,j] は左辺値としても使うことができます。
-例えば (M[i,j] := exp) という代入は、式expを評価して値にした後、
-その値をインデックス(i, j)で指し示したMのセルに書き込みます。
+>&#13;次元 m, n の行列 M が与えられたとき、
+式 M[i, j] は (i, j) をインデックスとする M のセルの中身を取り出します。
+このとき i と j は自然数で、それぞれ m と n よりも小さい値でなければなりません。
+式 M[i, j] は左辺値としても使うことができます。
+例えば (M[i, j] := exp) という代入は、式 exp を評価して値にした後、
+その値をインデックス (i, j) で指し示した M のセルに書き込みます。
 </P
 ><P
->&#13;matrix0値に関する様々な関数と関数テンプレートが
+>&#13;matrix0 値に関する様々な関数と関数テンプレートが
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
 TARGET="_top"
@@ -147,7 +147,7 @@ mtrxszref_set_elt_at // template
 
 </P
 ><P
->&#13;型Tと3つの値 <FONT
+>&#13;型 T と3つの値 <FONT
 COLOR="RED"
 >nrow</FONT
 >, <FONT
@@ -181,10 +181,10 @@ COLOR="RED"
 COLOR="RED"
 >init</FONT
 > で初期化されます。
-型Tと型 <FONT
+型 T と型 <FONT
 COLOR="RED"
 >mtrxszref(T)</FONT
-> の行列Mが与えられたとき、
+> の行列 M が与えられたとき、
 <FONT
 COLOR="RED"
 >mtrxszref_get_nrow(M)</FONT
@@ -192,7 +192,7 @@ COLOR="RED"
 COLOR="RED"
 >mtrxszref_get_ncol(M)</FONT
 >
-はMの列の数と行数を型 <FONT
+は M の列の数と行数を型 <FONT
 COLOR="RED"
 >size_t</FONT
 > でそれぞれ返します。
@@ -266,7 +266,7 @@ end // end of [mtrxszref_transpose]
 >
 
 
-行列Mは正方形、つまり列と行の数が等しいことを仮定しています。
+行列 M は正方形、つまり列と行の数が等しいことを仮定しています。
 2つの関数 <FONT
 COLOR="RED"
 >loop1</FONT

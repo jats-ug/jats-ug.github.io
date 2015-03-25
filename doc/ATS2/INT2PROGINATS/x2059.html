@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->ATSにおける外部の型と値</TITLE
+>ATS における外部の型と値</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="C言語との相互呼び出し"
 HREF="c1995.html"><LINK
 REL="NEXT"
-TITLE="ATSに外部コードを含める"
+TITLE="ATS に外部コードを含める"
 HREF="x2074.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,10 +78,10 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="external_types_and_values"
->ATSにおける外部の型と値</A
+>ATS における外部の型と値</A
 ></H1
 ><P
->&#13;外部の型や値を簡単にATS言語に取り込むことができます。
+>&#13;外部の型や値を簡単に ATS 言語に取り込むことができます。
 また、それはC言語で宣言された型や値に関連付けさせることができます。
 
 </P
@@ -93,8 +93,8 @@ COLOR="RED"
 この型は <FONT
 COLOR="RED"
 >$extype"some_type_in_c"</FONT
-> のようにATS言語から参照することができます。
-例えば次のコードのように、C言語でのいくつかの型をATS言語に取り込んで型定義できます:
+> のように ATS 言語から参照することができます。
+例えば次のコードのように、C言語でのいくつかの型を ATS 言語に取り込んで型定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -126,9 +126,9 @@ COLOR="RED"
 COLOR="RED"
 >T</FONT
 >, "some_value_in_c")</FONT
-> のようにATSから参照することができます。
-この T はこの値に割り当てるATSの型です。
-例えば次のコードのように、C言語でのいくつかの外部定義の値をATS言語に取り込んでマクロ定義できます:
+> のように ATS から参照することができます。
+この T はこの値に割り当てる ATS の型です。
+例えば次のコードのように、C言語でのいくつかの外部定義の値を ATS 言語に取り込んでマクロ定義できます:
 
 <DIV
 CLASS="informalexample"
@@ -170,8 +170,8 @@ macdef atof = $extype(string -&#62; double, "atof")
 >
 
 
-C言語の関数を直接参照するために、より適切な方法がATSにはあることに注意してください。
-一般に、ATSで外部定義の値を使う主な用途は、C言語の定数宣言を直接ATSコードに関連付けることです。
+C言語の関数を直接参照するために、より適切な方法が ATS にはあることに注意してください。
+一般に、ATS で外部定義の値を使う主な用途は、C言語の定数宣言を直接 ATS コードに関連付けることです。
 
 </P
 ></DIV
@@ -233,7 +233,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->ATSに外部コードを含める</TD
+>ATS に外部コードを含める</TD
 ></TR
 ></TABLE
 ></DIV
