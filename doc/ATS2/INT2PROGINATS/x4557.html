@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Example: Templates for Loop Construction</TITLE
+>例: ループ生成のためのテンプレート</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="ジェネリックスから遅延バインディングへ"
-HREF="c4429.html"><LINK
+TITLE="ジェネリックスから遅延束縛へ"
+HREF="c4430.html"><LINK
 REL="PREVIOUS"
 TITLE="ファンクタの特殊形としてのテンプレート"
-HREF="x4526.html"><LINK
+HREF="x4527.html"><LINK
 REL="NEXT"
-TITLE="Template-Based Support for Late-Binding"
+TITLE="テンプレートを用いた遅延束縛のサポート"
 HREF="x4610.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x4526.html"
+HREF="x4527.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 17. ジェネリックスから遅延バインディングへ</TD
+>Chapter 17. ジェネリックスから遅延束縛へ</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,19 +78,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="template-for-loop-construction"
->Example: Templates for Loop Construction</A
+>例: ループ生成のためのテンプレート</A
 ></H1
 ><P
->&#13;Beginners in functional programming (FP) who have already acquired some
-knowledge of imperative programming often ask about ways to construct
-for-loops and while-loops in FP. A commonly given answer is that loop
-constructs are unnecessary in FP as they can be readily replaced with
-higher-order functions. Let us first see some thorny issues with this
-answer.
+>&#13;命令型プログラミングに経験がある関数型プログラミング (FP) の初心者は、FP において for ループや while ループを作る方法にしばしば疑問を持ちます。
+一般的な答は、それらは高階関数で置き換えられるので FP ではループを生成する必要はない、というものです。
+はじめに、この答においていくつか困難な問題があることを見てみましょう。
 </P
 ><P
->&#13;The following code in C implements a function that returns the sum
-of the first n natural numbers when applied to a natural number n:
+>&#13;次のC言語コードは、自然数 n に適用されると最初の n 個の自然数の合計を返す関数を実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -114,11 +110,10 @@ tally (int n) {
 >
 
 
-This function <FONT
+この関数 <FONT
 COLOR="RED"
 >tally</FONT
-> can be given the following
-equivalent implementation in ATS:
+> と等価な ATS の関数は次のように与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -145,17 +140,14 @@ tally
 >
 
 
-where the tail-recursive function <FONT
+このとき、末尾再帰関数 <FONT
 COLOR="RED"
 >loop</FONT
-> is just a translation
-of the for-loop in C.
+> はC言語の for ループを単純に変換したものです。
 
 </P
 ><P
->&#13;When someone claims that loop constructs can be replaced with higher-order
-functions, he or she probably means to construct loops with a function like
-the following one:
+>&#13;ループ生成を高階関数で置換できると誰かが指摘するとき、彼等はおそらく次のような関数でループを生成しようとするでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -182,14 +174,13 @@ if count &#60; limit
 >
 
 
-For example, the following function <FONT
+例えば、次の関数 <FONT
 COLOR="RED"
 >tally2</FONT
-> is directly based
-on <FONT
+> は <FONT
 COLOR="RED"
 >for_loop</FONT
->:
+> を直接使っています:
 
 <DIV
 CLASS="informalexample"
@@ -216,41 +207,39 @@ end // end of [tally2]
 >
 
 
-While both <FONT
+自然数に適用すると <FONT
 COLOR="RED"
 >tally</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >tally2</FONT
-> return the same result
-when applied to a given natural number, they behave very differently at
-run-time. In particular, each call to <FONT
+> は同じ結果を返しますが、実行時には異なる挙動をします。
+特に、<FONT
 COLOR="RED"
 >tally2</FONT
-> creates a
-(persistent) reference on heap for temporary use; the reference becomes
-garbage immediately after the call returns. Compared to <FONT
-COLOR="RED"
->tally</FONT
->,
+> 呼び出しは一時的な用途に (永続的な) 参照をヒープに作ります;
+呼び出しが返るとこの参照はすぐにゴミになりさう。
+
 <FONT
 COLOR="RED"
+>tally</FONT
+> と比較すると <FONT
+COLOR="RED"
 >tally2</FONT
-> is inefficient both time-wise and memory-wise.
+> は時間効率と空間効率の両面で非効率です。
 </P
 ><P
->&#13;To eliminate the need for reference creation in <FONT
+>&#13;<FONT
 COLOR="RED"
 >tally2</FONT
->, we
-turn <FONT
+> における参照の必要性を除去するために、<FONT
 COLOR="RED"
 >for_loop</FONT
-> into the following function template
-<FONT
+>
+を次のような関数テンレプレート <FONT
 COLOR="RED"
 >for_loop2</FONT
->:
+> に変換しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -282,17 +271,16 @@ then (
 >
 
 
-We can further turn <FONT
+さらに <FONT
 COLOR="RED"
 >tally2</FONT
-> into the following <FONT
-COLOR="RED"
->tally3</FONT
->
-based on <FONT
+> を、<FONT
 COLOR="RED"
 >for_loop2</FONT
->:
+> を用いて次の <FONT
+COLOR="RED"
+>tally3</FONT
+> に変換できます:
 
 <DIV
 CLASS="informalexample"
@@ -319,33 +307,29 @@ end // end of [tally3]
 >
 
 
-While <FONT
+<FONT
 COLOR="RED"
 >tally3</FONT
-> improves upon <FONT
+> は <FONT
 COLOR="RED"
 >tally2</FONT
->, it is still a
-bit unsatisfactory. Clearly, the closure function formed before
+> より良いものですが、まだ完全ではありせん。
 <FONT
 COLOR="RED"
 >tally3</FONT
-> calls <FONT
+> が <FONT
 COLOR="RED"
 >for_loop2</FONT
-> becomes garbage immediately
-after the call returns. It is plausible to expect an optimizing C compiler
-(e.g., gcc and clang) can eliminate the need for actual closure formation
-when it is called on the C code generated from ATS source, but there is
-no guarantee. In order to have such a guarantee, we can evolve
-<FONT
+> を呼び出す前に作ったクロージャ関数は、呼び出しが返ると即座にゴミになることは明確です。
+ATS ソースコードから生成されたC言語コードで呼び出されるので、Cコンパイラ (例えば gcc や clang)
+の最適化が実際のクロージャ関数を不要にしてくれることを期待することもできますが、その保証はありません。
+そのような保証を得るために、<FONT
 COLOR="RED"
 >for_loop2</FONT
-> into the following function template
-<FONT
+> を次のような関数テンプレート <FONT
 COLOR="RED"
->for_loop3:</FONT
-> 
+>for_loop3</FONT
+> に発展させることができます:
 
 <DIV
 CLASS="informalexample"
@@ -376,10 +360,10 @@ then (
 >
 
 
-where <FONT
+このとき <FONT
 COLOR="RED"
 >for_loop3$fwork</FONT
-> is given the interface below:
+> には次のようなインターフェイスが割り当てられます:
 
 <DIV
 CLASS="informalexample"
@@ -400,14 +384,13 @@ env:t@ype
 >
 
 
-Finally, we can turn <FONT
+最終的に <FONT
 COLOR="RED"
 >tally3</FONT
-> into <FONT
+> を次のような <FONT
 COLOR="RED"
 >tally4</FONT
->
-as follows:
+> に変換できます:
 
 <DIV
 CLASS="informalexample"
@@ -439,32 +422,28 @@ end // end of [tally4]
 >
 
 
-By inspecting the C code generated by <B
+<B
 CLASS="command"
 >atsopt</B
-> from compiling
-<FONT
+> が <FONT
 COLOR="RED"
 >tally4</FONT
->, we can see that the C code is essentially equivalent to
-the implementation of <FONT
+> をコンパイルして生成したC言語コードを調べれば、そのC言語コードは
+(この章の最初で登場した) C言語による <FONT
 COLOR="RED"
 >tally</FONT
-> in C (given at the beginning of
-this section).
+> の実装と本質的に等価であることがわかるでしょう。
 
 </P
 ><P
->&#13;By now, the reader probably agrees with me if I say the statement should at
-least be considered grossly inaccurate that claims loop constructs in FP
-can be readily replaced with higher-order functions.  Please find on-line
-the file <A
+>&#13;ここまで読んだ読者は、FP におけるループ生成は高階関数で容易に置き換えられるという主張が著しく不正確であることに同意できるでしょう。
+この章で紹介したコード全体とテストコードを含む
+<A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/loopcons.dats"
 TARGET="_top"
 >loopcons.dats</A
 >
-containing the entirety of the code presented in this section plus some
-testing code.
+ファイルはオンラインから入手できます。
 </P
 ></DIV
 ><DIV
@@ -483,7 +462,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x4526.html"
+HREF="x4527.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -517,7 +496,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c4429.html"
+HREF="c4430.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -525,7 +504,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Template-Based Support for Late-Binding</TD
+>テンプレートを用いた遅延束縛のサポート</TD
 ></TR
 ></TABLE
 ></DIV

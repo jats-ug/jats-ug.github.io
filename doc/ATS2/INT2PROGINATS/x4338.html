@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Linear Channels for Asynchronous IPC</TITLE
+>非同期 IPC のための線形チャネル</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,10 +12,10 @@ TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="抽象観と観型 (viewtype)"
-HREF="c4136.html"><LINK
+HREF="c4137.html"><LINK
 REL="PREVIOUS"
 TITLE="ロックとアンロック"
-HREF="x4289.html"><LINK
+HREF="x4290.html"><LINK
 REL="NEXT"
 TITLE="関数テンプレートを使ったプログラミング"
 HREF="p4428.html"><LINK
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x4289.html"
+HREF="x4290.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -78,29 +78,24 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="linear-channels-for-async-ipc"
->Linear Channels for Asynchronous IPC</A
+>非同期 IPC のための線形チャネル</A
 ></H1
 ><P
->&#13;In this section, I will present an implementation of
-linear channels to support asynchronous communication between threads. This
-is also a very fitting occasion for me to advocate what I often refer to as
-<SPAN
+>&#13;この章では、スレッド間の非同期通信をサポートする、線形チャネルの実装を示します。
+これはまた、<SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->programmer-centric</I
+>プログラマ中心</I
 ></SPAN
-> program verification.
+> のプログラム検証を主張する良い機会でもあります。
 </P
 ><P
->&#13;A communication channel between threads is essentially
-a queue wrapped in some kind of protection mechanism needed for guarding
-against race conditions.  Assume that a queue is of a fixed capacity, that
-is, the capacity of the queue is fixed after its creation. If the queue is
-full, then inserting an element into it results in a failure.  If the queue
-is empty, then removing an element from it results in a failure. In order
-to prevent inserting into a full queue or removing from an empty queue, I
-could first introduce a linear abstract type for queues as follows:
+>&#13;本質的にスレッド間の通信チャネルは、レースコンディションをに対して必要ななんらかの保護メカニズムで包んだキューです。
+容量固定のキュー、すなわち生成されたら容量が変わらないようなキューを仮定しましょう。
+もしそのキューが満杯なら、そのキューへの要素の挿入は失敗します。
+もしそのキューが空なら、そのキューからの要素の削除は失敗します。
+満杯のキューへの挿入や空のキューからの削除を防ぐために、まず次のようなキューに対する線形抽象型を導入しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -121,13 +116,11 @@ vtypedef queue(a:vt@ype,m:int,n:int) = queue_vtype(a,m,n)
 >
 
 
-where the type <FONT
+このとき、型 <FONT
 COLOR="RED"
 >queue(VT,M,N)</FONT
-> is for a queue of capacity M that
-currently contains N elements of type VT. Then the functions for inserting
-into and removing from a queue are expected to be given the following
-interface:
+> は、型 VT の N 個の要素を含んでいる容量 M のキューを表わします。
+それから、挿入と削除を表わす関数には次のようなインターフェイスが割り当てられるでしょう:
 
 <DIV
 CLASS="informalexample"
@@ -155,23 +148,22 @@ queue_remove
 >
 
 
-The presented abstract type <FONT
+示した抽象型 <FONT
 COLOR="RED"
 >queue</FONT
-> can indeed work very well for
-the task of implementing linear channels. However, I will not continue with
-this version of <FONT
+> は線形チャネルを実装として機能します。
+けれども、私はこのバージョンの <FONT
 COLOR="RED"
 >queue</FONT
-> further for I intend to present a style of
-program verification that is less rigorous but far more flexible.
+> を採用できません。
+私は、厳密でより柔軟なプログラム検証のスタイルを示したいのです。
 
 </P
 ><P
->&#13;Following is another version of abstract type <FONT
+>&#13;次のコードは抽象型 <FONT
 COLOR="RED"
 >queue</FONT
->:
+> の別バージョンです:
 
 <DIV
 CLASS="informalexample"
@@ -197,17 +189,15 @@ vtypedef queue(a:vt0p) = [id:int] queue(a, id)
 >
 
 
-Given a viewtype VT and an integer ID, <FONT
+観型 VT と整数 ID が与えられたとき、<FONT
 COLOR="RED"
 >queue(VT,ID)</FONT
-> is for a
-queue containing elements of the type VT that can be uniquely identified
-with the integer ID. So one may think of ID as some form of stamp. The
-following declared function <FONT
+> は、整数 ID で一意に識別される型 VT の要素を含むキューを表わします。
+そのため ID はスタンプの一種と考えることができます。
+次に表わされた関数 <FONT
 COLOR="RED"
 >queue_isnil</FONT
-> is for testing whether
-a given queue is empty:
+> は与えられたキューが空であるかどうか調べます:
 
 
 <DIV
@@ -233,19 +223,17 @@ queue_isnil{id:int}(!queue(a, id)): [b:bool] (ISNIL(id, b) | bool(b))
 >
 
 
-Given an integer ID, a proof of the prop <FONT
+整数 ID が与えられたとき、命題 <FONT
 COLOR="RED"
 >ISNIL(ID,true)</FONT
->
-(<FONT
+> (もしくは <FONT
 COLOR="RED"
 >ISNIL(ID,false)</FONT
->) means that the queue uniquely identified by
-ID is (not) empty. Similarly, the following declared function
-<FONT
+>) の証明は、ID で同定されたキューが空である (もしくは空でない) ことを意味しています。
+同様に、次に表わされた関数 <FONT
 COLOR="RED"
 >queue_isful</FONT
-> is for testing whether a given queue is full:
+> は与えられたキューが満杯であるかどうか調べます:
 
 <DIV
 CLASS="informalexample"
@@ -270,27 +258,23 @@ queue_isful{id:int}(!queue(a, id)): [b:bool] (ISFUL(id, b) | bool(b))
 >
 
 
-Given an integer ID, a proof of the prop <FONT
+整数 ID が与えられたとき、命題 <FONT
 COLOR="RED"
 >ISFUL(ID,true)</FONT
->
-(<FONT
+> (もしくは <FONT
 COLOR="RED"
 >ISFUL(ID,false)</FONT
->) means that the queue uniquely identified by
-ID is (not) full.
+>) の証明は、ID で同定されたキューが満杯である (もしくは満杯でない) ことを意味しています。
 
 </P
 ><P
->&#13;The functions <FONT
+>&#13;これで、与えられたキューへの挿入と削除を表わす関数 <FONT
 COLOR="RED"
 >queue_insert</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >queue_remove</FONT
->
-for inserting into and removing from a given queue can now be given the
-following interface:
+> には次のインターフェイスを割り当てることができます:
 
 <DIV
 CLASS="informalexample"
@@ -328,85 +312,73 @@ queue_remove
 >
 
 
-Note that either inserting an element into a queue or removing an element
-from a queue assigns a new stamp to the queue.  This is essential for
-interpreting <FONT
+キューへの挿入やキューからの削除が、新しいスタンプをそのキューに割り当てていることに注意してください。
+これは本質的に、上記に示したマナーでの <FONT
 COLOR="RED"
 >ISNIL</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >ISFUL</FONT
-> in the manner presented
-above.
+> の解釈です。
 
 </P
 ><P
->&#13;In order to call <FONT
+>&#13;与えられたキューへ <FONT
 COLOR="RED"
 >queue_insert</FONT
-> on a given queue, one needs to
-have a proof attesting to the queue being not full. Such a proof is
-obtained if calling <FONT
+> を呼び出すためには、そのキューが満杯ではないことを示す証明が必要です。
+当該キューに <FONT
 COLOR="RED"
 >queue_isful</FONT
-> on the queue returns false.
-Similarly, in order to call <FONT
+> を呼び出して false が返れば、そのような証明を獲得できます。
+同様に、与えられたキューへ <FONT
 COLOR="RED"
 >queue_remove</FONT
-> on a given queue,
-one can first call <FONT
+> を呼び出すためには、まずそのキューに <FONT
 COLOR="RED"
 >queue_isnil</FONT
-> on the queue to obtain a proof
-attesting to the queue being not empty.
+> を呼び出して、そのキューが空でないことを示す証明を獲得する必要があります。
 </P
 ><P
->&#13;What is really of concern here is not to actually verify that
-<FONT
+>&#13;ここで示した内容は、<FONT
 COLOR="RED"
 >queue_isnil</FONT
-> and <FONT
+> と <FONT
 COLOR="RED"
 >queue_isful</FONT
-> have the interface
-assigned to them. Instead, the focus is on ensuring that
-<FONT
+> が持つそのインターフェイスを実際には立証していません。
+その代わりここでの焦点は、<FONT
+COLOR="RED"
+>queue_isnil</FONT
+> と <FONT
+COLOR="RED"
+>queue_isful</FONT
+>
+にそのようなインターフェイスが割り当てられたとき、満杯のキューに <FONT
 COLOR="RED"
 >queue_insert</FONT
-> is never applied to a full queue and
-<FONT
+>
+が呼び出されないことと <FONT
 COLOR="RED"
 >queue_remove</FONT
-> is never applied to an empty queue under the
-assumption that <FONT
-COLOR="RED"
->queue_isnil</FONT
-> and <FONT
-COLOR="RED"
->queue_isful</FONT
-> have
-the assigned interface. I refer to this form of program verification as
-being <SPAN
+> が空のキューに呼び出されないことを保証することです。
+私はこのスタイルのプログラミング検証を <SPAN
 CLASS="emphasis"
 ><I
 CLASS="emphasis"
->programmer-centric</I
+>プログラマ中心</I
 ></SPAN
-> because its correctness is not
-formally established in an objective manner. I myself find that
-programmer-centric programm verification is very flexible and effective in
-practice.  If we believe that constructing informal mathematical proofs can
-help one check whether the proven statements are valid, then it is only
-natural to believe that programmer-centric program verification can also
-help one check whether verified programs are correct.
+> であると呼んでいます。
+なぜならその正確さは客観的形式的に確立されたものではないからです。
+私自身、プログラマ中心のプログラム検証が実際にとても柔軟で効果的であることを見つけました。
+もし非形式的な数学の証明が証明された内容が正当であるかどうか検査するのに役立つと我々が信じるのであれば、プログラマ中心のプログラム検証もまた検証されたプログラムが正しいかどうか検査するのに役立つことを自然に信じることができるでしょう。
 </P
 ><P
->&#13;Let us now start to implement linear channels for asynchronous
-communication between threads. First, let us declare a linear abstract
-type <FONT
+>&#13;それでは、スレッド間の非同期通信のための線形チャネルの実装を開始しましょう。
+はじめに、次のような線形抽象型 <FONT
 COLOR="RED"
 >channel</FONT
-> as follows:
+> を宣言しましょう:
 
 
 <DIV
@@ -427,8 +399,7 @@ vtypedef channel(a:vt0p) = channel_vtype(a)
 >
 
 
-The function for inserting an element into a channel is given the following
-interface:
+チャネルに要素を挿入する関数には次のインターフェイスが与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -447,12 +418,11 @@ CLASS="programlisting"
 >
 
 
-The caller of <FONT
+もしそのチャネルが満杯であったら、<FONT
 COLOR="RED"
 >channel_insert</FONT
-> is blocked if the channel is full.
-Similarly, the function for removing an element from a channel is given the following
-interface:
+> の呼び出し元はブロックします。
+同様に、チャネルから要素を削除する関数には次のインターフェイスが与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -471,14 +441,14 @@ CLASS="programlisting"
 >
 
 
-The caller of <FONT
+もしそのチャネルが空であったら、<FONT
 COLOR="RED"
 >channel_remove</FONT
-> is blocked if the channel is empty.
+> の呼び出し元はブロックします。
 
 </P
 ><P
->&#13;Let a channel be represented as follows:
+>&#13;チャネルを次のように表現してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -514,46 +484,40 @@ assume channel_vtype(a:vt0p) = channel_
 >
 
 
-There are 7 fields in the record representing a channel; the
+チャネルを表現するレコードには7つのフィールドがあります;
 <FONT
 COLOR="RED"
 >cap</FONT
-> field stores an integer indicating the (fixed) capacity of
-the channel; the <FONT
+> フィールドはそのチャネルの (固定の) 容量を示す整数を保持しています;
+<FONT
 COLOR="RED"
 >spin</FONT
-> field stores a spin-lock for protecting
-the reference count in the field of the name <FONT
+> フィールドは、<FONT
 COLOR="RED"
 >rfcnt</FONT
->; the
+> フィールドにあるリファレンスカウントを保護するためのスピンロックを保持しています;
 <FONT
 COLOR="RED"
 >mutex</FONT
-> field stores a mutex for protecting the queue in the
-field of the name <FONT
+> フィールドは、<FONT
 COLOR="RED"
 >queue</FONT
->; the field <FONT
+> フィールドにあるキューを保護するための mutex を保持しています;
+<FONT
 COLOR="RED"
 >CVisnil</FONT
-> stores a
-conditional variable for the situation where a caller (holding the mutex)
-wants to wait for the condition that the queue becomes not empty; the
-field <FONT
+> フィールドは、(mutex を保持した) 呼び出し元がキューが空ではなくなるのを待つための条件変数を保持しています;
+<FONT
 COLOR="RED"
 >CVisful</FONT
-> stores a conditional variable for the situation
-where a caller (holding the mutex) wants to wait for the condition that the
-queue becomes not full.
+> フィールドは、(mutex を保持した) 呼び出し元がキューが満杯ではなくなるのを待つための条件変数を保持しています。
 
 </P
 ><P
->&#13;The function
-<FONT
+>&#13;関数 <FONT
 COLOR="RED"
 >channel_insert</FONT
-> is given the following implementation:
+> には次の実装が与えられます:
 
 <DIV
 CLASS="informalexample"
@@ -589,12 +553,10 @@ end // end of [channel_insert]
 >
 
 
-where
-the auxiliary function <FONT
+このとき、補助関数 <FONT
 COLOR="RED"
 >channel_insert2</FONT
-> is given
-the following interface:
+> には次のインターフェイスが与えらえます:
 
 <DIV
 CLASS="informalexample"
@@ -615,15 +577,14 @@ channel_insert2
 >
 
 
-Please note that <FONT
+呼び出し元がチャネル中の mutex を保持した状態で <FONT
 COLOR="RED"
 >channel_insert2</FONT
-> is called when
-the caller is holding the mutex inside the channel. Following
-is an implementation for <FONT
+> は呼び出されることに注意してください。
+次のコードは <FONT
 COLOR="RED"
 >channel_insert2</FONT
->:
+> の実装です:
 
 <DIV
 CLASS="informalexample"
@@ -682,61 +643,54 @@ end // end of [channel_insert2]
 >
 
 
-The logic behind <FONT
+<FONT
 COLOR="RED"
 >channel_insert2</FONT
-> can be explained as follows.
-If the queue in the given channel is full, the caller calls
-<FONT
+> の背後にあるロジックは次のように説明できます。
+与えられたチャネルのキューが満杯であったなら、呼び出し元はその mutex を手放すために <FONT
 COLOR="RED"
 >condvar_wait</FONT
-> to release the mutex it holds and then wait on the
-conditional variable stored in the field <FONT
+>
+を呼び出し、それからチャネルの <FONT
 COLOR="RED"
 >CVisful</FONT
-> of the
-channel; after the caller regains the mutex after being awoken by a signal
-sent to the conditioanl variable, it calls <FONT
+> フィールド中の条件変数を待ち合わせます;
+条件変数へのシグナル送信で起きた呼び出し元は、mutex を再び保持した後、<FONT
 COLOR="RED"
 >channel_insert2</FONT
->
-recursively. If the queue in the given channel is not full, then the caller
-insert a given element into the queue stored in the field <FONT
+> を再帰的に呼び出します。
+与えられたチャネルのキューが満杯でなかったなら、呼び出し元は <FONT
 COLOR="RED"
 >queue</FONT
->
-and then returns. Note that <FONT
-COLOR="RED"
->channel_insert2</FONT
-> is a tail-recursive
-function that essentially corresponds to a standard while-loop often
-appearing in C code for handling the wait on a conditional variable.
-</P
-><P
->&#13;By following the above implementation for <FONT
-COLOR="RED"
->channel_insert</FONT
-> (and
+> フィールド中のキューに与えられた要素を挿入して返ります。
 <FONT
 COLOR="RED"
 >channel_insert2</FONT
->), it should be pretty straightforward for one
-to figure out an implementation for <FONT
-COLOR="RED"
->channel_remove</FONT
->. I leave it
-as an exercise.
+> が末尾再帰関数であり、条件変数を待ち合わせるC言語コードによくある標準的な while ループに本質的に対応していることに注意してください。
 
 </P
 ><P
->&#13;Please find on-line the file
+>&#13;<FONT
+COLOR="RED"
+>channel_insert</FONT
+> (と <FONT
+COLOR="RED"
+>channel_insert2</FONT
+>) の上記実装を真似て、<FONT
+COLOR="RED"
+>channel_remove</FONT
+> の実装を導くことは単純でしょう。
+これは練習問題とします。
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードを含む
 <A
 HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/channel_vt.dats"
 TARGET="_top"
 >channel_vt.dats</A
 >
-containing the entirety of the code presented in this section plus some
-code for testing.
+ファイルはオンラインから入手できます。
 </P
 ></DIV
 ><DIV
@@ -755,7 +709,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x4289.html"
+HREF="x4290.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -789,7 +743,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c4136.html"
+HREF="c4137.html"
 ACCESSKEY="U"
 >Up</A
 ></TD

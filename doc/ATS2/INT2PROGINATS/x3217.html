@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="定理証明によるプログラミング"
-HREF="c3129.html"><LINK
+HREF="c3130.html"><LINK
 REL="PREVIOUS"
 TITLE="強化された正確性を使って明記する"
-HREF="x3190.html"><LINK
+HREF="x3191.html"><LINK
 REL="NEXT"
 TITLE="例: 検証された高速な累乗"
-HREF="x3240.html"><LINK
+HREF="x3241.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x3190.html"
+HREF="x3191.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3240.html"
+HREF="x3241.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -82,7 +82,7 @@ NAME="example_another_verified_factorial"
 ></H1
 ><P
 >&#13;<A
-HREF="x3190.html"
+HREF="x3191.html"
 >specifying with enhanced precision</A
 > の章で示した関数 <FONT
 COLOR="RED"
@@ -114,28 +114,26 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3225"
+NAME="AEN3226"
 ></A
 ><PRE
 CLASS="programlisting"
->fun
-ifact2
-{n:nat} .&#60;&#62;.
+>fun ifact2
+  {n:nat} .&#60;&#62;.
 (
   n: int (n)
-) :&#60;&#62; [r:int] (FACT(n, r) | int r) = let
+) :&#60;&#62; [r:int] (FACT (n, r) | int r) = let
   fun loop
-    {i:nat|i &#60;= n}{r:int} .&#60;n-i&#62;.
+    {i:nat | i &#60;= n}{r:int} .&#60;n-i&#62;.
   (
-    pf: FACT(i, r)
-  | n: int n, i: int i, r: int r
-  ) :&#60;&#62; [r:int] (FACT(n, r) | int r) =
+    pf: FACT (i, r) | n: int n, i: int i, r: int r
+  ) :&#60;&#62; [r:int] (FACT (n, r) | int r) =
     if n - i &#62; 0 then let
-      val (pfmul | r1) = imul2 (i+1, r) in loop (FACTind(pf, pfmul) | n, i+1, r1)
+      val (pfmul | r1) = (i+1) imul2 r in loop (FACTind (pf, pfmul) | n, i+1, r1)
     end else (pf | r) // end of [if]
   // end of [loop]
 in
-  loop (FACTbas() | n, 0, 1)
+  loop (FACTbas () | n, 0, 1)
 end // end of [ifact2]
 </PRE
 ><P
@@ -169,7 +167,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN3232"
+NAME="AEN3233"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -177,7 +175,7 @@ CLASS="programlisting"
   fun loop (n, i, r) =
     if n - i &#62; 0 then let
       val r1 = (i+1) * r in loop (n, i+1, r1)
-    end else r // end of [if]
+    end else r
   // end of [loop]
 in
   loop (n, 0, 1)
@@ -233,7 +231,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x3190.html"
+HREF="x3191.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -251,7 +249,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3240.html"
+HREF="x3241.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -267,7 +265,7 @@ WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c3129.html"
+HREF="c3130.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
