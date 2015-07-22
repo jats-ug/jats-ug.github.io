@@ -1,0 +1,530 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>C言語との相互呼び出し</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="現実のプログラミングに対するサポート"
+HREF="p1369.html"><LINK
+REL="PREVIOUS"
+TITLE="
+例: ファンクタを用いた有理数パッケージ
+"
+HREF="x1974.html"><LINK
+REL="NEXT"
+TITLE="ATS における外部の型と値"
+HREF="x2066.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1974.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2066.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="Cinteraction"
+></A
+>Chapter 8. C言語との相互呼び出し</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c2002.html#external_name"
+>外部のグローバル名</A
+></DT
+><DT
+><A
+HREF="x2066.html"
+>ATS における外部の型と値</A
+></DT
+><DT
+><A
+HREF="x2081.html"
+>ATS に外部コードを含める</A
+></DT
+><DT
+><A
+HREF="x2102.html"
+>ATS における外部関数呼び出し</A
+></DT
+><DT
+><A
+HREF="x2114.html"
+>安全ではないC言語スタイルのATSプログラミング</A
+></DT
+><DT
+><A
+HREF="x2164.html"
+>ATS の型をエクスポートしてC言語から使う</A
+></DT
+><DT
+><A
+HREF="x2208.html"
+>例: 静的に確保されたリストをコンストラクトする</A
+></DT
+></DL
+></DIV
+><P
+>&#13;ATS とC言語は全く同じネイティブ/フラット/アンボックスなデータ表現を共有しています。
+結果的に、ATS で実装された関数をC言語から呼び出す際にラップ/アンラップやボックス化/アンボックス化したりする必要はありません。
+逆もまた同様です。
+さらにその際の実行時オーバーヘッドもありません。
+おおざっぱに ATS はC言語のフロントエンドと考えることができます。
+このフロントエンドは (プログラムの不変条件を記述するための) 表現力豊かな型システムと
+(コードの再利用を楽にしてくれる) 柔軟なテンプレートシステムを備えているのです。
+とりわけ ATS は大きな一つのタスクを一貫したインターフェイスのサブタスク群に分解するのにしばしば有効です。
+それらのサブタスクは ATS で実装することもできますし、C言語や他の言語で実装することもできます。
+そうしてそれらを一緒に汲み上げることで元のタスクを構築できるのです。
+</P
+><P
+>&#13;期待される通りですが、ATS コード中に直接記述されたC言語コードは ATS コードに対して行なわれるような厳格な型検査を通りません。
+そのため慎重に ATS コードの中にC言語コードを埋め込むことがプログラマに要求されます。
+私個人の経験からは実際のところ ATS コード中におけるC言語コードがバグの犯人である可能性が非常に高いです。
+
+</P
+><P
+>&#13;この章に出てくるコードとテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_CINTERACT/"
+TARGET="_top"
+>オンライン</A
+>
+から得られます。
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="external_name"
+>外部のグローバル名</A
+></H1
+><P
+>&#13;ATS で宣言された関数にはC言語スタイルのグローバル名が与えれらます。
+その関数は ATS コードからもC言語コードからも呼び出すことができます。
+つまり、関数は ATS で実装してC言語から呼び出すことができ、その逆もまた可能なのです。
+</P
+><P
+>&#13;次のコードでは2つの関数を宣言しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2012"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun fact (n: int): int
+extern
+fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+最初の関数 <FONT
+COLOR="RED"
+>fact</FONT
+> はグローバル名を持たないのに対し、
+2番目の関数 <FONT
+COLOR="RED"
+>fact2</FONT
+> にはグローバル名 <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> が割り当てられます。
+<FONT
+COLOR="RED"
+>ext#</FONT
+> シンボルは <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> をC言語のグローバル関数のように扱います。
+そして <FONT
+COLOR="RED"
+>extern</FONT
+> キーワードによるプロトタイプ宣言が呼び出される前に必要です。
+もし先の宣言 <FONT
+COLOR="RED"
+>ext#fact2_in_c</FONT
+> の代わりに <FONT
+COLOR="RED"
+>ext#</FONT
+> が使われた場合、
+ATS の <FONT
+COLOR="RED"
+>fact2</FONT
+> 関数へのグローバル名は ATS の関数名と同じになります。
+言いかえれば、先の例で <FONT
+COLOR="RED"
+>ext#</FONT
+> という宣言を書くことは、<FONT
+COLOR="RED"
+>ext#fact2</FONT
+> と書くことと同じです。
+
+</P
+><P
+>&#13;次のように <FONT
+COLOR="RED"
+>fact</FONT
+> の実装が与えられたとしましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2027"
+></A
+><PRE
+CLASS="programlisting"
+>implement fact (n) = fact2 (n, 1)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この実装をコンパイルするには <FONT
+COLOR="RED"
+>fact</FONT
+> と <FONT
+COLOR="RED"
+>fact2</FONT
+> を参照する関数名を、
+ATS コンパイラは生成するC言語コード中に作らなければなりません。
+前者のC言語での関数名はあるルール (名前空間の問題を考慮します) によって決定されます。
+後者の関数名は単純に <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> グローバル名が割り当てられます。
+<FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> という名前の通り、この関数は次のように直接C言語で実装されていることでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2033"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;int
+fact2_in_c (int n, int res)
+{
+  while (n &#62; 0) { res *= n ; n -= 1 ; } ; return res ;
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+そして次のような <FONT
+COLOR="RED"
+>fact2</FONT
+> をATSで直接実装することもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2036"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+fact2 (n, res) = if n &#62; 0 then fact2 (n-1, n*res) else res
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この <FONT
+COLOR="RED"
+>fact2</FONT
+> の実装は <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> という名前を通してC言語から呼び出すことができます。
+</P
+><P
+>&#13;もし <FONT
+COLOR="RED"
+>fact2</FONT
+> と <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> が両方とも実装されていたら
+(前者は ATS で後者はC言語で実装しました)、
+<FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> が二重に実装されていることを示すリンク時エラーが発生するでしょう。
+</P
+><P
+>&#13;また <FONT
+COLOR="RED"
+>fact2</FONT
+> を次のように宣言することもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2046"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun fact2 (n: int, res: int): int = "mac#fact2_in_c"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>mac#</FONT
+> シンボルは <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> をC言語のマクロのように扱うことを示しています。
+特に <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> はそのプロトタイプ宣言を最初に宣言しなくても呼び出すことができます。
+実際のところ、プロトタイプ宣言がなくても問題ありません。
+このスタイルの宣言は当然 <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> がC言語で直接実装されることを期待しています。
+</P
+><P
+>&#13;また <FONT
+COLOR="RED"
+>mac#</FONT
+> のかわりに <FONT
+COLOR="RED"
+>sta#</FONT
+> を使うこともできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2055"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun fact2 (n: int, res: int): int = "sta#fact2_in_c"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このスタイルの宣言すると <FONT
+COLOR="RED"
+>fact2_in_c</FONT
+> がC言語の static 関数のように扱われます。
+しかし実際にはあまり使うことはないでしょう。
+</P
+><P
+>&#13;完全を期すために、static 関数を宣言する他の方法を紹介します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2059"
+></A
+><PRE
+CLASS="programlisting"
+>static fun fact2 (n: int, res: int): int
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このスタイルの宣言は自動的に次のように変換されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2061"
+></A
+><PRE
+CLASS="programlisting"
+>extern fun fact2 (n: int, res: int): int = "sta#"
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>sta#</FONT
+> のように使うと、C言語における <FONT
+COLOR="RED"
+>fact2</FONT
+> という名前が単純に
+<FONT
+COLOR="RED"
+>fact2</FONT
+> を意味するようになります。
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1974.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2066.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: ファンクタを用いた有理数パッケージ</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p1369.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ATS における外部の型と値</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

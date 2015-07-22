@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: リストのマージソート (再)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="データ型の改良"
+HREF="c2569.html"><LINK
+REL="PREVIOUS"
+TITLE="例: リストに対する関数テンプレート (再)"
+HREF="x2678.html"><LINK
+REL="NEXT"
+TITLE="パターンマッチの連続性"
+HREF="x2778.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2678.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. データ型の改良</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2778.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_mergesort_redux"
+>例: リストのマージソート (再)</A
+></H1
+><P
+>&#13;以前の章 <A
+HREF="x1336.html"
+>implementation of mergesort on lists</A
+>
+でコンストラクタ <FONT
+COLOR="RED"
+>list0_nil</FONT
+> と <FONT
+COLOR="RED"
+>list0_cons</FONT
+> を使ってリストのマージソートを実装しました。
+この章では コンストラクタ <FONT
+COLOR="RED"
+>list_nil</FONT
+> と <FONT
+COLOR="RED"
+>list_cons</FONT
+>
+を使ってリストのマージソートを実装します。
+この実装は以前の章と同じアルゴリズムを用いています。
+しかし、長さを保持するよう関数を保証するために、実装したソート関数に型を割り当てます。
+つまり、この関数はソートする前のリストと同じ長さのリストを常に返します。
+
+</P
+><P
+>次に定義する関数 <FONT
+COLOR="RED"
+>merge</FONT
+> は2つの整列済みリストを連結して1つの整列済みリストにします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2760"
+></A
+><PRE
+CLASS="programlisting"
+>typedef lte (a:t@ype) = (a, a) -&#62; bool
+
+fun{
+a:t@ype
+} merge
+  {m,n:nat} .&#60;m+n&#62;.
+(
+  xs: list (a, m), ys: list (a, n), lte: lte a
+) : list (a, m+n) =
+  case+ xs of
+  | list_nil () =&#62; ys
+  | list_cons (x, xs1) =&#62;
+    (
+    case+ ys of
+    | list_nil () =&#62; xs
+    | list_cons (y, ys1) =&#62;
+        if x \lte y then
+          list_cons (x, merge (xs1, ys, lte))
+        else
+          list_cons (y, merge (xs, ys1, lte))
+        // end of [if]
+    ) // end of [list_cons]
+// end of [merge]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>merge</FONT
+> に割り当てられている型は、入力された2つのリストの長さの和と等しい長さのリストをこの関数が返すことを明確に示しています。
+停止性メトリクスが <FONT
+COLOR="RED"
+>merge</FONT
+> が停止する関数であることを検査していることに注意してください。
+</P
+><P
+>&#13;次に定義する関数 <FONT
+COLOR="RED"
+>mergesort</FONT
+> は与えられた順序付けでリストをマージソートします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2766"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} mergesort{n:nat}
+(
+  xs: list (a, n), lte: lte a
+) : list (a, n) = let
+  fun msort
+    {n:nat} .&#60;n,n&#62;.
+  (
+    xs: list (a, n), n: int n, lte: lte a
+  ) : list (a, n) =
+    if n &#62;= 2 then split (xs, n, lte, n/2, list_nil) else xs
+  // end of [msort]
+  and split
+    {n:int | n &#62;= 2}{i:nat | i &#60;= n/2} .&#60;n,i&#62;.
+  (
+    xs: list (a, n-n/2+i)
+  , n: int n, lte: lte a, i: int i, xsf: list (a, n/2-i)
+  ) : list (a, n) =
+    if i &#62; 0 then let
+      val+ list_cons (x, xs) = xs
+    in
+      split (xs, n, lte, i-1, list_cons (x, xsf))
+    end else let
+      val xsf = list_reverse&#60;a&#62; (xsf) // make sorting stable!
+      val xsf = list_of_list_vt (xsf) // linear list -&#62; nonlinear list
+      val xsf = msort (xsf, n/2, lte) and xs = msort (xs, n-n/2, lte)
+    in
+      merge (xsf, xs, lte)
+    end // end of [if]
+  // end of [split]
+  val n = list_length&#60;a&#62; (xs)
+in
+  msort (xs, n, lte)
+end // end of [mergesort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>mergesort</FONT
+> に割り当てられた型は
+<FONT
+COLOR="RED"
+>mergesort</FONT
+> が入力されたリストと同じ長さのリストを返すことを示しています。
+2つの内部関数 <FONT
+COLOR="RED"
+>msort</FONT
+> と <FONT
+COLOR="RED"
+>split</FONT
+> は相互再帰的に定義されています。
+そしてそれらの停止性メトリクスは自然数のペアで、整数列は標準の辞書順で比較されます。
+<FONT
+COLOR="RED"
+>msort</FONT
+> に割り当てられた型は、リスト引数の長さのために整数引数が必要であることを示しています。
+これら2つの整数が一致しないと型エラーを引き
+起こします。
+<FONT
+COLOR="RED"
+>split</FONT
+> に割り当てられた型は特に有益です。
+この関数の引数と返値の間の関係を表わしていて、コードを理解しようとする人の助けになるでしょう。
+関数 <FONT
+COLOR="RED"
+>list_reverse</FONT
+> は入力を逆順にした線形リストを返します。
+キャスト関数 <FONT
+COLOR="RED"
+>list_of_list_vt</FONT
+> は線形リストを非線形のリストに変換します。
+この変換では実行時のコストは発生しません。
+線形リストついては別の章で解説します。
+</P
+><P
+>この章のコード全体と追加のテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPDTREF/mergesort.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2678.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2778.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: リストに対する関数テンプレート (再)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2569.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>パターンマッチの連続性</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

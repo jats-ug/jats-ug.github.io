@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>スタックに確保された値</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="観 (view) と観型入門"
+HREF="c3306.html"><LINK
+REL="PREVIOUS"
+TITLE="左辺値と参照渡し"
+HREF="x3431.html"><LINK
+REL="NEXT"
+TITLE="ヒープに確保された線形クロージャ関数"
+HREF="x3516.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3431.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 13. 観 (view) と観型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3516.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="stack-allocated_variables"
+>スタックに確保された値</A
+></H1
+><P
+>&#13;型 T とアドレス L が与えられた時、
+最初の段階で観 <FONT
+COLOR="RED"
+>T@L</FONT
+> の証明はどのように得られるのでしょうか？
+実際にそのような証明を得る方法は様々です。
+次のようにローカルの値としてスタックに確保する方法を紹介します。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>foo</FONT
+> の本体では、
+いくつかのスタックに確保されたローカルな値が宣言されています:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3464"
+></A
+><PRE
+CLASS="programlisting"
+>fn foo (): void = let
+  var x0: int // view@(x0): int? @ x0
+  val () = x0 := 0 // view@(x0): int(0) @ x0
+  var x1: int = 1 // view@(x1): int(1) @ x1
+//
+// [with] is a keyword in ATS
+//
+  var y: int with pfy // pfy is an alias of view@(y): int? @ y
+  val () = y := 2 // pfy = view@(y): int(2) @ y
+  var z: int with pfz = 3 // pfz is an alias of view@(z): int(3) @ z
+in
+  // nothing
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;キーワード <FONT
+COLOR="RED"
+>var</FONT
+> はローカルな値の宣言です。
+値は宣言された時、その型またはその初期値を与える必要があります。
+もし値が型をともなわずに宣言されたら、その初期値の型がその型であると見なされます。
+値 x が型 T で宣言されていたと仮定しましょう。
+するとその値の位置を指すポインタは <FONT
+COLOR="RED"
+>addr@(x)</FONT
+> で表わされ、関連した (駐観の) 線形の証明は
+<FONT
+COLOR="RED"
+>view@(x)</FONT
+> で表わされます。
+このとき <FONT
+COLOR="RED"
+>addr@</FONT
+> と <FONT
+COLOR="RED"
+>view@</FONT
+> はキーワードです。
+値は ATS における左辺値のもう一つの形です。
+<FONT
+COLOR="RED"
+>foo</FONT
+> の本体では、<FONT
+COLOR="RED"
+>x0</FONT
+> が型 <FONT
+COLOR="RED"
+>int</FONT
+> の値として宣言されて整数0で初期化されます;
+<FONT
+COLOR="RED"
+>x1</FONT
+> が型 <FONT
+COLOR="RED"
+>int</FONT
+> の値として宣言されて初期値1が与えられます;
+<FONT
+COLOR="RED"
+>pfy</FONT
+> が <FONT
+COLOR="RED"
+>view@(y)</FONT
+> の別名として導入されているとき、
+<FONT
+COLOR="RED"
+>y</FONT
+> が型 <FONT
+COLOR="RED"
+>int</FONT
+> の値として宣言されて整数2で初期化されます;
+<FONT
+COLOR="RED"
+>pfz</FONT
+> が <FONT
+COLOR="RED"
+>view@(z)</FONT
+> の別名として導入されているとき、
+<FONT
+COLOR="RED"
+>z</FONT
+> が型 <FONT
+COLOR="RED"
+>int</FONT
+> の値として宣言されて初期値3が与えられます。
+
+</P
+><P
+>&#13;次のコードは階乗関数の実装です:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3486"
+></A
+><PRE
+CLASS="programlisting"
+>fn fact{n:nat}
+  (n: int (n)): int = let
+  fun loop{n:nat}{l:addr} .&#60;n&#62;.
+    (pf: !int @ l | n: int n, res: ptr l): void =
+    if n &#62; 0 then let
+      val () = !res := n * !res in loop (pf | n-1, res)
+    end // end of [if]
+  // end of [loop]
+  var res: int with pf = 1
+  val () = loop (pf | n, addr@res) // addr@res: the pointer to res
+in
+  res
+end // end of [fact]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;loop を実行している間、<FONT
+COLOR="RED"
+>res</FONT
+> の値は中間結果を保持していることに注意してください。
+<FONT
+COLOR="RED"
+>res</FONT
+> はスタックに確保されるので、
+<FONT
+COLOR="RED"
+>fact</FONT
+> 呼び出しが評価された後にゴミが生成されることはありません。
+C言語でこのスタイルのプログラミングをする時、<FONT
+COLOR="RED"
+>fact</FONT
+> 呼び出しが返った後に
+<FONT
+COLOR="RED"
+>res</FONT
+> を指すポインタがデリファレンスされてしまう不安がしばしばあります。
+これは一般に、宙ぶらりんなポインタのデリファレンス (derefencing a dangling pointer) と呼ばれます。
+ATS ではこの不安は完全に取り除かれています。
+変数 <FONT
+COLOR="RED"
+>res</FONT
+> に関連する駐観の線形証明は、<FONT
+COLOR="RED"
+>res</FONT
+>
+のスコープが終わるまで存在することが ATS の型システムによって要求されます。
+より具体的には、もし型 T の変数 x が宣言されていたら、L がアドレス x のとき観 <FONT
+COLOR="RED"
+>T?@L</FONT
+>
+の線形証明は、x のスコープの終わりに型検査が到達するまで有効でなければなりません。
+この要求は、確保されたスタックの割り当てが終わった後、もはや変数にアクセスできないことを保証します。
+その変数に関連した駐観の線形証明がその時点では無効なのです。
+
+</P
+><P
+>&#13;ATS の配列もまたスタックに確保できます。
+例えば、次のコードは関数 <FONT
+COLOR="RED"
+>main0</FONT
+> のスタックフレームに double の2つの配列を確保します。
+それからそれらを <FONT
+COLOR="RED"
+>dotprod</FONT
+> に渡してドット積を計算します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3500"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+main0 () =
+{
+//
+var A = @[double][3](1.0) // initialized with 1.0, 1.0, 1.0
+var B = @[double](1.0, 2.0, 3.0) // initialized with 1.0, 2.0, 3.0
+//
+val () = println! ("A * B = ", dotprod (A, B)) // A * B = 6.0
+//
+} (* end of [main0] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+変数 A に関連した駐観は <FONT
+COLOR="RED"
+>(@[double][3])@A</FONT
+> です。
+このとき A は 値 A のアドレスもまた参照しています。
+同様に変数 B に関連した駐観は <FONT
+COLOR="RED"
+>(@[double][3])@B</FONT
+> です。
+
+完全を期すために、次のような未初期化の配列のための構文を紹介します:
+型 T と整数 N が与えられた時、構文 <FONT
+COLOR="RED"
+>@[T][N]()</FONT
+> は型 T の N 個の未初期化の値からなる配列を表わします。
+
+</P
+><P
+>&#13;関数の呼び出しフレーム中に大きな配列確保するのは良い慣習とは言えないことに注意してください。
+実行時にスタックオーバーフローが非常に発生しやすくなります。
+
+</P
+><P
+>&#13;ATS では、関数の呼び出しフレーム内にクロージャを確保することもできます。
+例えば、次のコードは <FONT
+COLOR="RED"
+>bar</FONT
+> という名前でスタックに確保された変数にフラットなクロージャ関数を置く
+<FONT
+COLOR="RED"
+>foo</FONT
+> という名前の関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3509"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo
+(
+  x: int, y: int
+) : int = let
+//
+var bar = lam@ (): int =&#62; x * y
+//
+in
+  bar ()
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+特殊キーワード <FONT
+COLOR="RED"
+>lam@</FONT
+> はフラットなクロージャ関数を作るのに使われることに注意してください。
+完全を期すために、再帰クロージャ関数もまたスタックに確保された変数に格納できることを示す次のような別の例を紹介します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3512"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo2
+(
+  x: int, y: int
+) : int = let
+//
+var bar2 = fix@ f (x: int): int =&#62; if x &#62; 0 then y + f(x-1) else 0
+//
+in
+  bar2 (x)
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+特殊キーワード <FONT
+COLOR="RED"
+>fix@</FONT
+> はフラットな再帰クロージャ関数を作るのに使われることに注意してください。
+
+</P
+><P
+>&#13;動的なメモリ確保が使えない状況下では、スタックに確保されたクロージャは高階関数を使ったプログラミングをサポートする極めて重要な存在です。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3431.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3516.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>左辺値と参照渡し</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3306.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ヒープに確保された線形クロージャ関数</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

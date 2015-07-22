@@ -1,0 +1,476 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 関数的な赤黒木</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="データ型の改良"
+HREF="c2571.html"><LINK
+REL="PREVIOUS"
+TITLE="パターンマッチの連続性"
+HREF="x2780.html"><LINK
+REL="NEXT"
+TITLE="ATS/LF を使った定理証明"
+HREF="c2852.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2780.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. データ型の改良</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c2852.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_fun_red-black_trees"
+>例: 関数的な赤黒木</A
+></H1
+><P
+>&#13;赤黒木は、それぞれのノードが赤もしくは黒であり、根からそれぞれの葉までのパスが同じ数の黒ノードを持ち、1つの列に赤ノードが2つ連続しないような二分木として定義されます。
+明確に、赤黒木の最も長いパスの長さはその木の最も短かいパスの長さの2倍が限界です。
+したがって、赤黒木は平衡木の一種です。
+赤黒木のそれぞれのパス黒ノードの数はしばしばその木の <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>黒高さ (black height)</I
+></SPAN
+> と呼ばれます。
+
+</P
+><P
+>&#13;形式的に、赤黒木のデータ型は ATS では次のように宣言できます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2814"
+></A
+><PRE
+CLASS="programlisting"
+>#define BLK 0
+#define RED 1
+sortdef clr = {c:nat | c &#60;= 1}
+
+datatype rbtree
+  (a:t@ype+, int(*clr*), int(*bh*)) =
+  | rbtree_nil (a, BLK, 0)
+  | {c,cl,cr:clr | cl &#60;= 1-c; cr &#60;= 1-c} {bh:nat}
+    rbtree_cons (a, c, bh+1-c) of (int c, rbtree (a, cl, bh), a, rbtree (a, cr, bh))
+// end of [rbtree]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;木の色は、その木が空であれば根ノードの色は黒になります。
+型 T と整数で表わされる色  C と整数 BH が与えられた時、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH)</FONT
+>
+は色 C で黒高さ BH で型 T の要素を持つような赤黒木を表わします。
+
+</P
+><P
+>&#13;赤黒木に対する (挿入や削除のような) 様々な操作を実装する際、
+はじめに赤ノードの連続を許すような色の違反を含む中間生成の木をコンストラクトする必要がしばしばあります。
+それからそのような違反を修正するために木を回転させるのです。
+このためには上記のデータ型 <FONT
+COLOR="RED"
+>rbtree</FONT
+> は厳格すぎます。
+色が違反するようなどんな中間生成した木にも型を割り当てられないのです。
+この問題に対処するために、次のような <FONT
+COLOR="RED"
+>rbtree</FONT
+> を宣言しましょう:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2821"
+></A
+><PRE
+CLASS="programlisting"
+>datatype rbtree
+(
+  a:t@ype+
+, int // color
+, int // black height
+, int // violations
+) =
+  | rbtree_nil (a, BLK, 0, 0) of ()
+  | {c,cl,cr:clr}{bh:nat}{v:int}
+      {c==BLK &#38;&#38; v==0 || c == RED &#38;&#38; v==cl+cr}
+    rbtree_cons (a, c, bh+1-c, v) of
+    (
+      int c, rbtree0 (a, cl, bh), a, rbtree0 (a, cr, bh)
+    ) (* end of [rbtree_cons] *)
+// end of [rbtree]
+
+where rbtree0 (a:t@ype, c:int, bh:int) = rbtree (a, c, bh, 0)
+
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;1つの列における2つの赤ノードの発生を1つの色違反として数えましょう。
+型 T と整数として表わされる色 C と整数 BH, V が与えられた時、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH, V)</FONT
+>
+は型 T の要素を持ち、色 C で、黒高さ BH で、きっかり V 回の色違反を含む木を表わします。
+したがって、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH, 0)</FONT
+> は色違反のない有効な赤黒木です。
+
+</P
+><P
+>&#13;1以上の色違反を含む木と1つの要素、別の色違反を含まない木が与えられた時、
+次の操作は有効な赤黒木をコンストラクトします:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2827"
+></A
+><PRE
+CLASS="programlisting"
+>fn{
+a:t@ype
+} insfix_l // right rotation for fixing left insertion
+  {cl,cr:clr} {bh:nat} {v:nat} (
+  tl: rbtree (a, cl, bh, v), x0: a, tr: rbtree (a, cr, bh, 0)
+) : [c:clr] rbtree0 (a, c, bh+1) = let
+  #define B BLK; #define R RED; #define cons rbtree_cons
+in
+  case+ (tl, x0, tr) of
+  | (cons (R, cons (R, a, x, b), y, c), z, d) =&#62;
+      cons (R, cons (B, a, x, b), y, cons (B, c, z, d)) // shallow rot
+  | (cons (R, a, x, cons (R, b, y, c)), z, d) =&#62;
+      cons (R, cons (B, a, x, b), y, cons (B, c, z, d)) // deep rotation
+  | (a, x, b) =&#62;&#62; cons (B, a, x, b)
+end // end of [insfix_l]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>insfix_l</FONT
+> のインターフェイスを読んでみることで、引数である2つの木は自然数の黒高さ bh
+が同じで、なおかつ返値の木の黒高さが bh+1 でなくてはいけないことが分かります。
+
+</P
+><P
+>&#13;次の操作 <FONT
+COLOR="RED"
+>insfix_r</FONT
+> は <FONT
+COLOR="RED"
+>insfix_l</FONT
+> の単純な鏡像です:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2834"
+></A
+><PRE
+CLASS="programlisting"
+>fn{
+a:t@ype
+} insfix_r // left rotation for fixing right insertion
+  {cl,cr:clr} {bh:nat} {v:nat} (
+  tl: rbtree (a, cl, bh, 0), x0: a, tr: rbtree (a, cr, bh, v)
+) : [c:clr] rbtree0 (a, c, bh+1) = let
+  #define B BLK; #define R RED; #define cons rbtree_cons
+in
+  case+ (tl, x0, tr) of
+  | (a, x, cons (R, b, y, cons (R, c, z, d))) =&#62;
+      cons (R, cons (B, a, x, b), y, cons (B, c, z, d)) // shallow rot
+  | (a, x, cons (R, cons (R, b, y, c), z, d)) =&#62;
+      cons (R, cons (B, a, x, b), y, cons (B, c, z, d)) // deep rotation
+  | (a, x, b) =&#62;&#62; cons (B, a, x, b)
+end // end of [insfix_r]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;これで赤黒木への挿入を実装する準備が整いました。
+与えられた赤黒木に要素を挿入した木は常に有効な赤黒木であることを保証するような、挿入の実装できます。
+次の挿入インターフェイスが正確に保証します:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2837"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun{
+a:t@ype
+} rbtree_insert
+  {c:clr} {bh:nat}
+(
+  t: rbtree0 (a, c, bh), x0: a, cmp: cmp a
+) : [bh1:nat] rbtree0 (a, BLK, bh1)
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;興味深いことに、このインターフェイスは <FONT
+COLOR="RED"
+>rbtree_insert</FONT
+>
+を呼び出して得られる木が常に黒であることも示しています。
+以下のコードは <FONT
+COLOR="RED"
+>rbtree_insert</FONT
+> の実装です:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2842"
+></A
+><PRE
+CLASS="programlisting"
+>implement{a}
+rbtree_insert
+  (t, x0, cmp) = let
+//
+#define B BLK
+#define R RED
+#define nil rbtree_nil
+#define cons rbtree_cons
+//
+fun ins
+  {c:clr}{bh:nat} .&#60;bh,c&#62;.
+(
+  t: rbtree0 (a, c, bh), x0: a
+) :
+[
+  cl:clr;v:nat | v &#60;= c
+] rbtree (a, cl, bh, v) =
+(
+  case+ t of
+  | nil ((*void*)) =&#62;
+      cons{..}{..}{..}{0} (R, nil, x0, nil)
+  | cons (c, tl, x, tr) =&#62; let
+      val sgn = compare (x0, x, cmp)
+    in
+      if sgn &#60; 0 then let
+        val [cl,v:int] tl = ins (tl, x0)
+      in
+        if c = B then insfix_l (tl, x, tr)
+          else cons{..}{..}{..}{cl} (R, tl, x, tr)
+        // end of [if]
+      end else if sgn &#62; 0 then let
+        val [cr,v:int] tr = ins (tr, x0)
+      in
+        if c = B then insfix_r (tl, x, tr)
+          else cons{..}{..}{..}{cr} (R, tl, x, tr)
+        // end of [if]
+      end else t // end of [if]
+    end // end of [cons]
+) (* end of [ins] *)
+//
+val t = ins (t, x0)
+//
+in
+  case+ t of cons (R, tl, x, tr) =&#62; cons (B, tl, x, tr) | _ =&#62;&#62; t
+end // end of [rbtree_insert]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;内部関数 <FONT
+COLOR="RED"
+>ins</FONT
+>
+に割り当てれらた型が、赤黒木にへの挿入方法について形式的な説明を事実上与えていることに注意してください。
+このアルゴリズムの内部構造についてほとんど理解していない疑似コードとして書かれたアルゴリズムを単に頼って、多くのプログラマは赤黒木を実装します。
+例えば、上記の内部関数 <FONT
+COLOR="RED"
+>ins</FONT
+> がC言語で実装されたとしたら、
+その関数が常に与えられた赤黒木の黒高さを管理できているか、判断できるプログラマはほとんどいないでしょう。
+そして木の値が赤になった場合、色違反のある木を作ってしまうかもしれません。
+一方、この不変条件は赤黒木の挿入アルゴリズムとしてよく知られたものと本質的に同じです。
+
+</P
+><P
+>&#13;もし既に与えられた赤黒木に要素が含まれていたら、上記で実装した挿入操作はその要素を挿入しません。
+もしそのような場合、呼び出し元に知らせた方が望ましいかもしれません。
+例えば、この目的のために例外を発生させることもできます。
+代案として、<FONT
+COLOR="RED"
+>rbtree_insert</FONT
+> に参照渡し (call-by-reference) 引数を与えて、挿入しようとした要素が実際に挿入されたのか示すフラグを返す方法があります。
+別の章で参照渡しの意味と、ATS でそれがどのようにサポートされているのか解説します。
+
+</P
+><P
+>&#13;しばしば2分探索木の要素の削除を実装するのは挿入よりもきわめて難しいことがあります。
+これは赤黒木において特に顕著です。
+興味のある読者には、型を使って返値の木が有効な赤黒木であることを保証する赤黒木の削除操作の実装コードとして、
+ATS の libats ライブラリをおすすめします。
+
+</P
+><P
+>&#13;この章のコード全体と追加のテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPDTREF/rbtree.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2780.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c2852.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>パターンマッチの連続性</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2571.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ATS/LF を使った定理証明</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

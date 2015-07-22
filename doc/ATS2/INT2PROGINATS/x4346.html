@@ -1,0 +1,760 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>非同期 IPC のための線形チャネル</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="抽象観と観型 (viewtype)"
+HREF="c4145.html"><LINK
+REL="PREVIOUS"
+TITLE="ロックとアンロック"
+HREF="x4298.html"><LINK
+REL="NEXT"
+TITLE="関数テンプレートを使ったプログラミング"
+HREF="p4436.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4298.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. 抽象観と観型 (viewtype)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="p4436.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="linear-channels-for-async-ipc"
+>非同期 IPC のための線形チャネル</A
+></H1
+><P
+>&#13;この章では、スレッド間の非同期通信をサポートする、線形チャネルの実装を示します。
+これはまた、<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>プログラマ中心</I
+></SPAN
+> のプログラム検証を主張する良い機会でもあります。
+</P
+><P
+>&#13;本質的にスレッド間の通信チャネルは、レースコンディションをに対して必要ななんらかの保護メカニズムで包んだキューです。
+容量固定のキュー、すなわち生成されたら容量が変わらないようなキューを仮定しましょう。
+もしそのキューが満杯なら、そのキューへの要素の挿入は失敗します。
+もしそのキューが空なら、そのキューからの要素の削除は失敗します。
+満杯のキューへの挿入や空のキューからの削除を防ぐために、まず次のようなキューに対する線形抽象型を導入しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4351"
+></A
+><PRE
+CLASS="programlisting"
+>absvtype
+queue_vtype(a:vt@ype+, int(*m*), int(*n*))
+vtypedef queue(a:vt@ype,m:int,n:int) = queue_vtype(a,m,n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、型 <FONT
+COLOR="RED"
+>queue(VT,M,N)</FONT
+> は、型 VT の N 個の要素を含んでいる容量 M のキューを表わします。
+それから、挿入と削除を表わす関数には次のようなインターフェイスが割り当てられるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4354"
+></A
+><PRE
+CLASS="programlisting"
+>//
+fun{a:vt0p}
+queue_insert
+  {m,n:nat | m &#62; n}
+  (!queue(a, m, n) &#62;&#62; queue(a, m, n+1), a): void
+//
+fun{a:vt0p}
+queue_remove
+  {m,n:nat | n &#62; 0}(!queue(a, m, n) &#62;&#62; queue(a, m, n-1)): (a)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+示した抽象型 <FONT
+COLOR="RED"
+>queue</FONT
+> は線形チャネルを実装として機能します。
+けれども、私はこのバージョンの <FONT
+COLOR="RED"
+>queue</FONT
+> を採用できません。
+私は、厳密でより柔軟なプログラム検証のスタイルを示したいのです。
+
+</P
+><P
+>&#13;次のコードは抽象型 <FONT
+COLOR="RED"
+>queue</FONT
+> の別バージョンです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4360"
+></A
+><PRE
+CLASS="programlisting"
+>//
+absvtype
+queue_vtype(a:vt@ype+, int(*id*)) = ptr
+//
+vtypedef
+queue(a:vt0p, id:int) = queue_vtype(a, id)
+vtypedef queue(a:vt0p) = [id:int] queue(a, id)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+観型 VT と整数 ID が与えられたとき、<FONT
+COLOR="RED"
+>queue(VT,ID)</FONT
+> は、整数 ID で一意に識別される型 VT の要素を含むキューを表わします。
+そのため ID はスタンプの一種と考えることができます。
+次に表わされた関数 <FONT
+COLOR="RED"
+>queue_isnil</FONT
+> は与えられたキューが空であるかどうか調べます:
+
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4364"
+></A
+><PRE
+CLASS="programlisting"
+>//
+absprop ISNIL(id:int, b:bool)
+//
+fun
+{a:vt0p}
+queue_isnil{id:int}(!queue(a, id)): [b:bool] (ISNIL(id, b) | bool(b))
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+整数 ID が与えられたとき、命題 <FONT
+COLOR="RED"
+>ISNIL(ID,true)</FONT
+> (もしくは <FONT
+COLOR="RED"
+>ISNIL(ID,false)</FONT
+>) の証明は、ID で同定されたキューが空である (もしくは空でない) ことを意味しています。
+同様に、次に表わされた関数 <FONT
+COLOR="RED"
+>queue_isful</FONT
+> は与えられたキューが満杯であるかどうか調べます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4369"
+></A
+><PRE
+CLASS="programlisting"
+>//
+absprop ISFUL(id:int, b:bool)
+//
+fun
+{a:vt0p}
+queue_isful{id:int}(!queue(a, id)): [b:bool] (ISFUL(id, b) | bool(b))
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+整数 ID が与えられたとき、命題 <FONT
+COLOR="RED"
+>ISFUL(ID,true)</FONT
+> (もしくは <FONT
+COLOR="RED"
+>ISFUL(ID,false)</FONT
+>) の証明は、ID で同定されたキューが満杯である (もしくは満杯でない) ことを意味しています。
+
+</P
+><P
+>&#13;これで、与えられたキューへの挿入と削除を表わす関数 <FONT
+COLOR="RED"
+>queue_insert</FONT
+> と <FONT
+COLOR="RED"
+>queue_remove</FONT
+> には次のインターフェイスを割り当てることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4376"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun
+{a:vt0p}
+queue_insert
+  {id:int}
+(
+  ISFUL(id, false)
+| xs: !queue(a, id) &#62;&#62; queue(a, id2), x: a
+) : #[id2:int] void
+//
+extern
+fun
+{a:vt0p}
+queue_remove
+  {id:int}
+(
+  ISNIL(id, false) | xs: !queue(a, id) &#62;&#62; queue(a, id2)
+) : #[id2:int] a // end-of-fun
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+キューへの挿入やキューからの削除が、新しいスタンプをそのキューに割り当てていることに注意してください。
+これは本質的に、上記に示したマナーでの <FONT
+COLOR="RED"
+>ISNIL</FONT
+> と <FONT
+COLOR="RED"
+>ISFUL</FONT
+> の解釈です。
+
+</P
+><P
+>&#13;与えられたキューへ <FONT
+COLOR="RED"
+>queue_insert</FONT
+> を呼び出すためには、そのキューが満杯ではないことを示す証明が必要です。
+当該キューに <FONT
+COLOR="RED"
+>queue_isful</FONT
+> を呼び出して false が返れば、そのような証明を獲得できます。
+同様に、与えられたキューへ <FONT
+COLOR="RED"
+>queue_remove</FONT
+> を呼び出すためには、まずそのキューに <FONT
+COLOR="RED"
+>queue_isnil</FONT
+> を呼び出して、そのキューが空でないことを示す証明を獲得する必要があります。
+</P
+><P
+>&#13;ここで示した内容は、<FONT
+COLOR="RED"
+>queue_isnil</FONT
+> と <FONT
+COLOR="RED"
+>queue_isful</FONT
+> が持つそのインターフェイスを実際には立証していません。
+その代わりここでの焦点は、<FONT
+COLOR="RED"
+>queue_isnil</FONT
+> と <FONT
+COLOR="RED"
+>queue_isful</FONT
+>
+にそのようなインターフェイスが割り当てられたとき、満杯のキューに <FONT
+COLOR="RED"
+>queue_insert</FONT
+>
+が呼び出されないことと <FONT
+COLOR="RED"
+>queue_remove</FONT
+> が空のキューに呼び出されないことを保証することです。
+私はこのスタイルのプログラミング検証を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>プログラマ中心</I
+></SPAN
+> であると呼んでいます。
+なぜならその正確さは客観的形式的に確立されたものではないからです。
+私自身、プログラマ中心のプログラム検証が実際にとても柔軟で効果的であることを見つけました。
+もし非形式的な数学の証明が証明された内容が正当であるかどうか検査するのに役立つと我々が信じるのであれば、プログラマ中心のプログラム検証もまた検証されたプログラムが正しいかどうか検査するのに役立つことを自然に信じることができるでしょう。
+</P
+><P
+>&#13;それでは、スレッド間の非同期通信のための線形チャネルの実装を開始しましょう。
+はじめに、次のような線形抽象型 <FONT
+COLOR="RED"
+>channel</FONT
+> を宣言しましょう:
+
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4395"
+></A
+><PRE
+CLASS="programlisting"
+>absvtype channel_vtype(a:vt@ype+) = ptr
+vtypedef channel(a:vt0p) = channel_vtype(a)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+チャネルに要素を挿入する関数には次のインターフェイスが与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4397"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt0p} channel_insert (!channel(a), a): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+もしそのチャネルが満杯であったら、<FONT
+COLOR="RED"
+>channel_insert</FONT
+> の呼び出し元はブロックします。
+同様に、チャネルから要素を削除する関数には次のインターフェイスが与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4400"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt0p} channel_remove (chan: !channel(a)): (a)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+もしそのチャネルが空であったら、<FONT
+COLOR="RED"
+>channel_remove</FONT
+> の呼び出し元はブロックします。
+
+</P
+><P
+>&#13;チャネルを次のように表現してみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4404"
+></A
+><PRE
+CLASS="programlisting"
+>//
+datavtype
+channel_ =
+{
+l0,l1,l2,l3:agz
+} CHANNEL of
+@{
+  cap=intGt(0)
+, spin=spin_vt(l0)
+, rfcnt=intGt(0)
+, mutex=mutex_vt(l1)
+, CVisnil=condvar_vt(l2)
+, CVisful=condvar_vt(l3)
+, queue=ptr // deqarray
+} (* end of [channel] *)
+//
+assume channel_vtype(a:vt0p) = channel_
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+チャネルを表現するレコードには7つのフィールドがあります;
+<FONT
+COLOR="RED"
+>cap</FONT
+> フィールドはそのチャネルの (固定の) 容量を示す整数を保持しています;
+<FONT
+COLOR="RED"
+>spin</FONT
+> フィールドは、<FONT
+COLOR="RED"
+>rfcnt</FONT
+> フィールドにあるリファレンスカウントを保護するためのスピンロックを保持しています;
+<FONT
+COLOR="RED"
+>mutex</FONT
+> フィールドは、<FONT
+COLOR="RED"
+>queue</FONT
+> フィールドにあるキューを保護するための mutex を保持しています;
+<FONT
+COLOR="RED"
+>CVisnil</FONT
+> フィールドは、(mutex を保持した) 呼び出し元がキューが空ではなくなるのを待つための条件変数を保持しています;
+<FONT
+COLOR="RED"
+>CVisful</FONT
+> フィールドは、(mutex を保持した) 呼び出し元がキューが満杯ではなくなるのを待つための条件変数を保持しています。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>channel_insert</FONT
+> には次の実装が与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4415"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+channel_insert
+  (chan, x0) = let
+//
+val+CHANNEL
+  {l0,l1,l2,l3}(ch) = chan
+val mutex = unsafe_mutex_vt2t(ch.mutex)
+val (pfmut | ()) = mutex_lock (mutex)
+val xs =
+  $UN.castvwtp0{queue(a)}((pfmut | ch.queue))
+val ((*void*)) = channel_insert2&#60;a&#62; (chan, xs, x0)
+prval pfmut = $UN.castview0{locked_v(l1)}(xs)
+val ((*void*)) = mutex_unlock (pfmut | mutex)
+//
+in
+  // nothing
+end // end of [channel_insert]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、補助関数 <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> には次のインターフェイスが与えらえます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4418"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt0p}
+channel_insert2
+  (!channel(a), !queue(a) &#62;&#62; _, a): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+呼び出し元がチャネル中の mutex を保持した状態で <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> は呼び出されることに注意してください。
+次のコードは <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> の実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4422"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+channel_insert2
+  (chan, xs, x0) = let
+//
+val+CHANNEL
+  {l0,l1,l2,l3}(ch) = chan
+//
+val (pf | isful) = queue_isful (xs)
+//
+in
+//
+if
+isful
+then let
+  prval
+  (pfmut, fpf) =
+  __assert () where
+  {
+    extern
+    praxi __assert (): vtakeout0(locked_v(l1))
+  }
+  val mutex = unsafe_mutex_vt2t(ch.mutex)
+  val CVisful = unsafe_condvar_vt2t(ch.CVisful)
+  val ((*void*)) = condvar_wait (pfmut | CVisful, mutex)
+  prval ((*void*)) = fpf (pfmut)
+in
+  channel_insert2 (chan, xs, x0)
+end // end of [then]
+else let
+  val isnil = queue_isnil (xs)
+  val ((*void*)) = queue_insert (pf | xs, x0)
+  val ((*void*)) =
+  if isnil.1
+    then condvar_broadcast(unsafe_condvar_vt2t(ch.CVisnil))
+  // end of [if]
+in
+  // nothing
+end // end of [else]
+//
+end // end of [channel_insert2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> の背後にあるロジックは次のように説明できます。
+与えられたチャネルのキューが満杯であったなら、呼び出し元はその mutex を手放すために <FONT
+COLOR="RED"
+>condvar_wait</FONT
+>
+を呼び出し、それからチャネルの <FONT
+COLOR="RED"
+>CVisful</FONT
+> フィールド中の条件変数を待ち合わせます;
+条件変数へのシグナル送信で起きた呼び出し元は、mutex を再び保持した後、<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> を再帰的に呼び出します。
+与えられたチャネルのキューが満杯でなかったなら、呼び出し元は <FONT
+COLOR="RED"
+>queue</FONT
+> フィールド中のキューに与えられた要素を挿入して返ります。
+<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> が末尾再帰関数であり、条件変数を待ち合わせるC言語コードによくある標準的な while ループに本質的に対応していることに注意してください。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>channel_insert</FONT
+> (と <FONT
+COLOR="RED"
+>channel_insert2</FONT
+>) の上記実装を真似て、<FONT
+COLOR="RED"
+>channel_remove</FONT
+> の実装を導くことは単純でしょう。
+これは練習問題とします。
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードを含む
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/channel_vt.dats"
+TARGET="_top"
+>channel_vt.dats</A
+>
+ファイルはオンラインから入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4298.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="p4436.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ロックとアンロック</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4145.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>関数テンプレートを使ったプログラミング</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

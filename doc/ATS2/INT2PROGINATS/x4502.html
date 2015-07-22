@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 数に対するジェネリックス演算</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="ジェネリックスから遅延束縛へ"
+HREF="c4438.html"><LINK
+REL="PREVIOUS"
+TITLE="ジェネリックスから遅延束縛へ"
+HREF="c4438.html"><LINK
+REL="NEXT"
+TITLE="ファンクタの特殊形としてのテンプレート"
+HREF="x4535.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c4438.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. ジェネリックスから遅延束縛へ</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4535.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="generic-operations-on-numbers"
+>例: 数に対するジェネリックス演算</A
+></H1
+><P
+>&#13;ATS には数多くの数値型があります。
+関数テンプレートを用いると、数値演算においてコードの共有を向上させることができます。
+例えば、持つ行列の乗法のジェネリックス実装に次のインターフェイスを与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4505"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+{a:t@ype}
+matrix_mul
+  {p,q,r:int}
+(
+  p: int(p)
+, q: int(q)
+, r: int(r)
+, A: &#38;matrix(a, p, q)
+, B: &#38;matrix(a, q, r)
+, C: &#38;matrix(a?, p, r) &#62;&#62; matrix(a, p, r)
+) : void // end of [matrix_mul]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+それからこれを使って、整数の行列, 浮動小数点数の行列, 浮動小数点複素数の行列などの行列乗法の実装をすぐに得られます。
+このアプローチは、エラーを招きやすいC言語マクロの使用よりも明確に優れています。
+
+</P
+><P
+>&#13;数に対するジェネリックス演算の具体的な例を見てみましょう。
+次のコードは階乗関数の一般的な実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4508"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun fact(n: int): int
+//
+implement
+fact(n) =
+  if n &#62; 0 then n * fact(n-1) else 1
+// end of [fact]
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+100 に適用されると、<FONT
+COLOR="RED"
+>fact</FONT
+> は 0 を返すでしょう。
+これは 100 の階乗が 2<SUP
+>32</SUP
+> の倍数になり、型 <FONT
+COLOR="RED"
+>int</FONT
+>
+の整数に対する乗算が 2<SUP
+>32</SUP
+> を法とすることから容易に理解できます。
+この乗法を倍精度の浮動小数点数における乗法に置き換えたいとします。
+これは次のように <FONT
+COLOR="RED"
+>fact</FONT
+> のわずかな偏見を実装するだけで済みます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4515"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun factd(n: int): double
+
+implement
+factd(n) =
+  if n &#62; 0 then n * factd(n-1) else 1.0
+// end of [factd]
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+100 に適用されると、<FONT
+COLOR="RED"
+>factd</FONT
+> は大きな浮動小数点数を返します。
+明らかに <FONT
+COLOR="RED"
+>fact</FONT
+> と <FONT
+COLOR="RED"
+>factd</FONT
+> の実装の間にはコードの重複があります。
+次のような階乗関数のジェネリックス実装を導入することで、この重複をたやすく取り除くことができます。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4520"
+></A
+><PRE
+CLASS="programlisting"
+>//
+extern
+fun{a:t@ype} gfact(n: int): a
+//
+implement
+{a}(*tmp*)
+gfact(n) = (
+//
+if n &#62; 0
+then gmul_int_val&#60;a&#62;(n, gfact&#60;a&#62;(n-1))
+else gnumber_int&#60;a&#62;(1)
+//
+) (* end of [gfact] *)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ATS でオーバーロードをサポートによって少しきれいにできます。
+<FONT
+COLOR="RED"
+>gfact</FONT
+> を次のように書き直せます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4523"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+{a}(*tmp*)
+gfact(n) = let
+//
+overload * with gmul_int_val
+//
+in
+//
+if n &#62; 0
+then n * gfact&#60;a&#62;(n-1) else gnumber_int&#60;a&#62;(1)
+//
+end (* end of [gfact] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+これで <FONT
+COLOR="RED"
+>fact</FONT
+> と <FONT
+COLOR="RED"
+>factd</FONT
+> は次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4527"
+></A
+><PRE
+CLASS="programlisting"
+>//
+implement fact(n) = gfact&#60;int&#62;(n)
+implement factd(n) = gfact&#60;double&#62;(n)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+GNU multiple precision arithmetic library (GMPLIB) に基づいて多倍長整数を ATS はサポートしています。
+次のコードは 100 の階乗の正しい値を算出する方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4529"
+></A
+><PRE
+CLASS="programlisting"
+>//
+staload _(*T*) =
+"{$LIBATSHWXI}/intinf/DATS/intinf_t.dats"
+staload _(*VT*) =
+"{$LIBATSHWXI}/intinf/DATS/intinf_vt.dats"
+//
+staload GINTINF =
+"{$LIBATSHWXI}/intinf/DATS/gintinf_t.dats"
+//
+typedef intinf = $GINTINF.intinf
+overload print with $GINTINF.print_intinf
+//
+val () =
+println! ("gfact&#60;intinf&#62;(100) = ", gfact&#60;intinf&#62;(100))
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+次のような数値が得られました:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4531"
+></A
+><PRE
+CLASS="programlisting"
+>gfact&#60;intinf&#62;(100) = 933262154439441526816992388562667[...omitted...]
+</PRE
+><P
+></P
+></DIV
+>
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードを含む
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/gnumber.dats"
+TARGET="_top"
+>gnumber.dats</A
+>
+はオンラインから入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c4438.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4535.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ジェネリックスから遅延束縛へ</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4438.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ファンクタの特殊形としてのテンプレート</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

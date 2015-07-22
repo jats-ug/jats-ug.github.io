@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->単純な入力と出力</TITLE
+>例: 定数Piの推量</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -12,13 +12,13 @@ TITLE="ATSプログラミング入門"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="効果 (effect) を持つプログラミングの機能"
-HREF="c1364.html"><LINK
+HREF="c1372.html"><LINK
 REL="PREVIOUS"
-TITLE="例: 定数Piの推量"
-HREF="x1627.html"><LINK
+TITLE="行列"
+HREF="x1594.html"><LINK
 REL="NEXT"
-TITLE="モジュール性"
-HREF="c1693.html"><LINK
+TITLE="単純な入力と出力"
+HREF="x1643.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x1627.html"
+HREF="x1594.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c1693.html"
+HREF="x1643.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -77,293 +77,55 @@ CLASS="sect1"
 ><H1
 CLASS="sect1"
 ><A
-NAME="basic_input_and_output"
->単純な入力と出力</A
+NAME="example_estimating_the_constant_pi"
+>例: 定数Piの推量</A
 ></H1
 ><P
->&#13;ATS 言語で I/O を扱うには依存型と線形型を使う必要があり、これは別の章で解説します。
-この章では、プログラマが使うことのできる基本的な I/O へのアクセス手段を解説します。
+>&#13;モンテカルロ法を使って、円周の直径に対する比率である定数 Pi を推量します。
 </P
 ><P
->&#13;ファイルハンドルは本質的には (バイト列としての) ストリームと (整数値として表現される) ファイル識別子を結び付けます。
-ATS では、ファイルハンドルの型は <FONT
-COLOR="RED"
->FILEref</FONT
-> です。
-次に挙げるような3つの標準ファイルハンドルがあります:
-
+>&#13;次元 N x N の正方形があるとしましょう。
+この N は比較的大きな自然数 (例えば 1000) で、半径 1 の円盤がこの正方形に入っているとします。
+N*N、つまり N の平方に N2 という名前をつけます。
+この正方形の内側の点をランダムに選択すると、
+その点が円盤に当たる確率は Pi/N2 です。
 </P
 ><P
-></P
-><UL
-><LI
-><P
-><FONT
-COLOR="RED"
->stdin_ref</FONT
->: 標準入力
+>&#13;定数 Pi を推量する方法は次のようなものです。
+自然数 K が与えられたとき、その正方形の内側にある K 個の点をランダムに、K 回選択します。
+それぞれの回において、きっちり1度だけ点を選びます。
+前回選んだ点を中心とする円盤に k 回目に選択した点が当っていたら、1度当ったことを記録します。
+k 回目における記録された当った回数は、直前の回までに k-1 点選んだとき、(k-1)*Pi/N2 であることが期待できます。
+そのため、K 回試行して当った合計回数は、理想的には (K*(K-1)/2)*Pi/N2 であることになります。
+もし K が N2 に到達すれば、期待される当った合計回数は (N2-1)*Pi/2 になります。
+N が無限大に近付くと、当った合計回数を N2 で割った数が Pi/2 に収束することが証明できます。
 </P
-></LI
-><LI
 ><P
-><FONT
-COLOR="RED"
->stdout_ref</FONT
->: 標準出力
+>&#13;もし上記の試行を与えられた説明の通りに実装してしまうと、
+その実装の時間効率は、k が 1 から N2 までの範囲を取るとき k 回目にかかる時間が k に比例するので、
+明らかに N2*N2 に比例してしまいます。
+1000 のオーダーの N を取り扱うことを考えると (つまり N2 は 1,000,000 のオーダーになります)、
+そのような実装は実用的ではありません。
+この問題に対処するために、この正方形に N2 ユニットの正方形に分割するグリッド (次元は 1 x 1 です) を導入します。
+それからそれぞれのユニット正方形とその内側にある選んだ点のリストを関連させます。
+それぞれの回において、まず元の正方形の内側からランダムに点を選択します;
+次にこの点を含むユニット正方形を見つけます;
+その後、当該ユニット正方形もしくは隣接するユニット正方形に関連するリストを探索して、
+この回で選択した点によって生成された当った回数を数えます。
+これらのリスト中に存在しない点を中心とする円盤をこの点が当たることはありません。
+それぞれのユニット正方形は最大8つの隣接するユニット正方形を取ることができ、
+試行最中におけるそれぞれの正方形に関連するリストの平均の長さは 1 未満なので、
+それぞれの回にかかる時間は O(1) つまり定数に抑えられます。
+それゆえ全体の試行にかかる時間は O(N2) になります。
 </P
-></LI
-><LI
 ><P
-><FONT
-COLOR="RED"
->stderr_ref</FONT
->: 標準エラー出力
-</P
-></LI
-></UL
-><P
->&#13;ファイルハンドルに関連する様々な関数が <A
-HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/filebas.sats"
+>&#13;上記に示した実装とテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_EFFECTFUL/montecarlo.dats"
 TARGET="_top"
->filebas.sats</A
+>オンライン</A
 >
-ファイルで宣言されています。
-このファイルは <B
-CLASS="command"
->atsopt</B
-> で自動的に読み込まれます。
-例えば、
-ファイルハンドルのオープンとクローズを行なう関数は次のようなインターフェイスを持っています:
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1653"
-></A
-><PRE
-CLASS="programlisting"
->fun fileref_open_exn
-(
-  path: string, fm: file_mode
-) : FILEref // endfun
-
-fun fileref_close (fil: FILEref): void
-</PRE
-><P
-></P
-></DIV
->
-
-
-これらの2つの関数はエラーが発生した時点で即座に中断することに注意してください。
-次の関数は <FONT
-COLOR="RED"
->fileref_open_exn</FONT
-> の別バージョンで、
-ファイルハンドルが実際に得られたかどうか、
-<FONT
-COLOR="RED"
->fileref_open_opt</FONT
-> の呼び出し元が返値を検査する必要があります。
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1657"
-></A
-><PRE
-CLASS="programlisting"
->fun fileref_open_opt
-  (path: string, fm: file_mode) : Option_vt (FILEref)
-</PRE
-><P
-></P
-></DIV
->
-
-
-</P
-><P
->型 <FONT
-COLOR="RED"
->file_mode</FONT
-> は次に挙げるようなファイルモードを表わす値です:
-</P
-><P
-></P
-><UL
-><LI
-><P
-><FONT
-COLOR="RED"
->file_mode_r</FONT
->: ファイルを読み出しモードで開き、ファイル先頭にストリームを配置します。
-</P
-></LI
-><LI
-><P
-><FONT
-COLOR="RED"
->file_mode_rr</FONT
->: ファイルを読み書きモードで開き、ファイル先頭にストリームを配置します。
-</P
-></LI
-><LI
-><P
->&#13;<FONT
-COLOR="RED"
->file_mode_w</FONT
->: 与えられたファイルを長さゼロに切り詰めるか、書き込みのために新しいファイルを生成し、
-ファイル先頭にストリームを配置します。
-</P
-></LI
-><LI
-><P
->&#13;<FONT
-COLOR="RED"
->file_mode_ww</FONT
->: 与えられたファイルを長さゼロに切り詰めるか、読み書きのために新しいファイルを生成し、
-ファイル先頭にストリームを配置します。
-</P
-></LI
-><LI
-><P
->&#13;<FONT
-COLOR="RED"
->file_mode_a</FONT
->: ファイルを書き込みモードで開き、ファイル末尾にストリームを配置します。
-</P
-></LI
-><LI
-><P
->&#13;<FONT
-COLOR="RED"
->file_mode_aa</FONT
->: ファイルを読み書きモードで開き、読み出しストリームをファイル先頭に、
-書き込みストリームをファイル末尾に配置します。
-</P
-></LI
-></UL
-><P
->&#13;例として、次の短かいプログラムはファイルハンドルを開き、
-文字列 "Hello, world!" と改行をファイルハンドルに関連するストリームに出力し、
-最後にファイルハンドルを閉じます:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1681"
-></A
-><PRE
-CLASS="programlisting"
->implement
-main0 () =
-{
-val out =
-  fileref_open_exn ("hello.txt", file_mode_w)
-val () = fprint_string (out, "Hello, world!\n")
-val () = fileref_close (out)
-//
-} (* end of [main0] *)
-</PRE
-><P
-></P
-></DIV
->
-
-
-このプログラムを実行した後、
-現在のワーキングディレクトリに期待される内容を含む "hello.txt" と名前のついたファイルが得られます。
-与えられたファイルハンドル関連するストリームへデータを印字するような、様々な fprint 関数が ATS にはあります。
-ATS ではオーバーロードがサポートされているため、
-しばしばプログラマはこれらの関数を参照するために単純に <FONT
-COLOR="RED"
->fprint</FONT
-> という名前を使うことができます。
-</P
-><P
->&#13;別の一般的な I/O 関数として次のようなインターフェイスがあります:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1685"
-></A
-><PRE
-CLASS="programlisting"
->fun fileref_get_line_string (fil: FILEref): Strptr1
-</PRE
-><P
-></P
-></DIV
->
-
-
-関数 <FONT
-COLOR="RED"
->fileref_get_line_string</FONT
-> は与えられたファイルハンドルに対応するストリームから1行読み込みます。
-そしてその返値は <FONT
-COLOR="RED"
->Strptr1</FONT
-> 型になります。
-さしあたり、このような値は明示的に解放しなければならない文字列のようなものであると、
-単純に説明することにとどめます。
-例として、次の短かいプログラムは、標準入力から一行読み込み標準出力にエコー書き出します:
-
-<DIV
-CLASS="informalexample"
-><P
-></P
-><A
-NAME="AEN1689"
-></A
-><PRE
-CLASS="programlisting"
->implement
-main0 (
-// argumentless
-) = loop () where
-{
-//
-fun loop (): void = let
-  val isnot = fileref_isnot_eof (stdin_ref)
-in
-//
-if isnot then let
-  val line =
-    fileref_get_line_string (stdin_ref)
-  val ((*void*)) = fprintln! (stdout_ref, line)
-  val ((*void*)) = strptr_free (line)
-in
-  loop ()
-end else ((*loop exits as the end-of-file is reached*))
-//
-end (* end of [loop] *)
-//
-} (* end of [main0] *)
-</PRE
-><P
-></P
-></DIV
->
-
-
-(<FONT
-COLOR="RED"
->Strptr1</FONT
-> 型の)線形文字列を解放するために、
-関数 <FONT
-COLOR="RED"
->strptr_free</FONT
-> が呼び出されていることに注意してください。
-CTRL-D を入力することで入力の行をエコーしている上記のプログラムを終了することができます。
+から得られます。
 </P
 ></DIV
 ><DIV
@@ -382,7 +144,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x1627.html"
+HREF="x1594.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -400,7 +162,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c1693.html"
+HREF="x1643.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -410,13 +172,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->例: 定数Piの推量</TD
+>行列</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c1364.html"
+HREF="c1372.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -424,7 +186,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->モジュール性</TD
+>単純な入力と出力</TD
 ></TR
 ></TABLE
 ></DIV

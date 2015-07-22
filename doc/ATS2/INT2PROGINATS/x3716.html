@@ -1,0 +1,547 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>観変化のための証明関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形なデータ命題としてのデータ観 (dataview)"
+HREF="c3534.html"><LINK
+REL="PREVIOUS"
+TITLE="片方向リストのデータ観"
+HREF="x3662.html"><LINK
+REL="NEXT"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
+HREF="c3769.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3662.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. 線形なデータ命題としてのデータ観 (dataview)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c3769.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="view-changes"
+>観変化のための証明関数</A
+></H1
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>観変化 (view-change)</I
+></SPAN
+> という言いまわしは、関数を一連の観の証明に適用してそれらを別の観の証明に変換することを意味しています。
+この関数自身も証明関数なので、観変化それぞれに関連する実行時のコストはありません。
+例えば、どこかのアドレス L について駐観 int32@L の証明は4つの駐観: int8@L, int8@L+1, int8@L+2, int8@L+3
+からなるタプルに変化できます。
+このとき int32 と int8 はそれぞれ32ビットと8ビット整数の型です。
+より興味深い観変化が証明関数としてそれぞれ定義されています。
+この章の残りではそのようないくつかの例を紹介します。
+
+</P
+><P
+>&#13;配列の添字操作を O(1) 時間で実装するには、1つの配列の観を2つの隣接した配列の観に変換する証明関数と、その逆の変換を行なう別の証明関数が必要です。
+形式的に言うと、次の2つの証明関数 <FONT
+COLOR="RED"
+>array_v_split</FONT
+> と <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+>
+を作る必要があるのです:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3723"
+></A
+><PRE
+CLASS="programlisting"
+>prfun
+array_v_split
+  {a:t@ype}
+  {l:addr}{n,i:nat | i &#60;= n}
+(
+  pfarr: array_v (a, l, n)
+) : (array_v (a, i, l), array_v (a, n-i, l+i*sizeof(a)))
+
+prfun
+array_v_unsplit
+  {a:t@ype}
+  {l:addr}{n1,n2:nat}
+(
+  pf1arr: array_v (a, l, n1), pf2arr: array_v (a, l+n1*sizeof(a), n2)
+) : array_v (a, l, n1+n2)
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>array_v_split</FONT
+> の実装は次のように与えられます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3727"
+></A
+><PRE
+CLASS="programlisting"
+>primplmnt
+array_v_split
+  {a}{l}{n,i}(pfarr) = let
+  prfun split
+    {l:addr}{n,i:nat | i &#60;= n} .&#60;i&#62;.
+  (
+    pfarr: array_v (a, l, n)
+  ) : (
+    array_v (a, l, i)
+  , array_v (a, l+i*sizeof(a), n-i)
+  ) =
+    sif i &#62; 0 then let
+      prval array_v_cons (pf1, pf2arr) = pfarr
+      prval (pf1res1, pf1res2) = split{..}{n-1,i-1} (pf2arr)
+    in
+      (array_v_cons (pf1, pf1res1), pf1res2)
+    end else let
+      prval EQINT () = eqint_make{i,0}((*void*))
+    in
+      (array_v_nil (), pfarr)
+    end // end of [sif]
+in
+  split (pfarr)
+end // end of [array_v_split]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;(<FONT
+COLOR="RED"
+>implement</FONT
+> の代わりに) キーワード <FONT
+COLOR="RED"
+>primplement</FONT
+>
+は証明関数の実装に使われることに注意してください。
+明確に、証明関数 <FONT
+COLOR="RED"
+>split</FONT
+> は数学的帰納法を使って証明を直接エンコードしています。
+<FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> の実装を次に示します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3734"
+></A
+><PRE
+CLASS="programlisting"
+>primplement
+array_v_unsplit
+  {a}{l}{n1,n2}
+  (pf1arr, pf2arr) = let
+  prfun unsplit
+    {l:addr}{n1,n2:nat} .&#60;n1&#62;.
+  (
+    pf1arr: array_v (a, l, n1)
+  , pf2arr: array_v (a, l+n1*sizeof(a), n2)
+  ) : array_v (a, l, n1+n2) =
+    sif n1 &#62; 0 then let
+      prval
+      array_v_cons (pf1, pf1arr) = pf1arr
+      prval pfres = unsplit (pf1arr, pf2arr)
+    in
+      array_v_cons (pf1, pfres)
+    end else let
+      prval array_v_nil () = pf1arr in pf2arr
+    end // end of [sif]
+in
+  unsplit (pf1arr, pf2arr)
+end // end of [array_v_unsplit]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+証明関数 <FONT
+COLOR="RED"
+>unsplit</FONT
+> もまた数学的帰納法を用いて証明を直接エンコードしています。
+
+</P
+><P
+>&#13;ここで観変化を行なうより興味深い証明関数を見てみましょう。
+証明関数 <FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> のインターフェイスは次のように与えられます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3739"
+></A
+><PRE
+CLASS="programlisting"
+>prfun
+array_v_takeout
+  {a:t@ype}
+  {l:addr}{n,i:nat | i &#60; n}
+(
+  pfarr: array_v (a, l, n)
+) : (a @ l+i*sizeof(a), a @ l+i*sizeof(a) -&#60;lin,prf&#62; array_v (a, l, n))
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;次の型は、駐観の証明を取り配列観の証明を返すような線形証明関数を表わすことに注意してください:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3742"
+></A
+><PRE
+CLASS="programlisting"
+>a @ l+i*sizeof(a) -&#60;lin,prf&#62; array_v (a, l, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+そのような関数は1つ要素が欠けた配列を本質的に表わし、単純に
+<FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> は配列の観を (1つの要素に対する) 駐観と配列の残りを表わす観に変更すると、表現することができます。
+<FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> を使うことで、<FONT
+COLOR="RED"
+>arrget</FONT
+> に別の実装を与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3747"
+></A
+><PRE
+CLASS="programlisting"
+>implement{a}
+arrget{l}{n,i}
+  (pf | p, i) = x where {
+  prval (pf1, fpf2) =
+  array_v_takeout{a}{l}{n,i} (pf)
+  val x = ptr_get1&#60;a&#62; (pf1 | ptr_add&#60;a&#62; (p, i))
+  prval () = pf := fpf2 (pf1) // putting the cell and the rest together
+} // end of [arrget]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;証明関数 <FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> は次のように実装できます:
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3751"
+></A
+><PRE
+CLASS="programlisting"
+>primplmnt
+array_v_takeout
+  {a}{l}{n,i}(pfarr) = let
+  prfun takeout
+    {l:addr}{n,i:nat | i &#60; n} .&#60;i&#62;.
+  (
+    pfarr: array_v (a, l, n)
+  ) : (
+    a @ l+i*sizeof(a)
+  , a @ l+i*sizeof(a) -&#60;lin,prf&#62; array_v (a, l, n)
+  ) = let
+    prval array_v_cons (pf1at, pf1arr) = pfarr
+  in
+    sif i &#62; 0 then let
+      prval (pfres, fpfres) = takeout{..}{n-1,i-1}(pf1arr)
+    in
+      (pfres, llam (pfres) =&#62; array_v_cons (pf1at, fpfres (pfres)))
+    end else let
+      prval EQINT () = eqint_make{i,0}((*void*))
+    in
+      (pf1at, llam (pf1at) =&#62; array_v_cons (pf1at, pf1arr))
+    end // end of [sif]
+  end // end of [takeout]
+in
+  takeout{l}{n,i}(pfarr)
+end // end of [array_v_takeout]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>llam</FONT
+> は線形関数を作るキーワードであることに注意してください。
+線形関数が適用されるとそれは消費されてその内にリソースを作り、そしてもし未回収ならば、それが返す結果の中に移動します。
+
+</P
+><P
+>&#13;これまで示してきた観変化のための証明関数はは全て配列観の操作でした。
+次のコードはこれらとは異なり、片方向リストを表わす2つの観を1つに結合するものと考えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3756"
+></A
+><PRE
+CLASS="programlisting"
+>prfun slseg_v_unsplit
+  {a:t@ype}
+  {l1,l2,l3:addr}{n1,n2:nat}
+(
+  pf1lst: slseg_v (a, l1, l2, n1), pf2lst: slseg_v (a, l2, l3, n2)
+) : slseg_v (a, l1, l3, n1+n2)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> の型は、長さ N1 の L1 から L2 へのリスト片と長さ N2 の L2 から L3
+への別のリスト片は、長さ N1+N2 の L1 から L3 へのリスト片であると考えることができることを本質的に表わしています。
+次の <FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> の実装は <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> の実装とおおまかに類似しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3761"
+></A
+><PRE
+CLASS="programlisting"
+>primplement
+slseg_v_unsplit
+  {a}(pf1lst, pf2lst) = let
+  prfun unsplit
+    {l1,l2,l3:addr}{n1,n2:nat} .&#60;n1&#62;.
+  (
+    pf1lst: slseg_v (a, l1, l2, n1), pf2lst: slseg_v (a, l2, l3, n2)
+  ) : slseg_v (a, l1, l3, n1+n2) =
+    sif n1 &#62; 0 then let
+      prval slseg_v_cons (pf1at, pf1lst) = pf1lst
+    in
+      slseg_v_cons (pf1at, unsplit (pf1lst, pf2lst))
+    end else let
+      prval slseg_v_nil () = pf1lst in pf2lst
+    end // end of [sif]
+in
+  unsplit (pf1lst, pf2lst)
+end // end of [slseg_v_unsplit]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;興味深くも <FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> を使って <FONT
+COLOR="RED"
+>slist_ptr_append</FONT
+>
+を実装できることに読者は気が付くかもしれえません。
+
+</P
+><P
+>&#13;オンラインのファイル <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/array.dats"
+TARGET="_top"
+>array.dats</A
+> と
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/slist.dats"
+TARGET="_top"
+>slist.dats</A
+> からこの章で紹介したコードを入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3662.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c3769.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>片方向リストのデータ観</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3534.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形データ型としてのデータ観型 (dataviewtype)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>左辺値と参照渡し</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="観 (view) と観型入門"
+HREF="c3304.html"><LINK
+REL="PREVIOUS"
+TITLE="観と型を組み合わせた観型"
+HREF="x3401.html"><LINK
+REL="NEXT"
+TITLE="スタックに確保された値"
+HREF="x3456.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3401.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 13. 観 (view) と観型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3456.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="lval_and_cbr"
+>左辺値と参照渡し</A
+></H1
+><P
+>&#13;もっとも単純な形として、左辺値はポインタの指す位置に保存された (なんらかの型の)
+値を証言している線形の証明とペアになった単なるポインタです。
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>左辺値 (left-value)</I
+></SPAN
+> という名前は、(C言語のように)
+割り当てられた文の左側に置かれることが許された値に由来します。
+しばしば直感的に、左辺値はアドレスが付属した値として説明されます。
+左辺値として選ばれたどのような表現も、
+ポインタと左辺値に関連する (なんらかの駐観の)
+線形の証明の両方ともを識別できなければならないことに注意してください。
+
+</P
+><P
+>&#13;ATS では、もっとも単純な左辺値を表わす式は <FONT
+COLOR="RED"
+>!p</FONT
+> です。
+このとき <FONT
+COLOR="RED"
+>!</FONT
+> は特殊記号で、p はどこかのアドレス L について型 <FONT
+COLOR="RED"
+>ptr(L)</FONT
+> の値です。
+この式が型検査される時、
+なんらかの型 T について <FONT
+COLOR="RED"
+>T@L</FONT
+> の証明が現状有効な証明群の中に見つかることを要求します。
+徐々にさらなる左辺値の形について紹介します。
+
+</P
+><P
+>&#13;ATS における関数へ引数を渡す既定の戦略は値渡し (call-by-value) です。
+けれども、特定の関数に渡す引数に参照渡し (call-by-reference) を選択するように指示することも ATS では可能です。
+参照渡しの場合、渡される引数は左辺値でなければなりません。
+そして実際には (アドレスに格納された値の代わりに) 左辺値のアドレスが渡されることになります。
+例えば、次に定義した関数 <FONT
+COLOR="RED"
+>swap2</FONT
+> は参照渡しを使っています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3440"
+></A
+><PRE
+CLASS="programlisting"
+>fn{
+a:t@ype
+} swap2 (
+  x1: &#38;a, x2: &#38;a
+) : void = let
+  val tmp = x1 in x1 := x2; x2 := tmp
+end // end of [swap2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数の引数の型の直前にある特殊記号 <FONT
+COLOR="RED"
+>&#38;</FONT
+>
+は、その引数が参照渡し戦略に従って渡される必要があることを示すことに注意してください。
+次のコードは <FONT
+COLOR="RED"
+>swap2</FONT
+> を元にして <FONT
+COLOR="RED"
+>swap1</FONT
+> を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3445"
+></A
+><PRE
+CLASS="programlisting"
+>fn{
+a:t@ype
+} swap1{l1,l2:addr}
+(
+  pf1: !a @ l1, pf2: !a @ l2 | p1: ptr l1, p2: ptr l2
+) : void = swap2 (!p1, !p2)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+呼び出し <FONT
+COLOR="RED"
+>swap2(!p1, !p2)</FONT
+>
+が実行時に評価された時、(この2つのポインタは指す位置に保管されている値ではなく)
+2つのポインタ <FONT
+COLOR="RED"
+>p1</FONT
+> と <FONT
+COLOR="RED"
+>p2</FONT
+> が実際にはパラメータとして渡されます。
+</P
+><P
+>&#13;型 T と整数 N が与えられた時、構文 <FONT
+COLOR="RED"
+>@[T][N]</FONT
+> は 型 T の要素数 N
+から成るフラットな配列を表わしています。
+型 <FONT
+COLOR="RED"
+>@[T][N]</FONT
+> の値のサイズは N*sizeof(T) であることに注意してください。
+もし関数が配列を表わすパラメータを持つなら、このパラメータは参照渡しの方が好ましいでしょう。
+例えば、次のコードは double の2つの配列を取り、ドット積 (またはスカラー積) を計算する関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3453"
+></A
+><PRE
+CLASS="programlisting"
+>fun dotprod 
+(
+  A: &#38;(@[double][3])
+, B: &#38;(@[double][3])
+) : double =
+(
+  A[0] * B[0] + A[1] * B[1] + A[2] * B[2]
+)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>dotprod</FONT
+> の配列引数は両方とも参照渡しであることに注意してください。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3401.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3456.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>観と型を組み合わせた観型</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3304.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>スタックに確保された値</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

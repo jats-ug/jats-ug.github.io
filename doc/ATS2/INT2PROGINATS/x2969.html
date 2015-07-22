@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 乗法の分配法則</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="ATS/LF を使った定理証明"
+HREF="c2853.html"><LINK
+REL="PREVIOUS"
+TITLE="全域関数を使って証明を組み立てる"
+HREF="x2915.html"><LINK
+REL="NEXT"
+TITLE="例: 乗法の交換法則"
+HREF="x2984.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2915.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 11. ATS/LF を使った定理証明</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2984.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_distributivity_of_multiplication"
+>例: 乗法の分配法則</A
+></H1
+><P
+>加法に対する乗法の分配法則は次の等式を意味しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2972"
+></A
+><PRE
+CLASS="programlisting"
+>m * (n1 + n2) = m * n1 + m * n2
+</PRE
+><P
+></P
+></DIV
+>
+
+
+m, n1, n2 は整数の範囲を持ちます。
+この等式を直接エンコードすると次のような (証明の) 関数インターフェイスが得られます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2974"
+></A
+><PRE
+CLASS="programlisting"
+>//
+prfun
+mul_distribute
+  {m,n1,n2:int}{p1,p2:int}
+  (MUL(m, n1, p1), MUL(m, n2, p2)): MUL(m, n1+n2, p1+p2)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+端的に言うと、このエンコードは
+m と n1 の積が p1 でありかつ m と n2 の積が p2 であったなら m と (n1+n2) の積は p1+p2 になる、と言っています。
+<FONT
+COLOR="RED"
+>mul_distribute</FONT
+> の実装は次のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2977"
+></A
+><PRE
+CLASS="programlisting"
+>primplement
+mul_distribute
+{m,n1,n2}{p1,p2}
+  (pf1, pf2) = let
+//
+prfun
+auxnat
+{m:nat}{p1,p2:int} .&#60;m&#62;.
+(
+  pf1: MUL(m, n1, p1), pf2: MUL(m, n2, p2)
+) : MUL(m, n1+n2, p1+p2) =
+(
+  case+ (pf1, pf2) of
+  | (MULbas(), MULbas()) =&#62; MULbas()
+  | (MULind pf1, MULind pf2) =&#62; MULind(auxnat (pf1, pf2))
+) (* end of [auxnat] *)
+//
+in
+//
+sif
+m &#62;= 0
+then (
+  auxnat (pf1, pf2)
+) // end of [then]
+else let
+  prval MULneg(pf1) = pf1
+  prval MULneg(pf2) = pf2
+in
+  MULneg(auxnat (pf1, pf2))
+end // end of [else]
+//
+end // end of [mul_distribute]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+本質的に、
+内部の関数 <FONT
+COLOR="RED"
+>auxnat</FONT
+> は次の等式を満たす数学的帰納法の証明を素直にエンコードしています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2980"
+></A
+><PRE
+CLASS="programlisting"
+>m * (n1 + n2) = m * n1 + m * n2
+</PRE
+><P
+></P
+></DIV
+>
+
+
+m は自然数の範囲を取り、n1 と n2 は整数の範囲を取ります。
+関数 <FONT
+COLOR="RED"
+>mul_distribute</FONT
+> は <FONT
+COLOR="RED"
+>auxnat</FONT
+> を使ってすぐに実装できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2915.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2984.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>全域関数を使って証明を組み立てる</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2853.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 乗法の交換法則</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

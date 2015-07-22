@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>型検査中での制約解決</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="依存型入門"
+HREF="c2229.html"><LINK
+REL="PREVIOUS"
+TITLE="依存型入門"
+HREF="c2229.html"><LINK
+REL="NEXT"
+TITLE="例: 文字列処理"
+HREF="x2414.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c2229.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. 依存型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2414.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="constraint-solving_during_typechecking"
+>型検査中での制約解決</A
+></H1
+><P
+>&#13;ATS における型検査は制約の生成と解決を引き起こします。
+例えば、次のコードはよく知られた階乗関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2392"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+fact{n:nat}
+  (x: int n): [r:nat] int r = if x &#62; 0 then x * fact (x-1) else 1
+// end of [fact]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この実装では、関数 <FONT
+COLOR="RED"
+>fact</FONT
+> には次の型が割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2395"
+></A
+><PRE
+CLASS="programlisting"
+>{n:nat} int(n) -&#62; [r:nat] int(r)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+これは、<FONT
+COLOR="RED"
+>fact</FONT
+> は自然数 n に適用されると自然数 r を返すことを意味しています。
+このコードが型検査されるとき、次の制約が解決される必要があります:
+
+<P
+></P
+><UL
+><LI
+><P
+>&#13;それぞれの自然数 n について、n &#62; 0 が n - 1 &#62;= 0 の意味を含む
+</P
+></LI
+><LI
+><P
+>それぞれの自然数 n とそれぞれの自然数 r<SUB
+>1</SUB
+> について、n &#62; 0 が n * r<SUB
+>1</SUB
+>&#62;= 0 の意味を含む
+</P
+></LI
+><LI
+><P
+>&#13;それぞれの自然数 n について、常に 1 &#62;= 0 である
+</P
+></LI
+></UL
+>
+
+1番目の制約は、呼び出し <FONT
+COLOR="RED"
+>fact(x-1)</FONT
+> によって生成されています。
+<FONT
+COLOR="RED"
+>x-1</FONT
+> が自然数であることが要求されているからです。
+2番目の制約は、 <FONT
+COLOR="RED"
+>fact(x-1)</FONT
+> が自然数であるという仮定の下で、<FONT
+COLOR="RED"
+>x * fact(x-1)</FONT
+> が自然数であるかどうか検証することで生成されています。
+3番目の制約は、<FONT
+COLOR="RED"
+>1</FONT
+> が自然数であるかどうか検証することで生成されています。
+1番目と3番目の制約は ATS の制約ソルバによってたやすく解決できます。
+この手法は Fourier-Motzkin 変数消去法にもとづいています。
+けれども、2番目の制約は線形ではないため制約ソルバで取り扱うことができません。
+この制約は、線形でない項 (n*r<SUB
+>1</SUB
+>) が存在するために、線形整数プログラミングの問題に変形できないのです。
+ATS の制約ソルバは非線形の制約を自動的に取り扱うことはできませんが、証明を明示的に構築することでプログラマはそれらを検証することができます。
+精巧にそして明示的に構築する証明については別の章で紹介します。
+</P
+><P
+>&#13;初期設定では、ATS/Postiats で実装されている制約ソルバは標準の任意精度演算を用いています。
+効率の理由で、整数の制約の解決にマシンレベル演算を使うこともまた選択できます。
+演算のオーバーフローの可能性があるため、
+マシンレベル演算を使う制約ソルバが返す結果は不正確である可能性があります。
+(しかし今までのところ実際にはそのような状況に遭遇したことはありません。)
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c2229.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2414.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>依存型入門</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2229.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 文字列処理</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

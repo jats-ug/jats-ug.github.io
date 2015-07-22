@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>&#13;総称テンプレート実装
+</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="モジュール性"
+HREF="c1703.html"><LINK
+REL="PREVIOUS"
+TITLE="
+ATS の静的/動的ファイル
+"
+HREF="x1779.html"><LINK
+REL="NEXT"
+TITLE="
+特殊テンプレート実装
+"
+HREF="x1860.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1779.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. モジュール性</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1860.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="generic_template_implementation"
+>総称テンプレート実装</A
+></H1
+><P
+>&#13;関数テンプレートのインターフェイスは関数のインターフェイスによく似ています。
+例えば、次の構文は動的ファイルにおいて
+<FONT
+COLOR="RED"
+>list0_fold_left</FONT
+> という名前の関数テンプレートのインターフェイスを宣言しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1847"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun{
+a:t0p}{b:t0p
+} list0_fold_left
+  (xs: list0 b, f: (a, b) -&#60;cloref1&#62; a, init: a): a
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここで <FONT
+COLOR="RED"
+>t0p</FONT
+> は <FONT
+COLOR="RED"
+>t@ype</FONT
+> の略記です。</P
+><P
+>&#13;もし同じインターフェイスが静的ファイルの中で宣言されていたら、
+<FONT
+COLOR="RED"
+>extern</FONT
+> キーワードは削除するべきです。
+関数テンプレートのインターフェイスを実装することは関数のインターフェイスを実装することと、
+やはりよく似ています。
+上記の <FONT
+COLOR="RED"
+>list0_fold_left</FONT
+> のインターフェイスは次のようなコードで実装することができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1854"
+></A
+><PRE
+CLASS="programlisting"
+>implement{a}{b}
+list0_fold_left
+  (xs, f, init) = let
+//
+fun loop
+(
+  xs: list0 b, res: a
+) : a =
+(
+  case+ xs of
+  | list0_nil () =&#62; res
+  | list0_cons (x, xs) =&#62; loop (xs, f (res, x))
+) (* end of [loop] *)
+//
+in
+  loop (xs, init)
+end // end of [list0_fold_left]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>implement</FONT
+> キーワードの直後に、テンプレート引数を書かなければならないことに注意してください。
+この引数は省略できません。
+次の短かい例に示すように、テンプレート引数は連続して渡すこともできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1857"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun
+{a,b:t0p}{c:t0p}
+app2 (f: (a, b) -&#60;cloref1&#62; c, x: a, y: b): c
+
+implement{a,b}{c} app2 (f, x, y) = f (x, y)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;この章で示したスタイルのテンプレート実装は総称テンプレート実装と呼ばれます。
+後の章で特殊テンプレート実装と呼ばれる異なるスタイルのテンプレート実装を紹介します。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1779.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1860.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ATS の静的/動的ファイル</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1703.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>特殊テンプレート実装</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

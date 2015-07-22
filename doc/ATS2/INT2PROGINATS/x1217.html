@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>多相データ型</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="パラメータ多相"
+HREF="c1121.html"><LINK
+REL="PREVIOUS"
+TITLE="多相関数"
+HREF="x1170.html"><LINK
+REL="NEXT"
+TITLE="例: リストに対する関数テンプレート"
+HREF="x1252.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1170.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. パラメータ多相</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1252.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="polymorphic_datatypes"
+>多相データ型</A
+></H1
+><P
+>&#13;コード共有はデータ型の宣言についても適用できます。
+例えば、なじみ深い多相データ型 <FONT
+COLOR="RED"
+>list0</FONT
+> は次のように宣言されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1221"
+></A
+><PRE
+CLASS="programlisting"
+>datatype
+list0 (a:t@ype) =
+  | list0_nil (a) of () | list0_cons (a) of (a, list0 a)
+// end of [list0]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+より正確には <FONT
+COLOR="RED"
+>list0</FONT
+> は型コンストラクタです。
+型 T が与えられた時、型 T を要素とするリストである型 <FONT
+COLOR="RED"
+>list0(T)</FONT
+> を作ることができます。
+例えば <FONT
+COLOR="RED"
+>list0(char)</FONT
+> は文字のリストで、 <FONT
+COLOR="RED"
+>list0(int)</FONT
+> は整数のリスト、<FONT
+COLOR="RED"
+>list0(list0(int))</FONT
+> は整数のリストを要素とするリスト、などです。
+関数テンプレートや多相関数の主な必要性は多相データ型の可用性から大いに生じています。
+例として、関数テンプレート <FONT
+COLOR="RED"
+>list0_length</FONT
+> は与えられたリストの長さを計算するよう、次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1229"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+list0_length (xs: list0 a): int =
+(
+  case+ xs of
+  | list0_cons (_, xs) =&#62; 1 + list0_length&#60;a&#62; (xs) | list0_nil () =&#62; 0
+) (* end of [list0_length] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>list0_length</FONT
+> をリスト xs に適用する時、型検査器が <FONT
+COLOR="RED"
+>list0_length</FONT
+> の型パラメータを適切に推論してくれることを期待して、
+一般に <FONT
+COLOR="RED"
+>list0_length(xs)</FONT
+> と書くことができます。
+また xs の要素が型 T であるとき、<FONT
+COLOR="RED"
+>list0_length&#60;</FONT
+><FONT
+COLOR="RED"
+>T</FONT
+><FONT
+COLOR="RED"
+>&#62;(xs)</FONT
+> と書くこともできます。
+後者のスタイルは少し冗長ですが、型エラーが発生した際により有用なメッセージが得られるため好ましいと言えます。
+
+</P
+><P
+>&#13;もう一つの多相データ型の一般的な使い方 <FONT
+COLOR="RED"
+>option0</FONT
+> は次のような宣言です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1239"
+></A
+><PRE
+CLASS="programlisting"
+>datatype
+option0 (a:t@ype) =
+  | option0_none (a) of () | option0_some (a) of a
+// end of [option0]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>option0</FONT
+> の典型的な使い方はエラーの取り扱いです。
+整数の除算関数を実装しようとしていて、0 で除算してしまった時でも関数が返ってくることを保証したくなったとしましょう。
+これは次のようにすれば可能です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1242"
+></A
+><PRE
+CLASS="programlisting"
+>fun divopt
+(
+  x: int, y: int
+) : option0 (int) =
+  if y != 0 then option0_some{int}(x/y) else option0_none((*void*))
+// end of [divopt]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>divopt</FONT
+> の返値を検査することで、整数の除算が正常終了したのか、0除算が起きてエラー終了した見分けることができます。
+<FONT
+COLOR="RED"
+>option0</FONT
+> の実際の使用例は次の実装 <FONT
+COLOR="RED"
+>list0_last</FONT
+> になります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1247"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} list0_last
+(
+  xs: list0 a
+) : option0 (a) = let
+//
+fun loop
+  (x: a, xs: list0 a): a =
+(
+  case+ xs of
+  | list0_nil () =&#62; x | list0_cons (x, xs) =&#62; loop (x, xs)
+) (* end of [loop] *)
+//
+in
+  case+ xs of
+  | list0_nil () =&#62; option0_none((*void*))
+  | list0_cons (x, xs) =&#62; option0_some{a}(loop (x, xs))
+end // end of [list0_last]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+リストに適用されると、<FONT
+COLOR="RED"
+>list0_last</FONT
+> はオプション値を返します。
+もしこの値がパターン <FONT
+COLOR="RED"
+>option0_none()</FONT
+> にマッチすれば、このリストは空です。
+そうでなければ、この値はリストの最後の要素に <FONT
+COLOR="RED"
+>option0_some</FONT
+> を適用したものになります。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1170.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1252.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>多相関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1121.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: リストに対する関数テンプレート</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

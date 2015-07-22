@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>再帰関数の停止性検査</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="依存型入門"
+HREF="c2231.html"><LINK
+REL="PREVIOUS"
+TITLE="例: 配列の二分探索"
+HREF="x2463.html"><LINK
+REL="NEXT"
+TITLE="例: 依存型を使ったデバッグ"
+HREF="x2538.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2463.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. 依存型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2538.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="termination-checking_for_recursive_functions"
+>再帰関数の停止性検査</A
+></H1
+><P
+>&#13;ATS には、再帰的に定義された関数の停止性を検査するための停止性メトリクス (termination metrics)
+をプログラマ自身で提供できるような、メカニズムがあります。
+すぐに明らかになることですが、この停止性検査のメカニズムは
+ATS/LF のデザインにおいて基礎的な役割を果たします。
+この ATS/LF は ATS における定理証明サブシステムで、その証明は全域関数プログラムとして構成されます。
+</P
+><P
+>&#13;停止性メトリクスは自然数の単純なタプルで、
+そのタプルの順序には標準の自然数の辞書順が使われます。
+次の例では、再帰関数 <FONT
+COLOR="RED"
+>fact</FONT
+> が停止するか検査するために、シングルトンメトリクス
+(singleton metric) <FONT
+COLOR="RED"
+>n</FONT
+> を与えています。
+このとき <FONT
+COLOR="RED"
+>n</FONT
+> は <FONT
+COLOR="RED"
+>fact</FONT
+> の整数引数の値です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2496"
+></A
+><PRE
+CLASS="programlisting"
+>fun fact {n:nat} .&#60;n&#62;.
+  (x: int n): int = if x &#62; 0 then x * fact (x-1) else 1
+// end of [fact]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+再帰呼び出し <FONT
+COLOR="RED"
+>fact(x-1)</FONT
+> に付随したメトリクスは <FONT
+COLOR="RED"
+>n-1</FONT
+>
+であり、これは最初のメトリクス <FONT
+COLOR="RED"
+>n</FONT
+> よりも小さいことに注意してください。
+本質的に、ATS における停止性検査とは、関数の本体にあるそれぞれの再帰呼び出しに付随するメトリクスが、その関数の当初のメトリクスよりも必ず小さくなること検証することです。
+</P
+><P
+>&#13;より難しくまた興味深い例は、次のマッカーシーの91関数 (MacCarthy's 91-function) の実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2502"
+></A
+><PRE
+CLASS="programlisting"
+>fun f91 {i:int} .&#60;max(101-i,0)&#62;. (x: int i)
+  : [j:int | (i &#60; 101 &#38;&#38; j==91) || (i &#62;= 101 &#38;&#38; j==i-10)] int (j) =
+  if x &#62;= 101 then x-10 else f91 (f91 (x+11))
+// end of [f91]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>f91</FONT
+> の停止性を証明するために与えられたメトリクスは
+<FONT
+COLOR="RED"
+>max(101-i,0)</FONT
+> です。
+このとき <FONT
+COLOR="RED"
+>i</FONT
+> は <FONT
+COLOR="RED"
+>f91</FONT
+> の整数引数の値です。
+このメトリクスが <FONT
+COLOR="RED"
+>f91</FONT
+> の停止性検証するのに十分であるかどうか、手で検証してみてください。
+</P
+><P
+>&#13;別の例として、次のコードはアッカーマン関数を実装しています。
+この関数は原始再帰関数でない再帰として有名です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2510"
+></A
+><PRE
+CLASS="programlisting"
+>fun acker
+  {m,n:nat} .&#60;m,n&#62;.
+  (x: int m, y: int n): Nat =
+  if x &#62; 0 then
+    if y &#62; 0 then acker (x-1, acker (x, y-1)) else acker (x-1, 1)
+  else y + 1
+// end of [acker]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>acker</FONT
+> の停止性検証のために与えられたメトリックはペア <FONT
+COLOR="RED"
+>(m,n)</FONT
+> です。
+このとき <FONT
+COLOR="RED"
+>m</FONT
+> と <FONT
+COLOR="RED"
+>n</FONT
+> は <FONT
+COLOR="RED"
+>acker</FONT
+> の2つの整数引数の値です。
+<FONT
+COLOR="RED"
+>acker</FONT
+> への3つの再帰呼び出しに付随するメトリクスは、左から右に
+<FONT
+COLOR="RED"
+>(m-1,k)</FONT
+>, <FONT
+COLOR="RED"
+>(m,n-1)</FONT
+>, <FONT
+COLOR="RED"
+>(m-1,1)</FONT
+> です。
+このとき k はなんらかの自然数です。
+自然数のペアを辞書順によれば、これらのメトリクスは初期のメトリクス <FONT
+COLOR="RED"
+>(m,n)</FONT
+>
+よりも小さくなっていることは明白です。
+</P
+><P
+>&#13;相互再帰関数の停止性検査も同様です。
+次の例では、<FONT
+COLOR="RED"
+>isevn</FONT
+> と <FONT
+COLOR="RED"
+>isodd</FONT
+> が相互再帰的に定義されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2525"
+></A
+><PRE
+CLASS="programlisting"
+>fun isevn
+  {n:nat} .&#60;2*n&#62;.
+  (n: int n) : bool =
+  if n = 0 then true else isodd (n-1)
+and isodd
+  {n:nat} .&#60;2*n+1&#62;.
+  (n: int n) : bool = not (isevn (n))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>isevn</FONT
+> と <FONT
+COLOR="RED"
+>isodd</FONT
+> の停止性を検査するために与えられたメトリクスはそれぞれ
+<FONT
+COLOR="RED"
+>2*n</FONT
+> と <FONT
+COLOR="RED"
+>2*n+1</FONT
+> です。
+このとき <FONT
+COLOR="RED"
+>n</FONT
+> は <FONT
+COLOR="RED"
+>isevn</FONT
+> の整数引数の値であり、さらにまた
+<FONT
+COLOR="RED"
+>isodd</FONT
+> の整数引数の値です。
+<FONT
+COLOR="RED"
+>isevn</FONT
+> と <FONT
+COLOR="RED"
+>isodd</FONT
+> に <FONT
+COLOR="RED"
+>(n, 0)</FONT
+> と <FONT
+COLOR="RED"
+>(n, 1)</FONT
+>
+のメトリクスを与えれば、これら2つの関数の停止性もまた検査できることは明白です。
+相互再帰的に定義された関数のメトリクスは同じ長さのタプルであることが要求されることに注意してください。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2463.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2538.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: 配列の二分探索</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2231.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 依存型を使ったデバッグ</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>線形データ型としてのデータ観型 (dataviewtype)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形観と線形型を使ったプログラミング"
+HREF="p3304.html"><LINK
+REL="PREVIOUS"
+TITLE="観変化のための証明関数"
+HREF="x3718.html"><LINK
+REL="NEXT"
+TITLE="線形リスト"
+HREF="x3800.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3718.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3800.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="dataviewtypes"
+></A
+>Chapter 15. 線形データ型としてのデータ観型 (dataviewtype)</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c3771.html#linear_optional_values"
+>線形オプショナル値</A
+></DT
+><DT
+><A
+HREF="x3800.html"
+>線形リスト</A
+></DT
+><DT
+><A
+HREF="x3953.html"
+>例: 線形リストのマージソート</A
+></DT
+><DT
+><A
+HREF="x3990.html"
+>例: 線形リストの挿入ソート</A
+></DT
+><DT
+><A
+HREF="x4023.html"
+>例: 線形リストのクイックソート</A
+></DT
+><DT
+><A
+HREF="x4060.html"
+>線形2分探索木</A
+></DT
+><DT
+><A
+HREF="x4114.html"
+>データ型からデータ観型への翻訳</A
+></DT
+></DL
+></DIV
+><P
+>&#13;データ観型 (dataviewtype) はデータ型の線形バージョンとして考えることができます。
+おおざっぱに言うと、データ観型はデータ型とデータ観との組み合わせです。
+このプログラミングの機能は手動でメモリ管理をする状況下でパターンマッチのような利便性を提供することを主な目的として ATS に導入されています。
+GC を削減したり完全に除去しなければならない状況下では、データ観型はしばしばデータ型を置き換えることになります。
+この章ではいくつかの一般的に用いられるデータ観型とその使い方を紹介します。
+
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="linear_optional_values"
+>線形オプショナル値</A
+></H1
+><P
+>&#13;オプショナル値が生成さると、その値はたいがいすぐに使われて破棄されます。
+そのような値に線形型が割り当てられているなら、値を保管するために確保されたメモリを効率よく回収することができます。
+線形オプショナル値を表わすデータ観型 <FONT
+COLOR="RED"
+>option_vt</FONT
+> は次のように宣言されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3778"
+></A
+><PRE
+CLASS="programlisting"
+>datavtype
+option_vt (a:t@ype+, bool) =
+  | Some_vt (a, true) of a | None_vt (a, false) of ()
+// end of [option_vt]
+
+vtypedef Option_vt (a:t@ype) = [b:bool] option_vt (a, b)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>datavtype</FONT
+> は単に <FONT
+COLOR="RED"
+>dataviewtype</FONT
+> の短縮バージョンであることに注意してください。
+導入されたデータ観型 <FONT
+COLOR="RED"
+>option_vt</FONT
+> は1番目の引数について共変です。
+また関連した2つのデータコンストラクタ <FONT
+COLOR="RED"
+>Some_vt</FONT
+> と <FONT
+COLOR="RED"
+>None_vt</FONT
+> があります。
+次の例では、<FONT
+COLOR="RED"
+>find_rightmost</FONT
+> 
+与えられた述語を満たすようなリスト中の最右辺の要素を見つけようとします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3786"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+find_rightmost{n:nat} .&#60;n&#62;.
+(
+  xs: list (a, n), P: (a) -&#60;cloref1&#62; bool
+) : Option_vt (a) =
+(
+  case+ xs of
+  | list_cons (x, xs) =&#62; let
+      val opt = find_rightmost (xs, P)
+    in
+      case opt of
+      | ~None_vt () =&#62; if P (x) then Some_vt (x) else None_vt ()
+      | _ (*Some_vt*) =&#62; opt
+    end // end of [list_cons]
+  | list_nil () =&#62; None_vt ()
+) (* end of [find_rightmost] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+パターン <FONT
+COLOR="RED"
+>None_vt()</FONT
+> の前にあるチルダ記号 (<FONT
+COLOR="RED"
+>~</FONT
+>)
+は、そのパターンにマッチしたノードのためのメモリが、そのマッチ節の本体が評価される前に解放されることを表わすことに注意してください。
+この例では、<FONT
+COLOR="RED"
+>None_vt</FONT
+> は NULL ポインタにマップされるので、実際にはメモリの解放は起きません。
+データ観型に関連するコンストラクタのために確保されたメモリを解放する方法については、詳細をすぐに解説します。
+
+</P
+><P
+>&#13;別の例として、次の関数テンプレート <FONT
+COLOR="RED"
+>list_optcons</FONT
+> は与えられたオプショナル値を展開した要素を先頭にした新しいリストをコンストラクトします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3793"
+></A
+><PRE
+CLASS="programlisting"
+>fn{a:t@ype}
+list_optcons
+  {b:bool}{n:nat}
+(
+  opt: option_vt (a, b), xs: list (a, n)
+) : list (a, n+bool2int(b)) =
+  case+ opt of
+  | ~Some_vt (x) =&#62; list_cons (x, xs) | ~None_vt () =&#62; xs
+// end of [list_optcons]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+記号 <FONT
+COLOR="RED"
+>bool2int</FONT
+> は <FONT
+COLOR="RED"
+>true</FONT
+> と <FONT
+COLOR="RED"
+>false</FONT
+> をそれぞれ 1 と 0 に変換する ATS
+におけるビルトインの静的な関数です。
+ここで注目すべきなのは、<FONT
+COLOR="RED"
+>list_optcons</FONT
+> の最初の引数が線形であり、<FONT
+COLOR="RED"
+>list_optcons</FONT
+>
+呼び出しが返ると消費され、それが占有していたメモリはは回収されるということです。
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3718.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3800.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>観変化のための証明関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p3304.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形リスト</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

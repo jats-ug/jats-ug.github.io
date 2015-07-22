@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>&#13;例: 有理数パッケージ
+</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="モジュール性"
+HREF="c1701.html"><LINK
+REL="PREVIOUS"
+TITLE="
+抽象型
+"
+HREF="x1901.html"><LINK
+REL="NEXT"
+TITLE="
+例: ファンクタを用いた有理数パッケージ
+"
+HREF="x1975.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1901.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. モジュール性</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1975.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_a_package_for_rationals"
+>例: 有理数パッケージ</A
+></H1
+><P
+>&#13;有理数を整数の組で表現してみましょう。
+もし有理数の値を表現するためにボックス化された抽象型 <FONT
+COLOR="RED"
+>rat</FONT
+> を宣言したら、
+<FONT
+COLOR="RED"
+>rat</FONT
+> 型のそれぞれの値はヒープメモリに保存されます。
+そのメモリはガベージコレクション (GC) によってのみ回収できます。
+代わりに、 <FONT
+COLOR="RED"
+>rat</FONT
+> をアンボックス化された抽象型として宣言する別のアプローチを取ります。
+そこで、次のような宣言になります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1941"
+></A
+><PRE
+CLASS="programlisting"
+>abst@ype rat
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この宣言の問題はあまりにも抽象的すぎることです。
+<FONT
+COLOR="RED"
+>rat</FONT
+> 型のサイズについて何の情報もないので、
+ATSコンパイラは <FONT
+COLOR="RED"
+>rat</FONT
+> 型の値を保存するのに必要なメモリサイズを知ることさえできません。
+けれども、プログラマにとってこのような宣言が役に立たないというわけではありません。
+実際にはこのような宣言が非常に重要になってくる場面があります。
+このトピックは別の章で解説しようと思います。
+ここでは、アンボックス化された抽象型を次のように宣言してみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1945"
+></A
+><PRE
+CLASS="programlisting"
+>abst@ype rat = (int, int)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この宣言は、<FONT
+COLOR="RED"
+>rat</FONT
+> 型の値の表現は <FONT
+COLOR="RED"
+>(int, int)</FONT
+>
+型の値の表現と同じであることを、単純に ATS コンパイラに伝えています。
+けれども、この情報は ATS の型検査器にとって有効ではありません。
+とりわけ、プログラム中で <FONT
+COLOR="RED"
+>rat</FONT
+> 型の値が整数のペアとして扱われると、型エラーを引き起こします。
+</P
+><P
+><A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratmod.sats"
+TARGET="_top"
+>オンライン</A
+>
+から取得できる次のコードは
+<TT
+CLASS="filename"
+>ratmod.sats</TT
+> という名前のファイルに保存されています。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1953"
+></A
+><PRE
+CLASS="programlisting"
+>exception Denominator
+exception DivisionByZero
+
+fun rat_make_int_int (p: int, q: int): rat
+
+fun ratneg: (rat) -&#62; rat // negation
+fun ratadd: (rat, rat) -&#62; rat // addition
+fun ratsub: (rat, rat) -&#62; rat // subtraction
+fun ratmul: (rat, rat) -&#62; rat // multiplication
+fun ratdiv: (rat, rat) -&#62; rat // division
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>Denominator</FONT
+> 例外は分母がゼロの有理数を誤って生成してしまったことを示します。
+有理数の分子と分母を表わす2つの整数が与えられた時、
+関数 <FONT
+COLOR="RED"
+>rat_make_int_int</FONT
+> は有理数を表わす値を返します。
+<FONT
+COLOR="RED"
+>rat_make_int_int</FONT
+> の次の実装は <TT
+CLASS="filename"
+>ratmod.dats</TT
+> という名前のファイルにあり、
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/ratmod.dats"
+TARGET="_top"
+>オンライン</A
+> からも取得できます。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1960"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+rat_make_int_int (p, q) = let
+  fun make (
+    p: int, q: int
+  ) : rat = let
+    val r = gcd (p, q) in (p / r, q / r)
+  end // end of [make]
+//
+  val () = if q = 0 then $raise Denominator
+//
+in
+  if q &#62; 0 then make (p, q) else make (~p, ~q)
+end // end of [rat_make_int_int]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+整数 p とゼロでない整数 q の組が与えられた時、
+関数 <FONT
+COLOR="RED"
+>rat_make_int_int</FONT
+> は別の整数の組
+p<SUB
+>1</SUB
+> と q<SUB
+>1</SUB
+> を返します。
+ここで、q <SUB
+>1</SUB
+> は正の数で、p<SUB
+>1</SUB
+> と q<SUB
+>1</SUB
+>
+は互いに素です。
+つまり、それらの最大公約数は1で、p<SUB
+>1</SUB
+>/q<SUB
+>1</SUB
+> は p/q に等しくなります。
+<FONT
+COLOR="RED"
+>rat_make_int_int</FONT
+> を使うと、有理数の算術演算は次のように素直に実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1971"
+></A
+><PRE
+CLASS="programlisting"
+>implement ratneg (x) = (~x.0, x.1)
+
+implement
+ratadd (x, y) =
+  rat_make_int_int (x.0 * y.1 + x.1 * y.0, x.1 * y.1)
+// end of [ratadd]
+
+implement
+ratsub (x, y) =
+  rat_make_int_int (x.0 * y.1 - x.1 * y.0, x.1 * y.1)
+// end of [ratsub]
+
+implement
+ratmul (x, y) = rat_make_int_int (x.0 * y.0, x.1 * y.1)
+
+implement
+ratdiv (x, y) = (
+if y.0 &#62; 0
+  then rat_make_int_int (x.0 * y.1, x.1 * y.0) else $raise DivisionByZero()
+// end of [if]
+) (* end of [ratdiv] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<TT
+CLASS="filename"
+>ratmod.sats</TT
+> で宣言されている関数に対するいくらかのテストコードが
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/test_ratmod.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1901.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1975.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>抽象型</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1701.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: ファンクタを用いた有理数パッケージ</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

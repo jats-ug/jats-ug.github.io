@@ -1,0 +1,450 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ATS/LF を使った定理証明</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="依存型を使ったプログラミング"
+HREF="p2230.html"><LINK
+REL="PREVIOUS"
+TITLE="例: 関数的な赤黒木"
+HREF="x2810.html"><LINK
+REL="NEXT"
+TITLE="全域関数を使って証明を組み立てる"
+HREF="x2915.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2810.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2915.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="theorem-proving_in_ats_lf"
+></A
+>Chapter 11. ATS/LF を使った定理証明</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c2853.html#encoding_relations_as_dataprops"
+>データ命題 (dataprop) として関係をエンコードする</A
+></DT
+><DT
+><A
+HREF="x2915.html"
+>全域関数を使って証明を組み立てる</A
+></DT
+><DT
+><A
+HREF="x2969.html"
+>例: 乗法の分配法則</A
+></DT
+><DT
+><A
+HREF="x2984.html"
+>例: 乗法の交換法則</A
+></DT
+><DT
+><A
+HREF="x3001.html"
+>代数的なデータ種 (datasort)</A
+></DT
+><DT
+><A
+HREF="x3044.html"
+>例: ブラウンツリーの性質を確立する</A
+></DT
+><DT
+><A
+HREF="x3084.html"
+>プログラマ中心の定理証明</A
+></DT
+></DL
+></DIV
+><P
+>&#13;ATS プログラミング言語システムには、(対話的な) 定理証明をサポートする ATS/LF という名前の部品あります。
+ATS/LF では、全域関数のプログラムとして証明をコンストラクトすることで定理証明は行なわれます。
+この定理証明のスタイルは、関数型プログラミングと組み合わさってあるプログラミングパラダイムを産み出すことがすぐに明確になるでしょう。
+このようなパラダイムを ATS では <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>定理証明を使ったプログラミング</I
+></SPAN
+> と呼んでいます。
+その上、ATS/LF は様々な演繹システムとそれらのメタな性質をエンコードすることができます。
+</P
+><P
+>&#13;この章で解説するコードとテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_THMPRVING/"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="encoding_relations_as_dataprops"
+>データ命題 (dataprop) として関係をエンコードする</A
+></H1
+><P
+>&#13;ATS の静的な部分には、証明の型を表わす静的な項のためのビルトインの種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>prop</I
+></SPAN
+> があります。
+種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>prop</I
+></SPAN
+> の静的な項は、型もしくはより正確に命題型や、単に命題と呼ばれます。
+データ命題はデータ型の宣言とよく似た作法で宣言できます。
+例えば、<FONT
+COLOR="RED"
+>FIB</FONT
+> をコンストラクトする証明は次のデータ命題宣言で導入できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2865"
+></A
+><PRE
+CLASS="programlisting"
+>dataprop FIB (int, int) =
+  | FIB0 (0, 0) of () // [of ()] can be dropped
+  | FIB1 (1, 1) of () // [of ()] can be dropped
+  | {n:nat}{r0,r1:nat}
+    FIB2 (n+2, r0+r1) of (FIB (n, r0), FIB (n+1, r1))
+// end of [FIB]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>FIB</FONT
+> に割り当てられた種は <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; prop</I
+></SPAN
+> で、<FONT
+COLOR="RED"
+>FIB</FONT
+>
+が2つの静的な整数を取って命題型を作ることを示しています。
+<FONT
+COLOR="RED"
+>FIB</FONT
+> に関連して3つのデータ (もしくは命題の) コンストラクタがあります。
+それらは <FONT
+COLOR="RED"
+>FIB0</FONT
+>, <FONT
+COLOR="RED"
+>FIB1</FONT
+>, <FONT
+COLOR="RED"
+>FIB2</FONT
+> で、次の関数型 (もしくはより正確に命題型)
+が割り当てられています:
+
+<P
+></P
+><UL
+><LI
+><P
+><FONT
+COLOR="RED"
+>FIB0</FONT
+>: <FONT
+COLOR="RED"
+>() -&#62; FIB (0, 0)</FONT
+>
+</P
+></LI
+><LI
+><P
+><FONT
+COLOR="RED"
+>FIB1</FONT
+>: <FONT
+COLOR="RED"
+>() -&#62; FIB (1, 1)</FONT
+>
+</P
+></LI
+><LI
+><P
+><FONT
+COLOR="RED"
+>FIB2</FONT
+>:
+ <FONT
+COLOR="RED"
+>{n:nat}{r0,r1:int} (FIB(n, r0), FIB(n+1, r1)) -&#62; FIB(n+2, r0+r1)</FONT
+>
+</P
+></LI
+></UL
+>
+
+自然数 n と整数 r が与えられた時、<FONT
+COLOR="RED"
+>FIB(n, r)</FONT
+> が関係 fib(n) = r
+をエンコードしていることは明確でしょう。
+この fib は次の3つの等式で定義されます:
+
+<P
+></P
+><UL
+><LI
+><P
+>fib(0) = 0, and
+</P
+></LI
+><LI
+><P
+>&#13;fib(1) = 1, and
+</P
+></LI
+><LI
+><P
+>fib(n+2) = fib(n+1) + fib(n) for n &#62;= 2.
+</P
+></LI
+></UL
+>
+
+命題 <FONT
+COLOR="RED"
+>FIB(n, r)</FONT
+> の証明値は、fib(n) が r と等しい場合のみコンストラクトできます。
+例えば、証明の値 <FONT
+COLOR="RED"
+>FIB2(FIB0(), FIB1())</FONT
+> には命題 <FONT
+COLOR="RED"
+>FIB(2, 1)</FONT
+> が割り当てられ、
+これは fib(2) が 1 に等しいことを証明しています。
+</P
+><P
+>&#13;データ命題の別の例として、次の宣言は命題コンストラクタ <FONT
+COLOR="RED"
+>MUL</FONT
+> と関連する3つの証明コンストラクタを導入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2900"
+></A
+><PRE
+CLASS="programlisting"
+>dataprop MUL (int, int, int) =
+  | {n:int} MULbas (0, n, 0) of ()
+  | {m:nat}{n:int}{p:int}
+    MULind (m+1, n, p+n) of MUL (m, n, p)
+  | {m:pos}{n:int}{p:int}
+    MULneg (~m, n, ~p) of MUL (m, n, p)
+// end of [MUL]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+3つの整数 m, n, p が与えられた時、証明 <FONT
+COLOR="RED"
+>MUL(m, n, p)</FONT
+> は関係 m*n = p をエンコードしています。
+<FONT
+COLOR="RED"
+>MULbas</FONT
+>, <FONT
+COLOR="RED"
+>MULind</FONT
+>, <FONT
+COLOR="RED"
+>MULneg</FONT
+> はそれぞれ次の3つの等式に相当します:
+
+<P
+></P
+><UL
+><LI
+><P
+>全ての整数 n について 0*n = 0 、かつ
+</P
+></LI
+><LI
+><P
+>整数 m と n のペアそれぞれについて (m+1)*n = m*n + n 、かつ
+</P
+></LI
+><LI
+><P
+>整数 m と n のペアそれぞれについて (~m)*n = ~(m*n)
+</P
+></LI
+></UL
+>
+
+言い換えると、データ命題宣言 <FONT
+COLOR="RED"
+>MUL</FONT
+> は整数の乗法関数を表わす関係をエンコードしています。
+</P
+><P
+>&#13;関数的な関係 (例: 関数を表わす関係) をデータ命題にエンコードする過程は Prolog
+のような論理型プログラミング言語における関数の実装に類似していることにすぐに気が付くでしょう。
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2810.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2915.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: 関数的な赤黒木</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p2230.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>全域関数を使って証明を組み立てる</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

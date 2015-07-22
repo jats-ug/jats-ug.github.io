@@ -1,0 +1,513 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: ループ生成のためのテンプレート</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="ジェネリックスから遅延束縛へ"
+HREF="c4440.html"><LINK
+REL="PREVIOUS"
+TITLE="ファンクタの特殊形としてのテンプレート"
+HREF="x4537.html"><LINK
+REL="NEXT"
+TITLE="テンプレートを用いた遅延束縛のサポート"
+HREF="x4620.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4537.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. ジェネリックスから遅延束縛へ</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4620.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="template-for-loop-construction"
+>例: ループ生成のためのテンプレート</A
+></H1
+><P
+>&#13;命令型プログラミングに経験がある関数型プログラミング (FP) の初心者は、FP において for ループや while ループを作る方法にしばしば疑問を持ちます。
+一般的な答は、それらは高階関数で置き換えられるので FP ではループを生成する必要はない、というものです。
+はじめに、この答においていくつか困難な問題があることを見てみましょう。
+</P
+><P
+>&#13;次のC言語コードは、自然数 n に適用されると最初の n 個の自然数の合計を返す関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4571"
+></A
+><PRE
+CLASS="programlisting"
+>int
+tally (int n) {
+  int i, res;
+  for (i = 0, res = 0; i &#60; n; i += 1) res += i;
+  return res;
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この関数 <FONT
+COLOR="RED"
+>tally</FONT
+> と等価な ATS の関数は次のように与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4574"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+tally
+(
+  n: int
+) : int = loop (0, 0) where
+{
+  fun loop (i: int, res: int): int =
+    if i &#60; n then loop (i + 1, res + i) else res
+}
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、末尾再帰関数 <FONT
+COLOR="RED"
+>loop</FONT
+> はC言語の for ループを単純に変換したものです。
+
+</P
+><P
+>&#13;ループ生成を高階関数で置換できると誰かが指摘するとき、彼等はおそらく次のような関数でループを生成しようとするでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4578"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+for_loop
+(
+  count: int, limit: int, fwork: (int) -&#60;cloref1&#62; void
+) : void = (
+if count &#60; limit
+  then (fwork(count); for_loop(count+1, limit, fwork)) else ()
+// end of [if]
+) (* end of [for_loop] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+例えば、次の関数 <FONT
+COLOR="RED"
+>tally2</FONT
+> は <FONT
+COLOR="RED"
+>for_loop</FONT
+> を直接使っています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4582"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+tally2
+(
+  n: int
+) : int = let
+  val res = ref&#60;int&#62; (0)
+in
+  for_loop (0, n, lam (i) =&#62; !res := !res + i); !res
+end // end of [tally2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+自然数に適用すると <FONT
+COLOR="RED"
+>tally</FONT
+> と <FONT
+COLOR="RED"
+>tally2</FONT
+> は同じ結果を返しますが、実行時には異なる挙動をします。
+特に、<FONT
+COLOR="RED"
+>tally2</FONT
+> 呼び出しは一時的な用途に (永続的な) 参照をヒープに作ります;
+呼び出しが返るとこの参照はすぐにゴミになりさう。
+
+<FONT
+COLOR="RED"
+>tally</FONT
+> と比較すると <FONT
+COLOR="RED"
+>tally2</FONT
+> は時間効率と空間効率の両面で非効率です。
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>tally2</FONT
+> における参照の必要性を除去するために、<FONT
+COLOR="RED"
+>for_loop</FONT
+>
+を次のような関数テンレプレート <FONT
+COLOR="RED"
+>for_loop2</FONT
+> に変換しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4593"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+env:t@ype
+} for_loop2
+(
+  count: int, limit: int
+, env: &#38;env &#62;&#62; _, fwork: (int, &#38;env &#62;&#62; _) -&#60;cloref1&#62; void
+) : void = (
+if
+count &#60; limit
+then (
+  fwork(count, env); for_loop2&#60;env&#62; (count+1, limit, env, fwork)
+) else ()
+// end of [if]
+) (* end of [for_loop2] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+さらに <FONT
+COLOR="RED"
+>tally2</FONT
+> を、<FONT
+COLOR="RED"
+>for_loop2</FONT
+> を用いて次の <FONT
+COLOR="RED"
+>tally3</FONT
+> に変換できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4598"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+tally3
+(
+  n: int
+) : int = let
+  var res: int = 0
+in
+  for_loop2&#60;int&#62; (0, n, res, lam (i, res) =&#62; res := res + i); res
+end // end of [tally3]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>tally3</FONT
+> は <FONT
+COLOR="RED"
+>tally2</FONT
+> より良いものですが、まだ完全ではありせん。
+<FONT
+COLOR="RED"
+>tally3</FONT
+> が <FONT
+COLOR="RED"
+>for_loop2</FONT
+> を呼び出す前に作ったクロージャ関数は、呼び出しが返ると即座にゴミになることは明確です。
+ATS ソースコードから生成されたC言語コードで呼び出されるので、Cコンパイラ (例えば gcc や clang)
+の最適化が実際のクロージャ関数を不要にしてくれることを期待することもできますが、その保証はありません。
+そのような保証を得るために、<FONT
+COLOR="RED"
+>for_loop2</FONT
+> を次のような関数テンプレート <FONT
+COLOR="RED"
+>for_loop3</FONT
+> に発展させることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4606"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+env:t@ype
+} for_loop3
+(
+  count: int, limit: int, env: &#38;env &#62;&#62; _
+) : void = (
+if
+count &#60; limit
+then (
+  for_loop3$fwork&#60;env&#62;(count, env); for_loop3&#60;env&#62;(count+1, limit, env)
+) else ()
+// end of [if]
+) (* end of [for_loop3] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>for_loop3$fwork</FONT
+> には次のようなインターフェイスが割り当てられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4609"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+env:t@ype
+} for_loop3$fwork(count: int, env: &#38;env &#62;&#62; _): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+最終的に <FONT
+COLOR="RED"
+>tally3</FONT
+> を次のような <FONT
+COLOR="RED"
+>tally4</FONT
+> に変換できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4613"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+tally4
+(
+  n: int
+) : int = let
+//
+var res: int = 0
+//
+implement
+for_loop3$fwork&#60;int&#62; (i, res) = res := res + i
+//
+in
+  for_loop3&#60;int&#62; (0, n, res); res
+end // end of [tally4]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<B
+CLASS="command"
+>atsopt</B
+> が <FONT
+COLOR="RED"
+>tally4</FONT
+> をコンパイルして生成したC言語コードを調べれば、そのC言語コードは
+(この章の最初で登場した) C言語による <FONT
+COLOR="RED"
+>tally</FONT
+> の実装と本質的に等価であることがわかるでしょう。
+
+</P
+><P
+>&#13;ここまで読んだ読者は、FP におけるループ生成は高階関数で容易に置き換えられるという主張が著しく不正確であることに同意できるでしょう。
+この章で紹介したコード全体とテストコードを含む
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/loopcons.dats"
+TARGET="_top"
+>loopcons.dats</A
+>
+ファイルはオンラインから入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4537.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4620.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ファンクタの特殊形としてのテンプレート</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4440.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>テンプレートを用いた遅延束縛のサポート</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -18,7 +18,7 @@ TITLE="パラメータ多相"
 HREF="c1121.html"><LINK
 REL="NEXT"
 TITLE="多相データ型"
-HREF="x1210.html"><LINK
+HREF="x1217.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x1210.html"
+HREF="x1217.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -115,7 +115,7 @@ COLOR="RED"
 COLOR="RED"
 >xy</FONT
 > は動的引数と呼ばれます。
-次のコードは多相関数 <FONT
+例えば、次のコードは多相関数 <FONT
 COLOR="RED"
 >swap_boxed</FONT
 > を使っています:
@@ -129,8 +129,8 @@ NAME="AEN1180"
 ></A
 ><PRE
 CLASS="programlisting"
->val AB = ("A", "B")
-val BA1 = swap_boxed{string,string} (AB)
+>val AB = (box("A"), box("B"))
+val BA1 = swap_boxed{boxstr,boxstr} (AB)
 val BA2 = swap_boxed (AB) // omitting type arguments may be fine
 </PRE
 ><P
@@ -139,23 +139,50 @@ val BA2 = swap_boxed (AB) // omitting type arguments may be fine
 >
 
 
-もし型 T1 と T2 が与えられ <FONT
+このとき <FONT
+COLOR="RED"
+>boxstr</FONT
+> は明示的にボックス化された <FONT
+COLOR="RED"
+>string</FONT
+>
+で、<FONT
+COLOR="RED"
+>boxed(string)</FONT
+> のように定義されます。
+内部的には <FONT
+COLOR="RED"
+>string</FONT
+> と <FONT
+COLOR="RED"
+>boxed(string)</FONT
+> の間に違いはありません。
+もし <FONT
 COLOR="RED"
 >swap_boxed</FONT
-> をタプル型 (T1, T2) に対して呼び出した場合、T1
-と T2 はボックス化されていなければなりません。
-そうでなければ型エラーが発生します。
-例えば <FONT
+> がなんらかの型 T1 と T2 に関する型 (T1, T2)
+のペアに呼び出された場合、T1 と T2 の両方がボックス化されていることが要求されます。
+さもなければ、型エラーになります。
+例えば、<FONT
 COLOR="RED"
 >swap_boxed</FONT
 > を <FONT
 COLOR="RED"
 >(0, 1)</FONT
-> に呼び出すと、型 <FONT
+> に呼び出すと、型
+<FONT
 COLOR="RED"
 >int</FONT
->
-がボックス化されていないことを示す型エラーが起きます。
+> がボックス化されていないという型エラーが発生します。
+<FONT
+COLOR="RED"
+>box(0)</FONT
+> のようなボックス化された整数を作ろうとするかもしれませんが、これは型エラーになります。
+ATS における型 <FONT
+COLOR="RED"
+>int</FONT
+> の整数値のサイズについて、何も前提がないからです。
+
 </P
 ><P
 >&#13;多相関数を呼び出す時、静的引数を省略してコンパイラによって推論されることをしばしば期待します。
@@ -169,19 +196,19 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1188"
+NAME="AEN1195"
 ></A
 ><PRE
 CLASS="programlisting"
 >fun swap2_boxed{a:type}{b:type} (xy: (a, b)): (b, a) = (xy.1, xy.0)
 
-val AB = ("A", "B")
+val AB = (box("A"), box("B"))
 val BA1 = swap2_boxed (AB) // both static arguments to be synthesized
 val BA2 = swap2_boxed{...} (AB) // both static arguments to be synthesized
-val BA3 = swap2_boxed{..}{string} (AB) // 1st static argument to be synthesized
-val BA4 = swap2_boxed{string}{..} (AB) // 2nd static argument to be synthesized
+val BA3 = swap2_boxed{..}{boxstr} (AB) // 1st static argument to be synthesized
+val BA4 = swap2_boxed{boxstr}{..} (AB) // 2nd static argument to be synthesized
 val BA5 = swap2_boxed{..}{..} (AB) // both static arguments to be synthesized
-val BA6 = swap2_boxed{string}{string} (AB) // both static arguments are provided
+val BA6 = swap2_boxed{boxstr}{boxstr} (AB) // both static arguments are provided
 </PRE
 ><P
 ></P
@@ -214,7 +241,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1196"
+NAME="AEN1203"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -265,7 +292,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1207"
+NAME="AEN1214"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -329,7 +356,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x1210.html"
+HREF="x1217.html"
 ACCESSKEY="N"
 >Next</A
 ></TD

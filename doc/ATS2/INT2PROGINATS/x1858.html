@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>&#13;特殊テンプレート実装
+</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="モジュール性"
+HREF="c1701.html"><LINK
+REL="PREVIOUS"
+TITLE="
+総称テンプレート実装
+"
+HREF="x1841.html"><LINK
+REL="NEXT"
+TITLE="
+抽象型
+"
+HREF="x1901.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1841.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. モジュール性</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1901.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="specific_template_implementation"
+>特殊テンプレート実装</A
+></H1
+><P
+>&#13;関数テンプレートのインターフェイスを特殊実装するというのは、
+そのテンプレートの固定のインスタンスに実装を与えることです。
+例えば、次のインターフェイスは <FONT
+COLOR="RED"
+>eq_elt_elt</FONT
+> という名前の関数テンプレートです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1862"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t0p}
+eq_elt_elt (x: a, y: a): bool // a generic equality
+</PRE
+><P
+></P
+></DIV
+>
+
+
+型 T の値同士が等しいは検査するような <FONT
+COLOR="RED"
+>eq_elt_elt</FONT
+> の意味のある総称的な実装は存在しません。
+
+2つの特殊テンプレート実装である
+インスタンス <FONT
+COLOR="RED"
+>eq_elt_elt&#60;int&#62;</FONT
+> と <FONT
+COLOR="RED"
+>eq_elt_elt&#60;double&#62;</FONT
+>
+を次に示します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1867"
+></A
+><PRE
+CLASS="programlisting"
+>implement eq_elt_elt&#60;int&#62; (x, y) = g0int_eq (x, y)
+implement eq_elt_elt&#60;double&#62; (x, y) = g0float_eq (x, y)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>eq_int_int</FONT
+> と <FONT
+COLOR="RED"
+>eq_double_double</FONT
+> はそれぞれ
+<FONT
+COLOR="RED"
+>int</FONT
+> と <FONT
+COLOR="RED"
+>double</FONT
+> 型の値に対する等式関数です。
+この実装は次のように書くこともできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1873"
+></A
+><PRE
+CLASS="programlisting"
+>implement eq_elt_elt&#60;int&#62; (x, y) = (x = y)
+implement eq_elt_elt&#60;double&#62; (x, y) = (x = y)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+シンボル <FONT
+COLOR="RED"
+>=</FONT
+> が <FONT
+COLOR="RED"
+>g0int_eq</FONT
+> と <FONT
+COLOR="RED"
+>g0float_eq</FONT
+> でオーバーロードされている
+(その他多くの関数もオーバーロードしていています)ので、
+このような実装が可能なのです。
+</P
+><P
+>&#13;ここで、特殊テンプレート実装の典型的な使い方を見てみましょう。
+次に定義する関数テンプレート <FONT
+COLOR="RED"
+>listeq</FONT
+> はリストの等式関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1880"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t0p
+} listeq
+(
+  xs: list0 a
+, ys: list0 a
+) : bool = (
+  case+ (xs, ys) of
+  | (list0_cons (x, xs),
+     list0_cons (y, ys)) =&#62; 
+      if eq_elt_elt&#60;a&#62; (x, y) then listeq (xs, ys) else false
+  | (list0_nil (), list0_nil ()) =&#62; true
+  | (_, _) =&#62; false
+) (* end of [listeq] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2つのリスト xs と ys が与えられた時、xs と ys
+が同じ長さでなおかつそれぞれの要素が等しい (<FONT
+COLOR="RED"
+>eq_elt_elt</FONT
+> を使って比較することになります)
+なら <FONT
+COLOR="RED"
+>listeq</FONT
+> は <FONT
+COLOR="RED"
+>true</FONT
+> を返します。
+型 T が与えられた時、<FONT
+COLOR="RED"
+>list0(T)</FONT
+> 型の2つのリストに対して
+<FONT
+COLOR="RED"
+>listeq</FONT
+> を使うために、<FONT
+COLOR="RED"
+>eq_elt_elt&#60;T&#62;</FONT
+> のインスタンスが必要になることは明らかです。
+別の言い型をすると、<FONT
+COLOR="RED"
+>list0(T)</FONT
+> 型の2つのリストに <FONT
+COLOR="RED"
+>listeq</FONT
+>
+を呼び出すのであれば、<FONT
+COLOR="RED"
+>eq_elt_elt&#60;T&#62;</FONT
+> の特殊実装を与える必要があるのです。
+関数テンプレートのインスタンス実装は、インスタンスを呼び出すファイルで有効でなければならないことに注意してください。
+</P
+><P
+>比較のために、与えられた2つのリストが等しいか判定する関数テンプレート
+<FONT
+COLOR="RED"
+>listeqf</FONT
+> を次に実装します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1893"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t0p
+} listeqf
+(
+  xs: list0 a
+, ys: list0 a
+, eq: (a, a) -&#62; bool
+) : bool = (
+  case+ (xs, ys) of
+  | (list0_cons (x, xs),
+     list0_cons (y, ys)) =&#62; 
+      if eq (x, y) then listeqf (xs, ys, eq) else false
+  | (list0_nil (), list0_nil ()) =&#62; true
+  | (_, _) =&#62; false
+) (* end of [listeqf] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この例では <FONT
+COLOR="RED"
+>listeqf</FONT
+> には、リストの要素同士が等しいか判定するために引数
+<FONT
+COLOR="RED"
+>eq</FONT
+> が追加されています。
+<FONT
+COLOR="RED"
+>listeqf</FONT
+> は高階関数ですが <FONT
+COLOR="RED"
+>listeq</FONT
+> は通常の関数なので、
+前者はより効率的なオブジェクトコードにコンパイルされる可能性が高いことになります。
+また、ATS のライブラリでは特殊実装のテンプレートを広範囲に使っています。
+
+</P
+><P
+>この章で示したコードとテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/listeq.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1841.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1901.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>総称テンプレート実装</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1701.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>抽象型</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

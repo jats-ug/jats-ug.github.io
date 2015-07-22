@@ -1,0 +1,1026 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>依存型入門</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="依存型を使ったプログラミング"
+HREF="p2228.html"><LINK
+REL="PREVIOUS"
+TITLE="依存型を使ったプログラミング"
+HREF="p2228.html"><LINK
+REL="NEXT"
+TITLE="型検査中での制約解決"
+HREF="x2390.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="p2228.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2390.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="introduction-to-dependent-types"
+></A
+>Chapter 9. 依存型入門</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c2230.html#enhanced_expressiveness_for_specification"
+>仕様に対する表現力の強化</A
+></DT
+><DT
+><A
+HREF="x2390.html"
+>型検査中での制約解決</A
+></DT
+><DT
+><A
+HREF="x2415.html"
+>例: 文字列処理</A
+></DT
+><DT
+><A
+HREF="x2462.html"
+>例: 配列の二分探索</A
+></DT
+><DT
+><A
+HREF="x2487.html"
+>再帰関数の停止性検査</A
+></DT
+><DT
+><A
+HREF="x2537.html"
+>例: 依存型を使ったデバッグ</A
+></DT
+></DL
+></DIV
+><P
+>&#13;この本でこれまで見てきた型は、しばしばプログラミングの不変条件を正確に表現していませんでした。
+例えば型 <FONT
+COLOR="RED"
+>int</FONT
+> を整数 0 と 1 の両方に割り当てると、型のレベルでは 0 と 1 を単純に見分けることができません。
+これは型検査の範囲では 0 と 1 が交換可能であることを意味しています。
+別の言い方をすると、もし 0 であるべきところを 1 とミスタイプして、型検査中に捕捉すべきプログラムのエラーが起きても、型検査時に予測できません。
+もし、実際の使用に耐える表現力豊かな型ベースの仕様記述言語を作ろうとしたなら、型におけるこの種の不正確さは不自由な制限になりえます。
+
+</P
+><P
+>&#13;この章で紹介するコードとテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPTYPES/"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="enhanced_expressiveness_for_specification"
+>仕様に対する表現力の強化</A
+></H1
+><P
+>&#13;ATS の型システムに依存型を導入する主要な目的は、プログラムの不変条件をより正確に捕捉できるように、型の表現力をより強化することです。
+一般的には、依存型とは式の値に依存した型のことです。
+例えば、<FONT
+COLOR="RED"
+>bool</FONT
+>
+は与えられたブール値 b に適用されると型 <FONT
+COLOR="RED"
+>bool(b)</FONT
+> を作るような ATS の型コンストラクタです。
+この型は値 b のブール式にのみ割り当てることができ、これはしばしばシグルトン型と呼ばれます。
+つまりきっちり1つの値しか持たない型を意味します。
+明らかに、<FONT
+COLOR="RED"
+>bool(b)</FONT
+> の意味はブール値 b に依存しています。
+同様に、<FONT
+COLOR="RED"
+>int</FONT
+> は ATS の型コンストラクタで、与えられた整数 i に適用されて型 <FONT
+COLOR="RED"
+>int(i)</FONT
+> を作ります。
+また、この型は値 i の整数式にのみ割り当てることができるようなシングルトン型です。
+<FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
+> は両方ともオーバーロードされて (依存型でない) 型を参照していることに注意してください。
+ここでは依存型の他の例を徐々に紹介します。
+特に、依存データ型を宣言する柔軟な手法を紹介します。
+</P
+><P
+>&#13;ATS の静的な部分は単純型付き言語で、(動的な項の型 (type) と) 混乱する可能性を回避するために、この言語の型は <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>種 (sort)</I
+></SPAN
+> と呼ばれます。
+次に挙げる4つの種が一般的に使用されます:
+
+<P
+></P
+><UL
+><LI
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>bool</I
+></SPAN
+>: ブール値の静的な項
+</P
+></LI
+><LI
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+>: 整数値の静的な項
+</P
+></LI
+><LI
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>type</I
+></SPAN
+>: 動的な項のボックス化型を表現する静的な項
+</P
+></LI
+><LI
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+>: 動的な項のアンボックス化型を表現する静的な項
+</P
+></LI
+></UL
+>
+
+種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>bool</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+> は述語種 (predicative sorts) に、
+種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>type</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+> は非述語種 (impredicative sorts) に分類されます。
+ボックス化型は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>type</I
+></SPAN
+> の静的な項です。
+アンボックス化型は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+> の静的な項です。
+型としての <FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
+> は種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype</I
+></SPAN
+> の静的な項です。
+型コンストラクタとしての <FONT
+COLOR="RED"
+>bool</FONT
+> と <FONT
+COLOR="RED"
+>int</FONT
+>
+はそれぞれ種 (<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>bool -&#62; t@ype</I
+></SPAN
+>) と (<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int -&#62; t@ype</I
+></SPAN
+>) の静的な項です。
+型コンストラクタ <FONT
+COLOR="RED"
+>list0</FONT
+> もまた種 (<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>t@ype -&#62; type</I
+></SPAN
+>) であることに注意してください。
+これは <FONT
+COLOR="RED"
+>list0</FONT
+> はアンボックス化型に適用するとボックス化型を作ることを示しています。
+種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>bool</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+> の静的な項をコンストラクトするために、ATS
+にはビルトインの静的な関数が多数用意されています。
+次にこのような関数のいくつかを割り当てられた種と一緒に挙げてみます:
+
+<P
+></P
+><UL
+><LI
+><P
+>&#13;~ (negation): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int) -&#62; int</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;+ (addition): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; int</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;- (subtraction): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; int</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;* (multiplication): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; int</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;/ (division): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; int</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#62; (greater-than): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#62;= (greater-than-or-equal-to): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#60; (less-than): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#60;= (less-than-or-equal-to): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;== (equal-to): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;!= (not-equal-to): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#60;&#62; (not-equal-to): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(int, int) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;~ (boolean negation): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(bool) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;|| (disjunction): <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(bool, bool) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+><LI
+><P
+>&#13;&#38;&#38; (conjunction) : <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>(bool, bool) -&#62; bool</I
+></SPAN
+>
+</P
+></LI
+></UL
+>
+
+種と1つ以上の述語を結合して、サブセット種を定義できます。
+例えば、次のサブセット種が <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/basics_pre.sats"
+TARGET="_top"
+>basics_pre.sats</A
+>
+ファイルで定義されていて、ATSコンパイラが自動的にロードします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2326"
+></A
+><PRE
+CLASS="programlisting"
+>sortdef nat = {a: int | a &#62;= 0} // for natural numbers
+sortdef pos = {a: int | a &#62;= 1}  // for positive numbers
+sortdef neg = {a: int | a &#60;= ~1}  // for negative numbers
+
+sortdef nat1 = {a: nat | a &#60; 1} // for 0
+sortdef nat2 = {a: nat | a &#60; 2} // for 0, 1
+sortdef nat3 = {a: nat | a &#60; 3} // for 0, 1, 2
+sortdef nat4 = {a: nat | a &#60; 4} // for 0, 1, 2, 3
+</PRE
+><P
+></P
+></DIV
+>
+
+
+セミコロン記号 (;) を使って述語群を結合することで、それらの並べることができることに注意してください:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2328"
+></A
+><PRE
+CLASS="programlisting"
+>sortdef nat2 = {a: int | 0 &#60;= a; a &#60; 2} // for 0, 1
+sortdef nat3 = {a: int | 0 &#60;= a; a &#60; 3} // for 0, 1, 2
+sortdef sgn = { i:int | ~1 &#60;= i; i &#60;= 1 } // for ~1, 0, 1
+</PRE
+><P
+></P
+></DIV
+>
+
+
+次のようにサブセット種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>nat2</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>nat3</I
+></SPAN
+> を定義することも可能です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2332"
+></A
+><PRE
+CLASS="programlisting"
+>sortdef nat2 = {a: int | a == 0 || a == 1} // for 0, 1
+sortdef nat3 = {a: int | 0 &#60;= a &#38;&#38; a &#60;= 2} // for 0, 1, 2
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここのとき <FONT
+COLOR="RED"
+>||</FONT
+> と <FONT
+COLOR="RED"
+>&#38;&#38;</FONT
+> はそれぞれ論理和と論理積を表わしています。
+
+</P
+><P
+>依存型の表現力を解き放つために、静的な値の上に全称量化 (universal quantification)
+と存在量化 (existential quantification) を採用しましょう。
+例えば、ATSの型 <FONT
+COLOR="RED"
+>Int</FONT
+> は次のように定義されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2338"
+></A
+><PRE
+CLASS="programlisting"
+>typedef Int = [a:int] int (a) // for unspecified integers
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは、構文 <FONT
+COLOR="RED"
+>[a:int]</FONT
+> は、種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+> の静的な変数 <FONT
+COLOR="RED"
+>a</FONT
+>
+の上の存在量化を意味しています。
+これは本質的に、型 <FONT
+COLOR="RED"
+>Int</FONT
+> のそれぞれの値に対して、型 <FONT
+COLOR="RED"
+>int(I)</FONT
+>
+の値になるような整数 I が存在することを意味します。
+したがって、型 <FONT
+COLOR="RED"
+>int</FONT
+> が与えられるどのような値にも型 <FONT
+COLOR="RED"
+>Int</FONT
+> を与えることができます。
+<FONT
+COLOR="RED"
+>Int</FONT
+> のような型はしばしば存在量化型 (existentially quantified type) と呼ばれます。
+別の例として、ATSの型 <FONT
+COLOR="RED"
+>Nat</FONT
+> は次のように定義されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2349"
+></A
+><PRE
+CLASS="programlisting"
+>typedef Nat = [a:int | a &#62;= 0] int (a) // for natural numbers
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは、構文 <FONT
+COLOR="RED"
+>[a:int | a &#62;= 0]</FONT
+> は、不変条件 <FONT
+COLOR="RED"
+>a &#62;= 0</FONT
+> を満たすような種
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+> の静的な変数 <FONT
+COLOR="RED"
+>a</FONT
+> の上の存在量化を意味しています。
+したがって、型 <FONT
+COLOR="RED"
+>Nat</FONT
+> のそれぞれの値には
+I &#62;= 0 を満たす整数 I を使った型 <FONT
+COLOR="RED"
+>int(I)</FONT
+> を割り当てることができます。
+<FONT
+COLOR="RED"
+>int(I)</FONT
+> がシングルトン型として与えられると、その値は I に等しく、自然数になります。
+つまり型 <FONT
+COLOR="RED"
+>Nat</FONT
+> は自然数を意味することになります。
+<FONT
+COLOR="RED"
+>Nat</FONT
+> はまた次のようにも定義できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2360"
+></A
+><PRE
+CLASS="programlisting"
+>typedef Nat = [a:nat] int (a) // for natural numbers
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは、構文 <FONT
+COLOR="RED"
+>[a:nat]</FONT
+> は単なる構文糖衣で、自動的に <FONT
+COLOR="RED"
+>[a:int | a &#62;= 0]</FONT
+> に展開されます。
+</P
+><P
+>現時点で型の表現力はすでに強化されています。
+例えば、型 <FONT
+COLOR="RED"
+>(int) -&#62; int</FONT
+> は整数を自然数に写像する関数に割り当てることができました
+(例: 与えられた整数の絶対値を計算する関数)。
+しかし、そのような関数には型 <FONT
+COLOR="RED"
+>(Int) -&#62; Nat</FONT
+> を割り当てた方がより良いでしょう。
+その方がより明確になります。
+型レベルで関数の返値とその引数を関連付けるためには、全称量化が必要になります。
+例えば、次の全称量化型は、引数として渡された整数の次の数を返すような関数を表わしています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2367"
+></A
+><PRE
+CLASS="programlisting"
+>{i:int} int (i) -&#62; int (i+1)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+構文 <FONT
+COLOR="RED"
+>{i:int}</FONT
+> は種 <FONT
+COLOR="RED"
+>int</FONT
+> の静的な変数 <FONT
+COLOR="RED"
+>i</FONT
+> の上の全称量化を意味しています。
+この全称量化のスコープは、それに続く関数型の中です。
+読者は、この型の唯一の関数は整数の後者関数 (successor function)
+であり、この関数型もまたシングルトン型であると考えるかもしれません。
+実際には、この型を与えられる部分関数が無数に存在します。
+自然数の後者関数に、次のような型を使うことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2372"
+></A
+><PRE
+CLASS="programlisting"
+>{i:int | i &#62;= 0} int (i) -&#62; int (i+1)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+構文 <FONT
+COLOR="RED"
+>{i:int | i &#62;= 0}</FONT
+> は不変条件 <FONT
+COLOR="RED"
+>i &#62;= 0</FONT
+> を満たすような種 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>int</I
+></SPAN
+>
+の静的な変数 <FONT
+COLOR="RED"
+>i</FONT
+> の上の全称量化を意味しています。
+この型はまた次のように書くこともできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2378"
+></A
+><PRE
+CLASS="programlisting"
+>{i:nat} int (i) -&#62; int (i+1)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+構文 <FONT
+COLOR="RED"
+>{i:nat}</FONT
+> は自動的に <FONT
+COLOR="RED"
+>{i:int | i &#62;= 0}</FONT
+> に展開されます。
+整数に一般的に使われるいくつかのインターフェイスを次に挙げます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2382"
+></A
+><PRE
+CLASS="programlisting"
+>fun g1int_neg {i:int} (int i): int (~i) // negation
+fun g1int_add {i,j:int} (int i, int j): int (i+j) // addition
+fun g1int_sub {i,j:int} (int i, int j): int (i-j) // subtraction
+fun g1int_mul {i,j:int} (int i, int j): int (i*j) // multiplication
+fun g1int_div {i,j:int} (int i, int j): int (i/j) // division
+
+fun g1int_lt {i,j:int} (int i, int j): bool (i &#60; j) // less-than
+fun g1int_lte {i,j:int} (int i, int j): bool (i &#60;= j) // less-than-or-equal-to
+fun g1int_gt {i,j:int} (int i, int j): bool (i &#62; j) // greater-than
+fun g1int_gte {i,j:int} (int i, int j): bool (i &#62;= j) // greater-than-or-equal-to
+fun g1int_eq {i,j:int} (int i, int j): bool (i == j) // equal-to
+fun g1int_neq {i,j:int} (int i, int j): bool (i != j) // not-equal-to
+</PRE
+><P
+></P
+></DIV
+>
+
+
+これらのインターフェイスは全て <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/integer.sats"
+TARGET="_top"
+>integer.sats</A
+>
+ファイルで宣言されていて、ATS コンパイラが自動的にロードします。
+ここで挙げた関数群は全てそれらの標準名で参照可能であることに注意してください:
+ほとんどの場合、
+~ は g1int_neg,
++ は g1int_add,
+- は g1int_sub,
+* は g1int_mul,
+/ は g1int_div,
+&#60; は g1int_lt,
+&#60;= は g1int_lte,
+&#62; は g1int_gt,
+&#62;= は g1int_gte,
+= は g1int_eq,
+!= は g1int_neq,
+&#60;&#62; は g1int_neq を参照しています。
+
+</P
+><P
+>&#13;この興味深い質問を持ち出すには今が適切な時でしょう:
+階乗関数の依存型インターフェイスはどのようになるでしょうか？
+上記の例を見た後では、次の行のように考えるのが自然でしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2386"
+></A
+><PRE
+CLASS="programlisting"
+>fun g1int_fact {i:nat} (i: int i): int (fact (i))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>fact</I
+></SPAN
+> は階乗関数の静的なバージョンです。
+この答には大きな問題があります。
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>fact</I
+></SPAN
+> のような静的な関数を ATS では定義できないのです。
+ATS の静的な部分は単純型付き言語であり、静的な項のコンストラクトにおいてどのような再帰的な意味も許されていません。
+このデザインを採用しているのは、主に現実的なアルゴリズムをベースに静的な項の等価性を決定できるように保証するためです。
+本質的に、依存型を伴う型検査は、静的な項における等価性 (とビルトインの述語) の集合の検査に変化します。
+そのようなデザインは、依存型を使った実際のプログラミングをサポートするためにきわめて重要です。
+
+関数の定義に正確に一致する階乗関数にインターフェイスを割り当てるためには、ATS に定理証明を使ったプログラミングを採用する必要があります。
+このトピックは後の章で取り上げます。
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="p2228.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2390.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>依存型を使ったプログラミング</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p2228.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>型検査中での制約解決</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

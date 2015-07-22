@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 依存型を使ったデバッグ</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="依存型入門"
+HREF="c2231.html"><LINK
+REL="PREVIOUS"
+TITLE="再帰関数の停止性検査"
+HREF="x2488.html"><LINK
+REL="NEXT"
+TITLE="データ型の改良"
+HREF="c2571.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2488.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. 依存型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c2571.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="dependent_types_for_debugging"
+>例: 依存型を使ったデバッグ</A
+></H1
+><P
+>&#13;x &#62;= 0 の整数が割り当てられた時、x の平方根は i * i &#60;= x を満たすような最大の整数 i になります。
+次のように平方根関数を二分探索法をもとに実装します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2541"
+></A
+><PRE
+CLASS="programlisting"
+>fun isqrt
+  (x: int): int = let
+//
+fun search
+(
+  x: int, l: int, r: int
+) : int = let
+  val diff = r - l
+in
+  case+ 0 of
+  | _ when diff &#62; 0 =&#62; let
+      val m = l + (diff / 2)
+    in
+      // x &#60; m * m is more efficient but can overflow easily
+      if x / m &#60; m then search (x, l, m) else search (x, m, r)
+    end // end of [if]
+  | _ =&#62; l (* the result is found *)
+end // end of [search]
+//
+in
+  search (x, 0, x)
+end // end of [isqrt]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この実装は型検査を通りますが、実行すると無限ループにおちいってしまいます。
+一般的なデバッグ手法 (例: プリント関数呼び出しを埋め込む) を使う代わりに、依存型を使って関数
+<FONT
+COLOR="RED"
+>search</FONT
+> の停止性を証明して、無限ループの原因を特定してみることにしましょう。
+関数 <FONT
+COLOR="RED"
+>search</FONT
+> には関数型 <FONT
+COLOR="RED"
+>(int, int, int) -&#62; int</FONT
+> が割り当てられています。
+これは <FONT
+COLOR="RED"
+>search</FONT
+> が3つの整数を引数に取り、1つの整数を返すことを意味しています。
+このような非依存型からその他の情報が得られないことは明確です。
+けれども、もし実装が正しければ関数 <FONT
+COLOR="RED"
+>search</FONT
+> は次の不変条件を持つべきだと、プログラマは思うでしょう:
+
+<P
+></P
+><UL
+><LI
+><P
+>&#13;<FONT
+COLOR="RED"
+>search(x, l, r)</FONT
+> が呼び出された時、l * l &#60;= x かつ x &#60;= r * r です。
+</P
+></LI
+><LI
+><P
+>&#13;整数 x, l, r について l * l &#60;= x &#60; r * r を仮定します。
+<FONT
+COLOR="RED"
+>search(x, l, r)</FONT
+> の本体で整数 l1 と r1 について再帰関数 <FONT
+COLOR="RED"
+>search(x, l1, r1)</FONT
+>
+を呼び出すと、r1-l1 &#60; r-l です。
+この不変条件は <FONT
+COLOR="RED"
+>search</FONT
+> が停止することを示しています。
+</P
+></LI
+></UL
+>
+
+1番目の不変条件は ATS の型システムで表現できるにもかかわらず、
+非線形な制約を取り扱う必要があるためにいくぶん複雑です。
+その代わりに、次の依存型の関数として <FONT
+COLOR="RED"
+>search</FONT
+> を定義してみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2558"
+></A
+><PRE
+CLASS="programlisting"
+>{x:nat} {l,r:nat | l &#60; r} .&#60;r-l&#62;. (int(x), int(l), int(r)) -&#62; int
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>search(x, l, r)</FONT
+> が呼び出される時、より弱い不変条件である l &#60; r を取ります。
+関数 <FONT
+COLOR="RED"
+>search</FONT
+> の停止性を検証するために停止性メトリクス <FONT
+COLOR="RED"
+>.&#60;r-l&#62;.</FONT
+> を与えます。
+<FONT
+COLOR="RED"
+>search</FONT
+> に依存型の関数型を割り当てると、型検査で見つかるエラーに対して関数本体を修正する必要があります。
+次のコードは型検査を通るように適切な修正を施したものです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2564"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+isqrt{x:nat}
+  (x: int x): int = let
+//
+fun search
+  {x,l,r:nat | l &#60; r} .&#60;r-l&#62;.
+(
+  x: int x, l: int l, r: int r
+) : int = let
+  val diff = r - l
+in
+  case+ 0 of
+  | _ when diff &#62; 1 =&#62; let
+      val m = l + (diff / 2)
+    in
+      if x / m &#60; m then search (x, l, m) else search (x, m, r)
+    end // end of [if]
+  | _ =&#62; l (* the result is found *)
+end // end of [search]
+//
+in
+  if x &#62; 0 then search (x, 0, x) else 0
+end // end of [isqrt]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+r-l が 1 等しい時に <FONT
+COLOR="RED"
+>search(x, l, r)</FONT
+> が呼び出されると、以前の
+<FONT
+COLOR="RED"
+>search</FONT
+> 実装における無限ループが発生するのではないか、ということが明らかになりました。
+この呼び出しは同じ引数で別の <FONT
+COLOR="RED"
+>search</FONT
+> 呼び出しを引き起こしてしまう可能性があります。
+けれども、<FONT
+COLOR="RED"
+>search</FONT
+> に前述の依存型の関数型が割り当てた後では、そのような呼び出しは型エラーになります。
+</P
+><P
+>&#13;正確であろうとし、また効果的に正確さを強制できることで、実行時デバッグの必要性はどんどん小さくなることに、プログラマは確実に気が付くでしょう。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2488.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c2571.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>再帰関数の停止性検査</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2231.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>データ型の改良</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

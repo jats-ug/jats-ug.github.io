@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: もう一つの検証された階乗</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="定理証明によるプログラミング"
+HREF="c3138.html"><LINK
+REL="PREVIOUS"
+TITLE="強化された正確性を使って明記する"
+HREF="x3199.html"><LINK
+REL="NEXT"
+TITLE="例: 検証された高速な累乗"
+HREF="x3249.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3199.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. 定理証明によるプログラミング</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3249.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_another_verified_factorial"
+>例: もう一つの検証された階乗</A
+></H1
+><P
+>&#13;<A
+HREF="x3199.html"
+>specifying with enhanced precision</A
+> の章で示した関数 <FONT
+COLOR="RED"
+>ifact</FONT
+>
+は階乗関数の検証された実装の一つでした。
+その型は <FONT
+COLOR="RED"
+>ifact</FONT
+> が dataprop <FONT
+COLOR="RED"
+>FACT</FONT
+>
+にエンコードされた階乗の仕様を実装していることを保証しています。
+明確に、<FONT
+COLOR="RED"
+>ifact</FONT
+> の実装は <FONT
+COLOR="RED"
+>FACT</FONT
+> の宣言にきっちり従っています。
+もし後者をロジックプログラムと考えれば、本質的に前者はロジックプログラムから展開された関数的なバージョンです。
+けれども、仕様の実装の実際はアルゴリズム的な仕様からしばしば遠く外れたものになることがあります。
+例えば、階乗の検証された実装を末尾再帰として得たいかもしれません。
+これは次のようになるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3234"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+ifact2
+{n:nat} .&#60;&#62;.
+(
+  n: int (n)
+) :&#60;&#62; [r:int] (FACT(n, r) | int r) = let
+  fun loop
+    {i:nat|i &#60;= n}{r:int} .&#60;n-i&#62;.
+  (
+    pf: FACT(i, r)
+  | n: int n, i: int i, r: int r
+  ) :&#60;&#62; [r:int] (FACT(n, r) | int r) =
+    if n - i &#62; 0 then let
+      val (pfmul | r1) = imul2 (i+1, r) in loop (FACTind(pf, pfmul) | n, i+1, r1)
+    end else (pf | r) // end of [if]
+  // end of [loop]
+in
+  loop (FACTbas() | n, 0, 1)
+end // end of [ifact2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数 <FONT
+COLOR="RED"
+>ifact2</FONT
+> には <FONT
+COLOR="RED"
+>ifact2</FONT
+> が階乗の検証された実装であることを示す型が割り当てられています。
+内部の関数 <FONT
+COLOR="RED"
+>loop</FONT
+> は明確に末尾再帰で、関数 <FONT
+COLOR="RED"
+>ifact2</FONT
+>
+はこの関数を呼び出すことで定義されています。
+もし型と証明を削除したら、関数 <FONT
+COLOR="RED"
+>ifact2</FONT
+> は本質的に次のような定義になります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3241"
+></A
+><PRE
+CLASS="programlisting"
+>fun ifact2 (n) = let
+  fun loop (n, i, r) =
+    if n - i &#62; 0 then let
+      val r1 = (i+1) * r in loop (n, i+1, r1)
+    end else r // end of [if]
+  // end of [loop]
+in
+  loop (n, 0, 1)
+end // end of [ifact2]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+内部の関数 <FONT
+COLOR="RED"
+>loop</FONT
+> が3つの引数 n, i, r で呼び出される時、
+この呼び出しの前提条件は i が n 以下の自然数であり、なおかつ r が fact(i) つまり i の階乗の値に等しいことです。
+この前提条件は <FONT
+COLOR="RED"
+>loop</FONT
+> に割り当てられた型によって捕捉されています。
+したがって、<FONT
+COLOR="RED"
+>ifact2</FONT
+> の実装において、この条件は <FONT
+COLOR="RED"
+>loop</FONT
+> の呼び出し毎に強制されます。
+
+</P
+><P
+>&#13;この章のコード全体とテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/ifact23.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3199.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3249.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>強化された正確性を使って明記する</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3138.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 検証された高速な累乗</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

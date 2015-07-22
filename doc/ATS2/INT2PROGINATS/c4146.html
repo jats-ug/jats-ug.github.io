@@ -1,0 +1,641 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>抽象観と観型 (viewtype)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形観と線形型を使ったプログラミング"
+HREF="p3304.html"><LINK
+REL="PREVIOUS"
+TITLE="データ型からデータ観型への翻訳"
+HREF="x4114.html"><LINK
+REL="NEXT"
+TITLE="メモリの確保と解放"
+HREF="x4198.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4114.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4198.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="abstract_views_viewtypes"
+></A
+>Chapter 16. 抽象観と観型 (viewtype)</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c4146.html#simple-linear-objects"
+>単純な線形オブジェクト</A
+></DT
+><DT
+><A
+HREF="x4198.html"
+>メモリの確保と解放</A
+></DT
+><DT
+><A
+HREF="x4262.html"
+>例: 配列を用いたリングバッファ</A
+></DT
+><DT
+><A
+HREF="x4299.html"
+>ロックとアンロック</A
+></DT
+><DT
+><A
+HREF="x4347.html"
+>非同期 IPC のための線形チャネル</A
+></DT
+></DL
+></DIV
+><P
+>&#13;今までは、駐観と駐観の上に構築された観にもっぱら注目して観の表現を見てきました。
+駐観が実際にもっとも広く使われる観の形であり、また ATS がサポートした観の最初の形であることが、その大きな理由です。
+けれども、抽象的な観の他の形を ATS に導入することもできます。
+観を駐観 (もしくは観の他の形) を元にして定義できる場合においてさえ、(観変化する証明関数をともなう)
+抽象観として導入したいと思うかもしれません。
+しばしばプログラマが本当に必要とすることは、抽象的に定義された観とそれらを操作する証明関数が実際に意味をなすかどうか、<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>概念的に</I
+></SPAN
+> 理解することです。
+これは関数が計算可能かどうか根拠を示すことに少し似ています:
+例え、計算可能であることを立証するためにチューリングマシンに関数を実際にエンコードするとしても、まれにその必要があります。
+私見ですが、抽象観と抽象的な観型 (viewtype) の適切な使い方を学ぶことは、実際にリソースに関連するプログラミングの問題に取り組むために、効果的に線形型を使うのに必要なステップです。
+
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="simple-linear-objects"
+>単純な線形オブジェクト</A
+></H1
+><P
+>&#13;物理世界のオブジェクトが線形であることははっきりしています:
+それらは無から生成することはできませんし、単に消し去って無へと帰すこともできません。
+従って、物理オブジェクトを表現する値に線形型を割り当てることは極めて自然です。
+継承をサポートするビルトインの仕組みを含まないようなある種のオブジェクトを表わす線形値を表わすのに、ここでは
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>単純な線形オブジェクト (simple linear object)</I
+></SPAN
+> という名前を使います。
+</P
+><P
+>&#13;単純な線形オブジェクトの具体的な例を見てみましょう。
+次のコードは、タイマー (つまりストップウォッチです) のインターフェイスを表わしています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4155"
+></A
+><PRE
+CLASS="programlisting"
+>absvtype timer_vtype
+vtypedef timer = timer_vtype
+
+fun timer_new (): timer
+fun timer_free (x: timer): void
+fun timer_start (x: !timer): void
+fun timer_finish (x: !timer): void
+fun timer_pause (x: !timer): void
+fun timer_resume (x: !timer): void
+fun timer_get_ntick (x: !timer): uint
+fun timer_reset (x: !timer): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+次に定義されるレコード型 <FONT
+COLOR="RED"
+>timer_struct</FONT
+> によってタイマーの状態が与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4158"
+></A
+><PRE
+CLASS="programlisting"
+>typedef
+timer_struct = @{
+  started= bool // the timer has started
+, running= bool // the timer is running
+  // the tick number recorded when the timer
+, ntick_beg= uint // was turned on last time
+, ntick_acc= uint // the number of accumulated ticks
+} (* end of [timer_struct] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+次の線形データ型 <FONT
+COLOR="RED"
+>timer</FONT
+> はタイマーのために宣言され、また抽象型 <FONT
+COLOR="RED"
+>timer_vtype</FONT
+> は
+<FONT
+COLOR="RED"
+>timer</FONT
+> に等しいと見なされています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4163"
+></A
+><PRE
+CLASS="programlisting"
+>//
+datavtype timer =
+  TIMER of (timer_struct)
+//
+assume timer_vtype = timer
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;タイマーに関する各種の関数をこれですぐに実装できます。
+はじめにタイマーの生成と解放をするコードを見てみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4166"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;implement
+timer_new () = let
+//
+val timer = TIMER (_)
+val TIMER (x) = timer
+//
+val () = x.started := false
+val () = x.running := false
+val () = x.ntick_beg := 0u
+val () = x.ntick_acc := 0u
+//
+prval () = fold@ (timer)
+//
+in
+  timer
+end // end of [timer_new]
+
+implement
+timer_free (timer) =
+  let val ~TIMER _ = timer in (*nothing*) end
+// end of [timer_free]
+
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;タイマーを開始する関数は次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4169"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_start
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := true
+  val () = x.running := true
+  val () = x.ntick_beg := the_current_tick_get ()
+  val () = x.ntick_acc := 0u
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_start]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>the_current_tick_get</FONT
+> は (ティックの数で表わされた) 現在時間を読む関数です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4172"
+></A
+><PRE
+CLASS="programlisting"
+>extern fun the_current_tick_get (): uint
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;タイマーは停止したり休止したりすることができます。
+タイマーを停止させる関数は次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4175"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_finish
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := false
+  val () =
+  if x.running then
+  {
+    val () = x.running := false
+    val () = x.ntick_acc :=
+      x.ntick_acc + the_current_tick_get () - x.ntick_beg
+  } (* end of [val] *)
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_finish]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>タイマーは休止した後に再開することができます。
+次のコードはタイマーの休止と再開の関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4178"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;implement
+timer_pause
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () =
+  if x.running then
+  {
+    val () = x.running := false
+    val () = x.ntick_acc :=
+      x.ntick_acc + the_current_tick_get () - x.ntick_beg
+  } (* end of [val] *)
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_pause]
+
+implement
+timer_resume
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () =
+  if x.started &#38;&#38; ~(x.running) then
+  {
+    val () = x.running := true
+    val () = x.ntick_beg := the_current_tick_get ()
+  } (* end of [if] *) // end of [val]
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_resume]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+予想できることですが、タイマーが休止してから再開するまでの時間の総計はカウントされません。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>timer_reset</FONT
+> を呼び出すことでタイマーをリセットすることもまた可能です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4182"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_reset
+  (timer) = let
+  val+@TIMER(x) = timer
+  val () = x.started := false
+  val () = x.running := false
+  val () = x.ntick_beg := 0u
+  val () = x.ntick_acc := 0u
+  prval () = fold@ (timer)
+in
+  // nothing
+end // end of [timer_reset]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>timer_get_ntick</FONT
+> を呼び出すことで、
+タイマーにたまった時間を読み出すことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4186"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+timer_get_ntick
+  (timer) = let
+  val+@TIMER(x) = timer
+  var ntick: uint = x.ntick_acc
+  val () =
+  if x.running then (
+    ntick := ntick + the_current_tick_get () - x.ntick_beg
+  ) (* end of [if] *) // end of [val]
+  prval () = fold@ (timer)
+in
+  ntick
+end // end of [timer_get_ntick]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>the_current_tick_get</FONT
+> を実装するわかりやすいアプローチは、関数
+<FONT
+COLOR="RED"
+>clock_gettime</FONT
+> を直接用いることでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4191"
+></A
+><PRE
+CLASS="programlisting"
+>local
+
+staload "libc/SATS/time.sats"
+
+in (* in-of-local *)
+
+implement
+the_current_tick_get () = let
+  var tv: timespec // uninitialized
+  val err = clock_gettime (CLOCK_REALTIME, tv)
+  val ((*void*)) = assertloc (err &#62;= 0)
+  prval ((*void*)) = opt_unsome{timespec}(tv)
+in
+  $UNSAFE.cast2uint(tv.tv_sec)
+end // end of [the_current_tick_get]
+
+end // end of [local]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+リンク時に <FONT
+COLOR="RED"
+>librt</FONT
+> に含まれる関数 <FONT
+COLOR="RED"
+>clock_gettime</FONT
+> にアクセスするために、ライブラリフラグ
+<FONT
+COLOR="RED"
+>-lrt</FONT
+> が必要になることに注意してください。
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/timer.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4114.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4198.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>データ型からデータ観型への翻訳</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p3304.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>メモリの確保と解放</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>選言的な観</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形なデータ命題としてのデータ観 (dataview)"
+HREF="c3533.html"><LINK
+REL="PREVIOUS"
+TITLE="線形なデータ命題としてのデータ観 (dataview)"
+HREF="c3533.html"><LINK
+REL="NEXT"
+TITLE="線形配列のデータ観"
+HREF="x3597.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c3533.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. 線形なデータ命題としてのデータ観 (dataview)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3597.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="disjunctive_views"
+>選言的な観</A
+></H1
+><P
+>&#13;データ観 <FONT
+COLOR="RED"
+>VOR</FONT
+> は次のように宣言されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3560"
+></A
+><PRE
+CLASS="programlisting"
+>dataview VOR (v0:view+, v1:view+, int) =
+  | VORleft (v0, v1, 0) of (v0) | VORright (v0, v1, 1) of (v1)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この宣言はデータ観 <FONT
+COLOR="RED"
+>VOR</FONT
+> が1番目と2番目の引数について共変であることを示しています。
+そして関連する2つの証明コンストラクタ <FONT
+COLOR="RED"
+>VORleft</FONT
+> と <FONT
+COLOR="RED"
+>VORright</FONT
+> があります。
+観 V<SUB
+>0</SUB
+> と V<SUB
+>1</SUB
+> が与えられた時、
+<FONT
+COLOR="RED"
+>VOR(V<SUB
+>0</SUB
+>, V<SUB
+>1</SUB
+>, 0)</FONT
+> の証明は V<SUB
+>0</SUB
+> の証明になります。
+また <FONT
+COLOR="RED"
+>VOR(V<SUB
+>0</SUB
+>, V<SUB
+>1</SUB
+>, 1)</FONT
+> の証明は V<SUB
+>1</SUB
+> の証明になります。
+
+</P
+><P
+>&#13;なんらかの型 T を考えます。次の関数インターフェイスは <FONT
+COLOR="RED"
+>getopt</FONT
+>
+が未初期化のポインタを取り、ポインタが初期化されたかどうかを示す整数を返すことを表わしています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3577"
+></A
+><PRE
+CLASS="programlisting"
+>fun getopt{l:addr}
+  (pf: T? @ l | ptr (l)): [i:int] (VOR (T? @ l, T @ l, i) | int (i))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+次のコードは <FONT
+COLOR="RED"
+>getopt</FONT
+> の典型的な使用例を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3580"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo (): void = let
+  var x: T?
+  val (pfor | i) = getopt (view@(x) | addr@(x))
+in
+//
+if i = 0
+  then let
+    prval VORleft (pf0) = pfor in view@(x) := pf0 // uninitialized
+  end // end of [then]
+  else let
+    prval VORright (pf1) = pfor in view@(x) := pf1 // initialized
+  end // end of [else]
+// end of [if]
+//
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;ATS には、型 T とブール B を取り、opt 型 <FONT
+COLOR="RED"
+>opt(T, B)</FONT
+> を作るような型コンストラクタ <FONT
+COLOR="RED"
+>opt</FONT
+>
+があります。
+このとき B が true ならば <FONT
+COLOR="RED"
+>opt(T, B)</FONT
+> は T に等しく、B が false ならそれは T? に等しくなります。
+関数 <FONT
+COLOR="RED"
+>getopt</FONT
+> には次のような opt 型を使ったインターフェイスを与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3587"
+></A
+><PRE
+CLASS="programlisting"
+>fun getopt (x: &#38;T? &#62;&#62; opt (T, b)): #[b:bool] bool(b)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+これで <FONT
+COLOR="RED"
+>getopt</FONT
+> 呼び出しコードは次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3590"
+></A
+><PRE
+CLASS="programlisting"
+>fun foo (): void = let
+  var x: T?
+  val ans = getopt (x)
+in
+//
+if (ans)
+  then let
+    prval () = opt_unsome(x) in (*initialized*)
+  end // end of [then]
+  else let
+    prval () = opt_unnone(x) in (*uninitialized*)
+  end // end of [else]
+// end of [if]
+//
+end // end of [foo]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、証明関数 <FONT
+COLOR="RED"
+>opt_unsome</FONT
+> と <FONT
+COLOR="RED"
+>opt_unnone</FONT
+> には次の型が割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3594"
+></A
+><PRE
+CLASS="programlisting"
+>prfun opt_unsome{a:t@ype} (x: !opt (a, true) &#62;&#62; a): void
+prfun opt_unnone{a:t@ype} (x: !opt (a, false) &#62;&#62; a?): void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>VOR</FONT
+> を使うバージョンと比較して、
+opt 型を用いたこのバージョンはかなりすっきりしています。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c3533.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3597.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>線形なデータ命題としてのデータ観 (dataview)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3533.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形配列のデータ観</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

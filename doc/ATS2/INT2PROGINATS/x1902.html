@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>&#13;抽象型
+</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="モジュール性"
+HREF="c1702.html"><LINK
+REL="PREVIOUS"
+TITLE="
+特殊テンプレート実装
+"
+HREF="x1859.html"><LINK
+REL="NEXT"
+TITLE="
+例: 有理数パッケージ
+"
+HREF="x1936.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1859.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. モジュール性</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1936.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="abstract_types"
+>抽象型</A
+></H1
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>抽象型</I
+></SPAN
+> という名前は、型の利用者から完全に隠した型の値の表現方法に由来します。
+このような情報の隠蔽は、抽象の実装に対する変更が抽象型を使っている型安全なコードで型エラーを引き起こさないよう保証する努力です。
+多くの他のプログラミング言語と同様に、ATS
+でも抽象型はモジュールプログラミングをサポートする重要な役割をはたします。
+抽象型の実際的で典型的な使用の例を次に示します。
+</P
+><P
+>&#13;整数の有限集合に対する様々な機能を提供するパッケージを実装しているとしましょう。
+まずはじめに、整数の有限集合を表現する値のために次のような抽象型 <FONT
+COLOR="RED"
+>intset</FONT
+> を宣言します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1908"
+></A
+><PRE
+CLASS="programlisting"
+>abstype intset // a boxed abstract type
+</PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>abstype</FONT
+> は宣言された抽象型 <FONT
+COLOR="RED"
+>intset</FONT
+> がボックス化されていることを指示します。
+つまり <FONT
+COLOR="RED"
+>intset</FONT
+> のサイズはポインタのサイズと同じです。
+関連したキーワード <FONT
+COLOR="RED"
+>abst@ype</FONT
+> はアンボックス化された抽象型の開始で、別の章で説明します。
+パッケージで実装したいそれぞれの関数と値のインターフェイスを次に示します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1914"
+></A
+><PRE
+CLASS="programlisting"
+>// empty set
+val intset_empty : intset
+
+// singleton set of [x]
+fun intset_make_sing (x: int): intset
+
+// turning a list into a set
+fun intset_make_list (xs: list0 int): intset
+
+// turning a set into a list
+fun intset_listize (xs: intset): list0 (int)
+
+// membership test
+fun intset_ismem (xs: intset, x: int): bool
+
+// computing the size of [xs]
+fun intset_size (xs: intset): size_t
+
+// adding [x] into [xs]
+fun intset_add (xs: intset, x: int): intset
+
+// deleting [x] from [xs]
+fun intset_del (xs: intset, x: int): intset
+
+// union of [xs1] and [xs2]
+fun intset_union (xs1: intset, xs2: intset): intset
+
+// intersection of [xs1] and [xs2]
+fun intset_inter (xs1: intset, xs2: intset): intset
+
+// difference between [xs1] and [xs2]
+fun intset_differ (xs1: intset, xs2: intset): intset
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは <FONT
+COLOR="RED"
+>intset</FONT
+> の宣言と上記のインターフェイスは全て <TT
+CLASS="filename"
+>intset.sats</TT
+>
+と名前のつけられたファイルに格納されているものとしましょう。
+</P
+><P
+>&#13;通常、
+有限集合の現実的な実装はなんらかの平衡木 (例えば AVL 木や赤黒木) を使います。
+説明のために、ここでは整数の順序付きリストを使って表現される整数の有限集合を実装します。
+この実装は <TT
+CLASS="filename"
+>intset.dats</TT
+> という名前のファイルに保存されており、
+このファイルは <A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/intset.dats"
+TARGET="_top"
+>オンライン</A
+> から取得できます。
+抽象型の値をコンストラクトするために、
+次のような宣言を使って一時的にそれを具体化させる必要があります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1921"
+></A
+><PRE
+CLASS="programlisting"
+>assume intset = list0 (int)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>assume</FONT
+> キーワードを使いました。
+この assume 宣言は
+<FONT
+COLOR="RED"
+>intset</FONT
+> と型 <FONT
+COLOR="RED"
+>list0 (int)</FONT
+> を同一に扱うように指示します。
+この結び付きは、それが導入されたスコープの終了まで有効です。
+<TT
+CLASS="filename"
+>intset.dats</TT
+> のトップレベルに assume 宣言があるので、<FONT
+COLOR="RED"
+>intset</FONT
+>
+と <FONT
+COLOR="RED"
+>list0 (int)</FONT
+> が等価だという前提はファイル末尾まで有効です。
+ATS には、それぞれの抽象型は最大でも1度までしか assume
+宣言によって具体化することができないという、グローバルな制限があります。
+より具体的には、もし抽象型が2つのファイル <TT
+CLASS="filename"
+>foo1.dats</TT
+> と <TT
+CLASS="filename"
+>foo2.dats</TT
+>
+で具体化されていたら、これらの2つのファイルを一緒にして1つの実行ファイルで使うことはできません。
+
+<FONT
+COLOR="RED"
+>intset</FONT
+> の残りの実装は全て一般的なものです。
+例えば、2つの整数の有限集合の合併は次のような実装になります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1932"
+></A
+><PRE
+CLASS="programlisting"
+>implement
+intset_union
+  (xs1, xs2) = (
+case+ (xs1, xs2) of
+| (list0_cons (x1, xs11),
+   list0_cons (x2, xs21)) =&#62;
+  let
+    val sgn = compare (x1, x2)
+  in
+    case+ 0 of
+    | _ when sgn &#60; 0 =&#62;
+        list0_cons{int}(x1, intset_union (xs11, xs2))
+    | _ when sgn &#62; 0 =&#62;
+        list0_cons{int}(x2, intset_union (xs1, xs21))
+    | _ (* sgn = 0 *) =&#62;
+        list0_cons{int}(x1, intset_union (xs11, xs21))
+    // end of [case]
+  end // end of [(cons, cons)]
+| (list0_nil (), _) =&#62; xs2
+| (_, list0_nil ()) =&#62; xs1
+) (* end of [intset_union] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<TT
+CLASS="filename"
+>intset.sats</TT
+> で宣言されている関数の使用に対するいらかのテストコードが
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_MODULARITY/test_intset.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+しばしばこのようなテストコードを、
+パッケージで宣言されている様々な関数と値のインターフェイスの直後でコンストラクトすることがあります。
+これらのインターフェイスが実際に実装される前に試すことで、
+欠陥をすぐに発見することができます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1859.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1936.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>特殊テンプレート実装</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1702.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 有理数パッケージ</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

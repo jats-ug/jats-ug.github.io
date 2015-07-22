@@ -1,0 +1,552 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>&#13;ATS の静的/動的ファイル
+</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="モジュール性"
+HREF="c1703.html"><LINK
+REL="PREVIOUS"
+TITLE="モジュール性"
+HREF="c1703.html"><LINK
+REL="NEXT"
+TITLE="
+総称テンプレート実装
+"
+HREF="x1843.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1703.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. モジュール性</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1843.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="static_and_dynamic_ats_files"
+>ATS の静的/動的ファイル</A
+></H1
+><P
+>&#13;ATS のファイル名の拡張子である <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>sats</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>dats</I
+></SPAN
+> の最初の文字はそれぞれ、
+単語 <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>static</I
+></SPAN
+> と <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>dynamic</I
+></SPAN
+> に由来しています。
+例えば、<TT
+CLASS="filename"
+>foo.sats</TT
+> は静的ファイルの名前で、<TT
+CLASS="filename"
+>bar.dats</TT
+> は動的ファイルの名前です。
+静的ファイルはしばしば SATS ファイルと呼ばれ、通常は関数, 値, データ型宣言, 型定義などのインターフェイス宣言を含んでいます。
+SATS ファイルの主要な目的は、静的/動的にかかわらず別々のATSファイルでその中身を共用することにあります。
+</P
+><P
+>&#13;静的ファイルの典型的な使い方を知るために、シンプルな例を見てみましょう。
+まずアッカーマン関数を実装することになったとします。
+この関数は原始再帰ではない再帰として有名です。
+<TT
+CLASS="filename"
+>acker.sats</TT
+> という名前の静的ファイルに、次の関数インターフェイスを宣言します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1790"
+></A
+><PRE
+CLASS="programlisting"
+>fun acker (m: int, n: int): int
+</PRE
+><P
+></P
+></DIV
+>
+
+
+静的ファイル内で関数や値のインターフェイス宣言をする際には、
+<FONT
+COLOR="RED"
+>extern</FONT
+> キーワード を使わないことに注意してください。
+<TT
+CLASS="filename"
+>acker.dats</TT
+> という名前の動的ファイルに、次ような実装を書きます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1794"
+></A
+><PRE
+CLASS="programlisting"
+>staload "acker.sats"
+
+implement
+acker (m, n) =
+  if m &#62; 0 then
+    if n &#62; 0 then acker (m-1, acker (m, n-1))
+    else acker (m-1, 1)
+  else n+1
+// end of [acker]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>staload</FONT
+> は指定したファイルを型検査中に静的にロードするよう、ATS の型検査器に指示します。
+本質的にファイルの静的なロードは、
+後続のコードがアクセスできるようにファイルの中身を名前空間に配置することです。
+注目すべきなのは、静的なロードは単純なファイルの埋め込みとは異なるということです。
+ATS では後者もまたサポートしています。その機能は別の章で解説します。
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>acker</FONT
+> 関数宣言に対して次のような実装をすることもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1799"
+></A
+><PRE
+CLASS="programlisting"
+>staload ACKER = "acker.sats"
+
+implement $ACKER.acker
+  (m, n) = acker (m, n) where {
+  fun acker (m: int, n:int): int = 
+    if m &#62; 0 then
+      if n &#62; 0 then acker (m-1, acker (m, n-1))
+      else acker (m-1, 1)
+    else n+1
+} // end of [$ACKER.acker]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この場合、ACKER という名前の名前空間が <TT
+CLASS="filename"
+>acker.sats</TT
+> ファイルの中身を保持しています。
+また接頭辞 <FONT
+COLOR="RED"
+>$ACKER.</FONT
+> (ドル記号の後にACKERを、その後にドット記号です)
+を <TT
+CLASS="filename"
+>acker.sats</TT
+> で宣言されている関数, 値, データ型, コンストラクタ, 型宣言
+などの名前に付記する必要があります。
+多数の静的ファイルがロードされた時、それらのファイルの持つ名前空間に名前を割り当てるのは、
+しばしば良い習慣です。
+それぞれの要素が宣言されている元のソースコードをすぐに見つけ出せるからです。
+</P
+><P
+>&#13;別のファイル <TT
+CLASS="filename"
+>test_acker.dats</TT
+> に次のコードを書いてみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1806"
+></A
+><PRE
+CLASS="programlisting"
+>//
+#include
+"share/atspre_staload.hats"
+//
+staload "acker.sats"
+dynload "acker.dats"
+
+implement
+main0 () = () where {
+//
+// acker (3, 3) should return 61
+//
+  val () = assertloc (acker (3, 3) = 61)
+} // end of [main0]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>dynload</FONT
+> は
+<TT
+CLASS="filename"
+>acker.dats</TT
+> ファイルに関連する初期化関数呼び出しを生成するよう、ATS コンパイラに指示します。
+これは必須で、さもないとリンク時にエラーが発生してしまいます。
+通常、動的ファイルに関連するこの初期化関数は、そのファイルの中で値が実装されている時のみ必要になります。
+この例では <TT
+CLASS="filename"
+>acker.dats</TT
+> の中には関数の実装しかありません。
+もし次の行を <TT
+CLASS="filename"
+>acker.dats</TT
+> の中のどこかに書けば:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1812"
+></A
+><PRE
+CLASS="programlisting"
+>#define ATS_DYNLOADFLAG 0 // no need for dynloading at run-time
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<TT
+CLASS="filename"
+>test_acker.dats</TT
+> 中の <FONT
+COLOR="RED"
+>dynload</FONT
+> キーワード行はもはや不要です。
+<FONT
+COLOR="RED"
+>assertloc</FONT
+> 関数は、その引数を評価してブール値 <FONT
+COLOR="RED"
+>true</FONT
+> になるか実行時に検証します。
+この例では引数は <FONT
+COLOR="RED"
+>false</FONT
+> に評価されるので、関数呼び出しは中断されてファイル名
+(この例では <TT
+CLASS="filename"
+>test_acker.dats</TT
+>) とそのファイルで呼び出したソースコードの位置を含むメッセージが表示されます。
+もし少し混乱してしまったら <FONT
+COLOR="RED"
+>false</FONT
+> に対して <FONT
+COLOR="RED"
+>assertloc</FONT
+> を呼び出してみてください。
+何が起きるのか明確になるでしょう。
+</P
+><P
+>&#13;次のコマンドラインを実行すれば、
+2つのファイル <TT
+CLASS="filename"
+>acker.dats</TT
+> と <TT
+CLASS="filename"
+>test_acker.dats</TT
+> を簡単にコンパイルできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1825"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;<B
+CLASS="command"
+>atscc</B
+> -o test_acker acker.dats test_acker.dats
+</PRE
+><P
+></P
+></DIV
+>
+
+現在のワーキングディレクトリに実行可能ファイル <TT
+CLASS="filename"
+>test_acker</TT
+> が生成されるはずです。
+次のように分割コンパイルをすることもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1829"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;<B
+CLASS="command"
+>atscc</B
+> -c acker.dats
+<B
+CLASS="command"
+>atscc</B
+> -c test_acker.dats
+<B
+CLASS="command"
+>atscc</B
+> -o test_acker acker_dats.o test_acker_dats.o
+</PRE
+><P
+></P
+></DIV
+>
+
+この分割コンパイルのスタイルは
+<B
+CLASS="command"
+>make</B
+> ユーティリティから呼び出す際に特に有用です。
+</P
+><P
+>望むなら <TT
+CLASS="filename"
+>acker.sats</TT
+> と <TT
+CLASS="filename"
+>acker.dats</TT
+> を次のような1つのファイルにまとめることも可能です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1838"
+></A
+><PRE
+CLASS="programlisting"
+>extern
+fun acker (m: int, m: int): int
+
+implement
+acker (m, n) =
+  if m &#62; 0 then
+    if n &#62; 0 then acker (m-1, acker (m, n-1))
+    else acker (m-1, 1)
+  else n+1
+// end of [acker]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<TT
+CLASS="filename"
+>acker3.dats</TT
+> の名前で上記のファイルを作ったとしましょう。
+するとテストコードは次のように書けます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1841"
+></A
+><PRE
+CLASS="programlisting"
+>//
+#include
+"share/atspre_staload.hats"
+//
+staload "acker3.dats"
+dynload "acker3.dats"
+
+implement
+main0 () = () where {
+//
+// acker (3, 3) should return 61
+//
+  val () = assertloc (acker (3, 3) = 61)
+} // end of [main0]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ATS の動的ファイルを静的ロードすることが正常であることに注意してください。
+実際 ATS の静的ファイルは、関数や値の実装を含まないATSの動的ファイルの単なる特殊形です。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1703.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1843.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>モジュール性</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1703.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>総称テンプレート実装</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

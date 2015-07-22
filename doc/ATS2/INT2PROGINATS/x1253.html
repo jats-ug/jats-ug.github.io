@@ -1,0 +1,640 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: リストに対する関数テンプレート</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="パラメータ多相"
+HREF="c1121.html"><LINK
+REL="PREVIOUS"
+TITLE="多相データ型"
+HREF="x1218.html"><LINK
+REL="NEXT"
+TITLE="例: リストのマージソート"
+HREF="x1336.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1218.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. パラメータ多相</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1336.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_function_templates_on_lists"
+>例: リストに対する関数テンプレート</A
+></H1
+><P
+>&#13;関数型プログラミングでは、リストはどこででも使われます。
+ここでは一般に使われるリストに対する関数テンプレートを実装します。
+これらのテンプレートは全て、ATS のライブラリで利用できることに注意すべきです。
+それらは線形データ型のようなこれまで紹介してないプログラミングの機能を使って、より効果的な方法で実装されていることがあります。
+</P
+><P
+>&#13;この章のコード全体と追加のテストコードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_POLYMORPH/listfuns.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+(訳注: このコードを atscc でコンパイルする際には -DATS_MEMALLOC_LIBC オプションが必要です。
+さらにATSコンパイラ本体だけではなく、ATS2-Postiats-contrib のインストールも必要です。)
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_append"
+>連結: <FONT
+COLOR="RED"
+>list0_append</FONT
+></A
+></H2
+><P
+>&#13;型 T と型 <FONT
+COLOR="RED"
+>list0(T)</FONT
+> の2つのリスト xs と ys
+が与えられた時、<FONT
+COLOR="RED"
+>list0_append(xs, ys)</FONT
+> は xs と ys を連結した1つのリストを返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1264"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} list0_append
+(
+  xs: list0 a
+, ys: list0 a
+) : list0 a =
+(
+case+ xs of
+| list0_cons (x, xs) =&#62;
+    list0_cons{a}(x, list0_append&#60;a&#62; (xs, ys))
+| list0_nil ((*void*)) =&#62; ys
+) (* end of [list0_append] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+明らかに、この <FONT
+COLOR="RED"
+>list0_append</FONT
+> は末尾再帰ではありません。
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_reverse_append"
+>逆順連結: <FONT
+COLOR="RED"
+>list0_reverse_append</FONT
+></A
+></H2
+><P
+>&#13;型 T と型 <FONT
+COLOR="RED"
+>list0(T)</FONT
+> の2つのリスト xs と ys が与えられた時、<FONT
+COLOR="RED"
+>list0_reverse_append(xs, ys)</FONT
+> は xs と ys の逆順を連結したリストを返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1273"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} list0_reverse_append
+(
+  xs: list0 a, ys: list0 a
+) : list0 a =
+(
+case+ xs of
+| list0_cons (x, xs) =&#62;
+    list0_reverse_append&#60;a&#62; (xs, list0_cons{a}(x, ys))
+| list0_nil () =&#62; ys
+) (* end of [list0_reverse_append] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+明らかに、 <FONT
+COLOR="RED"
+>list0_reverse_append</FONT
+> のこの実装は末尾再帰です。
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_reverse"
+>逆順: <FONT
+COLOR="RED"
+>list0_reverse</FONT
+></A
+></H2
+><P
+>&#13;リスト xs が与えられた時、<FONT
+COLOR="RED"
+>list0_reverse(xs)</FONT
+> は xs の逆順を返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1281"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+list0_reverse
+  (xs: list0 a): list0 a = list0_reverse_append&#60;a&#62; (xs, list0_nil)
+// end of [list0_reverse]
+</PRE
+><P
+></P
+></DIV
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_map"
+>マップ: <FONT
+COLOR="RED"
+>list0_map</FONT
+></A
+></H2
+><P
+>&#13;型 T1、型 T2、型 T1 -&#60;cloref1&#62; T2 のクロージャ関数 f、型 <FONT
+COLOR="RED"
+>list0(T1)</FONT
+> のリスト
+xs が与えられた時、<FONT
+COLOR="RED"
+>list0_map(xs, f)</FONT
+> は <FONT
+COLOR="RED"
+>list0(T2)</FONT
+> 型のリスト ys を返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1290"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+{a:t@ype}
+{b:t@ype}
+list0_map
+(
+  xs: list0 a, f: a -&#60;cloref1&#62; b
+) : list0 b =
+(
+case+ xs of
+| list0_cons (x, xs) =&#62;
+    list0_cons{b}(f x, list0_map&#60;a&#62;&#60;b&#62; (xs, f))
+| list0_nil ((*void*)) =&#62; list0_nil ()
+) (* end of [list0_map] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ys の長さは xs の長さに等しく、ys 中のそれぞれの要素 y は xs 中の関連する要素をxとしたとき f(x) に等しくなります。
+明らかに <FONT
+COLOR="RED"
+>list0_map</FONT
+> のこの実装は末尾再帰ではありません。
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_foldleft"
+>左 fold: <FONT
+COLOR="RED"
+>list0_foldleft</FONT
+></A
+></H2
+><P
+>&#13;xs, ini, f が与えられた時、<FONT
+COLOR="RED"
+>list0_foldleft(ini, xs, f)</FONT
+> は式 f(... f(f(ini, xs[0]), xs[1]) ..., xs[n-1]) の値を計算します。
+このとき n は xs の長さで、 xs[i] は i &#60; n のような xs の i 番目の要素です。
+次の <FONT
+COLOR="RED"
+>list0_foldleft</FONT
+> の実装は末尾再帰です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1299"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+{a:t@ype}
+{b:t@ype}
+list0_foldleft
+(
+  ini: a, xs: list0 (b), f: (a, b) -&#62; a
+) : a =
+(
+  case+ xs of
+  | list0_cons
+      (x, xs) =&#62; list0_foldleft&#60;a&#62;&#60;b&#62; (f (ini, x), xs, f)
+  | list0_nil ((*void*)) =&#62; ini
+)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_foldright"
+>右 fold: <FONT
+COLOR="RED"
+>list0_foldright</FONT
+></A
+></H2
+><P
+>&#13;xs, res, f が与えられた時、<FONT
+COLOR="RED"
+>list0_foldright(xs, res, f)</FONT
+> は式 f(xs[0], f(xs[1], f(... f(xs[n-1], res) ...))) の値を計算します。
+このとき n は xs の長さで、 xs[i] は i &#60; n のような xs の i 番目の要素です。
+次の <FONT
+COLOR="RED"
+>list0_foldright</FONT
+> 実装は末尾再帰ではありません:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1307"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+{a:t@ype}
+{b:t@ype}
+list0_foldright
+(
+  xs: list0 (a), res: b, f: (a, b) -&#62; b
+) : b =
+(
+  case+ xs of
+  | list0_cons
+      (x, xs) =&#62; f (x, list0_foldright&#60;a&#62;&#60;b&#62; (xs, res, f))
+  | list0_nil ((*void*)) =&#62; res
+)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_zip"
+>zip 関数: <FONT
+COLOR="RED"
+>list0_zip</FONT
+></A
+></H2
+><P
+>&#13;型 T1 と T2、型 <FONT
+COLOR="RED"
+>list0(T1)</FONT
+> と <FONT
+COLOR="RED"
+>list0(T2)</FONT
+> の2つのリスト xs と ys
+がそれぞれ与えられた時、<FONT
+COLOR="RED"
+>list0_zip(xs, ys)</FONT
+> は型 <FONT
+COLOR="RED"
+>list0 @(T1, T2)</FONT
+>
+のリスト zs を返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1317"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a,b:t@ype
+} list0_zip
+(
+  xs: list0 a
+, ys: list0 b
+) : list0 @(a, b) = let
+  typedef ab = @(a, b)
+in
+//
+case+ (xs, ys) of
+| (list0_cons (x, xs),
+   list0_cons (y, ys)) =&#62;
+  (
+    list0_cons{ab}((x, y), list0_zip&#60;a,b&#62; (xs, ys))
+  )
+| (_, _) =&#62; list0_nil ()
+//
+end // end of [list0_zip]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+zs の長さは xs と ys の長さの小さい方になり、zs のそれぞれの要素 z は x と y をそれぞれ xs と ys
+の対応する要素としたときの @(x, y) に等しくなります。
+明らかに、この <FONT
+COLOR="RED"
+>list0_zip</FONT
+> の実装は末尾再帰ではありません。
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="list0_zipwith"
+>zip with 関数: <FONT
+COLOR="RED"
+>list0_zipwith</FONT
+></A
+></H2
+><P
+>&#13;型 T1, T2, T3 と、型 (T1, T2) -&#60;cloref1&#62; T3 のクロージャ関数 f
+と、<FONT
+COLOR="RED"
+>list0(T1)</FONT
+> と <FONT
+COLOR="RED"
+>list0(T2)</FONT
+>  型の2つのリスト xs と ys
+がそれぞれ与えられた時、<FONT
+COLOR="RED"
+>list0_zipwith(xs, ys, f)</FONT
+> は <FONT
+COLOR="RED"
+>list0(T3)</FONT
+>
+型のリスト zs を返します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1328"
+></A
+><PRE
+CLASS="programlisting"
+>fun
+{a,b:t@ype}
+{c:t@ype}
+list0_zipwith
+(
+  xs: list0 a
+, ys: list0 b
+, f: (a, b) -&#60;cloref1&#62; c
+) : list0 c =
+(
+case+ (xs, ys) of
+| (list0_cons (x, xs),
+   list0_cons (y, ys)) =&#62;
+  (
+    list0_cons{c}(f (x, y), list0_zipwith&#60;a,b&#62;&#60;c&#62; (xs, ys, f))
+  )
+| (_, _) =&#62; list0_nil ()
+) (* end of [list0_zipwith] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+zs の長さは xs と ys の長さの小さい方になり、zs のそれぞれの要素 z は x と y をそれぞれ
+xs と ys の対応する要素としたときの f(x, y) に等しくなります。
+明らかに、この <FONT
+COLOR="RED"
+>list0_zipwith</FONT
+> の実装は末尾再帰ではありません。
+3番目の引数 <FONT
+COLOR="RED"
+>f</FONT
+> を <FONT
+COLOR="RED"
+>lam (x, y) =&#62; @(x, y)</FONT
+>
+で置き換えれば、<FONT
+COLOR="RED"
+>list0_zipwith</FONT
+> は <FONT
+COLOR="RED"
+>list0_zip</FONT
+>
+とまったく同じ振る舞いをすることに注意してください。
+この関数テンプレートは <FONT
+COLOR="RED"
+>list0_map2</FONT
+> という名前も持っています。
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1218.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1336.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>多相データ型</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1121.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: リストのマージソート</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

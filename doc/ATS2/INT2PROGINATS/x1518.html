@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>配列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="効果 (effect) を持つプログラミングの機能"
+HREF="c1372.html"><LINK
+REL="PREVIOUS"
+TITLE="例: カウンタの実装"
+HREF="x1507.html"><LINK
+REL="NEXT"
+TITLE="例: 順序をつけた置換 (Ordering Permutations)"
+HREF="x1558.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1507.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. 効果 (effect) を持つプログラミングの機能</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1558.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="arrays"
+>配列</A
+></H1
+><P
+>&#13;前の章で、参照はサイズが 1 の配列であると説明しました。
+サイズ n の配列とは連続して確保された n 個の参照であると言うこともできます。
+これらの参照はセルとも呼ばれ、それらは 0 から n-1 までの番号が付けられています。
+</P
+><P
+>&#13;サイズ n の配列が与えられた時、n
+よりも小さい自然数であれば、その整数値はこの配列に対する有効なインデックスです。
+そうでない場合、その整数値は配列の範囲の外を指すことになります。
+A という名前のついた配列について、i が A に対する有効なインデックスである場合、
+A[i] 式はAの i 番目のセルの中身を取り出します。
+A[i] 式は左辺値として使うこともできます。
+例えば (A[i] := exp) という代入は
+exp を評価して値にした後、i が有効なインデックスであればその値を A の i 番目のセルに書き込みます。
+</P
+><P
+>&#13;もし A[i] のインデックス i が有効でなかったら、つまり配列 A の範囲外であったら何が起きるのでしょうか？
+この場合、A[i] は out-of-bounds array subscription と呼ばれ、
+A[i] の評価は <FONT
+COLOR="RED"
+>ArraySubscriptExn()</FONT
+> 例外を引き起こします。
+与えられた配列に対して整数値が有効なインデックスであるかどうか判定する簡単で確実な方法の一つは、
+実行時に配列 のサイズと比較することです。
+型 T が与えられた時、型 <FONT
+COLOR="RED"
+>arrszref(T)</FONT
+> は配列と型 T の要素が収められているサイズのペアです。
+これ以降、 <FONT
+COLOR="RED"
+>arrszref(T)</FONT
+> 型の値のことを漠然と配列を呼びます。
+また、混乱する可能性を避けるために、array0 値と呼ぶこともあります。
+</P
+><P
+>&#13;array0 値に関する様々な関数と関数テンプレートが
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
+TARGET="_top"
+>arrayref.sats</A
+> ファイルで宣言されています。
+このファイルは <B
+CLASS="command"
+>atsopt</B
+> によって自動的に読み込まれます。
+例えば、配列に関する3つの関数テンプレートと1つの多相関数が次のインターフェイスで表現されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1529"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype} // a template
+arrszref_make_elt
+  (asz: size_t, x: a): arrszref a // array creation
+
+// a polymorphic function
+fun arrszref_get_size
+  {a:t@ype} (A: arrszref a): size_t // size of an array
+
+fun{a:t@ype} // a template
+arrszref_get_elt_at (A: arrszref a, i: size_t): a // A[i]
+
+fun{a:t@ype} // a template
+arrszref_set_elt_at (A: arrszref a, i: size_t, x: a): void // A[i] := x
+</PRE
+><P
+></P
+></DIV
+>
+
+
+サイズ情報をともなわない配列を使ったプログラミングは、
+依存型が導入された後に話題にすることにします。
+
+</P
+><P
+>&#13;C言語と同じように、ATS言語には多くの整数型があります。
+<FONT
+COLOR="RED"
+>size_t</FONT
+> 型は本質的に unsigned long の整数です。
+<FONT
+COLOR="RED"
+>int</FONT
+> と <FONT
+COLOR="RED"
+>size_t</FONT
+> を相互に変換する関数は
+<FONT
+COLOR="RED"
+>g0int2uint_int_size</FONT
+> と <FONT
+COLOR="RED"
+>g0uint2int_size_int</FONT
+> です。
+型 T と型 <FONT
+COLOR="RED"
+>size_t</FONT
+> と T の値としてそれぞれ <FONT
+COLOR="RED"
+>asz</FONT
+> と <FONT
+COLOR="RED"
+>init</FONT
+> が与えられたとき、
+<FONT
+COLOR="RED"
+>arrszref_make_elt&#60;T&#62; (asz, init)</FONT
+> は <FONT
+COLOR="RED"
+>arrszref(T)</FONT
+> 型の配列を返します。
+この配列のサイズは <FONT
+COLOR="RED"
+>asz</FONT
+> で、それぞれのセルは値 <FONT
+COLOR="RED"
+>init</FONT
+> で初期化されます。
+型 T と型 <FONT
+COLOR="RED"
+>arrszref(T)</FONT
+> の配列 A が与えられた時、
+<FONT
+COLOR="RED"
+>arrszref_get_size(A)</FONT
+> は A のサイズを型 <FONT
+COLOR="RED"
+>size_t</FONT
+> で返します。
+利便性のために <FONT
+COLOR="RED"
+>arrszref_get_size(A)</FONT
+> は <FONT
+COLOR="RED"
+>A.size</FONT
+> と書くこともできます。
+配列へのアクセスと更新のために、
+関数 <FONT
+COLOR="RED"
+>arrszref_get_elt_at</FONT
+> と <FONT
+COLOR="RED"
+>arrszref_set_elt_at</FONT
+> を呼び出すことができます。
+利便性のために、これらの関数を角括弧表記で呼び出すこともできます。
+</P
+><P
+>&#13;次のプログラムでは、
+一般的な配列の挿入ソートを関数テンプレート <FONT
+COLOR="RED"
+>insertion_sort</FONT
+> として実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1553"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a:t@ype
+} insertion_sort
+(
+  A: arrszref (a)
+, cmp: (a, a) -&#62; int
+) : void = let
+  val n = g0uint2int_size_int (A.size)
+  fun ins (x: a, i: int):&#60;cloref1&#62; void =
+    if i &#62;= 0 then
+    (
+      if cmp (x, A[i]) &#60; 0
+        then (A[i+1] := A[i]; ins (x, i-1)) else A[i+1] := x
+      // end of [if]
+    ) else A[0] := x // end of [if]
+  // end of [ins]
+  fun loop (i: int):&#60;cloref1&#62; void =
+    if i &#60; n then (ins (A[i], i-1); loop (i+1)) else ()
+  // end of [loop]
+in
+  loop (1)
+end // end of [insertion_sort]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+比較関数 <FONT
+COLOR="RED"
+>cmp</FONT
+> は 1, -1, 0 のいずれかを返します。
+それぞれ1番目の引数が2番目の引数よりも大きいか、小さいか、等しいことを表わします。
+
+</P
+><P
+>&#13;この章に出てくるコードの全体とテストのための追加コードは
+<A
+HREF="http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/CODE/CHAP_EFFECTFUL/insort.dats"
+TARGET="_top"
+>オンライン</A
+>
+から得られます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1507.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1558.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: カウンタの実装</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1372.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 順序をつけた置換 (Ordering Permutations)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
