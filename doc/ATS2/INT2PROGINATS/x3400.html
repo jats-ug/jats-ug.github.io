@@ -18,7 +18,7 @@ TITLE="観 (view) と観型入門"
 HREF="c3303.html"><LINK
 REL="NEXT"
 TITLE="左辺値と参照渡し"
-HREF="x3428.html"><LINK
+HREF="x3429.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x3428.html"
+HREF="x3429.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -119,7 +119,7 @@ COLOR="RED"
 COLOR="RED"
 >t@ype</FONT
 > であるような観型を表わす静的な項です。
-言い方をすると、前者にはポインタのサイズに等しいサイズの線形値の観型が割り当てられ、そして後者には詳細不明のサイズの線形値の観型が割り当てられます。
+別の言い方をすると、前者にはポインタのサイズに等しいサイズの線形値の観型が割り当てられ、そして後者には詳細不明のサイズの線形値の観型が割り当てられます。
 例えば、型と、種 <FONT
 COLOR="RED"
 >viewtype</FONT
@@ -237,9 +237,17 @@ a:t@ype}{b:t@ype
   pclo: !cloptr (a, b, l), x: a
 ) : b = let
   val p = pclo.1
-  prval pf = pclo.0 // take out pf: ((&#38;env, a) -&#62; b, env) @ l
+(*
+//
+// taking out pf: ((&#38;env, a) -&#62; b, env) @ l
+//
+  prval pf = pclo.0
+//
+*)
   val res = !p.0 (!p.1, x)
-  prval () = pclo.0 := pf // put the proof pf back
+(*
+  prval () = pclo.0 := pf // putting the proof pf back
+*)
 in
   res
 end // end of [cloptr]
@@ -259,7 +267,11 @@ COLOR="RED"
 COLOR="RED"
 >pclo</FONT
 > の型が元の位置に復帰されて返ります。
-クロージャ関数のような ATS プログラミングの機能を説明する能力は、ATS の型システムの表現力の説得力ある証拠です。
+このレコードからの線形証明の取り出しとレコードへの復帰は ATS の型検査器によって自動的に行なわれます。
+
+</P
+><P
+>&#13;クロージャ関数のような ATS プログラミングの機能を説明する能力は、ATS の型システムの表現力の説得力ある証拠です。
 
 </P
 ></DIV
@@ -297,7 +309,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x3428.html"
+HREF="x3429.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
