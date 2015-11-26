@@ -177,7 +177,11 @@ yellow, alternately. The entirety of the code presented so far is stored in
 <u>Sierpinski-3angle-part.dats</u>, which can be readily tested
 <a href="http://www.ats-lang.org/SERVER/MYCODE/Patsoptaas_serve.php?mycode_url=https://raw.githubusercontent.com/githwxi/ATS-Postiats/master/doc/EXAMPLE/EFFECTIVATS/Sierpinski-3angle/Sierpinski-3angle-part.dats">on-line</a>.
 -->
-ここでは JS コードの詳細を解説しません。このコードは本質的に、文字列 "Patsoptaas-Evaluate-canvas" によって指定されたキャンバスを配置します。[drawFrame] の実装は、キャンバス全体に青色と黄色を交互に描画します。これまで示したコードの全体は <u>Sierpinski-3angle-part.dats</u> から入手できます。このコードは <a href="http://www.ats-lang.org/SERVER/MYCODE/Patsoptaas_serve.php?mycode_url=https://raw.githubusercontent.com/githwxi/ATS-Postiats/master/doc/EXAMPLE/EFFECTIVATS/Sierpinski-3angle/Sierpinski-3angle-part.dats">オンライン</a> ですぐにテストできます。
+ここでは JS コードの詳細を解説しません。
+このコードは本質的に、文字列 "Patsoptaas-Evaluate-canvas" によって指定されたキャンバスを配置します。
+[drawFrame] の実装は、キャンバス全体に青色と黄色を交互に描画します。
+これまで示したコードの全体は <u>Sierpinski-3angle-part.dats</u> から入手できます。
+このコードは <a href="http://www.ats-lang.org/SERVER/MYCODE/Patsoptaas_serve.php?mycode_url=https://raw.githubusercontent.com/githwxi/ATS-Postiats/master/doc/EXAMPLE/EFFECTIVATS/Sierpinski-3angle/Sierpinski-3angle-part.dats">オンライン</a> ですぐにテストできます。
 </p>
 
 <h2>
@@ -231,7 +235,7 @@ Following is the interface of a function [drawTriangle],
 which is called to draw a triangle ABC filled with a given
 color:
 -->
-次のコードは、与えられた色で塗り潰された三角形 ABC を描画するために呼び出される関数 [drawTriangle] のインターフェイスです:
+ 次のコードは、与えられた色で塗り潰された三角形 ABC を描画するために呼び出される関数 [drawTriangle] のインターフェイスです:
 </p>
 
 <pre class="patsyntax">
@@ -421,15 +425,16 @@ Of course, it is also possible to use <u>patsopt</u> to compile
 find the related details in the provided Makefile. There is a file
 <u>Sierpinski-3angle.html</u> available for testing the generated JS code.
 -->
-このシェルピンスキーの三角形のアニメーション描画実装のコード全体は <u>Sierpinski-3angle-final.dats</u> から入手でき、また <a href="http://www.ats-lang.org/SERVER/MYCODE/Patsoptaas_serve.php?mycode_url=https://raw.githubusercontent.com/githwxi/ATS-Postiats/master/doc/EXAMPLE/EFFECTIVATS/Sierpinski-3angle/Sierpinski-3angle-final.dats">オンライン</a> 上で容易にテストできます。もちろん、<u>Sierpinski-3angle-final.dats</u> をなんらかのC言語コードにコンパイルするために <u>patsopt</u> を使うこともできます。その後、<u>atscc2js</u> を使って、そのC言語コードを JS コードにコンパイルすることもできます。このコンパイル手順詳細は Makefile から知ることができます。生成された JS コードは <u>Sierpinski-3angle.html</u> から入手できます。
+このシェルピンスキーの三角形のアニメーション描画実装のコード全体は <u>Sierpinski-3angle-final.dats</u> から入手でき、また <a href="http://www.ats-lang.org/SERVER/MYCODE/Patsoptaas_serve.php?mycode_url=https://raw.githubusercontent.com/githwxi/ATS-Postiats/master/doc/EXAMPLE/EFFECTIVATS/Sierpinski-3angle/Sierpinski-3angle-final.dats">オンライン</a> 上で容易にテストできます。
+もちろん、<u>Sierpinski-3angle-final.dats</u> をなんらかのC言語コードにコンパイルするために <u>patsopt</u> を使うこともできます。
+その後、<u>atscc2js</u> を使って、そのC言語コードを JS コードにコンパイルすることもできます。
+このコンパイル手順詳細は Makefile から知ることができます。
+生成された JS コードは <u>Sierpinski-3angle.html</u> から入手できます。
 </p>
 
 <hr size="2">
 
-<!--
 This article is written by <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a>.
--->
-この記事は <a href="http://www.cs.bu.edu/~hwxi/">Hongwei Xi</a> によって書かれ、<a href="http://jats-ug.metasepi.org/">Japan ATS User Group</a> によって翻訳されています。
 
 </body>
 </html>
