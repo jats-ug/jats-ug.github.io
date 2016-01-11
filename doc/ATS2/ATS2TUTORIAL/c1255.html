@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Stack-Allocated Closure-Functions</TITLE
+>スタックに確保されたクロージャ関数</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -78,30 +78,24 @@ CLASS="chapter"
 ><A
 NAME="stkclo"
 ></A
->Chapter 27. Stack-Allocated Closure-Functions</H1
+>Chapter 27. スタックに確保されたクロージャ関数</H1
 ><P
->&#13;Higher-order functions are a very convenient programming feature for
-supporting certain forms of code reuse. Often a function passed as an
-argument to a higher-order function call is a closure-function created on
-heap at run-time, and it is most likely of no more use after the call. If
-the closure-function is linear, then it needs to be freed explicitly by the
-programmer (or a type-error would occur during typechecking).  If the
-closure-function is non-linear, then its memory should be reclaimed through
-garbage-collection (GC) (or the memory is leaked).
+>&#13;高階関数は、コードの形を再利用するのにとても便利なプログラミングの機能です。
+高階関数呼び出しへの引数として渡された関数はしばしば実行時にヒープ上に生成されたクロージャ関数で、その呼び出しの後ではもはや使われないことを意図しています。
+もしそのクロージャ関数が線形なら、それはプログラマが明示的に解放する必要があります (そうでなければ型検査中に型エラーが発生します)。
+もしそのクロージャ関数が非線形なら、そのメモリはガベージコレクション (GC) によって回収されなければなりません (そうでなければメモリリークになります)。
 
 </P
 ><P
->&#13;Creating heap-allocated closure-functions implies the need for dynamic
-memory allocation (DMA). In a restricted environment (e.g., one for
-embedded programming), DMA may not be (fully) supported. One option for
-constructing a closure-function in the absence of support for DMA is to
-store it in the stack-frame of the calling function, and there is special
-systax in ATS for doing so.
+>&#13;ヒープに確保されたクロージャ関数の生成は動的なメモリ確保 (DMA) を必要としています。
+制限された環境 (例: 組み込みプログラミング) では、DMA は (完全には) サポートされていないかもしれません。
+DMA のサポートのない環境でのクロージャ関数の生成の1つの選択肢は、呼び出し関数のスタックフレームにそれを保管することです。
+ATS にはこれを行なうための特殊な構文があります。
 
 </P
 ><P
->&#13;Let us see a concrete example of stack-allocated closure.
-The following code implements a higher-order function template:
+>&#13;スタックに確保されたクロージャの実例を見てみましょう。
+次のコードは高階関数テンプレートを実装しています:
 
 <DIV
 CLASS="informalexample"
@@ -138,22 +132,20 @@ end // end of [ifold]
 >
 
 
-Essentially, <FONT
+本質的に、<FONT
 COLOR="RED"
 >ifold(n, fopr, ini)</FONT
-> evaluates the expression
-<FONT
+> は式 <FONT
 COLOR="RED"
 >fopr(...fopr(fopr(ini, 0), 1)..., n-1)</FONT
->.  For instance, the
-function <FONT
+> を評価します。
+例えば、2つのベクトルのドット積 (もしくは内積) を計算する 関数 <FONT
 COLOR="RED"
 >dotprod</FONT
-> for computing the dot product (or inner
-product) of two vectors can be implemented with a call to <FONT
+> は <FONT
 COLOR="RED"
 >ifold</FONT
->:
+> 呼び出しを使って実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -186,16 +178,14 @@ dotprod
 >
 
 
-The second argument passed to the call to <FONT
+<FONT
 COLOR="RED"
 >ifold</FONT
-> is a
-closure created on heap at run-time, and it is of no more use
-after the call returns. The function <FONT
+> 呼び出しへの第二引数は、実行時にヒープ上に生成されたクロージャで、この呼び出しが戻った後はもう使用できません。
+また、関数 <FONT
 COLOR="RED"
 >dotprod</FONT
-> can also be
-implemented as follows:
+> は次のようにも実装できます:
 
 <DIV
 CLASS="informalexample"
@@ -231,47 +221,41 @@ end // end of [dotprod]
 >
 
 
-The keyword <FONT
-COLOR="RED"
->lam@</FONT
-> (instead of <FONT
+(<FONT
 COLOR="RED"
 >lam</FONT
->) initiates the
-creation of an unboxed closure at a given location. In the above case, the
-variable <FONT
+> ではなく) キーワード <FONT
+COLOR="RED"
+>lam@</FONT
+> は与えられた位置にアンボックス化クロージャを生成します。
+上記の例では、変数 <FONT
 COLOR="RED"
 >fopr</FONT
-> is located in the stack-frame of
-<FONT
+> は <FONT
 COLOR="RED"
 >dotprod</FONT
->, and the created closure is stored in the memory
-reserved for <FONT
+> のスタックフレームに位置していて、生成されたクロージャは <FONT
 COLOR="RED"
 >fopr</FONT
->. It is the obligation of the compiler of ATS
-to make sure that the memory is large enough for storing the closure. The
-call to the (unsafe) cast turns the address of <FONT
-COLOR="RED"
->fopr</FONT
-> into a
-boxed closure so that it can be passed to <FONT
+> で予約されたメモリに保管されます。
+ATS コンパイラは、クロージャを保管するのにメモリが十分大きいことを保証します。
+(安全でない) キャスト呼び出しは、<FONT
 COLOR="RED"
 >ifold</FONT
->.
+> に渡せるようにするため、<FONT
+COLOR="RED"
+>fopr</FONT
+> のアドレスをボックス化クロージャに変化させます。
 
 </P
 ><P
->&#13;In order to remove the (unsafe) cast in the implementation of
-<FONT
+>&#13;<FONT
 COLOR="RED"
 >dotprod</FONT
->, we need to implement a slight variant
-of <FONT
+> の実装における (安全でない) キャスト削除するために、次のような <FONT
 COLOR="RED"
 >ifold</FONT
-> as follows:
+> の変種を実装する必要があります:
 
 <DIV
 CLASS="informalexample"
@@ -332,40 +316,36 @@ end // end of [dotprod_]
 >
 
 
-Note that the second argument of <FONT
-COLOR="RED"
->ifold_</FONT
-> is call-by-reference.
-The anotated arrow <FONT
-COLOR="RED"
->-&#60;clo1&#62;</FONT
-> is used to form function types
-for unboxed closures. So only a left value (representing some unboxed
-closure) can be passed as the second argument to a call to
 <FONT
 COLOR="RED"
 >ifold_</FONT
->, and what is really passed at run-time is the address of
-the left value. The function <FONT
+> の第二引数は参照渡しであることに注意してください。
+注釈付きに矢印 <FONT
 COLOR="RED"
->dotprod</FONT
-> can be safely implemented
-as <FONT
-COLOR="RED"
->dotprod_</FONT
-> with a call to <FONT
+>-&#60;clo1&#62;</FONT
+> はアンボックス化されたクロージャを表わす関数の型を作るのに使われます。
+(アンボックス化されたクロージャを表わす) 左辺値は <FONT
 COLOR="RED"
 >ifold_</FONT
->.
+> 呼び出しの第二引数として渡され、このとき実行時に実際に渡されるのはこの左辺値のアドレスです。
+<FONT
+COLOR="RED"
+>ifold_</FONT
+> 呼び出しを使うことで、関数 <FONT
+COLOR="RED"
+>dotprod</FONT
+> は <FONT
+COLOR="RED"
+>dotprod_</FONT
+> のような安全な実装ができるのです。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で用いたコード全体とテストコードは <A
 HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_stkclo.dats"
 TARGET="_top"
->on-line</A
-> the entirety of the
-code used in this chapter plus some testing code.
+>オンライン</A
+> から入手できます。
 </P
 ></DIV
 ><DIV
