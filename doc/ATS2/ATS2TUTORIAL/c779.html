@@ -1,0 +1,529 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>永続化配列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="ボックス化されたタプルとレコード"
+HREF="c719.html"><LINK
+REL="NEXT"
+TITLE="サイズを伴う永続化配列"
+HREF="c840.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c719.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c840.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="arrayref"
+></A
+>Chapter 16. 永続化配列</H1
+><P
+>&#13;サイズ n の永続化配列は、単に1行の中のヒープに確保された
+n 個のセル (もしくは参照) です。
+この配列に対して確保されたメモリは手動で解放できないという意味で永続的です。
+その代わりに、ガベージコレクション (GC) を通じて安全に回収されます。
+</P
+><P
+>&#13;viewtype VT が与えられたとき、viewtype VT の値 N を含む永続化配列の型は <FONT
+COLOR="RED"
+>arrayref(VT, N)</FONT
+> です。
+ATS での配列はC言語のものと同じで、それらにはサイズ情報が付属しないことに注意してください。
+永続化配列に関する様々な関数インターフェイスが SATS ファイル
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
+TARGET="_top"
+>prelude/SATS/arrayref.sats</A
+>
+に見つけることができます。
+このファイルは <B
+CLASS="command"
+>atsopt</B
+> によって自動的に読み込まれます。
+
+</P
+><P
+>&#13;配列を生成する様々な関数があります。
+例えば、次の2つは一般的に使用されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN787"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+arrayref_make_elt
+  {n:nat} (asz: size_t n, elt: a):&#60;!wrt&#62; arrayref (a, n)
+// end of [arrayref_make_elt]
+
+fun{a:t@ype}
+arrayref_make_listlen
+  {n:int} (xs: list (a, n), n: int n):&#60;!wrt&#62; arrayref (a, n)
+// end of [arrayref_make_listlen]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+サイズと要素に適用されると、<FONT
+COLOR="RED"
+>arrayref_make_elt</FONT
+>
+は与えられた要素でそれぞれのセルを初期化した与えられたサイズの配列を返します。
+リストとそのリストの長さに適用されると、<FONT
+COLOR="RED"
+>arrayref_make_listlen</FONT
+>
+は与えられた長さに等しいサイズの配列を返します。
+このとき配列のそれぞれのセルは与えられたリストの対応する要素で初期化されます。
+</P
+><P
+>&#13;配列を読み書きするために、関数テンプレート <FONT
+COLOR="RED"
+>arrayref_get_at</FONT
+>
+と <FONT
+COLOR="RED"
+>arrayref_set_at</FONT
+> を使うことができます。
+それぞれ次のようなインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN794"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+arrayref_get_at
+  {n:int} (A: arrayref (a, n), i: sizeLt (n)):&#60;!ref&#62; a
+
+fun{a:t@ype}
+arrayref_set_at
+  {n:int} (A: arrayref (a, n), i: sizeLt (n), x: a):&#60;!ref&#62; void
+</PRE
+><P
+></P
+></DIV
+>
+
+
+配列 <FONT
+COLOR="RED"
+>A</FONT
+>, インデックス <FONT
+COLOR="RED"
+>i</FONT
+>, 値 <FONT
+COLOR="RED"
+>v</FONT
+>
+が与えられたとき、<FONT
+COLOR="RED"
+>arrayref_get_at(A, i)</FONT
+> と
+<FONT
+COLOR="RED"
+>arrayref_set_at(A, i, v)</FONT
+> はそれぞれ
+<FONT
+COLOR="RED"
+>A[i]</FONT
+> と <FONT
+COLOR="RED"
+>A[i] := v</FONT
+> のように書くことができます。
+</P
+><P
+>&#13;
+例として、次の関数テンプレートは与えられた配列の内容を逆順にします:
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN804"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+arrayref_reverse{n:nat}
+(
+  A: arrayref (a, n), n: size_t (n)
+) : void = let
+//
+fun loop
+  {i: nat | i &#60;= n} .&#60;n-i&#62;.
+(
+  A: arrayref (a, n), n: size_t n, i: size_t i
+) : void = let
+  val n2 = half (n)
+in
+  if i &#60; n2 then let
+    val tmp = A[i]
+    val ni = pred(n)-i
+  in
+    A[i] := A[ni]; A[ni] := tmp; loop (A, n, succ(i))
+  end else () // end of [if]
+end // end of [loop]
+//
+in
+  loop (A, n, (i2sz)0)
+end // end of [arrayref_reverse]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;もし判定 <FONT
+COLOR="RED"
+>i &#60; n2</FONT
+> を <FONT
+COLOR="RED"
+>i &#60;= n2</FONT
+> に変更すると、型エラーが発生します。
+なぜでしょうか？
+その理由は、<FONT
+COLOR="RED"
+>n</FONT
+> と <FONT
+COLOR="RED"
+>i</FONT
+>
+が両方ともゼロに等しい場合に、<FONT
+COLOR="RED"
+>A[n-1-i]</FONT
+>
+が配列の添字指定の範囲外になるからです。
+サイズがゼロの配列に遭遇することなく、もし早期に発見していなかったら、このようなバグはゾッとするほど奥深くに埋め込まれてしまうかもしれません!
+</P
+><P
+>&#13;懸命な読者は、種 <FONT
+COLOR="RED"
+>t@ype</FONT
+> がテンプレートパラメータ <FONT
+COLOR="RED"
+>a</FONT
+>
+に割り当てられていることに、既に気がついているかもしれません。
+別の言い方をすると、<FONT
+COLOR="RED"
+>arrayref_reverse</FONT
+>
+の上記の実装は、与えられた配列内の値が線形型であるような場合を扱うことができません。
+種 <FONT
+COLOR="RED"
+>t@ype</FONT
+> を選択している理由は、<FONT
+COLOR="RED"
+>arrayref_get_at</FONT
+> と
+<FONT
+COLOR="RED"
+>arrayref_set_at</FONT
+> の両方が非線形型の値を含む配列にのみ適用できるからです。
+次の実装では、テンプレートパラメータには種 <FONT
+COLOR="RED"
+>vt@ype</FONT
+>
+が与えられているので、線形型の値を含む配列を扱うことができます:
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN820"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt@ype}
+arrayref_reverse{n:nat}
+(
+  A: arrayref (a, n), n: size_t (n)
+) : void = let
+//
+fun loop
+  {i: nat | i &#60;= n} .&#60;n-i&#62;.
+(
+  A: arrayref (a, n), n: size_t n, i: size_t i
+) : void = let
+  val n2 = half (n)
+in
+  if i &#60; n2 then let
+    val () = arrayref_interchange (A, i, pred(n)-i) in loop (A, n, succ(i))
+  end else () // end of [if]
+end // end of [loop]
+//
+in
+  loop (A, n, i2sz(0))
+end // end of [arrayref_reverse]
+</PRE
+><P
+></P
+></DIV
+><P
+>&#13;
+関数テンプレート <FONT
+COLOR="RED"
+>arrayref_interchange</FONT
+> のインターフェイスは以下のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN824"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:vt@ype}
+arrayref_interchange{n:int}
+  (A: arrayref (a, n), i: sizeLt n, j: sizeLt n):&#60;!ref&#62; void
+// end of [arrayref_interchange]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>arrayref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>arrayref_set_at</FONT
+>
+の観点では、<FONT
+COLOR="RED"
+>arrayref_interchange</FONT
+> は
+(型安全でないコードを使わずに)
+実装できないことに注意してください。
+</P
+><P
+>&#13;配列を左から右に、もしくは右から左に走査するのに役に立つ様々な関数があります。
+また、次の2つの関数は配列を左から右に走査するために使うことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN830"
+></A
+><PRE
+CLASS="programlisting"
+>//
+fun{a:t0p}
+arrayref_head{n:pos} (A: arrayref (a, n)): (a) // A[0]
+fun{a:t0p}
+arrayref_tail{n:pos} (A: arrayref (a, n)): arrayref (a, n-1)
+//
+overload .head with arrayref_head
+overload .tail with arrayref_tail
+</PRE
+><P
+></P
+></DIV
+>
+
+
+例として、配列に対する左 fold 関数は次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN832"
+></A
+><PRE
+CLASS="programlisting"
+>&#13;fun{a,b:t@ype}
+arrayref_foldleft{n:int}
+(
+  f: (a, b) -&#62; a, x: a, A: arrayref (b, n), n: size_t(n)
+) : a =
+(
+if n &#62; 0
+  then arrayref_foldleft&#60;a,b&#62; (f, f (x, A.head), A.tail, pred(n))
+  else x
+// end of [if]
+) (* end of [arrayref_foldleft] *)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+期待される通り、<FONT
+COLOR="RED"
+>A.head</FONT
+> と <FONT
+COLOR="RED"
+>A.tail</FONT
+> はそれぞれ
+<FONT
+COLOR="RED"
+>A[0]</FONT
+> と <FONT
+COLOR="RED"
+>ptr_succ&#60;T&#62;(p0)</FONT
+> に変換されます。
+このとき T は A に保管されている要素の型で、p0 は A の開始アドレスです。
+
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_arrayref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c719.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c840.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ボックス化されたタプルとレコード</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>サイズを伴う永続化配列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

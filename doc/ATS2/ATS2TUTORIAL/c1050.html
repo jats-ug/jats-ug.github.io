@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>遅延ストリーム</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="高階関数"
+HREF="c994.html"><LINK
+REL="NEXT"
+TITLE="線形型のリスト"
+HREF="c1102.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c994.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1102.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="stream-based-lazy-evaluation"
+></A
+>Chapter 23. 遅延ストリーム</H1
+><P
+>&#13;ATS のコアは値渡し (call-by-value) 評価に基づいていますが、ATS
+は遅延評価 (call-by-need) も直接サポートしています。
+
+</P
+><P
+>&#13;(サンク (thunk) を作ることによって)
+式の評価を遅延もしくは中断するための特殊な言語コンストラクタ <FONT
+COLOR="RED"
+>$delay</FONT
+> があります。
+また、(サンクによって表わされる)
+中断された評価を再開するための特殊な関数 <FONT
+COLOR="RED"
+>lazy_force</FONT
+> があります。
+種 <FONT
+COLOR="RED"
+>(t@ype) =&#62; type</FONT
+> の抽象型コンストラクタ <FONT
+COLOR="RED"
+>lazy</FONT
+>
+は型に適用されると (ボックス化された) 型を形作ります。
+型 T の式 exp が与えられたとき、型 <FONT
+COLOR="RED"
+>lazy(T)</FONT
+> の値 <FONT
+COLOR="RED"
+>$delay(exp)</FONT
+>
+は exp の中断された評価を表わしています。
+なんらかの型 T について型 <FONT
+COLOR="RED"
+>lazy(T)</FONT
+> の値 V が与えられたとき、
+V に対する <FONT
+COLOR="RED"
+>lazy_force</FONT
+> 呼び出しは V によって表現される中断された評価を再開します。
+もしその呼び出しあ返ったなら、その返値は型 T になります。
+関数テンプレート <FONT
+COLOR="RED"
+>lazy_force</FONT
+> のインターフェイスは次のように与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1063"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype} lazy_force (lazyval: lazy(a)):&#60;!laz&#62; a
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき記号 <FONT
+COLOR="RED"
+>!laz</FONT
+> は遅延評価 (lazy-evaluation) に関連する効果を表わします。
+ATS における特殊な前置演算子 <FONT
+COLOR="RED"
+>!</FONT
+> は
+<FONT
+COLOR="RED"
+>lazy_force</FONT
+> の多重定義であることに注意してください。
+
+</P
+><P
+>&#13;<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
+TARGET="_top"
+>prelude/SATS/stream.sats</A
+>
+では、遅延ストリームを表現するために次の型
+<FONT
+COLOR="RED"
+>stream_con</FONT
+> と <FONT
+COLOR="RED"
+>stream</FONT
+> が相互再帰的に宣言されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1072"
+></A
+><PRE
+CLASS="programlisting"
+>datatype
+stream_con (a:t@ype+) =
+  | stream_nil of ((*void*)) | stream_cons of (a, stream(a))
+where stream (a:t@ype) = lazy (stream_con(a))
+</PRE
+><P
+></P
+></DIV
+>
+
+
+また、ストリームに関する多数の一般的な関数が
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
+TARGET="_top"
+>prelude/SATS/stream.sats</A
+> で宣言され
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/DATS/stream.dats"
+TARGET="_top"
+>prelude/DATS/stream.dats</A
+> で実装されています。
+
+</P
+><P
+>&#13;次のコードはエラトステネスの篩 (Sieve of Eratosthenes) の一般的な実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1077"
+></A
+><PRE
+CLASS="programlisting"
+>//
+fun
+from (n: int): stream (int) =
+  $delay (stream_cons (n, from (n+1)))
+//
+fun sieve
+(
+  ns: stream(int)
+) :&#60;!laz&#62; stream(int) = $delay let
+//
+// [val-] means no warning message from the compiler
+//
+  val-stream_cons(n, ns) = !ns
+in
+  stream_cons (n, sieve (stream_filter_cloref&#60;int&#62; (ns, lam x =&#62; x mod n &#62; 0)))
+end // end of [$delay let] // end of [sieve]
+//
+val thePrimes = sieve(from(2))
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2からはじまる整数列から成るストリームがコンストラクトされます;
+ストリームの最初の要素が保持され、その要素の倍数がストリームの残り (tail) から削除されます;
+それからストリームの残り (tail) に対してこの処理が再帰的に繰り返されます。
+明確に、このように生成された最終的なストリームは昇順に並んだ全ての素数から成ります。
+
+</P
+><P
+>&#13;関数テンプレート <FONT
+COLOR="RED"
+>stream_filter_cloref</FONT
+> は次のようなインターフェイスを持ちます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1081"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t@ype}
+stream_filter_cloref
+  (xs: stream(a), pred: a -&#60;cloref&#62; bool):&#60;!laz&#62; stream(a)
+// end of [stream_filter_cloref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ストリームと述語が与えられたとき、<FONT
+COLOR="RED"
+>stream_filter_cloref</FONT
+>
+は与えられた述語を満すような、与えられたストリーム内の要素群全てから成る別のストリームを生成します。
+</P
+><P
+>&#13;遅延評価の別の例を見てみましょう。
+次のコードは、フィボナッチ数列を計算する興味深いアプローチを示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1085"
+></A
+><PRE
+CLASS="programlisting"
+>//
+val _0_ = $UNSAFE.cast{int64}(0)
+val _1_ = $UNSAFE.cast{int64}(1)
+//
+val // the following values are defined mutually recursively
+rec theFibs_0
+  : stream(int64) = $delay (stream_cons(_0_, theFibs_1)) // fib0, fib1, ...
+and theFibs_1
+  : stream(int64) = $delay (stream_cons(_1_, theFibs_2)) // fib1, fib2, ...
+and theFibs_2
+  : stream(int64) = // fib2, fib3, fib4, ...
+(
+  stream_map2_fun&#60;int64,int64&#62;&#60;int64&#62; (theFibs_0, theFibs_1, lam (x, y) =&#62; x + y)
+) (* end of [val/and/and] *)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数テンプレート <FONT
+COLOR="RED"
+>stream_map2_fun</FONT
+> には次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1088"
+></A
+><PRE
+CLASS="programlisting"
+>fun{
+a1,a2:t0p}{b:t0p
+} stream_map2_cloref
+(
+  xs1: stream (a1), xs2: stream (a2), f: (a1, a2) -&#60;fun&#62; b
+) :&#60;!laz&#62; stream (b) // end of [stream_map2_cloref]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2つのストリーム xs1, xs2 と引数が2つの関数 f が与えられたとき、
+<FONT
+COLOR="RED"
+>stream_map2_fun</FONT
+> は n が自然数の範囲において
+xs[n] が f(xs1[n], xs2[n]) と等しいようなストリーム xs を作ります。
+
+</P
+><P
+>&#13;さらに別の遅延評価の例を見てみましょう。
+ハミング数 (Hamming number) は素因数として 2, 3, 5 のみを持つ自然数です。
+次のコードは、全てのハミング数から成るストリームを生成する率直な方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1092"
+></A
+><PRE
+CLASS="programlisting"
+>//
+val
+compare_int_int =
+  lam (x1: int, x2: int): int =&#60;fun&#62; compare(x1, x2)
+//
+macdef
+merge2 (xs1, xs2) =
+  stream_mergeq_fun&#60;int&#62; (,(xs1), ,(xs2), compare_int_int)
+//
+val
+rec theHamming
+  : stream(int) = $delay
+(
+  stream_cons (1, merge2 (merge2 (theHamming2, theHamming3), theHamming5))
+) (* end of [val] *)
+
+and theHamming2
+  : stream(int) = stream_map_fun&#60;int&#62;&#60;int&#62; (theHamming, lam x =&#62; 2 * x)
+and theHamming3
+  : stream(int) = stream_map_fun&#60;int&#62;&#60;int&#62; (theHamming, lam x =&#62; 3 * x)
+and theHamming5
+  : stream(int) = stream_map_fun&#60;int&#62;&#60;int&#62; (theHamming, lam x =&#62; 5 * x)
+//
+</PRE
+><P
+></P
+></DIV
+>
+
+
+関数テンプレート <FONT
+COLOR="RED"
+>stream_mergeq_fun</FONT
+> は次のインターフェイスを持ちます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1095"
+></A
+><PRE
+CLASS="programlisting"
+>fun{a:t0p}
+stream_mergeq_fun
+(
+  xs1: stream (a), xs2: stream (a), (a, a) -&#60;fun&#62; int
+) :&#60;!laz&#62; stream (a) // end of [stream_mergeq_fun]
+</PRE
+><P
+></P
+></DIV
+>
+
+
+2つのストリームと、その2つのストリームがある順序によって昇順に整列されたような (関数によって表現された)
+順序が与えられたとき、<FONT
+COLOR="RED"
+>stream_mergeq_fun</FONT
+>
+は与えられた2つのストリームの合併を表わす、昇順に整列したストリームを返します。
+つまり2番目のストリーム内のどのような要素も、1番目のストリーム内にも在るのであれば捨てられます。
+
+</P
+><P
+>&#13;遅延ストリームを用いると、無限なデータの錯覚をたやすく作り出すことができます。
+この錯覚は、メモ化 (memoization)
+に対して単純なプログラミングインターフェイスと自動化サポートによって産み出され、
+しばしば優雅さと魅力を両立したプログラミングスタイルを可能にします。
+
+</P
+><P
+>&#13;一般的に、遅延評価に基づいたプログラムの時間的計算量 (time-complexity)
+と空間的計算量 (space-complexity) を見積ることは困難です。
+これは深刻な弱点です。
+線形遅延ストリームを用いることで、この弱点を本質的に克服することができます。
+
+</P
+><P
+>&#13;この章で紹介したコード全体は
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_stream.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c994.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1102.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>高階関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形型のリスト</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

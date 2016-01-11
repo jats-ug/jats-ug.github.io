@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>extvar 宣言</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="高度なチュートリアル"
+HREF="p1182.html"><LINK
+REL="PREVIOUS"
+TITLE="高度なチュートリアル"
+HREF="p1182.html"><LINK
+REL="NEXT"
+TITLE="線形クロージャ関数"
+HREF="c1209.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="p1182.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1209.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="extvar-declaration"
+></A
+>Chapter 25. extvar 宣言</H1
+><P
+>&#13;ATS は他のプログラミング言語との相互利用を重要視しています。
+
+</P
+><P
+>&#13;C言語コード中に <FONT
+COLOR="RED"
+>foo</FONT
+> という名前の (グローバルの) 整数変数を持ち、ATS コード中で <FONT
+COLOR="RED"
+>foo</FONT
+> に保管された値を 1 増加させたいとします。これは次のように書けます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1190"
+></A
+><PRE
+CLASS="programlisting"
+>val x0 = $extval(int, "foo") // get the value of foo
+val p_foo = $extval(ptr, "&#38;foo") // get the address of foo
+val () = $UNSAFE.ptr_set&#60;int&#62; (p_foo, x0 + 1) // update foo
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>foo</FONT
+> のアドレスを得るためにC言語のアドレス演算子 (&#38;) が必要です。もしアドレス演算子をサポートしていない言語 (例: JavaScript や Python) と ATS を相互利用するのであれば、次のように書くことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1193"
+></A
+><PRE
+CLASS="programlisting"
+>extvar "foo" = x0 + 1
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このときキーワード <FONT
+COLOR="RED"
+>extvar</FONT
+> は続く文字列が外部の変数 (もしくは左辺値) を参照していることを示しています。その変数は、その文字列に続く等式記号の右辺の式の値で更新されます。このいわゆる extvar 宣言は次のように書くこともできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1196"
+></A
+><PRE
+CLASS="programlisting"
+>extern var "foo" = x0 + 1
+</PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>extvar</FONT
+> は <FONT
+COLOR="RED"
+>extern var</FONT
+> に展開されています。
+
+</P
+><P
+>&#13;もう1つの例として、<FONT
+COLOR="RED"
+>foo2</FONT
+> が <FONT
+COLOR="RED"
+>first</FONT
+> と <FONT
+COLOR="RED"
+>second</FONT
+> という名前で2つの整数フィールドを持つレコード変数であるとしてみましょう。すると次のコードは、整数 1 と 2 を <FONT
+COLOR="RED"
+>foo2</FONT
+> の2つのフィールドに割り当てます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1205"
+></A
+><PRE
+CLASS="programlisting"
+>extvar "foo2.first" = 1
+extvar "foo2.second" = 2
+</PRE
+><P
+></P
+></DIV
+>
+
+
+ことがことだけに、extvar 宣言の機能は本質的に安全ではなく、慎重に使う必要があります。
+
+</P
+><P
+>&#13;この章で紹介したコード全体は <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_extvar.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="p1182.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1209.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>高度なチュートリアル</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p1182.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形クロージャ関数</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
