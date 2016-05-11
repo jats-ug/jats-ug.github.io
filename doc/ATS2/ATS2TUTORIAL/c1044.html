@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>遅延ストリーム</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="高階関数"
+HREF="c988.html"><LINK
+REL="NEXT"
+TITLE="線形型のリスト"
+HREF="c1096.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c988.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1096.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="stream-based-lazy-evaluation"
+></A
+>Chapter 23. 遅延ストリーム</H1
+><P
+>&#13;ATS のコアは値渡し (call-by-value) 評価に基づいていますが、ATS
+は遅延評価 (call-by-need) も直接サポートしています。
+
+</P
+><P
+>&#13;(サンク (thunk) を作ることによって)
+式の評価を遅延もしくは中断するための特殊な言語コンストラクタ <FONT
+COLOR="RED"
+>$delay</FONT
+> があります。
+また、(サンクによって表わされる)
+中断された評価を再開するための特殊な関数 <FONT
+COLOR="RED"
+>lazy_force</FONT
+> があります。
+種 <FONT
+COLOR="RED"
+>(t@ype) =&#62; type</FONT
+> の抽象型コンストラクタ <FONT
+COLOR="RED"
+>lazy</FONT
+>
+は型に適用されると (ボックス化された) 型を形作ります。
+型 T の式 exp が与えられたとき、型 <FONT
+COLOR="RED"
+>lazy(T)</FONT
+> の値 <FONT
+COLOR="RED"
+>$delay(exp)</FONT
+>
+は exp の中断された評価を表わしています。
+なんらかの型 T について型 <FONT
+COLOR="RED"
+>lazy(T)</FONT
+> の値 V が与えられたとき、
+V に対する <FONT
+COLOR="RED"
+>lazy_force</FONT
+> 呼び出しは V によって表現される中断された評価を再開します。
+もしその呼び出しあ返ったなら、その返値は型 T になります。
+関数テンプレート <FONT
+COLOR="RED"
+>lazy_force</FONT
+> のインターフェイスは次のように与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1057"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> lazy_force <span class="keyword">(</span>lazyval<span class="keyword">:</span> <span class="staexp">lazy</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">laz</span><span class="keyword">&gt;</span> <span class="staexp">a</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このとき記号 <FONT
+COLOR="RED"
+>!laz</FONT
+> は遅延評価 (lazy-evaluation) に関連する効果を表わします。
+ATS における特殊な前置演算子 <FONT
+COLOR="RED"
+>!</FONT
+> は
+<FONT
+COLOR="RED"
+>lazy_force</FONT
+> の多重定義であることに注意してください。
+
+</P
+><P
+>&#13;<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
+TARGET="_top"
+>prelude/SATS/stream.sats</A
+>
+では、遅延ストリームを表現するために次の型
+<FONT
+COLOR="RED"
+>stream_con</FONT
+> と <FONT
+COLOR="RED"
+>stream</FONT
+> が相互再帰的に宣言されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1066"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span>
+<span class="staexp">stream_con <span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">t@ype+</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">stream_nil <span class="keyword">of</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="dynexp">stream_cons <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="keyword">where</span> <span class="staexp">stream <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">lazy</span> <span class="keyword">(</span><span class="staexp">stream_con</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+また、ストリームに関する多数の一般的な関数が
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/stream.sats"
+TARGET="_top"
+>prelude/SATS/stream.sats</A
+> で宣言され
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/DATS/stream.dats"
+TARGET="_top"
+>prelude/DATS/stream.dats</A
+> で実装されています。
+
+</P
+><P
+>&#13;次のコードはエラトステネスの篩 (Sieve of Eratosthenes) の一般的な実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1071"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+from <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="dynexp"><span class="keyword">$delay</span> <span class="keyword">(</span>stream_cons <span class="keyword">(</span>n<span class="keyword">,</span> from <span class="keyword">(</span>n+1<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> sieve
+<span class="keyword">(</span>
+  ns<span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">laz</span><span class="keyword">&gt;</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$delay</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="comment">// [val-] means no warning message from the compiler</span>
+<span class="comment">//</span>
+  <span class="keyword">val-</span>stream_cons<span class="keyword">(</span>n<span class="keyword">,</span> ns<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">!</span>ns
+<span class="keyword">in</span>
+  stream_cons <span class="keyword">(</span>n<span class="keyword">,</span> sieve <span class="keyword">(</span>stream_filter_cloref&lt;int<span class="keyword">&gt;</span> <span class="keyword">(</span>ns<span class="keyword">,</span> <span class="keyword">lam</span> x <span class="keyword">=&gt;</span> x mod n <span class="keyword">&gt;</span> 0<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [$delay let] // end of [sieve]</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> thePrimes <span class="keyword">=</span> sieve<span class="keyword">(</span>from<span class="keyword">(</span><span class="dynexp">2</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2からはじまる整数列から成るストリームがコンストラクトされます;
+ストリームの最初の要素が保持され、その要素の倍数がストリームの残り (tail) から削除されます;
+それからストリームの残り (tail) に対してこの処理が再帰的に繰り返されます。
+明確に、このように生成された最終的なストリームは昇順に並んだ全ての素数から成ります。
+
+</P
+><P
+>&#13;関数テンプレート <FONT
+COLOR="RED"
+>stream_filter_cloref</FONT
+> は次のようなインターフェイスを持ちます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1075"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+stream_filter_cloref
+  <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> pred<span class="keyword">:</span> <span class="staexp">a</span> <span class="keyword">-&lt;</span><span class="staexp">cloref</span><span class="keyword">&gt;</span> <span class="staexp">bool</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">laz</span><span class="keyword">&gt;</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="comment">// end of [stream_filter_cloref]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ストリームと述語が与えられたとき、<FONT
+COLOR="RED"
+>stream_filter_cloref</FONT
+>
+は与えられた述語を満すような、与えられたストリーム内の要素群全てから成る別のストリームを生成します。
+</P
+><P
+>&#13;遅延評価の別の例を見てみましょう。
+次のコードは、フィボナッチ数列を計算する興味深いアプローチを示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1079"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> _0_ <span class="keyword">=</span> $UNSAFE<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int64<span class="keyword">}</span></span><span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> _1_ <span class="keyword">=</span> $UNSAFE<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int64<span class="keyword">}</span></span><span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="comment">// the following values are defined mutually recursively</span>
+<span class="keyword">rec</span> theFibs_0
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int64</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$delay</span> <span class="keyword">(</span>stream_cons<span class="keyword">(</span>_0_<span class="keyword">,</span> theFibs_1<span class="keyword">)</span><span class="keyword">)</span></span> <span class="comment">// fib0, fib1, ...</span>
+<span class="keyword">and</span> theFibs_1
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int64</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$delay</span> <span class="keyword">(</span>stream_cons<span class="keyword">(</span>_1_<span class="keyword">,</span> theFibs_2<span class="keyword">)</span><span class="keyword">)</span></span> <span class="comment">// fib1, fib2, ...</span>
+<span class="keyword">and</span> theFibs_2
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int64</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="comment">// fib2, fib3, fib4, ...</span>
+<span class="keyword">(</span>
+  stream_map2_fun&lt;<span class="staexp">int64</span><span class="keyword">,</span><span class="staexp">int64</span><span class="keyword">&gt;&lt;</span><span class="staexp">int64</span><span class="keyword">&gt;</span> <span class="keyword">(</span>theFibs_0<span class="keyword">,</span> theFibs_1<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>x<span class="keyword">,</span> y<span class="keyword">)</span> <span class="keyword">=&gt;</span> x + y<span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [val/and/and] *)</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+関数テンプレート <FONT
+COLOR="RED"
+>stream_map2_fun</FONT
+> には次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1082"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a1<span class="keyword">,</span>a2<span class="keyword">:</span>t0p<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>b<span class="keyword">:</span>t0p
+<span class="keyword">}</span></span> stream_map2_cloref
+<span class="keyword">(</span>
+  xs1<span class="keyword">:</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">a1</span><span class="keyword">)</span><span class="keyword">,</span> xs2<span class="keyword">:</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">a2</span><span class="keyword">)</span><span class="keyword">,</span> f<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a1</span><span class="keyword">,</span> <span class="staexp">a2</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp"><span class="keyword">fun</span></span><span class="keyword">&gt;</span> <span class="staexp">b</span>
+<span class="keyword">)</span> <span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">laz</span><span class="keyword">&gt;</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">b</span><span class="keyword">)</span></span> <span class="comment">// end of [stream_map2_cloref]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2つのストリーム xs1, xs2 と引数が2つの関数 f が与えられたとき、
+<FONT
+COLOR="RED"
+>stream_map2_fun</FONT
+> は n が自然数の範囲において
+xs[n] が f(xs1[n], xs2[n]) と等しいようなストリーム xs を作ります。
+
+</P
+><P
+>&#13;さらに別の遅延評価の例を見てみましょう。
+ハミング数 (Hamming number) は素因数として 2, 3, 5 のみを持つ自然数です。
+次のコードは、全てのハミング数から成るストリームを生成する率直な方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1086"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+compare_int_int <span class="keyword">=</span>
+  <span class="keyword">lam</span> <span class="keyword">(</span>x1<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> x2<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=&lt;</span><span class="staexp"><span class="keyword">fun</span></span><span class="keyword">&gt;</span> compare<span class="keyword">(</span>x1<span class="keyword">,</span> x2<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">macdef</span>
+merge2 <span class="dynexp"><span class="keyword">(</span>xs1<span class="keyword">,</span> xs2<span class="keyword">)</span></span> <span class="keyword">=</span>
+  stream_mergeq_fun&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="dynexp"><span class="keyword">,(</span>xs1<span class="keyword">)</span></span><span class="keyword">,</span> <span class="dynexp"><span class="keyword">,(</span>xs2<span class="keyword">)</span></span><span class="keyword">,</span> compare_int_int<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+<span class="keyword">rec</span> theHamming
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$delay</span>
+<span class="keyword">(</span>
+  stream_cons <span class="keyword">(</span>1<span class="keyword">,</span> merge2 <span class="keyword">(</span>merge2 <span class="keyword">(</span>theHamming2<span class="keyword">,</span> theHamming3<span class="keyword">)</span><span class="keyword">,</span> theHamming5<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [val] *)</span>
+
+<span class="keyword">and</span> theHamming2
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span> stream_map_fun&lt;<span class="staexp">int</span><span class="keyword">&gt;&lt;</span><span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>theHamming<span class="keyword">,</span> <span class="keyword">lam</span> x <span class="keyword">=&gt;</span> <span class="dynexp">2</span> * x<span class="keyword">)</span>
+<span class="keyword">and</span> theHamming3
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span> stream_map_fun&lt;<span class="staexp">int</span><span class="keyword">&gt;&lt;</span><span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>theHamming<span class="keyword">,</span> <span class="keyword">lam</span> x <span class="keyword">=&gt;</span> <span class="dynexp">3</span> * x<span class="keyword">)</span>
+<span class="keyword">and</span> theHamming5
+  <span class="keyword">:</span> <span class="staexp">stream</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">=</span> stream_map_fun&lt;<span class="staexp">int</span><span class="keyword">&gt;&lt;</span><span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>theHamming<span class="keyword">,</span> <span class="keyword">lam</span> x <span class="keyword">=&gt;</span> <span class="dynexp">5</span> * x<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+関数テンプレート <FONT
+COLOR="RED"
+>stream_mergeq_fun</FONT
+> は次のインターフェイスを持ちます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1089"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+stream_mergeq_fun
+<span class="keyword">(</span>
+  xs1<span class="keyword">:</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> xs2<span class="keyword">:</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp"><span class="keyword">fun</span></span><span class="keyword">&gt;</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">laz</span><span class="keyword">&gt;</span> <span class="staexp">stream</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// end of [stream_mergeq_fun]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2つのストリームと、その2つのストリームがある順序によって昇順に整列されたような (関数によって表現された)
+順序が与えられたとき、<FONT
+COLOR="RED"
+>stream_mergeq_fun</FONT
+>
+は与えられた2つのストリームの合併を表わす、昇順に整列したストリームを返します。
+つまり2番目のストリーム内のどのような要素も、1番目のストリーム内にも在るのであれば捨てられます。
+
+</P
+><P
+>&#13;遅延ストリームを用いると、無限なデータの錯覚をたやすく作り出すことができます。
+この錯覚は、メモ化 (memoization)
+に対して単純なプログラミングインターフェイスと自動化サポートによって産み出され、
+しばしば優雅さと魅力を両立したプログラミングスタイルを可能にします。
+
+</P
+><P
+>&#13;一般的に、遅延評価に基づいたプログラムの時間的計算量 (time-complexity)
+と空間的計算量 (space-complexity) を見積ることは困難です。
+これは深刻な弱点です。
+線形遅延ストリームを用いることで、この弱点を本質的に克服することができます。
+
+</P
+><P
+>&#13;この章で紹介したコード全体は
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_stream.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c988.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1096.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>高階関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形型のリスト</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

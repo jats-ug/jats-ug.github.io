@@ -12,13 +12,13 @@ TITLE="ATSプログラミングチュートリアル"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="高度なチュートリアル"
-HREF="p1181.html"><LINK
+HREF="p1176.html"><LINK
 REL="PREVIOUS"
-TITLE="スタックに確保されたクロージャ関数"
-HREF="c1255.html"><LINK
+TITLE="線形遅延ストリーム"
+HREF="c1287.html"><LINK
 REL="NEXT"
 TITLE="Generating a datcontag-function"
-HREF="x1329.html"><LINK
+HREF="x1376.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
@@ -49,7 +49,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="c1255.html"
+HREF="c1287.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x1329.html"
+HREF="x1376.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -78,7 +78,7 @@ CLASS="chapter"
 ><A
 NAME="codegen2"
 ></A
->Chapter 28. Automatic Code Generation</H1
+>Chapter 29. Automatic Code Generation</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -88,17 +88,17 @@ CLASS="TOC"
 ></DT
 ><DT
 ><A
-HREF="c1292.html#codegen2_datcon"
+HREF="c1339.html#codegen2_datcon"
 >Generating a datcon-function</A
 ></DT
 ><DT
 ><A
-HREF="x1329.html"
+HREF="x1376.html"
 >Generating a datcontag-function</A
 ></DT
 ><DT
 ><A
-HREF="x1348.html"
+HREF="x1395.html"
 >Generating a fprint-function</A
 ></DT
 ></DL
@@ -122,22 +122,22 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1296"
+NAME="AEN1343"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-datatype expr =
-  | Int of int
-  | Var of string
-  | Add of (expr, expr)
-  | Sub of (expr, expr)
-  | Mul of (expr, expr)
-  | Div of (expr, expr)
-  | Ifgtz of (expr, expr, expr) // if expr &#62; 0 then ... else ...
-  | Ifgtez of (expr, expr, expr) // if expr &#62;= 0 then ... else ...
-//
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">datatype</span> <span class="staexp">expr <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">Int <span class="keyword">of</span> <span class="staexp">int</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Var <span class="keyword">of</span> <span class="staexp">string</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Add <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Sub <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Mul <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Div <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Ifgtz <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span> <span class="comment">// if expr &gt; 0 then ... else ...</span>
+  <span class="keyword">|</span> <span class="dynexp">Ifgtez <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">,</span> <span class="staexp">expr</span><span class="keyword">)</span></span></span> <span class="comment">// if expr &gt;= 0 then ... else ...</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -171,12 +171,12 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1302"
+NAME="AEN1349"
 ></A
 ><PRE
 CLASS="programlisting"
->#codegen2("datcon", expr)
-</PRE
+><p class="patsyntax"><span class="keyword">#codegen2</span><span class="keyword">(</span>"datcon"<span class="keyword">,</span> expr<span class="keyword">)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -203,12 +203,12 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1307"
+NAME="AEN1354"
 ></A
 ><PRE
 CLASS="programlisting"
->#codegen2("datcon", expr, my_datcon_expr)
-</PRE
+><p class="patsyntax"><span class="keyword">#codegen2</span><span class="keyword">(</span>"datcon"<span class="keyword">,</span> expr<span class="keyword">,</span> my_datcon_expr<span class="keyword">)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -226,12 +226,12 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1310"
+NAME="AEN1357"
 ></A
 ><PRE
 CLASS="programlisting"
->#codegen2("datcon", expr)
-</PRE
+><p class="patsyntax"><span class="keyword">#codegen2</span><span class="keyword">(</span>"datcon"<span class="keyword">,</span> expr<span class="keyword">)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -253,7 +253,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1314"
+NAME="AEN1361"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -277,30 +277,30 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1318"
+NAME="AEN1365"
 ></A
 ><PRE
 CLASS="programlisting"
->(* ****** ****** *)
-//
-implement
-{}(*tmp*)
+><p class="patsyntax"><span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span><span class="comment">(*tmp*)</span>
 datcon_expr
-  (arg0) =
-(
-case+ arg0 of
-| Int _ =&#62; "Int"
-| Var _ =&#62; "Var"
-| Add _ =&#62; "Add"
-| Sub _ =&#62; "Sub"
-| Mul _ =&#62; "Mul"
-| Div _ =&#62; "Div"
-| Ifgtz _ =&#62; "Ifgtz"
-| Ifgtez _ =&#62; "Ifgtez"
-)
-//
-(* ****** ****** *)
-</PRE
+  <span class="keyword">(</span>arg0<span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> arg0 <span class="keyword">of</span>
+<span class="keyword">|</span> Int _ <span class="keyword">=&gt;</span> <span class="dynstr">"Int"</span>
+<span class="keyword">|</span> Var _ <span class="keyword">=&gt;</span> <span class="dynstr">"Var"</span>
+<span class="keyword">|</span> Add _ <span class="keyword">=&gt;</span> <span class="dynstr">"Add"</span>
+<span class="keyword">|</span> Sub _ <span class="keyword">=&gt;</span> <span class="dynstr">"Sub"</span>
+<span class="keyword">|</span> Mul _ <span class="keyword">=&gt;</span> <span class="dynstr">"Mul"</span>
+<span class="keyword">|</span> Div _ <span class="keyword">=&gt;</span> <span class="dynstr">"Div"</span>
+<span class="keyword">|</span> Ifgtz _ <span class="keyword">=&gt;</span> <span class="dynstr">"Ifgtz"</span>
+<span class="keyword">|</span> Ifgtez _ <span class="keyword">=&gt;</span> <span class="dynstr">"Ifgtez"</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -318,7 +318,7 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1321"
+NAME="AEN1368"
 ></A
 ><PRE
 CLASS="programlisting"
@@ -343,12 +343,12 @@ CLASS="informalexample"
 ><P
 ></P
 ><A
-NAME="AEN1325"
+NAME="AEN1372"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{} datcon_expr : (expr) -&#62; string // a function template
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span> datcon_expr <span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">expr</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">string</span></span> <span class="comment">// a function template</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -383,7 +383,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="c1255.html"
+HREF="c1287.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -401,7 +401,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x1329.html"
+HREF="x1376.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -411,13 +411,13 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->スタックに確保されたクロージャ関数</TD
+>線形遅延ストリーム</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="p1181.html"
+HREF="p1176.html"
 ACCESSKEY="U"
 >Up</A
 ></TD

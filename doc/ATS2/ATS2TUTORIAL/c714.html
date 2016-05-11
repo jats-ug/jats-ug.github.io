@@ -1,0 +1,567 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ボックス化されたタプルとレコード</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="参照"
+HREF="c643.html"><LINK
+REL="NEXT"
+TITLE="永続化配列"
+HREF="c772.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c643.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c772.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="boxed_tuprec"
+></A
+>Chapter 15. ボックス化されたタプルとレコード</H1
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>ボックス化</I
+></SPAN
+> されたタプル/レコードは、フラットなタプル/レコードが保管されたメモリ位置への単なる参照です。
+しばしばフラットなタプル/レコードを表現するのに、<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>アンボックス化</I
+></SPAN
+> という用語も使われます。
+
+</P
+><P
+>&#13;次のコードでは、型 <FONT
+COLOR="RED"
+>abc_tup</FONT
+> と <FONT
+COLOR="RED"
+>abc_rec</FONT
+> はそれぞれボックス化タプルとボックス化レコードを表わしています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN722"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">typedef</span>
+<span class="staexp">abc_tup <span class="keyword">=</span> <span class="keyword">'(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">string</span><span class="keyword">)</span></span> <span class="comment">// for tuples</span>
+<span class="keyword">typedef</span>
+<span class="staexp">abc_rec <span class="keyword">=</span> <span class="keyword">'{</span><span class="stalab">a</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">b</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">c</span><span class="keyword">=</span><span class="staexp">string</span><span class="keyword">}</span></span> <span class="comment">// for records</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+単にタプルは、n がタプルの長さであるとき、タプルのラベルが 0 から n-1 の範囲固定であるような特殊なレコードであることに注意してください。
+<FONT
+COLOR="RED"
+>abc_tup</FONT
+> の場合、それに関連した3つのラベルは 0, 1, そして 2 です。
+<FONT
+COLOR="RED"
+>'(</FONT
+> と <FONT
+COLOR="RED"
+>'{</FONT
+> は ATS における特殊なシンボルであり、シングルクオートとの間にスペースをはさめないことに注意してください。
+このような特殊なシンボルの使用を避ける場合、型 <FONT
+COLOR="RED"
+>abc_tup</FONT
+> と <FONT
+COLOR="RED"
+>abc_rec</FONT
+> を次のような少し異なる構文で宣言できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN729"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">typedef</span>
+<span class="staexp">abc_tup <span class="keyword">=</span> <span class="keyword">$tup</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">string</span><span class="keyword">)</span></span> <span class="comment">// for tuples</span>
+<span class="keyword">typedef</span>
+<span class="staexp">abc_rec <span class="keyword">=</span> <span class="keyword">$rec</span><span class="keyword">{</span><span class="stalab">a</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">b</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">c</span><span class="keyword">=</span><span class="staexp">string</span><span class="keyword">}</span></span> <span class="comment">// for records</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+また、キーワード <FONT
+COLOR="RED"
+>$tup</FONT
+> と <FONT
+COLOR="RED"
+>$rec</FONT
+> はそれぞれ <FONT
+COLOR="RED"
+>$tuple</FONT
+> と <FONT
+COLOR="RED"
+>$record</FONT
+> で置き換えできます。
+
+</P
+><P
+>&#13;次のコードはタプルとレコード生成し、それらの要素 (すなわちフィールド) を取り出す方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN736"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> x_tup <span class="keyword">=</span> <span class="keyword">'(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">,</span> <span class="dynstr">"2"</span><span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">abc_tup</span></span>
+<span class="dynexp"><span class="keyword">val</span> x_rec <span class="keyword">=</span> <span class="keyword">'{</span><span class="dynlab">a</span><span class="keyword">=</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynlab">b</span><span class="keyword">=</span><span class="dynexp">1</span><span class="keyword">,</span> <span class="dynlab">c</span><span class="keyword">=</span><span class="dynstr">"2"</span><span class="keyword">}</span> <span class="keyword">:</span> <span class="staexp">abc_rec</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup<span class="dynexp"><span class="keyword">.0</span></span> <span class="keyword">=</span> x_rec<span class="dynexp"><span class="keyword">.</span>a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup<span class="dynexp"><span class="keyword">.1</span></span> <span class="keyword">=</span> x_rec<span class="dynexp"><span class="keyword">.</span>b</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup<span class="dynexp"><span class="keyword">.2</span></span> <span class="keyword">=</span> x_rec<span class="dynexp"><span class="keyword">.</span>c</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>x_tup</FONT
+> と <FONT
+COLOR="RED"
+>x_rec</FONT
+> は両方とも不変であることには注意すべきでしょう。
+もし次のコードを型検査すると、<FONT
+COLOR="RED"
+>x_tup.0</FONT
+> と <FONT
+COLOR="RED"
+>x_rec.a</FONT
+> が左辺値ではないというエラーになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN743"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> x_tup<span class="dynexp"><span class="keyword">.0</span></span> := <span class="dynexp">100</span></span> <span class="comment">// *ERROR*: x_tup.0 not a left-value</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> x_rec<span class="dynexp"><span class="keyword">.</span>a</span> := <span class="dynexp">100</span></span> <span class="comment">// *ERROR*: x_tup.0 not a left-value</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;可変フィールドのタプル/レコードを得るためには、フラットなタプル/レコードへの参照を作るだけです。
+次のコードでは、フラットなタプルとレコードを表わす型 <FONT
+COLOR="RED"
+>abc_tup_</FONT
+> と <FONT
+COLOR="RED"
+>abc_rec_</FONT
+> をそれぞれ宣言しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN748"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span>
+<span class="staexp">abc_tup_ <span class="keyword">=</span> <span class="keyword">@(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">string</span><span class="keyword">)</span></span> <span class="comment">// for tuples</span>
+<span class="keyword">typedef</span>
+<span class="staexp">abc_rec_ <span class="keyword">=</span> <span class="keyword">@{</span><span class="stalab">a</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">b</span><span class="keyword">=</span><span class="staexp">int</span><span class="keyword">,</span> <span class="stalab">c</span><span class="keyword">=</span><span class="staexp">string</span><span class="keyword">}</span></span> <span class="comment">// for records</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+そして、型 <FONT
+COLOR="RED"
+>abc_tup_r</FONT
+> と <FONT
+COLOR="RED"
+>abc_rec_r</FONT
+> はそれぞれ <FONT
+COLOR="RED"
+>abc_tup_</FONT
+> と <FONT
+COLOR="RED"
+>abc_rec_</FONT
+> で分類されたタプルとレコードへの参照を表わします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN754"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span> <span class="staexp">abc_tup_r <span class="keyword">=</span> <span class="staexp">ref</span><span class="keyword">(</span><span class="staexp">abc_tup_</span><span class="keyword">)</span></span> <span class="comment">// for tuples</span>
+<span class="keyword">typedef</span> <span class="staexp">abc_rec_r <span class="keyword">=</span> <span class="staexp">ref</span><span class="keyword">(</span><span class="staexp">abc_rec_</span><span class="keyword">)</span></span> <span class="comment">// for records</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+次のコードは、可変フィールドのタプルとレコードを生成し、それらのフィールドにアクセス/更新する方法を示しています。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN756"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> x_tup_r <span class="keyword">=</span> ref&lt;<span class="staexp">abc_tup_</span><span class="keyword">&gt;</span><span class="keyword">(</span><span class="keyword">@(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">,</span> <span class="dynstr">"2"</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> x_rec_r <span class="keyword">=</span> ref&lt;<span class="staexp">abc_rec_</span><span class="keyword">&gt;</span><span class="keyword">(</span><span class="keyword">@{</span><span class="dynlab">a</span><span class="keyword">=</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynlab">b</span><span class="keyword">=</span><span class="dynexp">1</span><span class="keyword">,</span> <span class="dynlab">c</span><span class="keyword">=</span><span class="dynstr">"2"</span><span class="keyword">}</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup_r<span class="dynexp"><span class="keyword">-&gt;</span>0</span> <span class="keyword">=</span> x_rec_r<span class="dynexp"><span class="keyword">-&gt;</span>a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup_r<span class="dynexp"><span class="keyword">-&gt;</span>1</span> <span class="keyword">=</span> x_rec_r<span class="dynexp"><span class="keyword">-&gt;</span>b</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_tup_r<span class="dynexp"><span class="keyword">-&gt;</span>2</span> <span class="keyword">=</span> x_rec_r<span class="dynexp"><span class="keyword">-&gt;</span>c</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> x_tup_r<span class="dynexp"><span class="keyword">-&gt;</span>0</span> := <span class="dynexp">100</span></span> <span class="comment">// *OKAY*: x_tup_r.0 is a left-value</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> x_rec_r<span class="dynexp"><span class="keyword">-&gt;</span>a</span> := <span class="dynexp">100</span></span> <span class="comment">// *OKAY*: x_rec_r.a is a left-value</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;あるフィールドが読み出しのみで他のフィールドは更新できるような型のレコードが欲しいなら、ATS の抽象型のサポートを使うことで実現できます。
+次の例では、<FONT
+COLOR="RED"
+>myrec</FONT
+> は抽象的に宣言されています;
+<FONT
+COLOR="RED"
+>myrec</FONT
+> に関連した3つのフィールドがあり、それらは名前 <FONT
+COLOR="RED"
+>a</FONT
+>, <FONT
+COLOR="RED"
+>b</FONT
+>, <FONT
+COLOR="RED"
+>c</FONT
+> です;
+最初の2つは更新可能であるが、3つめは読み出ししかできません:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN764"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">(* ****** ****** *)</span>
+
+<span class="staexp"><span class="keyword">abstype</span> myrec <span class="keyword">=</span> ptr</span>  
+
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_make
+<span class="keyword">(</span>
+  a<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> b<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> c<span class="keyword">:</span> <span class="staexp">string</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">myrec</span></span> <span class="comment">// end-of-function</span>
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_get_a <span class="keyword">:</span> <span class="staexp">myrec</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_set_a <span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">myrec</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">void</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_get_b <span class="keyword">:</span> <span class="staexp">myrec</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_set_b <span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">myrec</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">void</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+myrec_get_c <span class="keyword">:</span> <span class="staexp">myrec</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">string</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">.</span>a <span class="keyword">with</span> myrec_get_a</span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">.</span>a <span class="keyword">with</span> myrec_set_a</span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">.</span>b <span class="keyword">with</span> myrec_get_b</span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">.</span>b <span class="keyword">with</span> myrec_set_b</span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">.</span>c <span class="keyword">with</span> myrec_get_c</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+
+<span class="keyword">local</span>
+<span class="comment">//</span>
+<span class="staexp"><span class="keyword">assume</span> myrec <span class="keyword">=</span> abc_rec_r</span>
+<span class="comment">//</span>
+<span class="keyword">in</span> <span class="comment">(* in-of-local *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span><span class="comment">(*tmp*)</span>
+myrec_make
+  <span class="keyword">(</span>a<span class="keyword">,</span> b<span class="keyword">,</span> c<span class="keyword">)</span> <span class="keyword">=</span> ref<span class="keyword">(</span><span class="keyword">@{</span><span class="dynlab">a</span><span class="keyword">=</span>a<span class="keyword">,</span> <span class="dynlab">b</span><span class="keyword">=</span>b<span class="keyword">,</span> <span class="dynlab">c</span><span class="keyword">=</span>c<span class="keyword">}</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span> myrec_get_a<span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> x<span class="dynexp"><span class="keyword">-&gt;</span>a</span></span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span> myrec_set_a<span class="keyword">(</span>x<span class="keyword">,</span> a<span class="keyword">)</span> <span class="keyword">=</span> x<span class="dynexp"><span class="keyword">-&gt;</span>a</span> := a</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span> myrec_get_b<span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> x<span class="dynexp"><span class="keyword">-&gt;</span>b</span></span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span> myrec_set_b<span class="keyword">(</span>x<span class="keyword">,</span> b<span class="keyword">)</span> <span class="keyword">=</span> x<span class="dynexp"><span class="keyword">-&gt;</span>b</span> := b</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp"><span class="keyword">}</span></span> myrec_get_c<span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> x<span class="dynexp"><span class="keyword">-&gt;</span>c</span></span>
+<span class="comment">(*
+//
+// there is no update for the c-field:
+//
+implement{} myrec_set_a(x, c) = x-&gt;c := c
+*)</span>
+<span class="comment">//</span>
+<span class="keyword">end</span> <span class="comment">// end of [local]</span>
+
+<span class="comment">(* ****** ****** *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+次のコードは型 <FONT
+COLOR="RED"
+>myrec</FONT
+> のレコードを生成し、生成されたレコードのいくつかのフィールドをアクセス/更新しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN767"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> x_abc <span class="keyword">=</span> myrec_make<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">,</span> <span class="dynstr">"2"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_abc<span class="dynexp"><span class="keyword">.</span>a</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_abc<span class="dynexp"><span class="keyword">.</span>b</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_abc<span class="dynexp"><span class="keyword">.</span>c</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynstr">"2"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> x_abc<span class="dynexp"><span class="keyword">.</span>a</span><span class="keyword">(</span><span class="dynexp">100</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_abc<span class="dynexp"><span class="keyword">.</span>a</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">100</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> x_abc<span class="dynexp"><span class="keyword">.</span>b</span><span class="keyword">(</span><span class="dynexp">101</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc<span class="keyword">(</span>x_abc<span class="dynexp"><span class="keyword">.</span>b</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">101</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">(*
+val ((*void*)) = x_abc.c("102") // *ERROR*: unsupported
+*)</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この例 (<FONT
+COLOR="RED"
+>myrec</FONT
+>) は読み出しのみのフィールドと更新可能なフィールドの両方を含むレコードをコンストラクトするアプローチを示していますが、このアプローチは少し冗長です。
+1つの可能性としては、このような冗長さを大きく減少させるために (ボイラープレートコードのため) メタプログラミングの機能を開発することです。
+
+</P
+><P
+>&#13;この章で使ったコードとテストコードの全体は <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_tuprec_1.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c643.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c772.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>参照</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>永続化配列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,415 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>スタックに確保されたクロージャ関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="高度なチュートリアル"
+HREF="p1176.html"><LINK
+REL="PREVIOUS"
+TITLE="線形クロージャ関数"
+HREF="c1203.html"><LINK
+REL="NEXT"
+TITLE="線形遅延ストリーム"
+HREF="c1287.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1203.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1287.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="stkclo"
+></A
+>Chapter 27. スタックに確保されたクロージャ関数</H1
+><P
+>&#13;高階関数は、コードの形を再利用するのにとても便利なプログラミングの機能です。
+高階関数呼び出しへの引数として渡された関数はしばしば実行時にヒープ上に生成されたクロージャ関数で、その呼び出しの後ではもはや使われないことを意図しています。
+もしそのクロージャ関数が線形なら、それはプログラマが明示的に解放する必要があります (そうでなければ型検査中に型エラーが発生します)。
+もしそのクロージャ関数が非線形なら、そのメモリはガベージコレクション (GC) によって回収されなければなりません (そうでなければメモリリークになります)。
+
+</P
+><P
+>&#13;ヒープに確保されたクロージャ関数の生成は動的なメモリ確保 (DMA) を必要としています。
+制限された環境 (例: 組み込みプログラミング) では、DMA は (完全には) サポートされていないかもしれません。
+DMA のサポートのない環境でのクロージャ関数の生成の1つの選択肢は、呼び出し関数のスタックフレームにそれを保管することです。
+ATS にはこれを行なうための特殊な構文があります。
+
+</P
+><P
+>&#13;スタックに確保されたクロージャの実例を見てみましょう。
+次のコードは高階関数テンプレートを実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1255"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>res<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+ifold<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> fopr<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">natLt</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">res</span><span class="keyword">,</span> ini<span class="keyword">:</span> <span class="staexp">res</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+loop
+<span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">res</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> n <span class="keyword">then</span> loop<span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">,</span> fopr<span class="keyword">(</span>res<span class="keyword">,</span> i<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> res</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> ini<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [ifold]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+本質的に、<FONT
+COLOR="RED"
+>ifold(n, fopr, ini)</FONT
+> は式 <FONT
+COLOR="RED"
+>fopr(...fopr(fopr(ini, 0), 1)..., n-1)</FONT
+> を評価します。
+例えば、2つのベクトルのドット積 (もしくは内積) を計算する 関数 <FONT
+COLOR="RED"
+>dotprod</FONT
+> は <FONT
+COLOR="RED"
+>ifold</FONT
+> 呼び出しを使って実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1261"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span> <span class="staexp">res <span class="keyword">=</span> <span class="staexp">double</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+dotprod
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> A<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> B<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  ifold&lt;<span class="staexp">res</span><span class="keyword">&gt;</span><span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span><span class="keyword">(</span>res<span class="keyword">,</span> i<span class="keyword">)</span> <span class="keyword">=&gt;</span> res + <span class="dynexp">A[i<span class="keyword">]</span></span>*<span class="dynexp">B[i<span class="keyword">]</span></span><span class="keyword">,</span> <span class="dynexp">0.0</span><span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>ifold</FONT
+> 呼び出しへの第二引数は、実行時にヒープ上に生成されたクロージャで、この呼び出しが戻った後はもう使用できません。
+また、関数 <FONT
+COLOR="RED"
+>dotprod</FONT
+> は次のようにも実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1265"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+dotprod
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> A<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> B<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="keyword">var</span>
+fopr <span class="keyword">=</span>
+<span class="keyword">lam@</span><span class="keyword">(</span>res<span class="keyword">:</span> <span class="staexp">res</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">natLt</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=&gt;</span> res + <span class="dynexp">A[i<span class="keyword">]</span></span>*<span class="dynexp">B[i<span class="keyword">]</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  ifold&lt;<span class="staexp">res</span><span class="keyword">&gt;</span><span class="keyword">(</span>n<span class="keyword">,</span> $UNSAFE<span class="keyword">.</span>cast<span class="keyword">(</span><span class="dynexp"><span class="keyword">addr@</span></span>fopr<span class="keyword">)</span><span class="keyword">,</span> <span class="dynexp">0.0</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [dotprod]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+(<FONT
+COLOR="RED"
+>lam</FONT
+> ではなく) キーワード <FONT
+COLOR="RED"
+>lam@</FONT
+> は与えられた位置にアンボックス化クロージャを生成します。
+上記の例では、変数 <FONT
+COLOR="RED"
+>fopr</FONT
+> は <FONT
+COLOR="RED"
+>dotprod</FONT
+> のスタックフレームに位置していて、生成されたクロージャは <FONT
+COLOR="RED"
+>fopr</FONT
+> で予約されたメモリに保管されます。
+ATS コンパイラは、クロージャを保管するのにメモリが十分大きいことを保証します。
+(安全でない) キャスト呼び出しは、<FONT
+COLOR="RED"
+>ifold</FONT
+> に渡せるようにするため、<FONT
+COLOR="RED"
+>fopr</FONT
+> のアドレスをボックス化クロージャに変化させます。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>dotprod</FONT
+> の実装における (安全でない) キャスト削除するために、次のような <FONT
+COLOR="RED"
+>ifold</FONT
+> の変種を実装する必要があります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1277"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>res<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+ifold_<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> fopr<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">natLt</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">clo1</span><span class="keyword">&gt;</span> <span class="staexp">res</span><span class="keyword">,</span> ini<span class="keyword">:</span> <span class="staexp">res</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+loop
+<span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">&gt;.</span>
+<span class="keyword">(</span>
+  i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span>
+<span class="keyword">,</span> fopr<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">natLt</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">clo1</span><span class="keyword">&gt;</span> <span class="staexp">res</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">res</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> n
+    <span class="keyword">then</span> loop<span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">,</span> fopr<span class="keyword">,</span> fopr<span class="keyword">(</span>res<span class="keyword">,</span> i<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> res</span>
+  <span class="comment">// end of [if]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> fopr<span class="keyword">,</span> ini<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [ifold_]</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+dotprod_
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> A<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> B<span class="keyword">:</span> <span class="staexp">arrayref</span><span class="keyword">(</span><span class="staexp">res</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="keyword">var</span>
+fopr <span class="keyword">=</span>
+<span class="keyword">lam@</span><span class="keyword">(</span>res<span class="keyword">:</span> <span class="staexp">res</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">natLt</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">res</span> <span class="keyword">=&gt;</span> res + <span class="dynexp">A[i<span class="keyword">]</span></span>*<span class="dynexp">B[i<span class="keyword">]</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  ifold_&lt;<span class="staexp">res</span><span class="keyword">&gt;</span><span class="keyword">(</span>n<span class="keyword">,</span> fopr<span class="keyword">,</span> <span class="dynexp">0.0</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [dotprod_]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>ifold_</FONT
+> の第二引数は参照渡しであることに注意してください。
+注釈付きに矢印 <FONT
+COLOR="RED"
+>-&#60;clo1&#62;</FONT
+> はアンボックス化されたクロージャを表わす関数の型を作るのに使われます。
+(アンボックス化されたクロージャを表わす) 左辺値は <FONT
+COLOR="RED"
+>ifold_</FONT
+> 呼び出しの第二引数として渡され、このとき実行時に実際に渡されるのはこの左辺値のアドレスです。
+<FONT
+COLOR="RED"
+>ifold_</FONT
+> 呼び出しを使うことで、関数 <FONT
+COLOR="RED"
+>dotprod</FONT
+> は <FONT
+COLOR="RED"
+>dotprod_</FONT
+> のような安全な実装ができるのです。
+
+</P
+><P
+>&#13;この章で用いたコード全体とテストコードは <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_stkclo.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1203.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1287.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>線形クロージャ関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p1176.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形遅延ストリーム</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

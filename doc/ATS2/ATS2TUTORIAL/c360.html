@@ -1,0 +1,678 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>データ型</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="再帰"
+HREF="c307.html"><LINK
+REL="NEXT"
+TITLE="関数的なリスト"
+HREF="c447.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c307.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c447.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="datatypes"
+></A
+>Chapter 10. データ型</H1
+><P
+>&#13;データ型は、データ (もしくは値) を分類するためのユーザ定義の型です。
+ATS におけるデータ型とパターンマッチは ML に由来しています。
+
+</P
+><P
+>&#13;次のコードは、平日を示す値を表わす、名前 <FONT
+COLOR="RED"
+>weekday</FONT
+> のデータ型を宣言しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN365"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">weekday <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">Monday</span> <span class="keyword">|</span> <span class="dynexp">Tuesday</span> <span class="keyword">|</span> <span class="dynexp">Wednesday</span> <span class="keyword">|</span> <span class="dynexp">Thursday</span> <span class="keyword">|</span> <span class="dynexp">Friday</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは <FONT
+COLOR="RED"
+>weekday</FONT
+> に関連する5つのデータコンストラクタがあり、それらは
+<FONT
+COLOR="RED"
+>Monday</FONT
+>,
+<FONT
+COLOR="RED"
+>Tuesday</FONT
+>,
+<FONT
+COLOR="RED"
+>Wednesday</FONT
+>,
+<FONT
+COLOR="RED"
+>Thursday</FONT
+>,
+<FONT
+COLOR="RED"
+>Friday</FONT
+> です。
+
+これらのデータコンストラクタは全て無引数 (nullary) です。
+すなわち、それらは (<FONT
+COLOR="RED"
+>weekday</FONT
+> 型の) 値を作るのに引数を取りません。
+</P
+><P
+>&#13;それぞれの無引数コンストラクタは (例えば 1024 より小さいような) 小さな整数として表現されます。
+次の関数 <FONT
+COLOR="RED"
+>weekday2int</FONT
+> を使うと、<FONT
+COLOR="RED"
+>weekday</FONT
+> に関連するコンストラクタを表わす整数を調べることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN377"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">staload</span> UN <span class="keyword">=</span> "prelude/SATS/unsafe.sats"
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+weekday2int
+  <span class="keyword">(</span>wd<span class="keyword">:</span> <span class="staexp">weekday</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>$UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>intptr<span class="keyword">}</span></span><span class="keyword">(</span>wd<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+無引数コンストラクタを表わす小さな整数は、コンストラクタのタグとしばしば呼ばれます。
+
+この場合、
+<FONT
+COLOR="RED"
+>Monday</FONT
+>,
+<FONT
+COLOR="RED"
+>Tuesday</FONT
+>,
+<FONT
+COLOR="RED"
+>Wednesday</FONT
+>,
+<FONT
+COLOR="RED"
+>Thursday</FONT
+>,
+<FONT
+COLOR="RED"
+>Friday</FONT
+>
+に対するタグは、それぞれ 0, 1, 2, 3, 4 になります。
+</P
+><P
+>&#13;無引数コンストラクタ <FONT
+COLOR="RED"
+>foo</FONT
+> が与えられたとき、<FONT
+COLOR="RED"
+>foo</FONT
+>
+でコンストラクトされた値を参照するために、<FONT
+COLOR="RED"
+>foo</FONT
+> と <FONT
+COLOR="RED"
+>foo()</FONT
+>
+の両方を使うことができます。
+けれどもこの値にマッチするパターンとして使えるのは <FONT
+COLOR="RED"
+>foo()</FONT
+> のみです。
+例えば次の関数は、与えられた型 <FONT
+COLOR="RED"
+>weekday</FONT
+> の値がコンストラクタ <FONT
+COLOR="RED"
+>Friday</FONT
+> で作られたかどうか確認しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN392"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+isFriday<span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">weekday</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span>
+  <span class="keyword">case+</span> x <span class="keyword">of</span> Friday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true <span class="keyword">|</span> _ <span class="keyword">=&gt;</span> false</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+パターン <FONT
+COLOR="RED"
+>Friday()</FONT
+> を <FONT
+COLOR="RED"
+>Friday</FONT
+> で置き換えられないことに注意してください。
+パターンとして使われると後者は値として使われます。
+一方で、次のアサートは実行時に扱われるので、<FONT
+COLOR="RED"
+>Friday</FONT
+> と <FONT
+COLOR="RED"
+>Friday()</FONT
+> は同じ値を指します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN398"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>isFriday<span class="keyword">(</span>Friday<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>isFriday<span class="keyword">(</span>Friday<span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;データ型に関連したコンストラクタが1つだけの場合、このデータ型の値を表わすタグはありません。
+
+</P
+><P
+>&#13;データ型に関連する2つのデータコンストラクタとして一方は無引数 (nil-like) でもう一方が無引数でない (cons-like) があるなら、そのデータ型は list-like です。
+例えば、次のように宣言されたデータ型 <FONT
+COLOR="RED"
+>ab</FONT
+> はリスト的です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN403"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">ab <span class="keyword">=</span> <span class="dynexp">A <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="dynexp">B <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">bool</span><span class="keyword">)</span></span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+list-like なデータ型の値は特別な方法で表現されます。
+そのデータ型の値が与えられたとき;
+もし nil-like なコンストラクタでコンストラクトされていたら、それは NULL ポインタで表現されます;
+もし cons-like なコンストラクタでコンストラクトされていたら、それはそのコンストラクタに渡された引数全てを含む (ヒープに確保された) タプルで表現されます。
+
+上記の場合、値 <FONT
+COLOR="RED"
+>A()</FONT
+> は NULL ポインタで表わされ、ブール <FONT
+COLOR="RED"
+>b</FONT
+> に対する値 <FONT
+COLOR="RED"
+>B(b)</FONT
+>
+は <FONT
+COLOR="RED"
+>b</FONT
+> のみを含む (ヒープに確保された) シングルトンタプルとして表わされます。
+この説明は次のコードで簡単に確認できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN409"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>iseqz<span class="keyword">(</span>$UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>ptr<span class="keyword">}</span></span><span class="keyword">(</span>A<span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>true <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_get&lt;<span class="staexp">bool</span><span class="keyword">&gt;</span><span class="keyword">(</span>$UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>ptr<span class="keyword">}</span></span><span class="keyword">(</span>B<span class="keyword">(</span>true<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>false <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_get&lt;<span class="staexp">bool</span><span class="keyword">&gt;</span><span class="keyword">(</span>$UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>ptr<span class="keyword">}</span></span><span class="keyword">(</span>B<span class="keyword">(</span>false<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;次の宣言は名前 <FONT
+COLOR="RED"
+>abc</FONT
+> のデータ型を導入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN413"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">abc <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">A <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="dynexp">B <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">bool</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="dynexp">C <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">double</span><span class="keyword">)</span></span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>abc</FONT
+> に関連する3つのコンストラクタは <FONT
+COLOR="RED"
+>A</FONT
+>, <FONT
+COLOR="RED"
+>B</FONT
+>, <FONT
+COLOR="RED"
+>C</FONT
+> です;
+<FONT
+COLOR="RED"
+>A</FONT
+> は無引数です;
+<FONT
+COLOR="RED"
+>B</FONT
+> の引数は1つで、(<FONT
+COLOR="RED"
+>abc</FONT
+> 型の) 値を作るためにブールを取ります;
+<FONT
+COLOR="RED"
+>C</FONT
+> の引数は2つで、(<FONT
+COLOR="RED"
+>abc</FONT
+> 型の) 値を作るために整数と (double 制度の) 浮動小数点数を取ります。
+
+</P
+><P
+>&#13;一般に、なんらかの正の整数 n についてデータコンストラクタが n
+個の引数を取るなら、コンストラクトされた値であるヒープに確保されたタプルは n+1 個の要素を持ちます。
+このとき最初の1つはコンストラクタに割り当てられたタグで、残りはコンストラクタに渡された引数です。
+例えば、次の関数を使うと <FONT
+COLOR="RED"
+>abc</FONT
+> に関連するコンストラクタに割り当てられたタグを調べることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN426"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+abc2tag
+<span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">abc</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> p <span class="keyword">=</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>intptr<span class="keyword">}</span></span><span class="keyword">(</span>x<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> <span class="dynexp">0</span> <span class="keyword">of</span>
+<span class="keyword">|</span> _ <span class="keyword">when</span> p <span class="keyword">&lt;</span> <span class="dynexp">1024</span> <span class="keyword">=&gt;</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>p<span class="keyword">)</span>
+<span class="keyword">|</span> _ <span class="comment">(*heap-allocated*)</span> <span class="keyword">=&gt;</span> $UN<span class="keyword">.</span>ptr0_get&lt;<span class="staexp">int</span><span class="keyword">&gt;</span><span class="keyword">(</span>$UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>ptr<span class="keyword">}</span></span><span class="keyword">(</span>p<span class="keyword">)</span><span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [abc2tag]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この場合、<FONT
+COLOR="RED"
+>A</FONT
+>, <FONT
+COLOR="RED"
+>B</FONT
+>, <FONT
+COLOR="RED"
+>C</FONT
+> に割り当てられたタグはそれぞれ 0, 1, 2 です。
+
+</P
+><P
+>&#13;データ型は再帰的に定義できます。
+例えば、次の宣言は再帰的な定義された (算術整数式を表わす) データ型 <FONT
+COLOR="RED"
+>intexp</FONT
+> を導入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN433"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span>
+<span class="staexp">intexp <span class="keyword">=</span>
+<span class="keyword">|</span> <span class="dynexp">Int <span class="keyword">of</span> <span class="staexp">int</span></span>
+<span class="keyword">|</span> <span class="dynexp">Neg <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp">Add <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp">Sub <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+例えば、<FONT
+COLOR="RED"
+>(1+2)-3</FONT
+> は <FONT
+COLOR="RED"
+>Sub(Add(Int(1), Int(2)), Int(3))</FONT
+> のように表現できます。
+別の例として、次のコードは2つの相互再帰的に定義されたデータ型 <FONT
+COLOR="RED"
+>intexp</FONT
+> と <FONT
+COLOR="RED"
+>boolexp</FONT
+>
+(それぞれ整数式とブール式を表わします) を導入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN439"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">datatype</span>
+<span class="staexp">intexp <span class="keyword">=</span>
+<span class="keyword">|</span> <span class="dynexp">Int <span class="keyword">of</span> <span class="staexp">int</span></span>
+<span class="keyword">|</span> <span class="dynexp">Neg <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp">Add <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp">Sub <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp">IfThenElse <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">boolexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span></span>
+
+<span class="keyword">and</span>
+<span class="staexp">boolexp <span class="keyword">=</span>
+<span class="keyword">|</span> <span class="dynexp">Bool <span class="keyword">of</span> <span class="staexp">bool</span></span> <span class="comment">// constant</span>
+<span class="keyword">|</span> <span class="dynexp">Not <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">boolexp</span><span class="keyword">)</span></span> <span class="comment">// negation</span>
+<span class="keyword">|</span> <span class="dynexp">Less <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span> <span class="comment">// Less(x, y): x &lt; y</span>
+<span class="keyword">|</span> <span class="dynexp">LessEq <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">intexp</span><span class="keyword">,</span> <span class="staexp">intexp</span><span class="keyword">)</span></span> <span class="comment">// LessEq(x, y): x &lt;= y</span>
+<span class="keyword">|</span> <span class="dynexp">Conj <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">boolexp</span><span class="keyword">,</span> <span class="staexp">boolexp</span><span class="keyword">)</span></span> <span class="comment">// Conj(x, y): x / y</span>
+<span class="keyword">|</span> <span class="dynexp">Disj <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">boolexp</span><span class="keyword">,</span> <span class="staexp">boolexp</span><span class="keyword">)</span></span></span> <span class="comment">// Disj(x, y): x / y</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+以下コードは、整数式とブール式の評価を表わす2つの相互再帰関数
+<FONT
+COLOR="RED"
+>eval_intexp</FONT
+> を <FONT
+COLOR="RED"
+>eval_boolexp</FONT
+> それぞれ実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN443"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="neuexp"><span class="keyword">symintr</span> eval</span>
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> eval_intexp <span class="keyword">:</span> <span class="staexp">intexp</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> eval_boolexp <span class="keyword">:</span> <span class="staexp">boolexp</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">bool</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">overload</span> eval <span class="keyword">with</span> eval_intexp</span>
+<span class="dynexp"><span class="keyword">overload</span> eval <span class="keyword">with</span> eval_boolexp</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span>
+eval_intexp
+  <span class="keyword">(</span>e0<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> e0 <span class="keyword">of</span>
+<span class="keyword">|</span> Int <span class="keyword">(</span>i<span class="keyword">)</span> <span class="keyword">=&gt;</span> i
+<span class="keyword">|</span> Neg <span class="keyword">(</span>e<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">~</span>eval<span class="keyword">(</span>e<span class="keyword">)</span>
+<span class="keyword">|</span> Add <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> + eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> Sub <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> - eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IfThenElse
+    <span class="keyword">(</span>e_test<span class="keyword">,</span> e_then<span class="keyword">,</span> e_else<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">if</span> eval<span class="keyword">(</span>e_test<span class="keyword">)</span> <span class="keyword">then</span> eval<span class="keyword">(</span>e_then<span class="keyword">)</span> <span class="keyword">else</span> eval<span class="keyword">(</span>e_else<span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [eval_intexp] *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span>
+eval_boolexp
+  <span class="keyword">(</span>e0<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> e0 <span class="keyword">of</span>
+<span class="keyword">|</span> Bool <span class="keyword">(</span>b<span class="keyword">)</span> <span class="keyword">=&gt;</span> b
+<span class="keyword">|</span> Not <span class="keyword">(</span>e<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">~</span>eval<span class="keyword">(</span>e<span class="keyword">)</span>
+<span class="keyword">|</span> Less <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">&lt;</span> eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> LessEq <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> &lt;= eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> Conj <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> &amp;&amp; eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> Disj <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval<span class="keyword">(</span>e1<span class="keyword">)</span> || eval<span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [eval_boolexp] *)</span>
+<span class="comment">//</span>
+<span class="comment">(* ****** ****** *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この章で紹介したデータ型は単純なデータ型です。
+データ型のより進んだ形として、多相データ型, 依存データ型, 線形データ型 があります。
+それらをどこかで紹介することになるでしょう。
+
+</P
+><P
+>&#13;この章で使ったコード全体とテストコードは <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_datatypes.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c307.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c447.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>再帰</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>関数的なリスト</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

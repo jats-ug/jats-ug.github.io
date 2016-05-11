@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>サイズを伴う永続化行列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="永続化行列"
+HREF="c868.html"><LINK
+REL="NEXT"
+TITLE="永続化ハッシュテーブル"
+HREF="c923.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c868.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c923.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="mtrxszref"
+></A
+>Chapter 19. サイズを伴う永続化行列</H1
+><P
+>&#13;次元情報 (つまり列の数や行の数)
+が付属した永続化行列を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>サイズを伴う行列 (matrix-with-size)</I
+></SPAN
+> と呼びます。
+観型 VT が与えられたとき、観型 VT の要素を M 列と N
+行含むサイズを伴う行列の型は <FONT
+COLOR="RED"
+>mtrxszref(VT, M, N)</FONT
+> です。
+本質的に、この型の値は3つの型
+<FONT
+COLOR="RED"
+>arrayref(VT, N)</FONT
+>, <FONT
+COLOR="RED"
+>size_t(M)</FONT
+>, <FONT
+COLOR="RED"
+>size_t(N)</FONT
+>
+を構成要素とするボックス化レコードです。
+サイズを伴う永続化行列に関する様々な関数のインターフェイスを
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/matrixref.sats"
+TARGET="_top"
+>prelude/SATS/matrixref.sats</A
+>
+に見つけることができます。
+
+</P
+><P
+>&#13;次の関数はサイズを伴う行列を生成するのに一般的に使用されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN902"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+mtrxszref_make_elt <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">mtrxref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="comment">// end of [mtrxszref_make_elt]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2つのサイズ m, n と要素 x0 が与えられたとき、
+<FONT
+COLOR="RED"
+>mtrxszref_make_elt</FONT
+> はそれぞれの行列セルが与えられた要素 x0 で初期化された次元 m, n のサイズを伴う行列を返します。
+</P
+><P
+>&#13;行列セルの内容物にアクセスしたり更新したりするために、
+次の2つの関数 <FONT
+COLOR="RED"
+>mtrxszref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>mtrxszref_set_at</FONT
+> を使うことができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN908"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+mtrxszref_get_at <span class="keyword">(</span>M<span class="keyword">:</span> <span class="staexp">mtrxszref</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+mtrxszref_set_at <span class="keyword">(</span>M<span class="keyword">:</span> <span class="staexp">mtrxszref</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+サイズを伴う行列 M と2つのインデックス i, j と値 v
+が与えられたとき、<FONT
+COLOR="RED"
+>mtrxszref_get_at(M, i, j)</FONT
+> と <FONT
+COLOR="RED"
+>mtrxszref_set_at(M, i, j, v)</FONT
+>
+はそれぞれ <FONT
+COLOR="RED"
+>M[i,j]</FONT
+> と <FONT
+COLOR="RED"
+>M[i,j] := v</FONT
+> のように書くことができます。
+<FONT
+COLOR="RED"
+>mtrxszref_get_at</FONT
+> もしくは <FONT
+COLOR="RED"
+>mtrxszref_set_at</FONT
+>
+が呼び出されると実行時に行列の範囲検査が行なわれ、行列の範囲外アクセスを検出すると例外
+<FONT
+COLOR="RED"
+>MatrixSubscriptExn</FONT
+> が発生することに注意してください。
+
+</P
+><P
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う行列の中身の転置行列を取る関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN918"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+mtrxszref_transpose <span class="keyword">(</span>M<span class="keyword">:</span> <span class="staexp">mtrxszref</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span>
+mtrxszref_transpose
+  <span class="keyword">(</span>M<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> n <span class="keyword">=</span> M<span class="dynexp"><span class="keyword">.</span>nrow</span><span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>M<span class="dynexp"><span class="keyword">.</span>nrow</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> M<span class="dynexp"><span class="keyword">.</span>ncol</span><span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop
+<span class="keyword">(</span>
+  i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">size_t</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> j <span class="keyword">&lt;</span> n <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x <span class="keyword">=</span> <span class="dynexp">M[i<span class="keyword">,</span>j<span class="keyword">]</span></span></span>
+    <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">M[i<span class="keyword">,</span>j<span class="keyword">]</span></span> := <span class="dynexp">M[j<span class="keyword">,</span>i<span class="keyword">]</span></span></span>
+    <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">M[j<span class="keyword">,</span>i<span class="keyword">]</span></span> := x</span>
+  <span class="keyword">in</span>
+    loop<span class="keyword">(</span>i<span class="keyword">,</span> succ<span class="keyword">(</span>j<span class="keyword">)</span><span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> i1 <span class="keyword">=</span> succ <span class="keyword">(</span>i<span class="keyword">)</span></span>
+  <span class="keyword">in</span>
+    <span class="keyword">if</span> i1 <span class="keyword">&lt;</span> n <span class="keyword">then</span> loop<span class="keyword">(</span>i1<span class="keyword">,</span> succ<span class="keyword">(</span>i1<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span>
+  <span class="keyword">end</span></span> <span class="comment">// end of [if]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> loop<span class="keyword">(</span>i2sz<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span><span class="keyword">,</span> i2sz<span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [mtrxszref_transpose]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;サイズを伴う配列と同様に、サイズを伴う行列は依存型行列よりも簡単にプログラミングできます。
+けれども、後者はコンパイル時にエラーを効果的に検出することができず、実行時のコード実行で検出します。
+ATS でプログラミングする際、サイズを伴う行列からはじめて、その恩恵が明確になった後で行列に置き換えるのは妥当でしょう。
+</P
+><P
+>&#13;この章で紹介したコードの全体は
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_mtrxszref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c868.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c923.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>永続化行列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>永続化ハッシュテーブル</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

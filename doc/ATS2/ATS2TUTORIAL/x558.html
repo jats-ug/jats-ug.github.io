@@ -1,0 +1,446 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>関数的な写像</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="関数的な集合と写像"
+HREF="c515.html"><LINK
+REL="PREVIOUS"
+TITLE="関数的な集合と写像"
+HREF="c515.html"><LINK
+REL="NEXT"
+TITLE="例外"
+HREF="c608.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c515.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. 関数的な集合と写像</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c608.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="funsetmap_map"
+>関数的な写像</A
+></H1
+><P
+>&#13;型 <FONT
+COLOR="RED"
+>key_t</FONT
+> のキーから型 <FONT
+COLOR="RED"
+>itm_t</FONT
+> の要素へマップを表わすのに、写像が必要だと考えます。
+次のコードは本質的に、ATSLIB/libats にて平衡木で実装された写像に対する生成と操作のインターフェイスを作っています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN563"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">local</span>
+<span class="comment">//</span>
+<span class="keyword">typedef</span>
+<span class="staexp">key <span class="keyword">=</span> <span class="staexp">key_t</span></span> <span class="keyword">and</span> <span class="staexp">itm <span class="keyword">=</span> <span class="staexp">itm_t</span></span>
+<span class="comment">//</span>
+<span class="keyword">staload</span>
+FM <span class="keyword">=</span> "libats/ML/SATS/funmap.sats"
+<span class="dynexp"><span class="keyword">implement</span>
+$FM<span class="keyword">.</span>compare_key_key&lt;<span class="staexp">key</span><span class="keyword">&gt;</span><span class="keyword">(</span>x<span class="keyword">,</span> y<span class="keyword">)</span> <span class="keyword">=</span> compare<span class="keyword">(</span>x<span class="keyword">,</span> y<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span> <span class="comment">(* in-of-local *)</span>
+
+<span class="neuexp"><span class="keyword">#include</span> "libats/ML/HATS/myfunmap.hats"</span>
+
+<span class="keyword">end</span> <span class="comment">// end of [local]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+関数的な写像を用いたプログラミングを単純化するためのラッパーである HATS ファイルは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/libats/ML/HATS/myfunmap.hats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+シンボル <FONT
+COLOR="RED"
+>compare</FONT
+> をオーバーロードする型 <FONT
+COLOR="RED"
+>key_t</FONT
+>の値に対する比較関数があることを、ここでは仮定していることに注意してください。
+存在しない場合、そのような関数を実装する必要があります。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>key_t</FONT
+> が <FONT
+COLOR="RED"
+>string</FONT
+> で <FONT
+COLOR="RED"
+>itm_t</FONT
+> が <FONT
+COLOR="RED"
+>int</FONT
+> であると仮定します。
+コードの次の行では、要素を含まない (整数の) 関数的な写像を生成しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN573"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> mymap <span class="keyword">=</span> myfunmap_nil<span class="keyword">(</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+次の数行では、キー/要素のペアを <FONT
+COLOR="RED"
+>mymap</FONT
+> に挿入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN576"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">var</span> mymap <span class="keyword">=</span> mymap
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>None_vt<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"a"</span><span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"a"</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>None_vt<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"b"</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"b"</span><span class="keyword">,</span> <span class="dynexp">2</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>None_vt<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"c"</span><span class="keyword">,</span> <span class="dynexp">2</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">2</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>insert</span><span class="keyword">(</span><span class="dynstr">"c"</span><span class="keyword">,</span> <span class="dynexp">3</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ドット表記 <FONT
+COLOR="RED"
+>.insert</FONT
+> は関数 <FONT
+COLOR="RED"
+>myfunmap_insert</FONT
+> によってオーバーロードされています。
+上記コードの最初の行は謎めいて見えるかもしれません:
+その唯一の目的は、<FONT
+COLOR="RED"
+>myfunmap_insert</FONT
+> への最初の引数として渡される左辺値を生成することです。
+キーと要素が与えられたとき、<FONT
+COLOR="RED"
+>mymap.insert</FONT
+> はキー/要素ペアを <FONT
+COLOR="RED"
+>mymap</FONT
+> に挿入します。
+もしそのキーが挿入前の写像 <FONT
+COLOR="RED"
+>mymap</FONT
+> の定義域であるなら、そのキーに関連する元の要素が返ります。
+そうでない場合、なにも要素は返りません。
+予想されることですが、この時点で <FONT
+COLOR="RED"
+>mymap</FONT
+> のサイズは 3 になります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN585"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>mymap<span class="dynexp"><span class="keyword">.</span>size</span><span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">3</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ドット表記 <FONT
+COLOR="RED"
+>.size</FONT
+> は関数 <FONT
+COLOR="RED"
+>myfunmap_size</FONT
+> でオーバーロードされています。
+この関数は与えられた写像に保管されたキー/要素のペアの数を返します。
+デバッグのために、与えられた写像中のキー/要素ペアを印字したいと思うかもしれません:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN589"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">fprintln!</span> <span class="keyword">(</span>stdout_ref<span class="keyword">,</span> <span class="dynstr">"mymap = "</span><span class="keyword">,</span> mymap<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、シンボル <FONT
+COLOR="RED"
+>fprint</FONT
+> は <FONT
+COLOR="RED"
+>fprint_mymap</FONT
+> でオーバーロードされています。
+次の2行のコードは、与えられたキーで写像を検索する方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN593"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>None_vt<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>search</span><span class="keyword">(</span><span class="dynstr">""</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>search</span><span class="keyword">(</span><span class="dynstr">"a"</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+The dot-symbol <FONT
+COLOR="RED"
+>.search</FONT
+> is overloaded with a function of the name <FONT
+COLOR="RED"
+>myfunmap_search</FONT
+>,
+which returns the item associated with a given key if it is found.
+The next few lines of code remove some key/item pairs from <FONT
+COLOR="RED"
+>mymap</FONT
+>:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN598"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val-</span>true <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>remove</span><span class="keyword">(</span><span class="dynstr">"a"</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span>false <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>remove</span><span class="keyword">(</span><span class="dynstr">"a"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">2</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>takeout</span><span class="keyword">(</span><span class="dynstr">"b"</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val-</span><span class="keyword">~</span>Some_vt<span class="keyword">(</span><span class="dynexp">3</span><span class="keyword">)</span> <span class="keyword">=</span> mymap<span class="dynexp"><span class="keyword">.</span>takeout</span><span class="keyword">(</span><span class="dynstr">"c"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ドット表記 <FONT
+COLOR="RED"
+>.remove</FONT
+> は、与えらえれたキーに対応するキー/要素ペアを削除を表わす関数
+<FONT
+COLOR="RED"
+>myfunmap_remove</FONT
+> でオーバーロードされています。
+もし、キー/要素ペアが削除された場合、この関数は true を返します。
+そうでない場合、操作を行なった写像には与えられたキーに対応するキー/要素ペアが見つからなかったことを表わす false を返します。
+ドット表記 <FONT
+COLOR="RED"
+>.takeout</FONT
+> は関数 <FONT
+COLOR="RED"
+>myfunmap_takeout</FONT
+> でオーバーロードされています。
+この関数は、削除した要素を返す点を除いて、<FONT
+COLOR="RED"
+>myfunmap_remove</FONT
+> と同じです。
+
+</P
+><P
+>&#13;一般的な各種の写像操作は <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/libats/ML/HATS/myfunmap.hats"
+TARGET="_top"
+>libats/ML/HATS/myfunmap.hats</A
+> に見つかります。
+これらの操作に割り当てられた型を見れば、それらをどのように呼び出すべきなのか理解するのは難しくないでしょう。
+この章で紹介したコード全体は <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_funsetmap_map.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c515.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c608.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>関数的な集合と写像</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c515.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例外</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

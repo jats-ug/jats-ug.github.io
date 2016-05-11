@@ -1,0 +1,545 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>線形型のリスト</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="遅延ストリーム"
+HREF="c1044.html"><LINK
+REL="NEXT"
+TITLE="高度なチュートリアル"
+HREF="p1176.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1044.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="p1176.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="linlist"
+></A
+>Chapter 24. 線形型のリスト</H1
+><P
+>&#13;ATS における線形型のリストは線形リストとも呼ばれ、本質的にはC言語における片方向リストに対応します。
+次の線形データ型宣言は、線形リストを表わす線形型 <FONT
+COLOR="RED"
+>list_vt</FONT
+> を導入しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1100"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">datavtype</span>
+<span class="staexp">list_vt<span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">vt@ype</span><span class="keyword">,</span> int<span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">|</span> <span class="dynexp">list_vt_nil<span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> <span class="dynexp"><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  list_vt_cons<span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>datavtype</FONT
+> は <FONT
+COLOR="RED"
+>dataviewtype</FONT
+> とも書けることに注意してください。
+(おそらく線形の) 型 T と整数 N が与えられたとき、型 <FONT
+COLOR="RED"
+>list_vt(T,N)</FONT
+> は型 T の要素を持つ長さ N のリストを表わします。
+線形リストに対する様々な関数のインターフェイスが SATS ファイル <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/list_vt.sats"
+TARGET="_top"
+>prelude/SATS/list_vt.sats</A
+> にあります。
+このファイルは <B
+CLASS="command"
+>atsopt</B
+> によって自動的にロードされます。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>list_vt_length</FONT
+> は、読み込みのみ許された線形リストをあつかう典型的な方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1109"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">vt@ype</span><span class="keyword">}</span></span>
+list_vt_length
+  <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_vt_nil<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">0</span>
+<span class="keyword">|</span> list_vt_cons<span class="keyword">(</span>x<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">1</span> + list_vt_length&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs2<span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>xs</FONT
+> が <FONT
+COLOR="RED"
+>list_vt_nil()</FONT
+> にパターンマッチするとき、<FONT
+COLOR="RED"
+>xs</FONT
+> の型は <FONT
+COLOR="RED"
+>list_vt(a, 0)</FONT
+> です。
+<FONT
+COLOR="RED"
+>xs</FONT
+> が <FONT
+COLOR="RED"
+>list_vt_cons(x, xs2)</FONT
+> にパターンマッチするとき、<FONT
+COLOR="RED"
+>xs</FONT
+> の型はなんらかの自然数 N について <FONT
+COLOR="RED"
+>list_vt(a, N+1)</FONT
+> で、<FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> の型はそれぞれ <FONT
+COLOR="RED"
+>a</FONT
+> と <FONT
+COLOR="RED"
+>list_vt(a, N)</FONT
+> です。
+<FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> は両方とも値を表わす名前で、それらの型は不変でなければならないことに注意してください。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>list_vt_foreach</FONT
+> は、線形リストに保管された要素を変更する典型的な方法を示しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1127"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">vt@ype</span><span class="keyword">}</span></span>
+list_vt_foreach
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">,</span> fwork<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">&amp;</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_vt_nil<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> <span class="keyword">@</span>list_vt_cons<span class="keyword">(</span>x<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>fwork<span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">;</span> list_vt_foreach&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs2<span class="keyword">,</span> fwork<span class="keyword">)</span><span class="keyword">;</span> <span class="keyword">fold@</span><span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>xs</FONT
+> が <FONT
+COLOR="RED"
+>@list_vt_cons(x,xs2)</FONT
+> にパターンマッチするとき、<FONT
+COLOR="RED"
+>xs</FONT
+> の型はなんらかの自然数 N について <FONT
+COLOR="RED"
+>list_vt(a, N+1)</FONT
+>
+で、<FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> の型はそれぞれ <FONT
+COLOR="RED"
+>a</FONT
+> と <FONT
+COLOR="RED"
+>list_vt(a, N)</FONT
+> です。
+<FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> の両方が (左辺値をなす) 値であることに注意してください。
+パターン <FONT
+COLOR="RED"
+>@list_vt_cons(x,xs2)</FONT
+> ではじまる関数本体の最初では、<FONT
+COLOR="RED"
+>xs</FONT
+> の型は <FONT
+COLOR="RED"
+>list_vt_cons_unfold(L0, L1, L2)</FONT
+> であると推測されます。
+このとき、その型は <FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> を呼び出してリストノードを表わす観型で、そのノードは L0 に配置されます。
+さらに <FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> の2つの引数は L1 と L2 に配置されていて、L1 と L2 に関連した駐観の証明が現在有効な証明として保管されています。
+したがって、左辺値として <FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> はそれぞれアドレス L1 と L2 を持ち、L1 と L2
+に関連した証明である観はそれぞれ <FONT
+COLOR="RED"
+>a@L1</FONT
+> と <FONT
+COLOR="RED"
+>list_vt_cons(a, N)@L2</FONT
+> です。
+関数適用 <FONT
+COLOR="RED"
+>fold@(xs)</FONT
+> は、L1 と L2 に関連した証明を消費して、<FONT
+COLOR="RED"
+>xs</FONT
+> を型 <FONT
+COLOR="RED"
+>list_vt(a, N+1)</FONT
+> の値に変化させます。
+<FONT
+COLOR="RED"
+>xs</FONT
+> の型は、割り当てられていた元と fold が終わった後で異なる可能性があることに注意してください:
+次のコードはそのような例です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1152"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">vt@ype</span><span class="keyword">}</span></span>
+list_vt_append
+  <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">)</span><span class="keyword">,</span> ys<span class="keyword">:</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="staexp">+</span><span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+loop<span class="staexp"><span class="keyword">{</span>m<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="staexp">+</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> ys<span class="keyword">:</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> <span class="keyword">~</span>list_vt_nil<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>xs := ys<span class="keyword">)</span>
+<span class="keyword">|</span> <span class="keyword">@</span>list_vt_cons<span class="keyword">(</span>x<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>loop<span class="keyword">(</span>xs2<span class="keyword">,</span> ys<span class="keyword">)</span><span class="keyword">;</span> <span class="keyword">fold@</span><span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> xs <span class="keyword">of</span>
+  <span class="keyword">|</span> <span class="keyword">~</span>list_vt_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> ys
+  <span class="keyword">|</span> <span class="keyword">@</span>list_vt_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>loop<span class="keyword">(</span>xs2<span class="keyword">,</span> ys<span class="keyword">)</span><span class="keyword">;</span> <span class="keyword">fold@</span><span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">;</span> xs<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [list_vt_append]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+パターンの前にあるシンボル <FONT
+COLOR="RED"
+>~</FONT
+> は以前説明しました。
+<FONT
+COLOR="RED"
+>list_vt_append</FONT
+> の実装は、C言語における2つの片方向リストの連結の標準的な実装に正確に一致しています:
+2つのリストとして xs と ys を与えます;
+もし xs が空であれば ys が返ります;
+そうでなければ、xs の最後のノードとして配置され、ys はその次として予約されたノードの要素に格納されます。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>list_vt_free</FONT
+> は、与えられた非線形の要素を含む線形リストを解放します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN1158"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">vt@ype</span><span class="keyword">}</span></span>
+list_vt_free
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> <span class="keyword">~</span>list_vt_nil<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> <span class="keyword">~</span>list_vt_cons<span class="keyword">(</span>x<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=&gt;</span> list_vt_free&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs2<span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>xs</FONT
+> がパターン <FONT
+COLOR="RED"
+>~list_vt_nil()</FONT
+> にマッチするとき、<FONT
+COLOR="RED"
+>xs</FONT
+> の型は、その <FONT
+COLOR="RED"
+>xs</FONT
+> の型が変更され、<FONT
+COLOR="RED"
+>xs</FONT
+> がその後では使用できないことを示しています。
+<FONT
+COLOR="RED"
+>xs</FONT
+> がパターン <FONT
+COLOR="RED"
+>~list_vt_cons(x,xs2)</FONT
+> にマッチするとき、<FONT
+COLOR="RED"
+>xs</FONT
+> の型は、その <FONT
+COLOR="RED"
+>xs</FONT
+> の型が変更され、やはり <FONT
+COLOR="RED"
+>xs</FONT
+> がその後では使用できないことを示しています。
+後者の場合、リスト <FONT
+COLOR="RED"
+>xs</FONT
+> の head と tail を表わす2つの値は、それぞれ <FONT
+COLOR="RED"
+>x</FONT
+> と <FONT
+COLOR="RED"
+>xs2</FONT
+> として参照できます。
+<FONT
+COLOR="RED"
+>xs</FONT
+> として参照されるリストの最初のリストノードのメモリを解放していることがわかります。
+
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_list_vt.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1044.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="p1176.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>遅延ストリーム</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>高度なチュートリアル</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

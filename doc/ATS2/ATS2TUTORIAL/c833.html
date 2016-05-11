@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>サイズを伴う永続化配列</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミングチュートリアル"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="基本的なチュートリアル"
+HREF="p37.html"><LINK
+REL="PREVIOUS"
+TITLE="永続化配列"
+HREF="c772.html"><LINK
+REL="NEXT"
+TITLE="永続化行列"
+HREF="c868.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/ATS2TUTORIAL-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミングチュートリアル: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c772.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c868.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="arrszref"
+></A
+>Chapter 17. サイズを伴う永続化配列</H1
+><P
+>&#13;サイズ情報が付属した永続化配列を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>サイズを伴う配列 (array-with-size)</I
+></SPAN
+> と呼びます。
+観型 VT が与えられたとき、観型 VT の N
+個の値を含むサイズを伴う配列の型は <FONT
+COLOR="RED"
+>arrszref(VT, N)</FONT
+> です。
+本質的に、この型の値は型 <FONT
+COLOR="RED"
+>arrayref(VT, N)</FONT
+> と <FONT
+COLOR="RED"
+>size_t(N)</FONT
+>
+の2つを構成要素とするボッスク化ペアです。
+サイズを伴う永続化配列に対する様々な関数のインターフェイスを
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/arrayref.sats"
+TARGET="_top"
+>prelude/SATS/arrayref.sats</A
+>
+に見つけることができます。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>arrszref_make_arrpsz</FONT
+> と <FONT
+COLOR="RED"
+>arrszref_make_arrayref</FONT
+>
+を呼び出すことで、サイズを伴う配列を生成することができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN844"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+arrszref_make_arrpsz
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">arrpsz</span> <span class="keyword">(</span><span class="staexp">INV</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">arrszref</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+arrszref_make_arrayref
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">arrayref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">size_t</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">arrszref</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="comment">// end of [arrszref_make_arrayref]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+例として、次のコードは全ての10進数の数字を含むような、サイズを伴う配列を生成しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN846"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> DIGITS <span class="keyword">=</span>
+  <span class="keyword">(</span>arrszref<span class="keyword">)</span><span class="keyword">$arrpsz</span><span class="keyword">{</span><span class="staexp">int</span><span class="keyword">}</span><span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">2</span><span class="keyword">,</span> <span class="dynexp">3</span><span class="keyword">,</span> <span class="dynexp">4</span><span class="keyword">,</span> <span class="dynexp">5</span><span class="keyword">,</span> <span class="dynexp">6</span><span class="keyword">,</span> <span class="dynexp">7</span><span class="keyword">,</span> <span class="dynexp">8</span><span class="keyword">,</span> <span class="dynexp">9</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>arrszref</FONT
+> は <FONT
+COLOR="RED"
+>arrszref_make_arrpsz</FONT
+>
+によって多重定義されていることに注意してください。
+
+</P
+><P
+>&#13;サイズを伴う配列を読み書きするために、関数テンプレート
+<FONT
+COLOR="RED"
+>arrszref_get_at</FONT
+> と <FONT
+COLOR="RED"
+>arrszref_set_at</FONT
+>
+をそれぞれ使うことができます。
+これらの関数テンプレートには次のインターフェイスが割り当てられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN853"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+arrszref_get_at <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+arrszref_set_at <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+サイズを伴う配列 A, インデックス i, 値 v
+が与えられたとき、<FONT
+COLOR="RED"
+>arrszref_get_at(A, i)</FONT
+> と
+<FONT
+COLOR="RED"
+>arrszref_set_at(A, i, v)</FONT
+> はそれぞれ
+<FONT
+COLOR="RED"
+>A[i]</FONT
+> と <FONT
+COLOR="RED"
+>A[i] := v</FONT
+>
+のように書くことができます。
+<FONT
+COLOR="RED"
+>arrszref_get_at</FONT
+> もしくは <FONT
+COLOR="RED"
+>arrszref_set_at</FONT
+>
+が呼び出されると実行時に配列の範囲検査が行なわれ、配列の添字指定の範囲外アクセスを検出すると例外
+<FONT
+COLOR="RED"
+>ArraySubscriptExn</FONT
+> が発生することに注意してください。
+
+</P
+><P
+>&#13;簡単な例として、次のコードは与えられたサイズを伴う配列の中身を逆順にする関数を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN863"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+arrszref_reverse
+<span class="keyword">(</span>
+  A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> n <span class="keyword">=</span> A<span class="dynexp"><span class="keyword">.</span>size</span></span>
+<span class="dynexp"><span class="keyword">val</span> n2 <span class="keyword">=</span> half <span class="keyword">(</span>n<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop
+  <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> n2 <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> tmp <span class="keyword">=</span> <span class="dynexp">A[i<span class="keyword">]</span></span></span>
+    <span class="dynexp"><span class="keyword">val</span> ni <span class="keyword">=</span> pred<span class="keyword">(</span>n<span class="keyword">)</span>-i</span>
+  <span class="keyword">in</span>
+    <span class="dynexp">A[i<span class="keyword">]</span></span> := <span class="dynexp">A[ni<span class="keyword">]</span></span><span class="keyword">;</span> <span class="dynexp">A[ni<span class="keyword">]</span></span> := tmp<span class="keyword">;</span> loop <span class="keyword">(</span>succ<span class="keyword">(</span>i<span class="keyword">)</span><span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="comment">// end of [if]</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [loop]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>i2sz<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [arrszref_reverse]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;配列を用いたプログラミングが要求される実装のプロトタイピングに、サイズを伴う配列はうってつけです。
+また、依存型にまだ精通していないプログラマにとって、配列よりもサイズを伴う配列の方が明らかに簡単に使えるでしょう。
+ATS におけるプログラミングでは、私はサイズを伴う配列からはじめて、それからその恩恵が明確になってから配列で置き換えることがしばしばあります。
+</P
+><P
+>&#13;この章で紹介したコード全体は
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_arrszref.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c772.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c868.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>永続化配列</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p37.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>永続化行列</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

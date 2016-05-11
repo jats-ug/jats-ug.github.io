@@ -179,8 +179,8 @@ NAME="AEN111"
 ></A
 ><PRE
 CLASS="programlisting"
->infixl 50 + -
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">infixl</span> 50 + -</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -238,8 +238,8 @@ NAME="AEN125"
 ></A
 ><PRE
 CLASS="programlisting"
->infixl (+) iadd fadd padd uadd
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">infixl</span> <span class="keyword">(</span>+<span class="keyword">)</span> iadd fadd padd uadd</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -266,8 +266,8 @@ NAME="AEN129"
 ></A
 ><PRE
 CLASS="programlisting"
->infixl (opr1 + 10) opr2
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">infixl</span> <span class="keyword">(</span>opr1 + 10<span class="keyword">)</span> opr2</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -289,12 +289,12 @@ COLOR="RED"
 >opr</FONT
 > の前にバックスラッシュ記号 (<FONT
 COLOR="RED"
->\</FONT
+></FONT
 >)
 を付けると、優先順位 0 の無結合中置演算子にすることもできます。
 例えば、式 <FONT
 COLOR="RED"
->exp1 \opr exp2</FONT
+>exp1 opr exp2</FONT
 > は <FONT
 COLOR="RED"
 >opr (exp1, exp2)</FONT
@@ -328,9 +328,9 @@ NAME="AEN143"
 ></A
 ><PRE
 CLASS="programlisting"
->prefix 61 ~
-postfix 69 ?
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">prefix</span> 61 <span class="keyword">~</span></span>
+<span class="neuexp"><span class="keyword">postfix</span> 69 ?</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -348,10 +348,10 @@ NAME="AEN145"
 ></A
 ><PRE
 CLASS="programlisting"
->postfix (imul + 10) !!
-extern fun !! (x: int): int
-implement !! (x) = if x &#62;= 2 then x * (x - 2)!! else 1
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">postfix</span> <span class="keyword">(</span>imul + 10<span class="keyword">)</span> !!</span>
+<span class="keyword">extern</span> <span class="dynexp"><span class="keyword">fun</span> !! <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+<span class="dynexp"><span class="keyword">implement</span> !! <span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">if</span> x &gt;= <span class="dynexp">2</span> <span class="keyword">then</span> x * <span class="keyword">(</span>x - <span class="dynexp">2</span><span class="keyword">)</span>!! <span class="keyword">else</span> <span class="dynexp">1</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -399,7 +399,7 @@ NAME="AEN155"
 ></A
 ><PRE
 CLASS="programlisting"
->nonfix iadd fadd padd uadd</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">nonfix</span> iadd fadd padd uadd</span></p></PRE
 ><P
 ></P
 ></DIV
