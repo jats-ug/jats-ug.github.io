@@ -143,13 +143,13 @@ NAME="AEN1660"
 ></A
 ><PRE
 CLASS="programlisting"
->fun fileref_open_exn
-(
-  path: string, fm: file_mode
-) : FILEref // endfun
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> fileref_open_exn
+<span class="keyword">(</span>
+  path<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">,</span> fm<span class="keyword">:</span> <span class="staexp">file_mode</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">FILEref</span></span> <span class="comment">// endfun</span>
 
-fun fileref_close (fil: FILEref): void
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> fileref_close <span class="keyword">(</span>fil<span class="keyword">:</span> <span class="staexp">FILEref</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -175,9 +175,9 @@ NAME="AEN1664"
 ></A
 ><PRE
 CLASS="programlisting"
->fun fileref_open_opt
-  (path: string, fm: file_mode) : Option_vt (FILEref)
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> fileref_open_opt
+  <span class="keyword">(</span>path<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">,</span> fm<span class="keyword">:</span> <span class="staexp">file_mode</span><span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">Option_vt</span> <span class="keyword">(</span><span class="staexp">FILEref</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -260,16 +260,16 @@ NAME="AEN1688"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
-main0 () =
-{
-val out =
-  fileref_open_exn ("hello.txt", file_mode_w)
-val () = fprint_string (out, "Hello, world!\n")
-val () = fileref_close (out)
-//
-} (* end of [main0] *)
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+main0 <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="dynexp"><span class="keyword">val</span> out <span class="keyword">=</span>
+  fileref_open_exn <span class="keyword">(</span><span class="dynstr">"hello.txt"</span><span class="keyword">,</span> file_mode_w<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> fprint_string <span class="keyword">(</span>out<span class="keyword">,</span> <span class="dynstr">"Hello, world!n"</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> fileref_close <span class="keyword">(</span>out<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [main0] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -297,8 +297,8 @@ NAME="AEN1692"
 ></A
 ><PRE
 CLASS="programlisting"
->fun fileref_get_line_string (fil: FILEref): Strptr1
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> fileref_get_line_string <span class="keyword">(</span>fil<span class="keyword">:</span> <span class="staexp">FILEref</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">Strptr1</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -326,29 +326,29 @@ NAME="AEN1696"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
-main0 (
-// argumentless
-) = loop () where
-{
-//
-fun loop (): void = let
-  val isnot = fileref_isnot_eof (stdin_ref)
-in
-//
-if isnot then let
-  val line =
-    fileref_get_line_string (stdin_ref)
-  val ((*void*)) = fprintln! (stdout_ref, line)
-  val ((*void*)) = strptr_free (line)
-in
-  loop ()
-end else ((*loop exits as the end-of-file is reached*))
-//
-end (* end of [loop] *)
-//
-} (* end of [main0] *)
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+main0 <span class="keyword">(</span>
+<span class="comment">// argumentless</span>
+<span class="keyword">)</span> <span class="keyword">=</span> loop <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">where</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> isnot <span class="keyword">=</span> fileref_isnot_eof <span class="keyword">(</span>stdin_ref<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+<span class="comment">//</span>
+<span class="keyword">if</span> isnot <span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> line <span class="keyword">=</span>
+    fileref_get_line_string <span class="keyword">(</span>stdin_ref<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">fprintln!</span> <span class="keyword">(</span>stdout_ref<span class="keyword">,</span> line<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> strptr_free <span class="keyword">(</span>line<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="comment">(*loop exits as the end-of-file is reached*)</span><span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">end</span></span> <span class="comment">(* end of [loop] *)</span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [main0] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV

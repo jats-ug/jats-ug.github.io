@@ -1,0 +1,570 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 検証された高速な累乗</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="定理証明によるプログラミング"
+HREF="c3137.html"><LINK
+REL="PREVIOUS"
+TITLE="例: もう一つの検証された階乗"
+HREF="x3224.html"><LINK
+REL="NEXT"
+TITLE="線形観と線形型を使ったプログラミング"
+HREF="p3302.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3224.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. 定理証明によるプログラミング</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="p3302.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_verified_fast_exponentiation"
+>例: 検証された高速な累乗</A
+></H1
+><P
+>整数 x が与えられた時、pow(x, n)、つまり x の n 乗、は次のように帰納的に宣言することができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3251"
+></A
+><PRE
+CLASS="programlisting"
+>pow (x, 0) = 1
+pow (x, n) = x * pow (x, n-1) (for all n &#62; 0)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+この定義の直接的な実装は次のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3253"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> ipow <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> x * ipow <span class="keyword">(</span>x<span class="keyword">,</span> n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">1</span></span>
+<span class="comment">// end of [ipow]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この実装の時間的計算量は (乗法を O(1) と仮定すると) O(n) になります。
+より効率的な実装は次のようになるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3255"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+ifastpow
+<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="keyword">&gt;.</span>
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> n2 <span class="keyword">=</span> half<span class="keyword">(</span>n<span class="keyword">)</span></span>
+    <span class="dynexp"><span class="keyword">val</span> i2 <span class="keyword">=</span> n-<span class="keyword">(</span><span class="dynexp">2</span>*n2<span class="keyword">)</span></span>
+  <span class="keyword">in</span>
+    <span class="keyword">if</span> i2 <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> ifastpow <span class="keyword">(</span>x*x<span class="keyword">,</span> n2<span class="keyword">)</span> <span class="keyword">else</span> x * ifastpow <span class="keyword">(</span>x*x<span class="keyword">,</span> n2<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="dynexp">1</span></span> <span class="comment">// end of [if]</span>
+<span class="comment">// end of [ifastpow]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ここでは、もし n が偶数であれば pow(x, n) は pow(x*x, n/2) に等しく、もし n が奇数であれば pow(x, n) は x * pow(x*x, n/2) に等しい、という性質を使っています。
+これは高速な累乗と呼ばれています。
+<FONT
+COLOR="RED"
+>ifastpow</FONT
+> の時間的計算量は O(log(n)) であることに注意してください。
+
+</P
+><P
+>&#13;明確に、上記は整数の累乗に限定されたものではありません。
+用いている乗法が結合的である限り、どのような要素の累乗を計算するのにも高速な累乗を使うことができます。
+特に、正方行列の累乗はこの方法で計算できます。
+高速な累乗の検証された一般化実装を次に紹介します。
+
+</P
+><P
+>検証された実装の中で一般化されたデータを正確に扱うために、しばしば ATS
+の型システムにおいて技巧的なテクニックが必要です。
+はじめに、次のような抽象型コンストラクタ <FONT
+COLOR="RED"
+>E</FONT
+> を導入してみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3261"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">sortdef</span> elt <span class="keyword">=</span> int</span> <span class="comment">// [elt] is just an alias for [int]</span>
+<span class="staexp"><span class="keyword">abst@ype</span> ELT<span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">,</span> x<span class="keyword">:</span>elt<span class="keyword">)</span> <span class="keyword">=</span> a</span> <span class="comment">// [x] is an imaginary stamp</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+これはしばしば <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>スタンプ化 (stamping)</I
+></SPAN
+> と呼ばれます。
+それぞれの型 T とスタンプ X について、関連するデータ表現に関する限り <FONT
+COLOR="RED"
+>E(T, x)</FONT
+> は単に T です。
+このスタンプは架空の存在で、仕様の目的にだけ使われます。
+次に抽象命題型 <FONT
+COLOR="RED"
+>MUL</FONT
+> と関数テンプレート <FONT
+COLOR="RED"
+>mul_elt_elt</FONT
+> を導入します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3267"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="staexp"><span class="keyword">absprop</span> MUL<span class="keyword">(</span>elt<span class="keyword">,</span> elt<span class="keyword">,</span> elt<span class="keyword">)</span></span> <span class="comment">// abstract mul relation</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+mul_elt_elt<span class="staexp"><span class="keyword">{</span>x<span class="keyword">,</span>y<span class="keyword">:</span>elt<span class="keyword">}</span></span>
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">x</span><span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">:</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>xy<span class="keyword">:</span>elt<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">xy</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">xy</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">// end of [mul_elt_elt]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>MUL</FONT
+> と
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS-Postiats/prelude/SATS/arith_prf.sats"
+TARGET="_top"
+>arith_prf.sats</A
+> で宣言されている同じ名前の型に混乱しないでください。
+エンコードされた乗法が結合的であることを示すために、次の証明関数を導入することができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3271"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">praxi</span>
+mul_assoc
+<span class="staexp"><span class="keyword">{</span>x<span class="keyword">,</span>y<span class="keyword">,</span>z<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>xy<span class="keyword">,</span>yz<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>xy_z<span class="keyword">,</span>x_yz<span class="keyword">:</span>elt<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">xy</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">xy</span><span class="keyword">,</span> <span class="staexp">z</span><span class="keyword">,</span> <span class="staexp">xy_z</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">z</span><span class="keyword">,</span> <span class="staexp">yz</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">yz</span><span class="keyword">,</span> <span class="staexp">x_yz</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>xy_z==x_yz<span class="keyword">]</span></span> <span class="staexp">void</span></span> <span class="comment">// end of [mul_assoc]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>praxi</FONT
+> は <FONT
+COLOR="RED"
+>mul_assoc</FONT
+>
+を実装されることを期待しない公理として扱うことを示します。
+
+</P
+><P
+>&#13;抽象的な累乗関数は、抽象命題型 <FONT
+COLOR="RED"
+>MUL</FONT
+> の項ですぐに指定できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3277"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">dataprop</span>
+<span class="staexp">POW <span class="keyword">(</span>
+  elt<span class="comment">(*base*)</span><span class="keyword">,</span> int<span class="comment">(*exp*)</span><span class="keyword">,</span> elt<span class="comment">(*res*)</span>
+<span class="keyword">)</span> <span class="keyword">=</span> <span class="comment">// res = base^exp</span>
+  <span class="keyword">|</span> <span class="prfexp"><span class="staexp"><span class="keyword">{</span>x<span class="keyword">:</span>elt<span class="keyword">}</span></span>
+    POWbas<span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">,</span> <span class="staexp">1</span><span class="comment">(*unit*)</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="prfexp"><span class="staexp"><span class="keyword">{</span>x<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p<span class="keyword">,</span>p1<span class="keyword">:</span>elt<span class="keyword">}</span></span>
+    POWind<span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">,</span> <span class="staexp">p1</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">POW</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">,</span> <span class="staexp">p1</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [POW]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+予想される通り、一般化された高速な累乗は次のインターフェイスで与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3279"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+fastpow_elt_int<span class="staexp"><span class="keyword">{</span>x<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">x</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>p<span class="keyword">:</span>elt<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">POW</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">// end of [fastpow_elt_int]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;上までで準備が整ったので、<FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> の率直な実装は次のようになります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3283"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+fastpow_elt_int
+  <span class="keyword">(</span>x<span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="comment">(*
+lemma: (x*x)^n = x^(2n)
+*)</span>
+<span class="keyword">extern</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+lemma
+<span class="staexp"><span class="keyword">{</span>x<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>xx<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>y<span class="keyword">:</span>elt<span class="keyword">}</span></span>
+  <span class="keyword">(</span>pfxx<span class="keyword">:</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">xx</span><span class="keyword">)</span><span class="keyword">,</span> pfpow<span class="keyword">:</span> <span class="staexp">POW</span><span class="keyword">(</span><span class="staexp">xx</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">POW</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">2</span><span class="staexp">*</span><span class="staexp">n</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">overload</span> * <span class="keyword">with</span> mul_elt_elt</span> <span class="comment">// [*] loaded with mul_elt_elt</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+<span class="comment">//</span>
+<span class="keyword">if</span>
+n <span class="keyword">=</span> <span class="dynexp">0</span>
+<span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> res <span class="keyword">=</span> mulunit&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">in</span> <span class="keyword">(</span><span class="prfexp">POWbas <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">|</span> res<span class="keyword">)</span> <span class="comment">// res = 1</span>
+<span class="keyword">end</span> <span class="comment">// end of [then]</span>
+<span class="keyword">else</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> n2 <span class="keyword">=</span> half n</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pfxx</span> <span class="keyword">|</span> xx<span class="keyword">)</span> <span class="keyword">=</span> x * x</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pfpow2</span> <span class="keyword">|</span> res<span class="keyword">)</span> <span class="keyword">=</span> fastpow_elt_int&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xx<span class="keyword">,</span> n2<span class="keyword">)</span></span> <span class="comment">// xx^n2 = res</span>
+  <span class="prfexp"><span class="keyword">prval</span> pfpow <span class="keyword">=</span> lemma <span class="keyword">(</span>pfxx<span class="keyword">,</span> pfpow2<span class="keyword">)</span></span> <span class="comment">// pfpow: x^(2*n2) = res</span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> n<span class="keyword">=</span><span class="dynexp">2</span>*n2
+    <span class="keyword">then</span> <span class="keyword">(</span><span class="prfexp">pfpow</span> <span class="keyword">|</span> res<span class="keyword">)</span>
+    <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pfmul</span> <span class="keyword">|</span> xres<span class="keyword">)</span> <span class="keyword">=</span> x * res</span> <span class="keyword">in</span> <span class="keyword">(</span><span class="prfexp">POWind<span class="keyword">(</span>pfpow<span class="keyword">,</span> pfmul<span class="keyword">)</span></span> <span class="keyword">|</span> xres<span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="comment">// end of [else]</span>
+<span class="keyword">end</span> <span class="comment">// end of [else]</span>
+<span class="comment">//</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [fastpow_elt_int]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> のこの実装は末尾再帰でないことに注意してください。
+用いる乗法の単位元を作るために呼び出す関数テンプレート <FONT
+COLOR="RED"
+>mulunit</FONT
+>
+には次のインターフェイスが割り当てられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3287"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> mulunit <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">ELT</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">1</span><span class="comment">(*stamp*)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+証明関数 <FONT
+COLOR="RED"
+>lemma</FONT
+> は、それぞれの自然数 n について pow(x, 2*n)=pow(x*x, n) を立証しています。
+私が実装した <FONT
+COLOR="RED"
+>lemma</FONT
+> はオンラインから入手できます。
+けれども興味のある読者には、私の実装を見る前に実装してみることを提案します。
+<FONT
+COLOR="RED"
+>lemma</FONT
+> の実装には次の公理が必要になることに注意してください:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3292"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="prfexp"><span class="keyword">praxi</span>
+mul_istot <span class="comment">// MUL is total</span>
+  <span class="staexp"><span class="keyword">{</span>x<span class="keyword">,</span>y<span class="keyword">:</span>elt<span class="keyword">}</span></span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>xy<span class="keyword">:</span>elt<span class="keyword">]</span></span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">xy</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="prfexp"><span class="keyword">praxi</span>
+mul_isfun <span class="comment">// MUL is functional</span>
+  <span class="staexp"><span class="keyword">{</span>x<span class="keyword">,</span>y<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>z1<span class="keyword">,</span>z2<span class="keyword">:</span>elt<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">z1</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">MUL</span><span class="keyword">(</span><span class="staexp">x</span><span class="keyword">,</span> <span class="staexp">y</span><span class="keyword">,</span> <span class="staexp">z2</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>z1==z2<span class="keyword">]</span></span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+別の興味深い (そしてておそらく少しやりがいのある) 課題は
+<FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> を末尾再帰的に実装することでしょう。
+
+</P
+><P
+>&#13;オンラインから入手できる2つのファイル
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/fastexp.sats"
+TARGET="_top"
+>fastexp.sats</A
+> と
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/fastexp.dats"
+TARGET="_top"
+>fastexp.dats</A
+>
+は上記に示したコード全体を含んでいます。
+
+</P
+><P
+>&#13;これで <FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> を実装するできました。
+これをどうやって使うのでしょうか？
+2 x 2 行列の高速な累乗を実装した <FONT
+COLOR="RED"
+>fastpow_elt_int</FONT
+> の例が
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_PRGTHMPRV/test_fastexp.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+これでフィボナッチ数を効率的に計算できるようになります。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3224.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="p3302.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: もう一つの検証された階乗</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3137.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形観と線形型を使ったプログラミング</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

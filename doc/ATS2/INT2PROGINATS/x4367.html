@@ -1,0 +1,759 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>非同期 IPC のための線形チャネル</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="抽象観と観型 (viewtype)"
+HREF="c4166.html"><LINK
+REL="PREVIOUS"
+TITLE="ロックとアンロック"
+HREF="x4319.html"><LINK
+REL="NEXT"
+TITLE="関数テンプレートを使ったプログラミング"
+HREF="p4457.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4319.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. 抽象観と観型 (viewtype)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="p4457.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="linear-channels-for-async-ipc"
+>非同期 IPC のための線形チャネル</A
+></H1
+><P
+>&#13;この章では、スレッド間の非同期通信をサポートする、線形チャネルの実装を示します。
+これはまた、<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>プログラマ中心</I
+></SPAN
+> のプログラム検証を主張する良い機会でもあります。
+</P
+><P
+>&#13;本質的にスレッド間の通信チャネルは、レースコンディションをに対して必要ななんらかの保護メカニズムで包んだキューです。
+容量固定のキュー、すなわち生成されたら容量が変わらないようなキューを仮定しましょう。
+もしそのキューが満杯なら、そのキューへの要素の挿入は失敗します。
+もしそのキューが空なら、そのキューからの要素の削除は失敗します。
+満杯のキューへの挿入や空のキューからの削除を防ぐために、まず次のようなキューに対する線形抽象型を導入しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4372"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">absvtype</span>
+queue_vtype<span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">vt@ype+</span><span class="keyword">,</span> int<span class="comment">(*m*)</span><span class="keyword">,</span> int<span class="comment">(*n*)</span><span class="keyword">)</span></span>
+<span class="keyword">vtypedef</span> <span class="staexp">queue<span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">vt@ype</span></span><span class="keyword">,</span><span class="staexp">m<span class="keyword">:</span>int</span><span class="keyword">,</span><span class="staexp">n<span class="keyword">:</span>int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">queue_vtype</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span><span class="staexp">m</span><span class="keyword">,</span><span class="staexp">n</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、型 <FONT
+COLOR="RED"
+>queue(VT,M,N)</FONT
+> は、型 VT の N 個の要素を含んでいる容量 M のキューを表わします。
+それから、挿入と削除を表わす関数には次のようなインターフェイスが割り当てられるでしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4375"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_insert
+  <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>nat <span class="keyword">|</span> m <span class="keyword">&gt;</span> n<span class="keyword">}</span></span>
+  <span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_remove
+  <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>nat <span class="keyword">|</span> n <span class="keyword">&gt;</span> 0<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">m</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">-</span><span class="staexp">1</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+示した抽象型 <FONT
+COLOR="RED"
+>queue</FONT
+> は線形チャネルを実装として機能します。
+けれども、私はこのバージョンの <FONT
+COLOR="RED"
+>queue</FONT
+> を採用できません。
+私は、厳密でより柔軟なプログラム検証のスタイルを示したいのです。
+
+</P
+><P
+>&#13;次のコードは抽象型 <FONT
+COLOR="RED"
+>queue</FONT
+> の別バージョンです:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4381"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="staexp"><span class="keyword">absvtype</span>
+queue_vtype<span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">vt@ype+</span><span class="keyword">,</span> int<span class="comment">(*id*)</span><span class="keyword">)</span> <span class="keyword">=</span> ptr</span>
+<span class="comment">//</span>
+<span class="keyword">vtypedef</span>
+<span class="staexp">queue<span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span>vt0p</span><span class="keyword">,</span> <span class="staexp">id<span class="keyword">:</span>int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">queue_vtype</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span></span>
+<span class="keyword">vtypedef</span> <span class="staexp">queue<span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span>vt0p</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>id<span class="keyword">:</span>int<span class="keyword">]</span></span> <span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+観型 VT と整数 ID が与えられたとき、<FONT
+COLOR="RED"
+>queue(VT,ID)</FONT
+> は、整数 ID で一意に識別される型 VT の要素を含むキューを表わします。
+そのため ID はスタンプの一種と考えることができます。
+次に表わされた関数 <FONT
+COLOR="RED"
+>queue_isnil</FONT
+> は与えられたキューが空であるかどうか調べます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4385"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="staexp"><span class="keyword">absprop</span> ISNIL<span class="keyword">(</span>id<span class="keyword">:</span>int<span class="keyword">,</span> b<span class="keyword">:</span>bool<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_isnil<span class="staexp"><span class="keyword">{</span>id<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>b<span class="keyword">:</span>bool<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">ISNIL</span><span class="keyword">(</span><span class="staexp">id</span><span class="keyword">,</span> <span class="staexp">b</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">bool</span><span class="keyword">(</span><span class="staexp">b</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+整数 ID が与えられたとき、命題 <FONT
+COLOR="RED"
+>ISNIL(ID,true)</FONT
+> (もしくは <FONT
+COLOR="RED"
+>ISNIL(ID,false)</FONT
+>) の証明は、ID で同定されたキューが空である (もしくは空でない) ことを意味しています。
+同様に、次に表わされた関数 <FONT
+COLOR="RED"
+>queue_isful</FONT
+> は与えられたキューが満杯であるかどうか調べます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4390"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="staexp"><span class="keyword">absprop</span> ISFUL<span class="keyword">(</span>id<span class="keyword">:</span>int<span class="keyword">,</span> b<span class="keyword">:</span>bool<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_isful<span class="staexp"><span class="keyword">{</span>id<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>b<span class="keyword">:</span>bool<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">ISFUL</span><span class="keyword">(</span><span class="staexp">id</span><span class="keyword">,</span> <span class="staexp">b</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">bool</span><span class="keyword">(</span><span class="staexp">b</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+整数 ID が与えられたとき、命題 <FONT
+COLOR="RED"
+>ISFUL(ID,true)</FONT
+> (もしくは <FONT
+COLOR="RED"
+>ISFUL(ID,false)</FONT
+>) の証明は、ID で同定されたキューが満杯である (もしくは満杯でない) ことを意味しています。
+
+</P
+><P
+>&#13;これで、与えられたキューへの挿入と削除を表わす関数 <FONT
+COLOR="RED"
+>queue_insert</FONT
+> と <FONT
+COLOR="RED"
+>queue_remove</FONT
+> には次のインターフェイスを割り当てることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4397"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_insert
+  <span class="staexp"><span class="keyword">{</span>id<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  <span class="prfexp"><span class="staexp">ISFUL</span><span class="keyword">(</span><span class="staexp">id</span><span class="keyword">,</span> <span class="staexp">false</span><span class="keyword">)</span></span>
+<span class="keyword">|</span> xs<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id2</span><span class="keyword">)</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">#[</span>id2<span class="keyword">:</span>int<span class="keyword">]</span></span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span>
+<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+queue_remove
+  <span class="staexp"><span class="keyword">{</span>id<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  <span class="prfexp"><span class="staexp">ISNIL</span><span class="keyword">(</span><span class="staexp">id</span><span class="keyword">,</span> <span class="staexp">false</span><span class="keyword">)</span></span> <span class="keyword">|</span> xs<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">id2</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">#[</span>id2<span class="keyword">:</span>int<span class="keyword">]</span></span> <span class="staexp">a</span></span> <span class="comment">// end-of-fun</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+キューへの挿入やキューからの削除が、新しいスタンプをそのキューに割り当てていることに注意してください。
+これは本質的に、上記に示したマナーでの <FONT
+COLOR="RED"
+>ISNIL</FONT
+> と <FONT
+COLOR="RED"
+>ISFUL</FONT
+> の解釈です。
+
+</P
+><P
+>&#13;与えられたキューへ <FONT
+COLOR="RED"
+>queue_insert</FONT
+> を呼び出すためには、そのキューが満杯ではないことを示す証明が必要です。
+当該キューに <FONT
+COLOR="RED"
+>queue_isful</FONT
+> を呼び出して false が返れば、そのような証明を獲得できます。
+同様に、与えられたキューへ <FONT
+COLOR="RED"
+>queue_remove</FONT
+> を呼び出すためには、まずそのキューに <FONT
+COLOR="RED"
+>queue_isnil</FONT
+> を呼び出して、そのキューが空でないことを示す証明を獲得する必要があります。
+</P
+><P
+>&#13;ここで示した内容は、<FONT
+COLOR="RED"
+>queue_isnil</FONT
+> と <FONT
+COLOR="RED"
+>queue_isful</FONT
+> が持つそのインターフェイスを実際には立証していません。
+その代わりここでの焦点は、<FONT
+COLOR="RED"
+>queue_isnil</FONT
+> と <FONT
+COLOR="RED"
+>queue_isful</FONT
+>
+にそのようなインターフェイスが割り当てられたとき、満杯のキューに <FONT
+COLOR="RED"
+>queue_insert</FONT
+>
+が呼び出されないことと <FONT
+COLOR="RED"
+>queue_remove</FONT
+> が空のキューに呼び出されないことを保証することです。
+私はこのスタイルのプログラミング検証を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>プログラマ中心</I
+></SPAN
+> であると呼んでいます。
+なぜならその正確さは客観的形式的に確立されたものではないからです。
+私自身、プログラマ中心のプログラム検証が実際にとても柔軟で効果的であることを見つけました。
+もし非形式的な数学の証明が証明された内容が正当であるかどうか検査するのに役立つと我々が信じるのであれば、プログラマ中心のプログラム検証もまた検証されたプログラムが正しいかどうか検査するのに役立つことを自然に信じることができるでしょう。
+</P
+><P
+>&#13;それでは、スレッド間の非同期通信のための線形チャネルの実装を開始しましょう。
+はじめに、次のような線形抽象型 <FONT
+COLOR="RED"
+>channel</FONT
+> を宣言しましょう:
+
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4416"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">absvtype</span> channel_vtype<span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">vt@ype+</span><span class="keyword">)</span> <span class="keyword">=</span> ptr</span>
+<span class="keyword">vtypedef</span> <span class="staexp">channel<span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span>vt0p</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">channel_vtype</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+チャネルに要素を挿入する関数には次のインターフェイスが与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4418"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span> channel_insert <span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">channel</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+もしそのチャネルが満杯であったら、<FONT
+COLOR="RED"
+>channel_insert</FONT
+> の呼び出し元はブロックします。
+同様に、チャネルから要素を削除する関数には次のインターフェイスが与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4421"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span> channel_remove <span class="keyword">(</span>chan<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">channel</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+もしそのチャネルが空であったら、<FONT
+COLOR="RED"
+>channel_remove</FONT
+> の呼び出し元はブロックします。
+
+</P
+><P
+>&#13;チャネルを次のように表現してみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4425"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">datavtype</span>
+<span class="staexp">channel_ <span class="keyword">=</span>
+<span class="dynexp"><span class="staexp"><span class="keyword">{</span>
+l0<span class="keyword">,</span>l1<span class="keyword">,</span>l2<span class="keyword">,</span>l3<span class="keyword">:</span>agz
+<span class="keyword">}</span></span> CHANNEL <span class="keyword">of</span>
+<span class="keyword">@{</span>
+  <span class="stalab">cap</span><span class="keyword">=</span><span class="staexp">intGt</span><span class="keyword">(</span><span class="staexp">0</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">spin</span><span class="keyword">=</span><span class="staexp">spin_vt</span><span class="keyword">(</span><span class="staexp">l0</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">rfcnt</span><span class="keyword">=</span><span class="staexp">intGt</span><span class="keyword">(</span><span class="staexp">0</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">mutex</span><span class="keyword">=</span><span class="staexp">mutex_vt</span><span class="keyword">(</span><span class="staexp">l1</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">CVisnil</span><span class="keyword">=</span><span class="staexp">condvar_vt</span><span class="keyword">(</span><span class="staexp">l2</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">CVisful</span><span class="keyword">=</span><span class="staexp">condvar_vt</span><span class="keyword">(</span><span class="staexp">l3</span><span class="keyword">)</span>
+<span class="keyword">,</span> <span class="stalab">queue</span><span class="keyword">=</span><span class="staexp">ptr</span> <span class="comment">// deqarray</span>
+<span class="keyword">}</span></span></span> <span class="comment">(* end of [channel] *)</span>
+<span class="comment">//</span>
+<span class="staexp"><span class="keyword">assume</span> channel_vtype<span class="keyword">(</span>a<span class="keyword">:</span>vt0p<span class="keyword">)</span> <span class="keyword">=</span> channel_</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+チャネルを表現するレコードには7つのフィールドがあります;
+<FONT
+COLOR="RED"
+>cap</FONT
+> フィールドはそのチャネルの (固定の) 容量を示す整数を保持しています;
+<FONT
+COLOR="RED"
+>spin</FONT
+> フィールドは、<FONT
+COLOR="RED"
+>rfcnt</FONT
+> フィールドにあるリファレンスカウントを保護するためのスピンロックを保持しています;
+<FONT
+COLOR="RED"
+>mutex</FONT
+> フィールドは、<FONT
+COLOR="RED"
+>queue</FONT
+> フィールドにあるキューを保護するための mutex を保持しています;
+<FONT
+COLOR="RED"
+>CVisnil</FONT
+> フィールドは、(mutex を保持した) 呼び出し元がキューが空ではなくなるのを待つための条件変数を保持しています;
+<FONT
+COLOR="RED"
+>CVisful</FONT
+> フィールドは、(mutex を保持した) 呼び出し元がキューが満杯ではなくなるのを待つための条件変数を保持しています。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>channel_insert</FONT
+> には次の実装が与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4436"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+channel_insert
+  <span class="keyword">(</span>chan<span class="keyword">,</span> x0<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span>CHANNEL
+  <span class="staexp"><span class="keyword">{</span>l0<span class="keyword">,</span>l1<span class="keyword">,</span>l2<span class="keyword">,</span>l3<span class="keyword">}</span></span><span class="keyword">(</span>ch<span class="keyword">)</span> <span class="keyword">=</span> chan</span>
+<span class="dynexp"><span class="keyword">val</span> mutex <span class="keyword">=</span> unsafe_mutex_vt2t<span class="keyword">(</span>ch<span class="dynexp"><span class="keyword">.</span>mutex</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pfmut</span> <span class="keyword">|</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=</span> mutex_lock <span class="keyword">(</span>mutex<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> xs <span class="keyword">=</span>
+  $UN<span class="keyword">.</span>castvwtp0<span class="staexp"><span class="keyword">{</span>queue<span class="keyword">(</span>a<span class="keyword">)</span><span class="keyword">}</span></span><span class="keyword">(</span><span class="keyword">(</span><span class="prfexp">pfmut</span> <span class="keyword">|</span> ch<span class="dynexp"><span class="keyword">.</span>queue</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> channel_insert2&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>chan<span class="keyword">,</span> xs<span class="keyword">,</span> x0<span class="keyword">)</span></span>
+<span class="prfexp"><span class="keyword">prval</span> pfmut <span class="keyword">=</span> $UN<span class="keyword">.</span>castview0<span class="staexp"><span class="keyword">{</span>locked_v<span class="keyword">(</span>l1<span class="keyword">)</span><span class="keyword">}</span></span><span class="keyword">(</span>xs<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> mutex_unlock <span class="keyword">(</span><span class="prfexp">pfmut</span> <span class="keyword">|</span> mutex<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [channel_insert]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このとき、補助関数 <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> には次のインターフェイスが与えらえます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4439"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+channel_insert2
+  <span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">channel</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">queue</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">_</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+呼び出し元がチャネル中の mutex を保持した状態で <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> は呼び出されることに注意してください。
+次のコードは <FONT
+COLOR="RED"
+>channel_insert2</FONT
+> の実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4443"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+channel_insert2
+  <span class="keyword">(</span>chan<span class="keyword">,</span> xs<span class="keyword">,</span> x0<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span>CHANNEL
+  <span class="staexp"><span class="keyword">{</span>l0<span class="keyword">,</span>l1<span class="keyword">,</span>l2<span class="keyword">,</span>l3<span class="keyword">}</span></span><span class="keyword">(</span>ch<span class="keyword">)</span> <span class="keyword">=</span> chan</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> isful<span class="keyword">)</span> <span class="keyword">=</span> queue_isful <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+<span class="comment">//</span>
+<span class="keyword">if</span>
+isful
+<span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prval</span>
+  <span class="keyword">(</span>pfmut<span class="keyword">,</span> fpf<span class="keyword">)</span> <span class="keyword">=</span>
+  __assert <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">where</span>
+  <span class="keyword">{</span>
+    <span class="keyword">extern</span>
+    <span class="prfexp"><span class="keyword">praxi</span> __assert <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">vtakeout0</span><span class="keyword">(</span><span class="staexp">locked_v</span><span class="keyword">(</span><span class="staexp">l1</span><span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="keyword">}</span></span>
+  <span class="dynexp"><span class="keyword">val</span> mutex <span class="keyword">=</span> unsafe_mutex_vt2t<span class="keyword">(</span>ch<span class="dynexp"><span class="keyword">.</span>mutex</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> CVisful <span class="keyword">=</span> unsafe_condvar_vt2t<span class="keyword">(</span>ch<span class="dynexp"><span class="keyword">.</span>CVisful</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> condvar_wait <span class="keyword">(</span><span class="prfexp">pfmut</span> <span class="keyword">|</span> CVisful<span class="keyword">,</span> mutex<span class="keyword">)</span></span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> fpf <span class="keyword">(</span>pfmut<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  channel_insert2 <span class="keyword">(</span>chan<span class="keyword">,</span> xs<span class="keyword">,</span> x0<span class="keyword">)</span>
+<span class="keyword">end</span> <span class="comment">// end of [then]</span>
+<span class="keyword">else</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> isnil <span class="keyword">=</span> queue_isnil <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> queue_insert <span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> xs<span class="keyword">,</span> x0<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> isnil<span class="dynexp"><span class="keyword">.1</span></span>
+    <span class="keyword">then</span> condvar_broadcast<span class="keyword">(</span>unsafe_condvar_vt2t<span class="keyword">(</span>ch<span class="dynexp"><span class="keyword">.</span>CVisnil</span><span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="comment">// end of [if]</span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [else]</span>
+<span class="comment">//</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [channel_insert2]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> の背後にあるロジックは次のように説明できます。
+与えられたチャネルのキューが満杯であったなら、呼び出し元はその mutex を手放すために <FONT
+COLOR="RED"
+>condvar_wait</FONT
+>
+を呼び出し、それからチャネルの <FONT
+COLOR="RED"
+>CVisful</FONT
+> フィールド中の条件変数を待ち合わせます;
+条件変数へのシグナル送信で起きた呼び出し元は、mutex を再び保持した後、<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> を再帰的に呼び出します。
+与えられたチャネルのキューが満杯でなかったなら、呼び出し元は <FONT
+COLOR="RED"
+>queue</FONT
+> フィールド中のキューに与えられた要素を挿入して返ります。
+<FONT
+COLOR="RED"
+>channel_insert2</FONT
+> が末尾再帰関数であり、条件変数を待ち合わせるC言語コードによくある標準的な while ループに本質的に対応していることに注意してください。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>channel_insert</FONT
+> (と <FONT
+COLOR="RED"
+>channel_insert2</FONT
+>) の上記実装を真似て、<FONT
+COLOR="RED"
+>channel_remove</FONT
+> の実装を導くことは単純でしょう。
+これは練習問題とします。
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードを含む
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/channel_vt.dats"
+TARGET="_top"
+>channel_vt.dats</A
+>
+ファイルはオンラインから入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4319.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="p4457.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ロックとアンロック</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4166.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>関数テンプレートを使ったプログラミング</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

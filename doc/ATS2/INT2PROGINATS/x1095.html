@@ -95,15 +95,15 @@ NAME="AEN1099"
 ></A
 ><PRE
 CLASS="programlisting"
->datatype IEXP =
-  | IEXPcst of int // constants
-  | IEXPneg of (IEXP) // negative
-  | IEXPadd of (IEXP, IEXP) // addition
-  | IEXPsub of (IEXP, IEXP) // subtraction
-  | IEXPmul of (IEXP, IEXP) // multiplication
-  | IEXPdiv of (IEXP, IEXP) // division
-// end of [IEXP]
-</PRE
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">IEXP <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPcst <span class="keyword">of</span> <span class="staexp">int</span></span> <span class="comment">// constants</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPneg <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// negative</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPadd <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// addition</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPsub <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// subtraction</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPmul <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// multiplication</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPdiv <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span></span> <span class="comment">// division</span>
+<span class="comment">// end of [IEXP]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -152,15 +152,19 @@ NAME="AEN1106"
 ></A
 ><PRE
 CLASS="programlisting"
->fun eval_iexp (e0: IEXP): int = case+ e0 of
-  | IEXPcst (n) =&#62; n
-  | IEXPneg (e) =&#62; ~eval_iexp (e)
-  | IEXPadd (e1, e2) =&#62; eval_iexp (e1) + eval_iexp (e2)
-  | IEXPsub (e1, e2) =&#62; eval_iexp (e1) - eval_iexp (e2)
-  | IEXPmul (e1, e2) =&#62; eval_iexp (e1) * eval_iexp (e2)
-  | IEXPdiv (e1, e2) =&#62; eval_iexp (e1) / eval_iexp (e1)
-// end of [eval_iexp]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+eval_iexp
+  <span class="keyword">(</span>e0<span class="keyword">:</span> <span class="staexp">IEXP</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> e0 <span class="keyword">of</span>
+<span class="keyword">|</span> IEXPcst <span class="keyword">(</span>n<span class="keyword">)</span> <span class="keyword">=&gt;</span> n
+<span class="keyword">|</span> IEXPneg <span class="keyword">(</span>e<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">~</span>eval_iexp <span class="keyword">(</span>e<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPadd <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> + eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPsub <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> - eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPmul <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> * eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPdiv <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> / eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [eval_iexp] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -192,29 +196,29 @@ NAME="AEN1112"
 ></A
 ><PRE
 CLASS="programlisting"
->datatype IEXP =
-  | IEXPcst of int // integer constants
-  | IEXPneg of (IEXP) // negative
-  | IEXPadd of (IEXP, IEXP) // addition
-  | IEXPsub of (IEXP, IEXP) // subtraction
-  | IEXPmul of (IEXP, IEXP) // multiplication
-  | IEXPdiv of (IEXP, IEXP) // division
-  | IEXPif of (BEXP(*test*), IEXP(*then*), IEXP(*else*))
-// end of [IEXP]
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">IEXP <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPcst <span class="keyword">of</span> <span class="staexp">int</span></span> <span class="comment">// integer constants</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPneg <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// negative</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPadd <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// addition</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPsub <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// subtraction</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPmul <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// multiplication</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPdiv <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// division</span>
+  <span class="keyword">|</span> <span class="dynexp">IEXPif <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">BEXP</span><span class="comment">(*test*)</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="comment">(*then*)</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="comment">(*else*)</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [IEXP]</span>
 
-and BEXP = // [and] for combining datatype declarations
-  | BEXPcst of bool // boolean constants
-  | BEXPneg of BEXP // negation
-  | BEXPconj of (BEXP, BEXP) // conjunction
-  | BEXPdisj of (BEXP, BEXP) // disjunction
-  | BEXPeq of (IEXP, IEXP) // equal-to
-  | BEXPneq of (IEXP, IEXP) // not-equal-to
-  | BEXPlt of (IEXP, IEXP) // less-than
-  | BEXPlte of (IEXP, IEXP) // less-than-equal-to
-  | BEXPgt of (IEXP, IEXP) // greater-than
-  | BEXPgte of (IEXP, IEXP) // greater-than-equal-to
-// end of [BEXP]
-</PRE
+<span class="keyword">and</span> <span class="staexp">BEXP <span class="keyword">=</span> <span class="comment">// [and] for combining datatype declarations</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPcst <span class="keyword">of</span> <span class="staexp">bool</span></span> <span class="comment">// boolean constants</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPneg <span class="keyword">of</span> <span class="staexp">BEXP</span></span> <span class="comment">// negation</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPconj <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">BEXP</span><span class="keyword">,</span> <span class="staexp">BEXP</span><span class="keyword">)</span></span> <span class="comment">// conjunction</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPdisj <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">BEXP</span><span class="keyword">,</span> <span class="staexp">BEXP</span><span class="keyword">)</span></span> <span class="comment">// disjunction</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPeq <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// equal-to</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPneq <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// not-equal-to</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPlt <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// less-than</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPlte <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// less-than-equal-to</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPgt <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span> <span class="comment">// greater-than</span>
+  <span class="keyword">|</span> <span class="dynexp">BEXPgte <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">IEXP</span><span class="keyword">,</span> <span class="staexp">IEXP</span><span class="keyword">)</span></span></span> <span class="comment">// greater-than-equal-to</span>
+<span class="comment">// end of [BEXP]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -239,43 +243,51 @@ NAME="AEN1116"
 ></A
 ><PRE
 CLASS="programlisting"
->fun eval_iexp
-  (e0: IEXP): int =
-(
-case+ e0 of
-| IEXPcst n =&#62; n
-| IEXPneg (e) =&#62; ~eval_iexp (e)
-| IEXPadd (e1, e2) =&#62; eval_iexp (e1) + eval_iexp (e2)
-| IEXPsub (e1, e2) =&#62; eval_iexp (e1) - eval_iexp (e2)
-| IEXPmul (e1, e2) =&#62; eval_iexp (e1) * eval_iexp (e2)
-| IEXPdiv (e1, e2) =&#62; eval_iexp (e1) / eval_iexp (e1)
-| IEXPif
-  (
-    e_test, e_then, e_else
-  ) =&#62;
-  (
-    eval_iexp (if eval_bexp (e_test) then e_then else e_else)
-  ) // end of [IEXPif]
-) (* end of [eval_iexp] *)
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+eval_iexp
+<span class="keyword">(</span>
+  e0<span class="keyword">:</span> <span class="staexp">IEXP</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> e0 <span class="keyword">of</span>
+<span class="keyword">|</span> IEXPcst n <span class="keyword">=&gt;</span> n
+<span class="keyword">|</span> IEXPneg <span class="keyword">(</span>e<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">~</span>eval_iexp <span class="keyword">(</span>e<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPadd <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> + eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPsub <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> - eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPmul <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> * eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPdiv <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> / eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span>
+<span class="keyword">|</span> IEXPif
+  <span class="keyword">(</span>
+    e_test<span class="keyword">,</span> e_then<span class="keyword">,</span> e_else
+  <span class="keyword">)</span> <span class="keyword">=&gt;</span>
+  <span class="keyword">(</span>
+    eval_iexp <span class="keyword">(</span><span class="keyword">if</span> eval_bexp <span class="keyword">(</span>e_test<span class="keyword">)</span> <span class="keyword">then</span> e_then <span class="keyword">else</span> e_else<span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="comment">// end of [IEXPif]</span>
+<span class="comment">//</span>
+<span class="keyword">)</span> <span class="comment">(* end of [eval_iexp] *)</span>
 
-and eval_bexp
-  (e0: BEXP): bool =
-(
-case+ e0 of
-| BEXPcst b =&#62; b
-| BEXPneg (e) =&#62; ~eval_bexp (e)
-| BEXPconj (e1, e2) =&#62;
-    if eval_bexp (e1) then eval_bexp (e2) else false
-| BEXPdisj (e1, e2) =&#62;
-    if eval_bexp (e1) then true else eval_bexp (e2)
-| BEXPeq (e1, e2) =&#62; eval_iexp (e1) = eval_iexp (e2)
-| BEXPneq (e1, e2) =&#62; eval_iexp (e1) != eval_iexp (e2)
-| BEXPlt (e1, e2) =&#62; eval_iexp (e1) &#60; eval_iexp (e2)
-| BEXPlte (e1, e2) =&#62; eval_iexp (e1) &#60;= eval_iexp (e2)
-| BEXPgt (e1, e2) =&#62; eval_iexp (e1) &#62; eval_iexp (e2)
-| BEXPgte (e1, e2) =&#62; eval_iexp (e1) &#62;= eval_iexp (e2)
-) (* end of [eval_bexp] *)
-</PRE
+<span class="keyword">and</span>
+eval_bexp
+<span class="keyword">(</span>
+  e0<span class="keyword">:</span> <span class="staexp">BEXP</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> e0 <span class="keyword">of</span>
+<span class="keyword">|</span> BEXPcst b <span class="keyword">=&gt;</span> b
+<span class="keyword">|</span> BEXPneg <span class="keyword">(</span>e<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">~</span>eval_bexp <span class="keyword">(</span>e<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPconj <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">if</span> eval_bexp <span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">then</span> eval_bexp <span class="keyword">(</span>e2<span class="keyword">)</span> <span class="keyword">else</span> false
+<span class="keyword">|</span> BEXPdisj <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">if</span> eval_bexp <span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">then</span> true <span class="keyword">else</span> eval_bexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPeq <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">=</span> eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPneq <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> != eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPlt <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">&lt;</span> eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPlte <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> &lt;= eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPgt <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> <span class="keyword">&gt;</span> eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="keyword">|</span> BEXPgte <span class="keyword">(</span>e1<span class="keyword">,</span> e2<span class="keyword">)</span> <span class="keyword">=&gt;</span> eval_iexp <span class="keyword">(</span>e1<span class="keyword">)</span> &gt;= eval_iexp <span class="keyword">(</span>e2<span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [eval_bexp] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV

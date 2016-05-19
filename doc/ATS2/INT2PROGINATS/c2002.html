@@ -177,11 +177,11 @@ NAME="AEN2012"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun fact (n: int): int
-extern
-fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> "ext#fact2_in_c"</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -245,8 +245,8 @@ NAME="AEN2027"
 ></A
 ><PRE
 CLASS="programlisting"
->implement fact (n) = fact2 (n, 1)
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span> fact <span class="keyword">(</span>n<span class="keyword">)</span> <span class="keyword">=</span> fact2 <span class="keyword">(</span>n<span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -305,9 +305,9 @@ NAME="AEN2036"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
-fact2 (n, res) = if n &#62; 0 then fact2 (n-1, n*res) else res
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+fact2 <span class="keyword">(</span>n<span class="keyword">,</span> res<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> fact2 <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">,</span> n*res<span class="keyword">)</span> <span class="keyword">else</span> res</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -351,9 +351,9 @@ NAME="AEN2046"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun fact2 (n: int, res: int): int = "mac#fact2_in_c"
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> "mac#fact2_in_c"</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -395,9 +395,9 @@ NAME="AEN2055"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun fact2 (n: int, res: int): int = "sta#fact2_in_c"
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> "sta#fact2_in_c"</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -422,8 +422,8 @@ NAME="AEN2059"
 ></A
 ><PRE
 CLASS="programlisting"
->static fun fact2 (n: int, res: int): int
-</PRE
+><p class="patsyntax"><span class="keyword">static</span> <span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -441,8 +441,8 @@ NAME="AEN2061"
 ></A
 ><PRE
 CLASS="programlisting"
->extern fun fact2 (n: int, res: int): int = "sta#"
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span> <span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> "sta#"</span>
+</p></PRE
 ><P
 ></P
 ></DIV

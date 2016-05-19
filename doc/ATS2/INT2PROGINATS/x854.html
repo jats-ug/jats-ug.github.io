@@ -92,8 +92,8 @@ NAME="AEN857"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef I (a:t@ype) = a -&#60;cloref1&#62; a
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">I <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">a</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">a</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -118,9 +118,9 @@ NAME="AEN860"
 ></A
 ><PRE
 CLASS="programlisting"
->fn{a:t0p}
-twice (f: I(a)):&#60;cloref&#62; I(a) = lam (x) =&#62; f (f (x))
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fn</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span>
+twice <span class="keyword">(</span>f<span class="keyword">:</span> <span class="staexp">I</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="staexp">cloref</span><span class="keyword">&gt;</span> <span class="staexp">I</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=&gt;</span> f <span class="keyword">(</span>f <span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -142,20 +142,20 @@ NAME="AEN863"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-typedef I0 = int
-typedef I1 = I(I0)
-typedef I2 = I(I1)
-typedef I3 = I(I2)
-//
-val Z = 0
-val S = lam (x: int): int =&#60;cloref&#62; x + 1
-val ans0 = twice&#60;I0&#62;(S)(Z)
-val ans1 = twice&#60;I1&#62;(twice&#60;I0&#62;)(S)(Z)
-val ans2 = twice&#60;I2&#62;(twice&#60;I1&#62;)(twice&#60;I0&#62;)(S)(Z)
-val ans3 = twice&#60;I3&#62;(twice&#60;I2&#62;)(twice&#60;I1&#62;)(twice&#60;I0&#62;)(S)(Z)
-//
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span> <span class="staexp">I0 <span class="keyword">=</span> <span class="staexp">int</span></span>
+<span class="keyword">typedef</span> <span class="staexp">I1 <span class="keyword">=</span> <span class="staexp">I</span><span class="keyword">(</span><span class="staexp">I0</span><span class="keyword">)</span></span>
+<span class="keyword">typedef</span> <span class="staexp">I2 <span class="keyword">=</span> <span class="staexp">I</span><span class="keyword">(</span><span class="staexp">I1</span><span class="keyword">)</span></span>
+<span class="keyword">typedef</span> <span class="staexp">I3 <span class="keyword">=</span> <span class="staexp">I</span><span class="keyword">(</span><span class="staexp">I2</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> Z <span class="keyword">=</span> <span class="dynexp">0</span></span>
+<span class="dynexp"><span class="keyword">val</span> S <span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=&lt;</span><span class="staexp">cloref</span><span class="keyword">&gt;</span> x + <span class="dynexp">1</span></span>
+<span class="dynexp"><span class="keyword">val</span> ans0 <span class="keyword">=</span> twice&lt;<span class="staexp">I0</span><span class="keyword">&gt;</span><span class="keyword">(</span>S<span class="keyword">)</span><span class="keyword">(</span>Z<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> ans1 <span class="keyword">=</span> twice&lt;<span class="staexp">I1</span><span class="keyword">&gt;</span><span class="keyword">(</span>twice&lt;<span class="staexp">I0</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>S<span class="keyword">)</span><span class="keyword">(</span>Z<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> ans2 <span class="keyword">=</span> twice&lt;<span class="staexp">I2</span><span class="keyword">&gt;</span><span class="keyword">(</span>twice&lt;<span class="staexp">I1</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>twice&lt;<span class="staexp">I0</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>S<span class="keyword">)</span><span class="keyword">(</span>Z<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> ans3 <span class="keyword">=</span> twice&lt;<span class="staexp">I3</span><span class="keyword">&gt;</span><span class="keyword">(</span>twice&lt;<span class="staexp">I2</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>twice&lt;<span class="staexp">I1</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>twice&lt;<span class="staexp">I0</span><span class="keyword">&gt;</span><span class="keyword">)</span><span class="keyword">(</span>S<span class="keyword">)</span><span class="keyword">(</span>Z<span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV

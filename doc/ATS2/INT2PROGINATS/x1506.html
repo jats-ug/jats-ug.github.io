@@ -96,13 +96,13 @@ NAME="AEN1510"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef
-counter = '{
-  get= () -&#60;cloref1&#62; int
-, inc= () -&#60;cloref1&#62; void
-, reset= () -&#60;cloref1&#62; void
-} // end of [counter]
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span>
+<span class="staexp">counter <span class="keyword">=</span> <span class="keyword">'{</span>
+  <span class="stalab">get</span><span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">int</span>
+<span class="keyword">,</span> <span class="stalab">inc</span><span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span>
+<span class="keyword">,</span> <span class="stalab">reset</span><span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span>
+<span class="keyword">}</span></span> <span class="comment">// end of [counter]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -129,17 +129,17 @@ NAME="AEN1514"
 ></A
 ><PRE
 CLASS="programlisting"
->fun newCounter
-(
-// argumentless
-) : counter = let
-  val count = ref&#60;int&#62; (0)
-in '{
-  get= lam () =&#62; !count
-, inc= lam () =&#62; !count := !count + 1
-, reset= lam () =&#62; !count := 0
-} end // end of [newCounter]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> newCounter
+<span class="keyword">(</span>
+<span class="comment">// argumentless</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">counter</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> count <span class="keyword">=</span> ref&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="keyword">in</span> <span class="keyword">'{</span>
+  <span class="dynlab">get</span><span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">!</span>count
+<span class="keyword">,</span> <span class="dynlab">inc</span><span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">!</span>count := <span class="keyword">!</span>count + <span class="dynexp">1</span>
+<span class="keyword">,</span> <span class="dynlab">reset</span><span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">!</span>count := <span class="dynexp">0</span>
+<span class="keyword">}</span> <span class="keyword">end</span></span> <span class="comment">// end of [newCounter]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

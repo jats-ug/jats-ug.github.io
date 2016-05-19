@@ -18,7 +18,7 @@ TITLE="再帰関数の停止性検査"
 HREF="x2485.html"><LINK
 REL="NEXT"
 TITLE="データ型の改良"
-HREF="c2568.html"><LINK
+HREF="c2569.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
@@ -63,7 +63,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="c2568.html"
+HREF="c2569.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -93,29 +93,35 @@ NAME="AEN2538"
 ></A
 ><PRE
 CLASS="programlisting"
->fun isqrt
-  (x: int): int = let
-//
-fun search
-(
-  x: int, l: int, r: int
-) : int = let
-  val diff = r - l
-in
-  case+ 0 of
-  | _ when diff &#62; 0 =&#62; let
-      val m = l + (diff / 2)
-    in
-      // x &#60; m * m is more efficient but can overflow easily
-      if x / m &#60; m then search (x, l, m) else search (x, m, r)
-    end // end of [if]
-  | _ =&#62; l (* the result is found *)
-end // end of [search]
-//
-in
-  search (x, 0, x)
-end // end of [isqrt]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+isqrt
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+search
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> l<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> r<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> diff <span class="keyword">=</span> r - l</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> <span class="dynexp">0</span> <span class="keyword">of</span>
+  <span class="keyword">|</span> _ <span class="keyword">when</span> diff <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> m <span class="keyword">=</span> l + <span class="keyword">(</span>diff / <span class="dynexp">2</span><span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="comment">// x &lt; m * m can overflow easily</span>
+      <span class="keyword">if</span> x / m <span class="keyword">&lt;</span> m
+        <span class="keyword">then</span> search <span class="keyword">(</span>x<span class="keyword">,</span> l<span class="keyword">,</span> m<span class="keyword">)</span> <span class="keyword">else</span> search <span class="keyword">(</span>x<span class="keyword">,</span> m<span class="keyword">,</span> r<span class="keyword">)</span>
+      <span class="comment">// end of [if]</span>
+    <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+  <span class="keyword">|</span> _ <span class="comment">(* diff &lt;= 0 *)</span> <span class="keyword">=&gt;</span> l <span class="comment">(* the result is found *)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [search]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  search <span class="keyword">(</span>x<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">,</span> x<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [isqrt]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -226,37 +232,46 @@ NAME="AEN2561"
 ></A
 ><PRE
 CLASS="programlisting"
->fun
-isqrt{x:nat}
-  (x: int x): int = let
-//
-fun search
-  {x,l,r:nat | l &#60; r} .&#60;r-l&#62;.
-(
-  x: int x, l: int l, r: int r
-) : int = let
-  val diff = r - l
-in
-  case+ 0 of
-  | _ when diff &#62; 1 =&#62; let
-      val m = l + (diff / 2)
-    in
-      if x / m &#60; m then search (x, l, m) else search (x, m, r)
-    end // end of [if]
-  | _ =&#62; l (* the result is found *)
-end // end of [search]
-//
-in
-  if x &#62; 0 then search (x, 0, x) else 0
-end // end of [isqrt]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+isqrt
+<span class="staexp"><span class="keyword">{</span>x<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">x</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+search
+<span class="staexp"><span class="keyword">{</span>x<span class="keyword">,</span>l<span class="keyword">,</span>r<span class="keyword">:</span>nat <span class="keyword">|</span> l <span class="keyword">&lt;</span> r<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">r</span><span class="staexp">-</span><span class="staexp">l</span><span class="keyword">&gt;.</span>
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">x</span><span class="keyword">,</span> l<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">l</span><span class="keyword">,</span> r<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">r</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> diff <span class="keyword">=</span> r - l</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> <span class="dynexp">0</span> <span class="keyword">of</span>
+  <span class="keyword">|</span> _ <span class="keyword">when</span> diff <span class="keyword">&gt;</span> <span class="dynexp">1</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> m <span class="keyword">=</span> l + half<span class="keyword">(</span>diff<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">if</span> x / m <span class="keyword">&lt;</span> m
+        <span class="keyword">then</span> search <span class="keyword">(</span>x<span class="keyword">,</span> l<span class="keyword">,</span> m<span class="keyword">)</span> <span class="keyword">else</span> search <span class="keyword">(</span>x<span class="keyword">,</span> m<span class="keyword">,</span> r<span class="keyword">)</span>
+      <span class="comment">// end of [if]</span>
+    <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+  <span class="keyword">|</span> _ <span class="comment">(* diff &lt;= 1 *)</span> <span class="keyword">=&gt;</span> l <span class="comment">(* the result is found *)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [search]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> x <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> search <span class="keyword">(</span>x<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">0</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [isqrt]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
 
 
-r-l が 1 等しい時に <FONT
+<FONT
+COLOR="RED"
+>r-l</FONT
+> が 1 等しい時に <FONT
 COLOR="RED"
 >search(x, l, r)</FONT
 > が呼び出されると、以前の
@@ -311,7 +326,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="c2568.html"
+HREF="c2569.html"
 ACCESSKEY="N"
 >Next</A
 ></TD

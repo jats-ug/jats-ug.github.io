@@ -1,0 +1,579 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ジェネリックスから遅延束縛へ</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="関数テンプレートを使ったプログラミング"
+HREF="p4457.html"><LINK
+REL="PREVIOUS"
+TITLE="関数テンプレートを使ったプログラミング"
+HREF="p4457.html"><LINK
+REL="NEXT"
+TITLE="例: 数に対するジェネリックス演算"
+HREF="x4523.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="p4457.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4523.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="from-genericity-to-late-binding"
+></A
+>Chapter 17. ジェネリックスから遅延束縛へ</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c4459.html#genericity-of-template-implementations"
+>テンプレート実装のジェネリックス</A
+></DT
+><DT
+><A
+HREF="x4523.html"
+>例: 数に対するジェネリックス演算</A
+></DT
+><DT
+><A
+HREF="x4556.html"
+>ファンクタの特殊形としてのテンプレート</A
+></DT
+><DT
+><A
+HREF="x4586.html"
+>例: ループ生成のためのテンプレート</A
+></DT
+><DT
+><A
+HREF="x4639.html"
+>テンプレートを用いた遅延束縛のサポート</A
+></DT
+></DL
+></DIV
+><P
+>&#13;ATS における関数テンプレートのサポートは ATS のデザインと実装に深く根差しています。
+第一に、関数テンプレートは ATS におけるコード再利用の一般的なアプローチを提供しています。
+それは (妥当性の面で) とても柔軟で、必要になる実行時オーバーヘッドは最小のものです。
+ATSPRE (つまり ATSLIB/prelude) と ATSLIB/libats の両方はテンプレートに基いていて、<B
+CLASS="command"
+>atsopt</B
+>
+によって吐き出されるC言語コードが ATS ソースコード中のテンプレート実体を実装するためにそれらのライブラリにおけるテンプレートは使われます。
+リンクする ATS のライブラリファイル (<TT
+CLASS="filename"
+>libatslib.a</TT
+> と <TT
+CLASS="filename"
+>libatslib.so</TT
+>) は最小のものです。
+それらは ATS ソースコードを実行バイナリにコンパイルするのに不要なことさえあります。
+
+</P
+><P
+>&#13;この章で紹介するコードとテストコードは <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="genericity-of-template-implementations"
+>テンプレート実装のジェネリックス</A
+></H1
+><P
+>&#13;この本の I 章で概説した通り、ネイティブのアンボックス化されたデータの存在下におけるパラメータ多相に関する問題に対して、関数テンプレートは自然な解決策です。
+けれども、関数テンプレートはパラメータ多相の単なるサポートより多くのことが可能です。
+<FONT
+COLOR="RED"
+>myprint</FONT
+> が次のインターフェイスの関数テンプレートだとしましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4471"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> myprint <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+値が与えられたとき、<FONT
+COLOR="RED"
+>myprint</FONT
+> はこの値に対するなんらかの表現を印字するものとしましょう。
+例えば、<FONT
+COLOR="RED"
+>myprint</FONT
+> を次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4475"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span> myprint <span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> print_string <span class="dynstr">"?"</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>myprint</FONT
+> のこの実装はしばしば (完全な) 総称テンプレート実装と呼ばれます。
+そのテンプレートパラメータに何の制限も課されていないからです。
+次のように同じ実装を書く別の方法もあります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4478"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> myprint&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> print_string <span class="dynstr">"?"</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+明らかに、上記 <FONT
+COLOR="RED"
+>myprint</FONT
+> のジェネリックス実装は、与えられた値について特別な情報を何も印字できないという点において十分ではありません。
+型 <FONT
+COLOR="RED"
+>int</FONT
+> の値のみをサポートする <FONT
+COLOR="RED"
+>myprint</FONT
+> を実装したくなるかもしれません:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4483"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span> myprint&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">)</span> <span class="keyword">=</span> print_int <span class="keyword">(</span>x<span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このとき <FONT
+COLOR="RED"
+>print_int</FONT
+> は与えられた整数を印字します。
+<FONT
+COLOR="RED"
+>myprint</FONT
+> のこの実装は特殊テンプレート実装としばしば呼ばれます。
+テンプレートパラメータに特別な型 (つまりこの例では <FONT
+COLOR="RED"
+>int</FONT
+>) を割り当てているからです。
+次のコードは、リスト値 (つまりなんらかの型 T に対する型 <FONT
+COLOR="RED"
+>List(T)</FONT
+> の値) のための <FONT
+COLOR="RED"
+>myprint</FONT
+> を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4490"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+myprint&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> list_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">(</span>myprint&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">;</span> myprint&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>myprint</FONT
+> のこの実装は、しばしば部分的な総称テンプレート実装を呼ばれます。
+この実装を使う <FONT
+COLOR="RED"
+>myprint</FONT
+> のインスタンスのために、そのインスタンスに対するテンプレートパラメータはなんらかの型
+T において <FONT
+COLOR="RED"
+>List(T)</FONT
+> でなければなりません。
+例えば、次のコードは2つの整数のリストのリストを印字するのに <FONT
+COLOR="RED"
+>myprint</FONT
+> のインスタンスを呼び出しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4496"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">(*
+** The output is "0123401234"
+*)</span>
+<span class="dynexp"><span class="keyword">val</span> ys <span class="keyword">=</span> <span class="keyword">$list</span><span class="keyword">{</span><span class="staexp">int</span><span class="keyword">}</span><span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span><span class="dynexp">1</span><span class="keyword">,</span><span class="dynexp">2</span><span class="keyword">,</span><span class="dynexp">3</span><span class="keyword">,</span><span class="dynexp">4</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> yss <span class="keyword">=</span> <span class="keyword">$list</span><span class="keyword">{</span><span class="staexp">List</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">}</span><span class="keyword">(</span>ys<span class="keyword">,</span> ys<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> myprint&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">List</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>yss<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> print_newline<span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;関数テンプレートの実装はある特定の順序に従って順序付けられます。
+これはジェネリックス順序 (genericity ordering) と呼ばれます:
+もし、ある実装が別の実装のインスタンスであるなら、前者のジェネリックスは後者のジェネリックス以下になります。
+与えられたテンプレートインスタンスをコンパイルするのに必要なテンプレート実装の配置には
+(best-fit ではなく) first-fit 戦略が取られることに注意してください。
+より具体的には、特殊テンレプートインスタンスに対するテンプレート実装の配置では、使用可能な最初の1つを探すのにレキシカルスコープの原理に従っています。
+
+</P
+><P
+>&#13;実際には、テンプレートインスタンスに対するテンプレート実装の配置にはほんの少し巧妙な点があります。
+<FONT
+COLOR="RED"
+>myprint2</FONT
+> を次のようなインターフェイスを持つ関数テンプレートとしましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4501"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> myprint2 <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+次のコードは <FONT
+COLOR="RED"
+>myprint2</FONT
+> の部分的な総称テンプレート実装です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4504"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+myprint2&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> list_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">(</span>myprint&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">;</span> <span class="dynexp">1</span> + myprint2 <span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+このテンプレート実装は、実際には予想される共同と違った振舞いをします。
+実装本体で呼び出された <FONT
+COLOR="RED"
+>myprint2</FONT
+> のインスタンスのテンプレートパラメータは、なんらかの
+(種 <FONT
+COLOR="RED"
+>int</FONT
+> の) 静的な項 N に対する <FONT
+COLOR="RED"
+>list(a, N)</FONT
+> 型になることに注意してください。
+これはどのような型 T に対する <FONT
+COLOR="RED"
+>List(T)</FONT
+> にもマッチしないので、テンプレート <FONT
+COLOR="RED"
+>myprint2</FONT
+>
+の呼び出されたインスタンスは与えられた <FONT
+COLOR="RED"
+>myprint2</FONT
+> のテンプレート実装に従ってコンパイルできません。
+この問題は、呼び出される <FONT
+COLOR="RED"
+>myprint2</FONT
+> のインスタンスに、明示的に型 <FONT
+COLOR="RED"
+>List(a)</FONT
+> をテンプレートパラメータとして渡せば簡単に修正できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4514"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+myprint2&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> list_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">(</span>myprint&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">;</span> <span class="dynexp">1</span> + myprint2&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この例におけるインスタンス <FONT
+COLOR="RED"
+>myprint2&#60;List(a)&#62;</FONT
+> はしばしば再帰的なインスタンスと呼ばれます。
+一般に、再帰的なインスタンスの使用を <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>避ける</I
+></SPAN
+> ことは良いプログラミング習慣です。
+例えば、次のような <FONT
+COLOR="RED"
+>myprint2</FONT
+> に相当する実装は再帰的なインスタンスを使っていません:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4519"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+myprint2&lt;<span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">&gt;</span>
+  <span class="keyword">(</span>xs<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+aux
+<span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">List</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+<span class="comment">//</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">0</span>
+<span class="keyword">|</span> list_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>myprint&lt;<span class="staexp">a</span><span class="keyword">&gt;</span><span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">;</span> <span class="dynexp">1</span> + aux<span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  aux <span class="keyword">(</span>xs<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [myprint2&lt;List(a)&gt;]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;この章で紹介したコード全体とテストコードを含む
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_FNTMPINT/myprint.dats"
+TARGET="_top"
+>myprint.dats</A
+>
+はオンラインから入手できます。
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="p4457.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4523.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>関数テンプレートを使ったプログラミング</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p4457.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 数に対するジェネリックス演算</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

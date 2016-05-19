@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ヒープに確保された線形クロージャ関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="観 (view) と観型入門"
+HREF="c3304.html"><LINK
+REL="PREVIOUS"
+TITLE="スタックに確保された値"
+HREF="x3458.html"><LINK
+REL="NEXT"
+TITLE="線形なデータ命題としてのデータ観 (dataview)"
+HREF="c3536.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3458.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 13. 観 (view) と観型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c3536.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="heap-allocated-linear-closure-functions"
+>ヒープに確保された線形クロージャ関数</A
+></H1
+><P
+>&#13;ATS では、クロージャ関数には線形型を割り当てることができます。
+これは型システムによって適切に追跡され、またプログラマによって明示的に解放されます。
+</P
+><P
+>&#13;次のコードは、第二引数に線形クロージャ関数を取る高階関数 <FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+> を実装しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3521"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>b<span class="keyword">:</span><span class="keyword">vt@ype</span>
+<span class="keyword">}</span></span> list_map_cloptr<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> f<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloptr1</span><span class="keyword">&gt;</span> <span class="staexp">b</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">b</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case+</span> xs <span class="keyword">of</span>
+  <span class="keyword">|</span> list_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> list_vt_nil <span class="keyword">(</span><span class="keyword">)</span>
+  <span class="keyword">|</span> list_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span> list_vt_cons <span class="keyword">(</span>f <span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">,</span> list_map_cloptr&lt;<span class="staexp">a</span><span class="keyword">&gt;&lt;</span><span class="staexp">b</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">,</span> f<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+キーワード <FONT
+COLOR="RED"
+>-&#60;cloptr1&#62;</FONT
+> はその関数型が線形クロージャ関数であること示すことに注意してください。
+もし純粋な線形クロージャ関数の型が必要であれば、キーワード  <FONT
+COLOR="RED"
+>-&#60;cloptr0&#62;</FONT
+> が使えます。
+関数型の前にある記号 <FONT
+COLOR="RED"
+>!</FONT
+> は <FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+>
+の線形の第二引数が値渡しであり、<FONT
+COLOR="RED"
+>list_map_cloptr</FONT
+> が返った後もそれが有効であることを意味します。
+</P
+><P
+>&#13;線形クロージャ関数が生成され、呼び出され、最後に解放されるような具体的なコードをいくつか見てみましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3529"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+main0 <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> xs <span class="keyword">=</span>
+<span class="keyword">$list_vt</span><span class="keyword">{</span><span class="staexp">int</span><span class="keyword">}</span><span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">2</span><span class="keyword">,</span> <span class="dynexp">3</span><span class="keyword">,</span> <span class="dynexp">4</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> len <span class="keyword">=</span> list_vt_length <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> f <span class="keyword">=</span> <span class="keyword">lam</span> <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=&lt;</span><span class="staexp">cloptr1</span><span class="keyword">&gt;</span> x * len</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> ys <span class="keyword">=</span>
+list_map_cloptr&lt;<span class="staexp">int</span><span class="keyword">&gt;&lt;</span><span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>$UNSAFE<span class="keyword">.</span>list_vt2t<span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">,</span> f<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> cloptr_free<span class="keyword">(</span>$UNSAFE<span class="keyword">.</span>castvwtp0<span class="staexp"><span class="keyword">{</span>cloptr<span class="keyword">(</span>void<span class="keyword">)</span><span class="keyword">}</span></span><span class="keyword">(</span>f<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">println!</span> <span class="keyword">(</span><span class="dynstr">"xs = "</span><span class="keyword">,</span> xs<span class="keyword">)</span></span> <span class="comment">// xs = 0, 1, 2, 3, 4</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">println!</span> <span class="keyword">(</span><span class="dynstr">"ys = "</span><span class="keyword">,</span> ys<span class="keyword">)</span></span> <span class="comment">// ys = 0, 5, 10, 15, 20</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*freed*)</span><span class="keyword">)</span> <span class="keyword">=</span> list_vt_free <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*freed*)</span><span class="keyword">)</span> <span class="keyword">=</span> list_vt_free <span class="keyword">(</span>ys<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [main0] *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+関数 <FONT
+COLOR="RED"
+>cloptr_free</FONT
+> には次のインターフェイスが与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3532"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> cloptr_free<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>t0p<span class="keyword">}</span></span><span class="keyword">(</span>pclo<span class="keyword">:</span> <span class="staexp">cloptr</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="keyword">!</span><span class="staexp">wrt</span><span class="keyword">&gt;</span> <span class="staexp">void</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+また、<FONT
+COLOR="RED"
+>$UNSAFE.castvwtp0{cloptr(void)}(f)</FONT
+> に含まれるキャストは安全なキャストです。
+
+</P
+><P
+>&#13;ATS1 での線形クロージャ関数のサポートは、高階関数が必要だけれど実行時のガベージコレクション (GC)
+が使えないような場面で重要でした。
+ATS2 では、線形クロージャ関数は GC のない高階関数を使ったプログラミングでも重要ではなくなりました。
+好都合なことにテンプレートを使うことができるのです。
+けれども、もしメモリリークを引き起こさずにデータ構造にクロージャ関数を埋め込みたい場合で、
+さらにメモリを再利用するために GC に頼ることもできない場合には、
+線形クロージャ関数の使用が必要になります。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3458.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c3536.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>スタックに確保された値</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3304.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形なデータ命題としてのデータ観 (dataview)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

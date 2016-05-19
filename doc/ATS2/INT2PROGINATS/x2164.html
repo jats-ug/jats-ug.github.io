@@ -101,10 +101,9 @@ NAME="AEN2169"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-typedef
-"int_and_string" = (int, string)
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="extcode"><span class="keyword">typedef</span> "int_and_string" <span class="keyword">=</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">string</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -161,9 +160,9 @@ NAME="AEN2178"
 ></A
 ><PRE
 CLASS="programlisting"
->datatype abc =
-  | cons1 of int | cons2 of (int, double)
-</PRE
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">abc <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">cons1 <span class="keyword">of</span> <span class="staexp">int</span></span> <span class="keyword">|</span> <span class="dynexp">cons2 <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">double</span><span class="keyword">)</span></span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -213,9 +212,9 @@ NAME="AEN2188"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-vtypedef "cons2_node" = cons2_pstruct(int, double)
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="extcode"><span class="keyword">vtypedef</span> "cons2_node" <span class="keyword">=</span> <span class="staexp">cons2_pstruct</span><span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">double</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -326,10 +325,10 @@ NAME="AEN2205"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun cons2_make (int, double): abc = "mac#"
-val-cons2 (1, 2.34) = cons2_make (1, 2.34)
-</PRE
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> cons2_make <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">double</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">abc</span> <span class="keyword">=</span> "mac#"</span>
+<span class="dynexp"><span class="keyword">val-</span>cons2 <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">2.34</span><span class="keyword">)</span> <span class="keyword">=</span> cons2_make <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">2.34</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV

@@ -138,8 +138,8 @@ NAME="AEN1787"
 ></A
 ><PRE
 CLASS="programlisting"
->fun acker (m: int, n: int): int
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> acker <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -165,16 +165,16 @@ NAME="AEN1791"
 ></A
 ><PRE
 CLASS="programlisting"
->staload "acker.sats"
+><p class="patsyntax"><span class="keyword">staload</span> "acker.sats"
 
-implement
-acker (m, n) =
-  if m &#62; 0 then
-    if n &#62; 0 then acker (m-1, acker (m, n-1))
-    else acker (m-1, 1)
-  else n+1
-// end of [acker]
-</PRE
+<span class="dynexp"><span class="keyword">implement</span>
+acker <span class="keyword">(</span>m<span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> m <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> acker <span class="keyword">(</span>m<span class="keyword">,</span> n-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">else</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span>
+  <span class="keyword">else</span> n+<span class="dynexp">1</span></span>
+<span class="comment">// end of [acker]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -205,17 +205,17 @@ NAME="AEN1796"
 ></A
 ><PRE
 CLASS="programlisting"
->staload ACKER = "acker.sats"
+><p class="patsyntax"><span class="keyword">staload</span> ACKER <span class="keyword">=</span> "acker.sats"
 
-implement $ACKER.acker
-  (m, n) = acker (m, n) where {
-  fun acker (m: int, n:int): int = 
-    if m &#62; 0 then
-      if n &#62; 0 then acker (m-1, acker (m, n-1))
-      else acker (m-1, 1)
-    else n+1
-} // end of [$ACKER.acker]
-</PRE
+<span class="dynexp"><span class="keyword">implement</span> $ACKER<span class="keyword">.</span>acker
+  <span class="keyword">(</span>m<span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">=</span> acker <span class="keyword">(</span>m<span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">where</span> <span class="keyword">{</span>
+  <span class="dynexp"><span class="keyword">fun</span> acker <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> 
+    <span class="keyword">if</span> m <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span>
+      <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> acker <span class="keyword">(</span>m<span class="keyword">,</span> n-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span>
+      <span class="keyword">else</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span>
+    <span class="keyword">else</span> n+<span class="dynexp">1</span></span>
+<span class="keyword">}</span></span> <span class="comment">// end of [$ACKER.acker]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -254,21 +254,21 @@ NAME="AEN1803"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-#include
-"share/atspre_staload.hats"
-//
-staload "acker.sats"
-dynload "acker.dats"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#include</span>
+"share/atspre_staload.hats"</span>
+<span class="comment">//</span>
+<span class="keyword">staload</span> "acker.sats"
+<span class="keyword">dynload</span> "acker.dats"
 
-implement
-main0 () = () where {
-//
-// acker (3, 3) should return 61
-//
-  val () = assertloc (acker (3, 3) = 61)
-} // end of [main0]
-</PRE
+<span class="dynexp"><span class="keyword">implement</span>
+main0 <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">where</span> <span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="comment">// acker (3, 3) should return 61</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>acker <span class="keyword">(</span><span class="dynexp">3</span><span class="keyword">,</span> <span class="dynexp">3</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">61</span><span class="keyword">)</span></span>
+<span class="keyword">}</span></span> <span class="comment">// end of [main0]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -303,8 +303,8 @@ NAME="AEN1809"
 ></A
 ><PRE
 CLASS="programlisting"
->#define ATS_DYNLOADFLAG 0 // no need for dynloading at run-time
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">#define</span> ATS_DYNLOADFLAG 0</span> <span class="comment">// no need for dynloading at run-time</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -428,17 +428,17 @@ NAME="AEN1835"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun acker (m: int, m: int): int
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> acker <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
 
-implement
-acker (m, n) =
-  if m &#62; 0 then
-    if n &#62; 0 then acker (m-1, acker (m, n-1))
-    else acker (m-1, 1)
-  else n+1
-// end of [acker]
-</PRE
+<span class="dynexp"><span class="keyword">implement</span>
+acker <span class="keyword">(</span>m<span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> m <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> acker <span class="keyword">(</span>m<span class="keyword">,</span> n-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">else</span> acker <span class="keyword">(</span>m-<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span>
+  <span class="keyword">else</span> n+<span class="dynexp">1</span></span>
+<span class="comment">// end of [acker]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -460,21 +460,21 @@ NAME="AEN1838"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-#include
-"share/atspre_staload.hats"
-//
-staload "acker3.dats"
-dynload "acker3.dats"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#include</span>
+"share/atspre_staload.hats"</span>
+<span class="comment">//</span>
+<span class="keyword">staload</span> "acker3.dats"
+<span class="keyword">dynload</span> "acker3.dats"
 
-implement
-main0 () = () where {
-//
-// acker (3, 3) should return 61
-//
-  val () = assertloc (acker (3, 3) = 61)
-} // end of [main0]
-</PRE
+<span class="dynexp"><span class="keyword">implement</span>
+main0 <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">where</span> <span class="keyword">{</span>
+<span class="comment">//</span>
+<span class="comment">// acker (3, 3) should return 61</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> assertloc <span class="keyword">(</span>acker <span class="keyword">(</span><span class="dynexp">3</span><span class="keyword">,</span> <span class="dynexp">3</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">61</span><span class="keyword">)</span></span>
+<span class="keyword">}</span></span> <span class="comment">// end of [main0]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

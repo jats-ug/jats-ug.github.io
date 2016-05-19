@@ -1,0 +1,519 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>ロックとアンロック</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="抽象観と観型 (viewtype)"
+HREF="c4166.html"><LINK
+REL="PREVIOUS"
+TITLE="例: 配列を用いたリングバッファ"
+HREF="x4282.html"><LINK
+REL="NEXT"
+TITLE="非同期 IPC のための線形チャネル"
+HREF="x4367.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4282.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. 抽象観と観型 (viewtype)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4367.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="locking-and-unlocking"
+>ロックとアンロック</A
+></H1
+><P
+>&#13;並行プログラミングでは、共有リソースに対する安全なロックとアンロックは本質的で意欲的な課題です。
+この章では、線形型がこの課題を解決するのに有効であることを具体的に説明します。
+
+</P
+><P
+>&#13;はじめに、次のような線形抽象型 <FONT
+COLOR="RED"
+>shared</FONT
+> を導入しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4324"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">absvtype</span> shared<span class="keyword">(</span>a<span class="keyword">:</span>vtype<span class="keyword">)</span> <span class="keyword">=</span> ptr</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+(なんらかのリソースに対する) 観型 VT が与えられたとき、型 <FONT
+COLOR="RED"
+>shared(VT)</FONT
+> の値は、本質的に、型 VT のリソースとなんらかのロックを含んだボックス化レコードです。
+リソースを共有リソースにするために、次のような関数 <FONT
+COLOR="RED"
+>shared_make</FONT
+> が呼ばれます。
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4328"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> shared_make<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vtype<span class="keyword">}</span></span><span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>  
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+型 <FONT
+COLOR="RED"
+>shared(VT)</FONT
+> それ自身が線形であることに注意してください。
+実装では、スピンロックで保護された線形共有リソースにはリファレンスカウントが内在しています。
+関数 <FONT
+COLOR="RED"
+>shared_ref</FONT
+> と <FONT
+COLOR="RED"
+>shared_unref</FONT
+> は共有リソース内のリファレンスカウントを増減させます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4333"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> shared_ref<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vtype<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span> shared_unref<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vtype<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">Option_vt</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+もし共有リソースのリファレンスカウントが 1 であったら、その共有リソースへの <FONT
+COLOR="RED"
+>shared_unref</FONT
+> 呼び出しはそれらの表現で使われていたメモリを解放し、その共有リソースに保存されていたリソースを返します。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>shared_lock</FONT
+> は与えられた共有リソースからリソースを獲得し、関数 <FONT
+COLOR="RED"
+>shared_unlock</FONT
+> はその反対です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4339"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="staexp"><span class="keyword">absview</span> locked_v</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> shared_lock<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vtype<span class="keyword">}</span></span><span class="keyword">(</span><span class="staexp"><span class="keyword">!</span></span><span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">locked_v</span> <span class="keyword">|</span> <span class="staexp">a</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span> shared_unlock<span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vtype<span class="keyword">}</span></span><span class="keyword">(</span><span class="prfexp"><span class="staexp">locked_v</span></span> <span class="keyword">|</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">shared</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+抽象観 <FONT
+COLOR="RED"
+>locked_v</FONT
+> が線形証明として導入されていることに注意してください。この線形証明は共有リソースは獲得の後に解放しなければならないことを、プログラマに気付かせます。
+
+</P
+><P
+>&#13;予想できることですが共有リソースは、スピンロック、リファレンスカウントと (保管されたリソースを差す) ポインタから成る、ボックス化タプルとして実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4343"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">datavtype</span>
+<span class="staexp">shared_ <span class="keyword">(</span>a<span class="keyword">:</span>vtype<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="dynexp">SHARED <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">spin1_vt</span><span class="comment">(*lock*)</span><span class="keyword">,</span> <span class="staexp">int</span><span class="comment">(*count*)</span><span class="keyword">,</span> <span class="staexp">ptr</span><span class="keyword">)</span></span></span>
+<span class="comment">//</span>
+<span class="staexp"><span class="keyword">assume</span> shared <span class="keyword">=</span> shared_</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+型 <FONT
+COLOR="RED"
+>spin1_vt</FONT
+> は線形スピンロックを表わすことに注意してください。関数 <FONT
+COLOR="RED"
+>shared_ref</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4347"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+shared_ref
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>sh<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>SHARED
+  <span class="keyword">(</span>spin<span class="keyword">,</span> count<span class="keyword">,</span> _<span class="keyword">)</span> <span class="keyword">=</span> sh</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+spin <span class="keyword">=</span> <span class="comment">// for temp. use</span>
+  unsafe_spin_vt2t<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+<span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_lock<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> c0 <span class="keyword">=</span> count</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> count := c0 + <span class="dynexp">1</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_unlock<span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> spin<span class="keyword">)</span></span>
+<span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span>sh</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  $UN<span class="keyword">.</span>castvwtp1<span class="staexp"><span class="keyword">{</span>shared<span class="keyword">(</span>a<span class="keyword">)</span><span class="keyword">}</span></span><span class="keyword">(</span>sh<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [shared_ref]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この実装が安全でないキャストをいくつか使っていることは明白です。そのようなキャストを使わない実装は可能だとしてもとても複雑になるでしょう。
+そのとき <FONT
+COLOR="RED"
+>c0</FONT
+> と <FONT
+COLOR="RED"
+>count</FONT
+> に保管された整数の間に束縛を作る前にスピンロックを獲得しなければなりません。
+そうでなければレースコーンディションの原因になります。
+関数 <FONT
+COLOR="RED"
+>shared_unref</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4352"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+shared_unref
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>sh<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>SHARED
+  <span class="keyword">(</span>spin<span class="keyword">,</span> count<span class="keyword">,</span> _<span class="keyword">)</span> <span class="keyword">=</span> sh</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+spin <span class="keyword">=</span> <span class="comment">// for temp. use</span>
+  unsafe_spin_vt2t<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+<span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_lock<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> c0 <span class="keyword">=</span> count</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> count := c0 - <span class="dynexp">1</span></span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_unlock<span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> spin<span class="keyword">)</span></span>
+<span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span>sh</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+<span class="comment">//</span>
+<span class="keyword">if</span>
+c0 &lt;= <span class="dynexp">1</span>
+<span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val+</span><span class="keyword">~</span>SHARED<span class="keyword">(</span>spin<span class="keyword">,</span> _<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=</span> sh</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*freed*)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_vt_destroy<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  Some_vt<span class="keyword">(</span>$UN<span class="keyword">.</span>castvwtp0<span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>x<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span> <span class="comment">// end of [then]</span>
+<span class="keyword">else</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> $UN<span class="keyword">.</span>cast2void<span class="keyword">(</span>sh<span class="keyword">)</span></span> <span class="keyword">in</span> None_vt<span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">end</span> <span class="comment">// end of [else]</span>
+<span class="comment">//</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [shared_unref]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+リファレンスカウントが 1 である場合、共有リソースが解放され、その中のスピンロックが破棄され、そして共有リソースの中にあったリソースが返ります。
+
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>shared_lock</FONT
+> と <FONT
+COLOR="RED"
+>shared_unlock</FONT
+> は次のように実装されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4357"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+shared_lock
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>sh<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>SHARED<span class="keyword">(</span>spin<span class="keyword">,</span> _<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=</span> sh</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+spin <span class="keyword">=</span>
+  unsafe_spin_vt2t<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+<span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=</span> spin_lock<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> x0 <span class="keyword">=</span> $UN<span class="keyword">.</span>castvwtp0<span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>x<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span>sh</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">(</span><span class="prfexp">$UN<span class="keyword">.</span>castview0<span class="keyword">(</span>pf<span class="keyword">)</span></span> <span class="keyword">|</span> x0<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [shared_lock]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4359"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+shared_unlock
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> sh<span class="keyword">,</span> x0<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>SHARED<span class="keyword">(</span>spin<span class="keyword">,</span> _<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=</span> sh</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span>
+spin <span class="keyword">=</span>
+  unsafe_spin_vt2t<span class="keyword">(</span>spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> x := $UN<span class="keyword">.</span>castvwtp0<span class="staexp"><span class="keyword">{</span>ptr<span class="keyword">}</span></span><span class="keyword">(</span>x0<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span>
+  spin_unlock<span class="keyword">(</span><span class="prfexp">$UN<span class="keyword">.</span>castview0<span class="keyword">(</span>pf<span class="keyword">)</span></span> <span class="keyword">|</span> spin<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span>sh</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [shared_unlock]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>shared_lock</FONT
+> において、値 <FONT
+COLOR="RED"
+>x</FONT
+> の中身はスピンロック獲得後に読み出されていることに注目してください。
+これは重要な点で、さもなくばレースコンディションを引き起こします。
+<FONT
+COLOR="RED"
+>shared_unlock</FONT
+> においては、獲得されたスピンロックを解放する前に、値 <FONT
+COLOR="RED"
+>x</FONT
+> の中身を更新しています。
+</P
+><P
+>&#13;この章で紹介したコード全体を含む <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/shared_vt.dats"
+TARGET="_top"
+>shared_vt.dats</A
+>
+ファイルはオンラインから入手できます。
+また、このファイルはロックを保持した動作が: スレッド0が動作し; スレッド1が動作し; スレッド2が動作し; スレッド0が動作し; スレッド1が動作し; スレッド2が動作し; というように動く3つのスレッドの実装も含んでいます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4282.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4367.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: 配列を用いたリングバッファ</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4166.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>非同期 IPC のための線形チャネル</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -96,16 +96,16 @@ NAME="AEN977"
 ></A
 ><PRE
 CLASS="programlisting"
->datatype wday =
-  | Monday of ()
-  | Tuesday of ()
-  | Wednesday of ()
-  | Thursday of ()
-  | Friday of ()
-  | Saturday of ()
-  | Sunday of ()
-// end of [wday]
-</PRE
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">wday <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">Monday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Tuesday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Wednesday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Thursday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Friday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Saturday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp">Sunday <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [wday]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -168,17 +168,17 @@ NAME="AEN991"
 ></A
 ><PRE
 CLASS="programlisting"
->fun isWeekday
-  (x: wday): bool = case x of
-  | Monday() =&#62; true // the first bar (|) is optional
-  | Tuesday() =&#62; true
-  | Wednesday() =&#62; true
-  | Thursday() =&#62; true
-  | Friday() =&#62; true
-  | Saturday() =&#62; false
-  | Sunday() =&#62; false
-// end of [isWeekday]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> isWeekday
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">wday</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">case</span> x <span class="keyword">of</span>
+  <span class="keyword">|</span> Monday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true <span class="comment">// the first bar (|) is optional</span>
+  <span class="keyword">|</span> Tuesday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true
+  <span class="keyword">|</span> Wednesday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true
+  <span class="keyword">|</span> Thursday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true
+  <span class="keyword">|</span> Friday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> true
+  <span class="keyword">|</span> Saturday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> false
+  <span class="keyword">|</span> Sunday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> false</span>
+<span class="comment">// end of [isWeekday]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -223,11 +223,11 @@ NAME="AEN999"
 ></A
 ><PRE
 CLASS="programlisting"
->fun isWeekday
-  (x: wday): bool = case x of
-  | Saturday() =&#62; false | Sunday() =&#62; false | _ =&#62; true
-// end of [isWeekday]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> isWeekday
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">wday</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">case</span> x <span class="keyword">of</span>
+  <span class="keyword">|</span> Saturday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> false <span class="keyword">|</span> Sunday<span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> false <span class="keyword">|</span> _ <span class="keyword">=&gt;</span> true</span>
+<span class="comment">// end of [isWeekday]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

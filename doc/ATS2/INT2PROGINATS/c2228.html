@@ -532,15 +532,15 @@ NAME="AEN2324"
 ></A
 ><PRE
 CLASS="programlisting"
->sortdef nat = {a: int | a &#62;= 0} // for natural numbers
-sortdef pos = {a: int | a &#62;= 1}  // for positive numbers
-sortdef neg = {a: int | a &#60;= ~1}  // for negative numbers
+><p class="patsyntax"><span class="staexp"><span class="keyword">sortdef</span> nat <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> a &gt;= 0<span class="keyword">}</span></span> <span class="comment">// for natural numbers</span>
+<span class="staexp"><span class="keyword">sortdef</span> pos <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> a &gt;= 1<span class="keyword">}</span></span>  <span class="comment">// for positive numbers</span>
+<span class="staexp"><span class="keyword">sortdef</span> neg <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> a &lt;= <span class="keyword">~</span>1<span class="keyword">}</span></span>  <span class="comment">// for negative numbers</span>
 
-sortdef nat1 = {a: nat | a &#60; 1} // for 0
-sortdef nat2 = {a: nat | a &#60; 2} // for 0, 1
-sortdef nat3 = {a: nat | a &#60; 3} // for 0, 1, 2
-sortdef nat4 = {a: nat | a &#60; 4} // for 0, 1, 2, 3
-</PRE
+<span class="staexp"><span class="keyword">sortdef</span> nat1 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> nat <span class="keyword">|</span> a <span class="keyword">&lt;</span> 1<span class="keyword">}</span></span> <span class="comment">// for 0</span>
+<span class="staexp"><span class="keyword">sortdef</span> nat2 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> nat <span class="keyword">|</span> a <span class="keyword">&lt;</span> 2<span class="keyword">}</span></span> <span class="comment">// for 0, 1</span>
+<span class="staexp"><span class="keyword">sortdef</span> nat3 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> nat <span class="keyword">|</span> a <span class="keyword">&lt;</span> 3<span class="keyword">}</span></span> <span class="comment">// for 0, 1, 2</span>
+<span class="staexp"><span class="keyword">sortdef</span> nat4 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> nat <span class="keyword">|</span> a <span class="keyword">&lt;</span> 4<span class="keyword">}</span></span> <span class="comment">// for 0, 1, 2, 3</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -558,10 +558,10 @@ NAME="AEN2326"
 ></A
 ><PRE
 CLASS="programlisting"
->sortdef nat2 = {a: int | 0 &#60;= a; a &#60; 2} // for 0, 1
-sortdef nat3 = {a: int | 0 &#60;= a; a &#60; 3} // for 0, 1, 2
-sortdef sgn = { i:int | ~1 &#60;= i; i &#60;= 1 } // for ~1, 0, 1
-</PRE
+><p class="patsyntax"><span class="staexp"><span class="keyword">sortdef</span> nat2 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> 0 &lt;= a<span class="keyword">;</span> a <span class="keyword">&lt;</span> 2<span class="keyword">}</span></span> <span class="comment">// for 0, 1</span>
+<span class="staexp"><span class="keyword">sortdef</span> nat3 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> 0 &lt;= a<span class="keyword">;</span> a <span class="keyword">&lt;</span> 3<span class="keyword">}</span></span> <span class="comment">// for 0, 1, 2</span>
+<span class="staexp"><span class="keyword">sortdef</span> sgn <span class="keyword">=</span> <span class="keyword">{</span> i<span class="keyword">:</span>int <span class="keyword">|</span> <span class="keyword">~</span>1 &lt;= i<span class="keyword">;</span> i &lt;= 1 <span class="keyword">}</span></span> <span class="comment">// for ~1, 0, 1</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -591,9 +591,9 @@ NAME="AEN2330"
 ></A
 ><PRE
 CLASS="programlisting"
->sortdef nat2 = {a: int | a == 0 || a == 1} // for 0, 1
-sortdef nat3 = {a: int | 0 &#60;= a &#38;&#38; a &#60;= 2} // for 0, 1, 2
-</PRE
+><p class="patsyntax"><span class="staexp"><span class="keyword">sortdef</span> nat2 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> a == 0 || a == 1<span class="keyword">}</span></span> <span class="comment">// for 0, 1</span>
+<span class="staexp"><span class="keyword">sortdef</span> nat3 <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span> int <span class="keyword">|</span> 0 &lt;= a &amp;&amp; a &lt;= 2<span class="keyword">}</span></span> <span class="comment">// for 0, 1, 2</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -626,8 +626,8 @@ NAME="AEN2336"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef Int = [a:int] int (a) // for unspecified integers
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">Int <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>a<span class="keyword">:</span>int<span class="keyword">]</span></span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// for unspecified integers</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -681,8 +681,8 @@ NAME="AEN2347"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef Nat = [a:int | a &#62;= 0] int (a) // for natural numbers
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">Nat <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>a<span class="keyword">:</span>int <span class="keyword">|</span> a &gt;= 0<span class="keyword">]</span></span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// for natural numbers</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -736,8 +736,8 @@ NAME="AEN2358"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef Nat = [a:nat] int (a) // for natural numbers
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">Nat <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>a<span class="keyword">:</span>nat<span class="keyword">]</span></span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span></span> <span class="comment">// for natural numbers</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -871,19 +871,19 @@ NAME="AEN2380"
 ></A
 ><PRE
 CLASS="programlisting"
->fun g1int_neg {i:int} (int i): int (~i) // negation
-fun g1int_add {i,j:int} (int i, int j): int (i+j) // addition
-fun g1int_sub {i,j:int} (int i, int j): int (i-j) // subtraction
-fun g1int_mul {i,j:int} (int i, int j): int (i*j) // multiplication
-fun g1int_div {i,j:int} (int i, int j): int (i/j) // division
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> g1int_neg <span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp"><span class="keyword">~</span></span><span class="staexp">i</span><span class="keyword">)</span></span> <span class="comment">// negation</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_add <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">i</span><span class="staexp">+</span><span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// addition</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_sub <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">i</span><span class="staexp">-</span><span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// subtraction</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_mul <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// multiplication</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_div <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">i</span><span class="staexp">/</span><span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// division</span>
 
-fun g1int_lt {i,j:int} (int i, int j): bool (i &#60; j) // less-than
-fun g1int_lte {i,j:int} (int i, int j): bool (i &#60;= j) // less-than-or-equal-to
-fun g1int_gt {i,j:int} (int i, int j): bool (i &#62; j) // greater-than
-fun g1int_gte {i,j:int} (int i, int j): bool (i &#62;= j) // greater-than-or-equal-to
-fun g1int_eq {i,j:int} (int i, int j): bool (i == j) // equal-to
-fun g1int_neq {i,j:int} (int i, int j): bool (i != j) // not-equal-to
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> g1int_lt <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp"><span class="keyword">&lt;</span></span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// less-than</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_lte <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp">&lt;=</span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// less-than-or-equal-to</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_gt <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// greater-than</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_gte <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp">&gt;=</span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// greater-than-or-equal-to</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_eq <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp">==</span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// equal-to</span>
+<span class="dynexp"><span class="keyword">fun</span> g1int_neq <span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>j<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">int</span> <span class="staexp">j</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp">!=</span> <span class="staexp">j</span><span class="keyword">)</span></span> <span class="comment">// not-equal-to</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -926,8 +926,8 @@ NAME="AEN2384"
 ></A
 ><PRE
 CLASS="programlisting"
->fun g1int_fact {i:nat} (i: int i): int (fact (i))
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> g1int_fact <span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">fact</span> <span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV

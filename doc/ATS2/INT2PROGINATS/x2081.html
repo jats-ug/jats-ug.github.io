@@ -94,21 +94,23 @@ NAME="AEN2084"
 ></A
 ><PRE
 CLASS="programlisting"
->extern
-fun fact (n: int): int
-extern
-fun fact2 (n: int, res: int): int = "ext#fact2_in_c"
-
-implement fact (n) = fact2 (n, 1)
-
-%{
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span> fact2 <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> res<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> "ext#fact2_in_c"</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span> fact <span class="keyword">(</span>n<span class="keyword">)</span> <span class="keyword">=</span> fact2 <span class="keyword">(</span>n<span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="extcode"><span class="extcode">%{
 int
 fact2_in_c (int n, int res)
 {
-  while (n &#62; 0) { res *= n ; n -= 1 ; } ; return res ;
+  while (n &gt; 0) { res *= n ; n -= 1 ; } ; return res ;
 }
-%}
-</PRE
+%}</span></span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV

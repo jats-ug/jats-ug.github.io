@@ -115,10 +115,10 @@ NAME="AEN2493"
 ></A
 ><PRE
 CLASS="programlisting"
->fun fact {n:nat} .&#60;n&#62;.
-  (x: int n): int = if x &#62; 0 then x * fact (x-1) else 1
-// end of [fact]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> fact <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">if</span> x <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> x * fact <span class="keyword">(</span>x-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">1</span></span>
+<span class="comment">// end of [fact]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -150,11 +150,11 @@ NAME="AEN2499"
 ></A
 ><PRE
 CLASS="programlisting"
->fun f91 {i:int} .&#60;max(101-i,0)&#62;. (x: int i)
-  : [j:int | (i &#60; 101 &#38;&#38; j==91) || (i &#62;= 101 &#38;&#38; j==i-10)] int (j) =
-  if x &#62;= 101 then x-10 else f91 (f91 (x+11))
-// end of [f91]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> f91 <span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">max</span><span class="keyword">(</span><span class="staexp">101</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">,</span><span class="staexp">0</span><span class="keyword">)</span><span class="keyword">&gt;.</span> <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">i</span><span class="keyword">)</span>
+  <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>j<span class="keyword">:</span>int <span class="keyword">|</span> <span class="keyword">(</span>i <span class="keyword">&lt;</span> 101 &amp;&amp; j==91<span class="keyword">)</span> || <span class="keyword">(</span>i &gt;= 101 &amp;&amp; j==i-10<span class="keyword">)</span><span class="keyword">]</span></span> <span class="staexp">int</span> <span class="keyword">(</span><span class="staexp">j</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> x &gt;= <span class="dynexp">101</span> <span class="keyword">then</span> x-<span class="dynexp">10</span> <span class="keyword">else</span> f91 <span class="keyword">(</span>f91 <span class="keyword">(</span>x+<span class="dynexp">11</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">// end of [f91]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -194,14 +194,14 @@ NAME="AEN2507"
 ></A
 ><PRE
 CLASS="programlisting"
->fun acker
-  {m,n:nat} .&#60;m,n&#62;.
-  (x: int m, y: int n): Nat =
-  if x &#62; 0 then
-    if y &#62; 0 then acker (x-1, acker (x, y-1)) else acker (x-1, 1)
-  else y + 1
-// end of [acker]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> acker
+  <span class="staexp"><span class="keyword">{</span>m<span class="keyword">,</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">m</span><span class="keyword">,</span><span class="staexp">n</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">m</span><span class="keyword">,</span> y<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">Nat</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> x <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> y <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> acker <span class="keyword">(</span>x-<span class="dynexp">1</span><span class="keyword">,</span> acker <span class="keyword">(</span>x<span class="keyword">,</span> y-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> acker <span class="keyword">(</span>x-<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span>
+  <span class="keyword">else</span> y + <span class="dynexp">1</span></span>
+<span class="comment">// end of [acker]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -265,14 +265,14 @@ NAME="AEN2522"
 ></A
 ><PRE
 CLASS="programlisting"
->fun isevn
-  {n:nat} .&#60;2*n&#62;.
-  (n: int n) : bool =
-  if n = 0 then true else isodd (n-1)
-and isodd
-  {n:nat} .&#60;2*n+1&#62;.
-  (n: int n) : bool = not (isevn (n))
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> isevn
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">2</span><span class="staexp">*</span><span class="staexp">n</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> n <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> true <span class="keyword">else</span> isodd <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span>
+<span class="keyword">and</span> isodd
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">2</span><span class="staexp">*</span><span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> not <span class="keyword">(</span>isevn <span class="keyword">(</span>n<span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV

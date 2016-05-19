@@ -108,8 +108,11 @@ NAME="AEN524"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sum1 (n: int): int = if n &#62;= 1 then sum1 (n-1) + n else 0
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sum1
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> n &gt;= <span class="dynexp">1</span> <span class="keyword">then</span> sum1 <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> + n <span class="keyword">else</span> <span class="dynexp">0</span></span>
+<span class="comment">// end of [sum1]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -165,8 +168,11 @@ NAME="AEN537"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sum2 (m: int, n: int): int = if m &#60;= n then m + sum2 (m+1, n) else 0
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sum2
+  <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> m &lt;= n <span class="keyword">then</span> m + sum2 <span class="keyword">(</span>m+<span class="dynexp">1</span><span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">0</span></span>
+<span class="comment">// end of [sum2]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -238,13 +244,17 @@ NAME="AEN554"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sum3
-  (m: int, n: int): int =
-  if m &#60;= n then let
-    val mn2 = (m+n)/2 in sum3 (m, mn2-1) + mn2 + sum3 (mn2+1, n)
-  end else 0 // end of [if]
-// end of [sum3]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sum3
+  <span class="keyword">(</span>m<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> m &lt;= n
+    <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> mn2 <span class="keyword">=</span> <span class="keyword">(</span>m+n<span class="keyword">)</span>/<span class="dynexp">2</span></span>
+    <span class="keyword">in</span>
+      sum3 <span class="keyword">(</span>m<span class="keyword">,</span> mn2-<span class="dynexp">1</span><span class="keyword">)</span> + mn2 + sum3 <span class="keyword">(</span>mn2+<span class="dynexp">1</span><span class="keyword">,</span> n<span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="comment">// end of [then]</span>
+    <span class="keyword">else</span> <span class="dynexp">0</span></span> <span class="comment">// end of [else]</span>
+<span class="comment">// end of [sum3]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

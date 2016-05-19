@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>観変化のための証明関数</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形なデータ命題としてのデータ観 (dataview)"
+HREF="c3536.html"><LINK
+REL="PREVIOUS"
+TITLE="片方向リストのデータ観"
+HREF="x3684.html"><LINK
+REL="NEXT"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
+HREF="c3791.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3684.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. 線形なデータ命題としてのデータ観 (dataview)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c3791.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="view-changes"
+>観変化のための証明関数</A
+></H1
+><P
+>&#13;<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>観変化 (view-change)</I
+></SPAN
+> という言いまわしは、関数を一連の観の証明に適用してそれらを別の観の証明に変換することを意味しています。
+この関数自身も証明関数なので、観変化それぞれに関連する実行時のコストはありません。
+例えば、どこかのアドレス L について駐観 int32@L の証明は4つの駐観: int8@L, int8@L+1, int8@L+2, int8@L+3
+からなるタプルに変化できます。
+このとき int32 と int8 はそれぞれ32ビットと8ビット整数の型です。
+より興味深い観変化が証明関数としてそれぞれ定義されています。
+この章の残りではそのようないくつかの例を紹介します。
+
+</P
+><P
+>&#13;配列の添字操作を O(1) 時間で実装するには、1つの配列の観を2つの隣接した配列の観に変換する証明関数と、その逆の変換を行なう別の証明関数が必要です。
+形式的に言うと、次の2つの証明関数 <FONT
+COLOR="RED"
+>array_v_split</FONT
+> と <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+>
+を作る必要があるのです:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3745"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+array_v_split
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+  <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pfarr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">,</span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+array_v_unsplit
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+  <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n1<span class="keyword">,</span>n2<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pf1arr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="keyword">)</span><span class="keyword">,</span> pf2arr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">n1</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">n2</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="staexp">+</span><span class="staexp">n2</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>array_v_split</FONT
+> の実装は次のように与えられます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3749"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">primplmnt</span>
+array_v_split
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">}</span></span><span class="keyword">(</span>pfarr<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prfun</span> split
+    <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">i</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>
+    pfarr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="keyword">(</span>
+    <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">i</span><span class="keyword">)</span>
+  <span class="keyword">,</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">=</span>
+    <span class="keyword">sif</span> <span class="staexp">i</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> array_v_cons <span class="keyword">(</span>pf1<span class="keyword">,</span> pf2arr<span class="keyword">)</span> <span class="keyword">=</span> pfarr</span>
+      <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span>pf1res1<span class="keyword">,</span> pf1res2<span class="keyword">)</span> <span class="keyword">=</span> split<span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n-1<span class="keyword">,</span>i-1<span class="keyword">}</span></span> <span class="keyword">(</span>pf2arr<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">(</span>array_v_cons <span class="keyword">(</span>pf1<span class="keyword">,</span> pf1res1<span class="keyword">)</span><span class="keyword">,</span> pf1res2<span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> EQINT <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> eqint_make<span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>0<span class="keyword">}</span></span><span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">(</span>array_v_nil <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">,</span> pfarr<span class="keyword">)</span>
+    <span class="keyword">end</span></span> <span class="comment">// end of [sif]</span>
+<span class="keyword">in</span>
+  split <span class="keyword">(</span>pfarr<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [array_v_split]</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;(<FONT
+COLOR="RED"
+>implement</FONT
+> の代わりに) キーワード <FONT
+COLOR="RED"
+>primplement</FONT
+>
+は証明関数の実装に使われることに注意してください。
+明確に、証明関数 <FONT
+COLOR="RED"
+>split</FONT
+> は数学的帰納法を使って証明を直接エンコードしています。
+<FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> の実装を次に示します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3756"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">primplmnt</span>
+array_v_unsplit
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n1<span class="keyword">,</span>n2<span class="keyword">}</span></span>
+  <span class="keyword">(</span>pf1arr<span class="keyword">,</span> pf2arr<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prfun</span> unsplit
+    <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n1<span class="keyword">,</span>n2<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n1</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>
+    pf1arr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="keyword">)</span>
+  <span class="keyword">,</span> pf2arr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">n1</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">n2</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="staexp">+</span><span class="staexp">n2</span><span class="keyword">)</span> <span class="keyword">=</span>
+    <span class="keyword">sif</span> <span class="staexp">n1</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span>
+      array_v_cons <span class="keyword">(</span>pf1<span class="keyword">,</span> pf1arr<span class="keyword">)</span> <span class="keyword">=</span> pf1arr</span>
+      <span class="prfexp"><span class="keyword">prval</span> pfres <span class="keyword">=</span> unsplit <span class="keyword">(</span>pf1arr<span class="keyword">,</span> pf2arr<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      array_v_cons <span class="keyword">(</span>pf1<span class="keyword">,</span> pfres<span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> array_v_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf1arr</span> <span class="keyword">in</span> pf2arr
+    <span class="keyword">end</span></span> <span class="comment">// end of [sif]</span>
+<span class="keyword">in</span>
+  unsplit <span class="keyword">(</span>pf1arr<span class="keyword">,</span> pf2arr<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [array_v_unsplit]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+証明関数 <FONT
+COLOR="RED"
+>unsplit</FONT
+> もまた数学的帰納法を用いて証明を直接エンコードしています。
+
+</P
+><P
+>&#13;ここで観変化を行なうより興味深い証明関数を見てみましょう。
+証明関数 <FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> のインターフェイスは次のように与えられます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3761"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+array_v_takeout
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+  <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i <span class="keyword">&lt;</span> n<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pfarr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">lin</span><span class="keyword">,</span><span class="staexp">prf</span><span class="keyword">&gt;</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;次の型は、駐観の証明を取り配列観の証明を返すような線形証明関数を表わすことに注意してください:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3764"
+></A
+><PRE
+CLASS="programlisting"
+>a @ l+i*sizeof(a) -&#60;lin,prf&#62; array_v (a, l, n)
+</PRE
+><P
+></P
+></DIV
+>
+
+
+そのような関数は1つ要素が欠けた配列を本質的に表わし、単純に
+<FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> は配列の観を (1つの要素に対する) 駐観と配列の残りを表わす観に変更すると、表現することができます。
+<FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> を使うことで、<FONT
+COLOR="RED"
+>arrget</FONT
+> に別の実装を与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3769"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+arrget<span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">}</span></span>
+  <span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> p<span class="keyword">,</span> i<span class="keyword">)</span> <span class="keyword">=</span> x <span class="keyword">where</span> <span class="keyword">{</span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span>pf1<span class="keyword">,</span> fpf2<span class="keyword">)</span> <span class="keyword">=</span>
+  array_v_takeout<span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">}</span></span> <span class="keyword">(</span>pf<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> x <span class="keyword">=</span> ptr_get1&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="prfexp">pf1</span> <span class="keyword">|</span> ptr_add&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p<span class="keyword">,</span> i<span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf := fpf2 <span class="keyword">(</span>pf1<span class="keyword">)</span></span> <span class="comment">// putting the cell and the rest together</span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [arrget] *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;証明関数 <FONT
+COLOR="RED"
+>array_v_takeout</FONT
+> は次のように実装できます:
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3773"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">primplmnt</span>
+array_v_takeout
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">}</span></span><span class="keyword">(</span>pfarr<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prfun</span> takeout
+    <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i <span class="keyword">&lt;</span> n<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">i</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>
+    pfarr<span class="keyword">:</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="keyword">(</span>
+    <span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+  <span class="keyword">,</span> <span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="staexp">+</span><span class="staexp">i</span><span class="staexp">*</span><span class="staexp">sizeof</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">lin</span><span class="keyword">,</span><span class="staexp">prf</span><span class="keyword">&gt;</span> <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+    <span class="prfexp"><span class="keyword">prval</span> array_v_cons <span class="keyword">(</span>pf1at<span class="keyword">,</span> pf1arr<span class="keyword">)</span> <span class="keyword">=</span> pfarr</span>
+  <span class="keyword">in</span>
+    <span class="keyword">sif</span> <span class="staexp">i</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span>pfres<span class="keyword">,</span> fpfres<span class="keyword">)</span> <span class="keyword">=</span> takeout<span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n-1<span class="keyword">,</span>i-1<span class="keyword">}</span></span><span class="keyword">(</span>pf1arr<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">(</span>pfres<span class="keyword">,</span> <span class="keyword">llam</span> <span class="keyword">(</span>pfres<span class="keyword">)</span> <span class="keyword">=&gt;</span> array_v_cons <span class="keyword">(</span>pf1at<span class="keyword">,</span> fpfres <span class="keyword">(</span>pfres<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> EQINT <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> eqint_make<span class="staexp"><span class="keyword">{</span>i<span class="keyword">,</span>0<span class="keyword">}</span></span><span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">(</span>pf1at<span class="keyword">,</span> <span class="keyword">llam</span> <span class="keyword">(</span>pf1at<span class="keyword">)</span> <span class="keyword">=&gt;</span> array_v_cons <span class="keyword">(</span>pf1at<span class="keyword">,</span> pf1arr<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="comment">// end of [sif]</span>
+  <span class="keyword">end</span></span> <span class="comment">// end of [takeout]</span>
+<span class="keyword">in</span>
+  takeout<span class="staexp"><span class="keyword">{</span>l<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>i<span class="keyword">}</span></span><span class="keyword">(</span>pfarr<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [array_v_takeout]</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>llam</FONT
+> は線形関数を作るキーワードであることに注意してください。
+線形関数が適用されるとそれは消費されてその内にリソースを作り、そしてもし未回収ならば、それが返す結果の中に移動します。
+
+</P
+><P
+>&#13;これまで示してきた観変化のための証明関数は全て配列観の操作でした。
+次のコードはこれらとは異なり、片方向リストを表わす2つの観を1つに結合するものと考えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3778"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+slseg_v_unsplit
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+  <span class="staexp"><span class="keyword">{</span>l1<span class="keyword">,</span>l2<span class="keyword">,</span>l3<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n1<span class="keyword">,</span>n2<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pf1lst<span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l1</span><span class="keyword">,</span> <span class="staexp">l2</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="keyword">)</span><span class="keyword">,</span> pf2lst<span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l2</span><span class="keyword">,</span> <span class="staexp">l3</span><span class="keyword">,</span> <span class="staexp">n2</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l1</span><span class="keyword">,</span> <span class="staexp">l3</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="staexp">+</span><span class="staexp">n2</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> の型は、長さ N1 の L1 から L2 へのリスト片と長さ N2 の L2 から L3
+への別のリスト片は、長さ N1+N2 の L1 から L3 へのリスト片であると考えることができることを本質的に表わしています。
+次の <FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> の実装は <FONT
+COLOR="RED"
+>array_v_unsplit</FONT
+> の実装とおおまかに類似しています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3783"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">primplmnt</span>
+slseg_v_unsplit
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span>pf1lst<span class="keyword">,</span> pf2lst<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="prfexp"><span class="keyword">prfun</span> unsplit
+    <span class="staexp"><span class="keyword">{</span>l1<span class="keyword">,</span>l2<span class="keyword">,</span>l3<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n1<span class="keyword">,</span>n2<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n1</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>
+    pf1lst<span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l1</span><span class="keyword">,</span> <span class="staexp">l2</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="keyword">)</span><span class="keyword">,</span> pf2lst<span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l2</span><span class="keyword">,</span> <span class="staexp">l3</span><span class="keyword">,</span> <span class="staexp">n2</span><span class="keyword">)</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">slseg_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">l1</span><span class="keyword">,</span> <span class="staexp">l3</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="staexp">+</span><span class="staexp">n2</span><span class="keyword">)</span> <span class="keyword">=</span>
+    <span class="keyword">sif</span> <span class="staexp">n1</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> slseg_v_cons <span class="keyword">(</span>pf1at<span class="keyword">,</span> pf1lst<span class="keyword">)</span> <span class="keyword">=</span> pf1lst</span>
+    <span class="keyword">in</span>
+      slseg_v_cons <span class="keyword">(</span>pf1at<span class="keyword">,</span> unsplit <span class="keyword">(</span>pf1lst<span class="keyword">,</span> pf2lst<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> slseg_v_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf1lst</span> <span class="keyword">in</span> pf2lst
+    <span class="keyword">end</span></span> <span class="comment">// end of [sif]</span>
+<span class="keyword">in</span>
+  unsplit <span class="keyword">(</span>pf1lst<span class="keyword">,</span> pf2lst<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [slseg_v_unsplit]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;興味深くも <FONT
+COLOR="RED"
+>slseg_v_unsplit</FONT
+> を使って <FONT
+COLOR="RED"
+>slist_ptr_append</FONT
+>
+を実装できることに読者は気が付くかもしれえません。
+
+</P
+><P
+>&#13;オンラインのファイル <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/array.dats"
+TARGET="_top"
+>array.dats</A
+> と
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/slist.dats"
+TARGET="_top"
+>slist.dats</A
+> からこの章で紹介したコードを入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3684.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c3791.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>片方向リストのデータ観</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3536.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形データ型としてのデータ観型 (dataviewtype)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

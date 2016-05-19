@@ -100,25 +100,25 @@ NAME="AEN844"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-// The type [uint] is for unsigned integers
-//
-fun bsearch_fun
-(
-  f: int -&#60;cloref1&#62; uint
-, x0: uint, lb: int, ub: int
-) : int =
-  if lb &#60;= ub then let
-    val mid = lb + (ub - lb) / 2
-  in
-    if x0 &#60; f (mid) then
-      bsearch_fun (f, x0, lb, mid-1)
-    else
-      bsearch_fun (f, x0, mid+1, ub)
-    // end of [if]
-  end else ub // end of [if]
-// end of [bsearch_fun]
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="comment">// The type [uint] is for unsigned integers</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> bsearch_fun
+<span class="keyword">(</span>
+  f<span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">uint</span>
+<span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">uint</span><span class="keyword">,</span> lb<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> ub<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> lb &lt;= ub <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> mid <span class="keyword">=</span> lb + <span class="keyword">(</span>ub - lb<span class="keyword">)</span> / <span class="dynexp">2</span></span>
+  <span class="keyword">in</span>
+    <span class="keyword">if</span> x0 <span class="keyword">&lt;</span> f <span class="keyword">(</span>mid<span class="keyword">)</span> <span class="keyword">then</span>
+      bsearch_fun <span class="keyword">(</span>f<span class="keyword">,</span> x0<span class="keyword">,</span> lb<span class="keyword">,</span> mid-<span class="dynexp">1</span><span class="keyword">)</span>
+    <span class="keyword">else</span>
+      bsearch_fun <span class="keyword">(</span>f<span class="keyword">,</span> x0<span class="keyword">,</span> mid+<span class="dynexp">1</span><span class="keyword">,</span> ub<span class="keyword">)</span>
+    <span class="comment">// end of [if]</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> ub</span> <span class="comment">// end of [if]</span>
+<span class="comment">// end of [bsearch_fun]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -144,15 +144,15 @@ NAME="AEN848"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-// Assuming that [uint] is of 32 bits
-//
-val ISQRT_MAX = (1 &#60;&#60; 16) - 1 // = 65535
-fun isqrt
-  (x: uint): int =
-  bsearch_fun (lam i =&#62; square ((g0i2u)i), x, 0, ISQRT_MAX)
-// end of [isqrt]
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="comment">// Assuming that [uint] is of 32 bits</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> ISQRT_MAX <span class="keyword">=</span> <span class="keyword">(</span><span class="dynexp">1</span> &lt;&lt; <span class="dynexp">16</span><span class="keyword">)</span> - <span class="dynexp">1</span></span> <span class="comment">// = 65535</span>
+<span class="dynexp"><span class="keyword">fun</span> isqrt
+  <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">uint</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  bsearch_fun <span class="keyword">(</span><span class="keyword">lam</span> i <span class="keyword">=&gt;</span> square <span class="keyword">(</span><span class="keyword">(</span>g0i2u<span class="keyword">)</span>i<span class="keyword">)</span><span class="keyword">,</span> x<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">,</span> ISQRT_MAX<span class="keyword">)</span></span>
+<span class="comment">// end of [isqrt]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

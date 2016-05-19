@@ -100,9 +100,14 @@ NAME="AEN715"
 ></A
 ><PRE
 CLASS="programlisting"
->fun isevn (n: int): bool = if n &#62; 0 then isodd (n-1) else true
-and isodd (n: int): bool = if n &#62; 0 then isevn (n-1) else false
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+isevn <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isodd <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> true
+<span class="comment">//</span>
+<span class="keyword">and</span>
+isodd <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isevn <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> false</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -141,9 +146,14 @@ NAME="AEN723"
 ></A
 ><PRE
 CLASS="programlisting"
->fnx isevn (n: int): bool = if n &#62; 0 then isodd (n-1) else true
-and isodd (n: int): bool = if n &#62; 0 then isevn (n-1) else false
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fnx</span>
+isevn <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isodd <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> true
+<span class="comment">//</span>
+<span class="keyword">and</span>
+isodd <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> isevn <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> false</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -171,27 +181,36 @@ NAME="AEN727"
 ></A
 ><PRE
 CLASS="programlisting"
->fun print_multable () = let
-//
-#define N 9
-//
-fnx loop1 (i: int): void =
-  if i &#60;= N then loop2 (i, 1) else ()
-//
-and loop2 (i: int, j: int): void =
-  if j &#60;= i then let
-    val () = if j &#62;= 2 then print " "
-    val () = printf ("%dx%d=%2.2d", @(j, i, j*i))
-  in
-    loop2 (i, j+1) 
-  end else let
-    val () = print_newline () in loop1 (i+1)
-  end // end of [if]
-//
-in
-  loop1 (1)
-end // end of [print_multable]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+print_multable
+  <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#define</span> N 9</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fnx</span>
+loop1
+  <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i &lt;= N <span class="keyword">then</span> loop2 <span class="keyword">(</span>i<span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="comment">//</span>
+<span class="keyword">and</span>
+loop2
+  <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> j &lt;= i
+    <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">if</span> j &gt;= <span class="dynexp">2</span> <span class="keyword">then</span> print <span class="dynstr">" "</span></span>
+      <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extfcall</span><span class="keyword">(</span>void<span class="keyword">,</span> "printf"<span class="keyword">,</span> "%dx%d=%2.2d"<span class="keyword">,</span> j<span class="keyword">,</span> i<span class="keyword">,</span> j*i<span class="keyword">)</span></span></span>
+    <span class="keyword">in</span>
+      loop2 <span class="keyword">(</span>i<span class="keyword">,</span> j+<span class="dynexp">1</span><span class="keyword">)</span> 
+    <span class="keyword">end</span> <span class="comment">// end of [then]</span>
+    <span class="keyword">else</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> print_newline <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">in</span> loop1 <span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">)</span>
+    <span class="keyword">end</span></span> <span class="comment">// end of [else]</span>
+  <span class="comment">// end of [if]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop1 <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [print_multable]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

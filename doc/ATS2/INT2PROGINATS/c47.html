@@ -129,10 +129,12 @@ NAME="AEN53"
 ></A
 ><PRE
 CLASS="programlisting"
->val _ = print ("Hello, world!\n")
-
-implement main0 () = () // [main] のダミー実装
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> _ <span class="keyword">=</span> print <span class="keyword">(</span><span class="dynstr">"Hello, world!n"</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">implement</span> main0 <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span></span> <span class="comment">// a dummy for [main]</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -148,7 +150,7 @@ COLOR="RED"
 > (アンダースコア) に、関数呼び出し
 <FONT
 COLOR="RED"
->print ("Hello, world!\n")</FONT
+>print ("Hello, world!n")</FONT
 > を束縛します。
 この束縛は作られた後に使われるのではありません。
 評価された時に <FONT
@@ -186,8 +188,8 @@ NAME="AEN65"
 ></A
 ><PRE
 CLASS="programlisting"
->fun main0 (): void
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> main0 <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV

@@ -172,8 +172,8 @@ NAME="AEN1379"
 ></A
 ><PRE
 CLASS="programlisting"
->fun loop (): void = loop ()
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> loop <span class="keyword">(</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -194,8 +194,7 @@ NAME="AEN1382"
 ></A
 ><PRE
 CLASS="programlisting"
->let val _ = [] in print ("Terminated") end
-</PRE
+>let val _ = [] in print ("Terminated") end</PRE
 ><P
 ></P
 ></DIV
@@ -263,9 +262,9 @@ NAME="AEN1397"
 ></A
 ><PRE
 CLASS="programlisting"
->exception FatalError0 of ()
-exception FatalError1 of (string)
-</PRE
+><p class="patsyntax"><span class="keyword">exception</span> <span class="dynexp">FatalError0 <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="keyword">exception</span> <span class="dynexp">FatalError1 <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">string</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -303,11 +302,11 @@ NAME="AEN1404"
 ></A
 ><PRE
 CLASS="programlisting"
->exception DivisionByZero of ()
-fun divexn (x: int, y: int): int =
-  if y != 0 then then x / y else $raise DivisionByZero()
-// end of [divexn]
-</PRE
+><p class="patsyntax"><span class="keyword">exception</span> <span class="dynexp">DivisionByZero <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span> divexn <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> y<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> y != <span class="dynexp">0</span> <span class="keyword">then</span> x / y <span class="keyword">else</span> <span class="dynexp"><span class="keyword">$raise</span> DivisionByZero<span class="keyword">(</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [divexn]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -377,43 +376,43 @@ NAME="AEN1418"
 ></A
 ><PRE
 CLASS="programlisting"
->fun listprod1
-(
-  xs: list0 (int)
-): int =
-(
-  case+ xs of
-  | list0_nil () =&#62; 1
-  | list0_cons (x, xs) =&#62; x * listprod1 (xs)
-) (* end of [listprod1] *)
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> listprod1
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span>
+<span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case+</span> xs <span class="keyword">of</span>
+  <span class="keyword">|</span> list0_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">1</span>
+  <span class="keyword">|</span> list0_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span> x * listprod1 <span class="keyword">(</span>xs<span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [listprod1] *)</span>
 
-fun listprod2
-(
-  xs: list0 (int)
-) : int =
-(
-  case+ xs of
-  | list0_nil () =&#62; 1
-  | list0_cons (x, xs) =&#62;
-      if x = 0 then 0 else x * listprod2 (xs)
-    // end of [list0_cons]
-) (* end of [listprod2] *)
+<span class="dynexp"><span class="keyword">fun</span> listprod2
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case+</span> xs <span class="keyword">of</span>
+  <span class="keyword">|</span> list0_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">1</span>
+  <span class="keyword">|</span> list0_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      <span class="keyword">if</span> x <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="dynexp">0</span> <span class="keyword">else</span> x * listprod2 <span class="keyword">(</span>xs<span class="keyword">)</span>
+    <span class="comment">// end of [list0_cons]</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [listprod2] *)</span>
 
-fun listprod3
-(
-  xs: list0 (int)
-) : int = let
-  exception ZERO of ()
-  fun aux (xs: list0 (int)): int =
-    case+ xs of
-    | list0_cons (x, xs) =&#62;
-        if x = 0 then $raise ZERO() else x * aux (xs)
-    | list0_nil () =&#62; 1
-  // end of [aux]
-in
-  try aux (xs) with ~ZERO () =&#62; 0
-end // end of [listprod3]
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> listprod3
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="keyword">exception</span> <span class="dynexp">ZERO <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">fun</span> aux <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+    <span class="keyword">case+</span> xs <span class="keyword">of</span>
+    <span class="keyword">|</span> list0_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+        <span class="keyword">if</span> x <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="dynexp"><span class="keyword">$raise</span> ZERO<span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">else</span> x * aux <span class="keyword">(</span>xs<span class="keyword">)</span>
+    <span class="keyword">|</span> list0_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">1</span></span>
+  <span class="comment">// end of [aux]</span>
+<span class="keyword">in</span>
+  <span class="dynexp"><span class="keyword">try</span> aux <span class="keyword">(</span>xs<span class="keyword">)</span> <span class="keyword">with</span> <span class="keyword">~</span>ZERO <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> 0</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [listprod3]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

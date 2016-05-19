@@ -116,8 +116,8 @@ NAME="AEN2120"
 ></A
 ><PRE
 CLASS="programlisting"
->fun strcmp (str1: string, str2: string): int
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> strcmp <span class="keyword">(</span>str1<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">,</span> str2<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -157,36 +157,36 @@ NAME="AEN2128"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;staload
-UN = "prelude/SATS/unsafe.sats"
+><p class="patsyntax"><span class="keyword">staload</span>
+UN <span class="keyword">=</span> "prelude/SATS/unsafe.sats"
 
-(* ****** ****** *)
+<span class="comment">(* ****** ****** *)</span>
 
-implement
-strcmp (str1, str2) = let
-//
-fun loop
-  (p1: ptr, p2: ptr): int = let
-//
-val c1 = $UN.ptr0_get&#60;uchar&#62; (p1)
-val c2 = $UN.ptr0_get&#60;uchar&#62; (p2)
-//
-in
-  case+ 0 of
-  | _ when c1 &#62; c2 =&#62;  1
-  | _ when c1 &#60; c2 =&#62; ~1
-  | _ (* c1 = c2 *) =&#62;
-    (
-      if $UN.cast{int}(c1) = 0
-        then 0 else loop (ptr0_succ&#60;uchar&#62; (p1), ptr0_succ&#60;uchar&#62; (p2))
-      // end of [if]
-    )
-end (* end of [loop] *)
-//
-in
-  loop (string2ptr(str1), string2ptr(str2))
-end (* end of [strcmp] *)
-</PRE
+<span class="dynexp"><span class="keyword">implement</span>
+strcmp <span class="keyword">(</span>str1<span class="keyword">,</span> str2<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop
+  <span class="keyword">(</span>p1<span class="keyword">:</span> <span class="staexp">ptr</span><span class="keyword">,</span> p2<span class="keyword">:</span> <span class="staexp">ptr</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> c1 <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_get&lt;<span class="staexp">uchar</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p1<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">val</span> c2 <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_get&lt;<span class="staexp">uchar</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p2<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> <span class="dynexp">0</span> <span class="keyword">of</span>
+  <span class="keyword">|</span> _ <span class="keyword">when</span> c1 <span class="keyword">&gt;</span> c2 <span class="keyword">=&gt;</span>  <span class="dynexp">1</span>
+  <span class="keyword">|</span> _ <span class="keyword">when</span> c1 <span class="keyword">&lt;</span> c2 <span class="keyword">=&gt;</span> <span class="keyword">~</span><span class="dynexp">1</span>
+  <span class="keyword">|</span> _ <span class="comment">(* c1 = c2 *)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">(</span>
+      <span class="keyword">if</span> $UN<span class="keyword">.</span>cast<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>c1<span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">0</span>
+        <span class="keyword">then</span> <span class="dynexp">0</span> <span class="keyword">else</span> loop <span class="keyword">(</span>ptr0_succ&lt;<span class="staexp">uchar</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p1<span class="keyword">)</span><span class="keyword">,</span> ptr0_succ&lt;<span class="staexp">uchar</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p2<span class="keyword">)</span><span class="keyword">)</span>
+      <span class="comment">// end of [if]</span>
+    <span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">(* end of [loop] *)</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>string2ptr<span class="keyword">(</span>str1<span class="keyword">)</span><span class="keyword">,</span> string2ptr<span class="keyword">(</span>str2<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">(* end of [strcmp] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -308,9 +308,9 @@ NAME="AEN2147"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t@ype}
-array_copy_from_list (A: array0(a), xs: list0(a)): void
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+array_copy_from_list <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">array0</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">,</span> xs<span class="keyword">:</span> <span class="staexp">list0</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -353,32 +353,32 @@ NAME="AEN2155"
 ></A
 ><PRE
 CLASS="programlisting"
->staload
-UN = "prelude/SATS/unsafe.sats"
+><p class="patsyntax"><span class="keyword">staload</span>
+UN <span class="keyword">=</span> "prelude/SATS/unsafe.sats"
 
-(* ****** ****** *)
+<span class="comment">(* ****** ****** *)</span>
 
-implement
-{a}(*tmp*)
+<span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
 array_copy_from_list
-  (A, xs) = let
-//
-fun loop
-(
-  p: ptr, xs: list0 (a)
-) : void =
-(
-case+ xs of
-| list0_nil () =&#62; ()
-| list0_cons (x, xs) =&#62; let
-    val () = $UN.ptr0_set&#60;a&#62; (p, x) in loop (ptr0_succ&#60;a&#62; (p), xs)
-  end // end of [list0_cons]
-) (* end of [loop] *)
-//
-in
-  loop (array0_get_ref(A), xs)
-end // end of [array_copy_from_list]
-</PRE
+  <span class="keyword">(</span>A<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop
+<span class="keyword">(</span>
+  p<span class="keyword">:</span> <span class="staexp">ptr</span><span class="keyword">,</span> xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="keyword">case+</span> xs <span class="keyword">of</span>
+<span class="keyword">|</span> list0_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">|</span> list0_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> $UN<span class="keyword">.</span>ptr0_set&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p<span class="keyword">,</span> x<span class="keyword">)</span></span> <span class="keyword">in</span> loop <span class="keyword">(</span>ptr0_succ&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>p<span class="keyword">)</span><span class="keyword">,</span> xs<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="comment">// end of [list0_cons]</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [loop] *)</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>array0_get_ref<span class="keyword">(</span>A<span class="keyword">)</span><span class="keyword">,</span> xs<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [array_copy_from_list]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

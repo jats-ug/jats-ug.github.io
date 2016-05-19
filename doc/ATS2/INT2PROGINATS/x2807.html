@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 関数的な赤黒木</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="データ型の改良"
+HREF="c2569.html"><LINK
+REL="PREVIOUS"
+TITLE="パターンマッチの連続性"
+HREF="x2778.html"><LINK
+REL="NEXT"
+TITLE="ATS/LF を使った定理証明"
+HREF="c2850.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2778.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. データ型の改良</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c2850.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_fun_red-black_trees"
+>例: 関数的な赤黒木</A
+></H1
+><P
+>&#13;赤黒木は、それぞれのノードが赤もしくは黒であり、根からそれぞれの葉までのパスが同じ数の黒ノードを持ち、1つの列に赤ノードが2つ連続しないような二分木として定義されます。
+明確に、赤黒木の最も長いパスの長さはその木の最も短かいパスの長さの2倍が限界です。
+したがって、赤黒木は平衡木の一種です。
+赤黒木のそれぞれのパス黒ノードの数はしばしばその木の <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>黒高さ (black height)</I
+></SPAN
+> と呼ばれます。
+
+</P
+><P
+>&#13;形式的に、赤黒木のデータ型は ATS では次のように宣言できます:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2812"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#define</span> BLK 0</span>
+<span class="neuexp"><span class="keyword">#define</span> RED 1</span>
+<span class="staexp"><span class="keyword">sortdef</span> clr <span class="keyword">=</span> <span class="keyword">{</span>c<span class="keyword">:</span>nat <span class="keyword">|</span> c &lt;= 1<span class="keyword">}</span></span>
+<span class="comment">//</span>
+<span class="keyword">datatype</span> <span class="staexp">rbtree
+  <span class="keyword">(</span>a<span class="keyword">:</span><span class="keyword">t@ype+</span><span class="keyword">,</span> int<span class="comment">(*clr*)</span><span class="keyword">,</span> int<span class="comment">(*bh*)</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">rbtree_nil <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">BLK</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp"><span class="staexp"><span class="keyword">{</span>c<span class="keyword">,</span>cl<span class="keyword">,</span>cr<span class="keyword">:</span>clr <span class="keyword">|</span> cl &lt;= 1-c<span class="keyword">;</span> cr &lt;= 1-c<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+    rbtree_cons <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="staexp">+</span><span class="staexp">1</span><span class="staexp">-</span><span class="staexp">c</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">int</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cl</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cr</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [rbtree]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;木の色は、その木が空であれば根ノードの色は黒になります。
+型 T と整数で表わされる色  C と整数 BH が与えられた時、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH)</FONT
+>
+は色 C で黒高さ BH で型 T の要素を持つような赤黒木を表わします。
+
+</P
+><P
+>&#13;赤黒木に対する (挿入や削除のような) 様々な操作を実装する際、
+はじめに赤ノードの連続を許すような色の違反を含む中間生成の木をコンストラクトする必要がしばしばあります。
+それからそのような違反を修正するために木を回転させるのです。
+このためには上記のデータ型 <FONT
+COLOR="RED"
+>rbtree</FONT
+> は厳格すぎます。
+色が違反するようなどんな中間生成した木にも型を割り当てられないのです。
+この問題に対処するために、次のような <FONT
+COLOR="RED"
+>rbtree</FONT
+> を宣言しましょう:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2819"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">datatype</span> <span class="staexp">rbtree
+<span class="keyword">(</span>
+  a<span class="keyword">:</span><span class="keyword">t@ype+</span>
+<span class="keyword">,</span> int <span class="comment">// color</span>
+<span class="keyword">,</span> int <span class="comment">// black height</span>
+<span class="keyword">,</span> int <span class="comment">// violations</span>
+<span class="keyword">)</span> <span class="keyword">=</span> <span class="comment">// rbtree</span>
+  <span class="keyword">|</span> <span class="dynexp">rbtree_nil <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">BLK</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="dynexp"><span class="staexp"><span class="keyword">{</span>c<span class="keyword">,</span>cl<span class="keyword">,</span>cr<span class="keyword">:</span>clr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>v<span class="keyword">:</span>int<span class="keyword">}</span></span>
+      <span class="staexp"><span class="keyword">{</span>c==BLK &amp;&amp; v==0 || c == RED &amp;&amp; v==cl+cr<span class="keyword">}</span></span>
+    rbtree_cons <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="staexp">+</span><span class="staexp">1</span><span class="staexp">-</span><span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">v</span><span class="keyword">)</span> <span class="keyword">of</span>
+    <span class="keyword">(</span>
+      <span class="staexp">int</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cl</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">rbtree0</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cr</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span>
+    <span class="keyword">)</span></span></span> <span class="comment">(* end of [rbtree_cons] *)</span>
+<span class="comment">// end of [rbtree]</span>
+<span class="comment">//</span>
+<span class="keyword">where</span> <span class="staexp">rbtree0<span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">,</span> <span class="staexp">c<span class="keyword">:</span>int</span><span class="keyword">,</span> <span class="staexp">bh<span class="keyword">:</span>int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp">rbtree</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;1つの列における2つの赤ノードの発生を1つの色違反として数えましょう。
+型 T と整数として表わされる色 C と整数 BH, V が与えられた時、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH, V)</FONT
+>
+は型 T の要素を持ち、色 C で、黒高さ BH で、きっかり V 回の色違反を含む木を表わします。
+したがって、型 <FONT
+COLOR="RED"
+>rbtree(T, C, BH, 0)</FONT
+> は色違反のない有効な赤黒木です。
+
+</P
+><P
+>&#13;1以上の色違反を含む木と1つの要素、別の色違反を含まない木が与えられた時、
+次の操作は有効な赤黒木をコンストラクトします:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2825"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fn</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> insfix_l <span class="comment">// right rotation for fixing left insertion</span>
+  <span class="staexp"><span class="keyword">{</span>cl<span class="keyword">,</span>cr<span class="keyword">:</span>clr<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>v<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">(</span>
+  tl<span class="keyword">:</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cl</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">v</span><span class="keyword">)</span><span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">,</span> tr<span class="keyword">:</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cr</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>c<span class="keyword">:</span>clr<span class="keyword">]</span></span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="neuexp"><span class="keyword">#define</span> B BLK</span><span class="keyword">;</span> <span class="neuexp"><span class="keyword">#define</span> R RED</span><span class="keyword">;</span> <span class="neuexp"><span class="keyword">#define</span> cons rbtree_cons</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> <span class="keyword">(</span>tl<span class="keyword">,</span> x0<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">of</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">,</span> c<span class="keyword">)</span><span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> c<span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span> <span class="comment">// shallow rot</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>cons <span class="keyword">(</span>R<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> b<span class="keyword">,</span> y<span class="keyword">,</span> c<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> c<span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span> <span class="comment">// deep rotation</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span> <span class="keyword">=&gt;&gt;</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [insfix_l]</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;<FONT
+COLOR="RED"
+>insfix_l</FONT
+> のインターフェイスを読んでみることで、引数である2つの木は自然数の黒高さ bh
+が同じで、なおかつ返値の木の黒高さが bh+1 でなくてはいけないことが分かります。
+
+</P
+><P
+>&#13;次の操作 <FONT
+COLOR="RED"
+>insfix_r</FONT
+> は <FONT
+COLOR="RED"
+>insfix_l</FONT
+> の単純な鏡像です:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2832"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fn</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> insfix_r <span class="comment">// left rotation for fixing right insertion</span>
+  <span class="staexp"><span class="keyword">{</span>cl<span class="keyword">,</span>cr<span class="keyword">:</span>clr<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>v<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">(</span>
+  tl<span class="keyword">:</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cl</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span><span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">,</span> tr<span class="keyword">:</span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cr</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">v</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>c<span class="keyword">:</span>clr<span class="keyword">]</span></span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="neuexp"><span class="keyword">#define</span> B BLK</span><span class="keyword">;</span> <span class="neuexp"><span class="keyword">#define</span> R RED</span><span class="keyword">;</span> <span class="neuexp"><span class="keyword">#define</span> cons rbtree_cons</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> <span class="keyword">(</span>tl<span class="keyword">,</span> x0<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">of</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>a<span class="keyword">,</span> x<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> b<span class="keyword">,</span> y<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> c<span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> c<span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span> <span class="comment">// shallow rot</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>a<span class="keyword">,</span> x<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> b<span class="keyword">,</span> y<span class="keyword">,</span> c<span class="keyword">)</span><span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      cons <span class="keyword">(</span>R<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span><span class="keyword">,</span> y<span class="keyword">,</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> c<span class="keyword">,</span> z<span class="keyword">,</span> d<span class="keyword">)</span><span class="keyword">)</span> <span class="comment">// deep rotation</span>
+  <span class="keyword">|</span> <span class="keyword">(</span>a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span> <span class="keyword">=&gt;&gt;</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> a<span class="keyword">,</span> x<span class="keyword">,</span> b<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [insfix_r]</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;これで赤黒木への挿入を実装する準備が整いました。
+与えられた赤黒木に要素を挿入した木は常に有効な赤黒木であることを保証するような、挿入の実装できます。
+次の挿入インターフェイスが正確に保証します:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2835"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> rbtree_insert
+  <span class="staexp"><span class="keyword">{</span>c<span class="keyword">:</span>clr<span class="keyword">}</span></span> <span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  t<span class="keyword">:</span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span><span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span> <span class="staexp">a</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>bh1<span class="keyword">:</span>nat<span class="keyword">]</span></span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">BLK</span><span class="keyword">,</span> <span class="staexp">bh1</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;興味深いことに、このインターフェイスは <FONT
+COLOR="RED"
+>rbtree_insert</FONT
+>
+を呼び出して得られる木が常に黒であることも示しています。
+以下のコードは <FONT
+COLOR="RED"
+>rbtree_insert</FONT
+> の実装です:
+
+</P
+><DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN2840"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span><span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span>
+rbtree_insert
+  <span class="keyword">(</span>t<span class="keyword">,</span> x0<span class="keyword">,</span> cmp<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="neuexp"><span class="keyword">#define</span> B BLK</span>
+<span class="neuexp"><span class="keyword">#define</span> R RED</span>
+<span class="neuexp"><span class="keyword">#define</span> nil rbtree_nil</span>
+<span class="neuexp"><span class="keyword">#define</span> cons rbtree_cons</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> ins
+  <span class="staexp"><span class="keyword">{</span>c<span class="keyword">:</span>clr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>bh<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">bh</span><span class="keyword">,</span><span class="staexp">c</span><span class="keyword">&gt;.</span>
+<span class="keyword">(</span>
+  t<span class="keyword">:</span> <span class="staexp">rbtree0</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">c</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">)</span><span class="keyword">,</span> x0<span class="keyword">:</span> <span class="staexp">a</span>
+<span class="keyword">)</span> <span class="keyword">:</span>
+<span class="staexp"><span class="keyword">[</span>
+  cl<span class="keyword">:</span>clr<span class="keyword">;</span>v<span class="keyword">:</span>nat <span class="keyword">|</span> v &lt;= c
+<span class="keyword">]</span></span> <span class="staexp">rbtree</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">cl</span><span class="keyword">,</span> <span class="staexp">bh</span><span class="keyword">,</span> <span class="staexp">v</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case+</span> t <span class="keyword">of</span>
+  <span class="keyword">|</span> nil <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span>
+      cons<span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>0<span class="keyword">}</span></span> <span class="keyword">(</span>R<span class="keyword">,</span> nil<span class="keyword">,</span> x0<span class="keyword">,</span> nil<span class="keyword">)</span>
+  <span class="keyword">|</span> cons <span class="keyword">(</span>c<span class="keyword">,</span> tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> sgn <span class="keyword">=</span> compare <span class="keyword">(</span>x0<span class="keyword">,</span> x<span class="keyword">,</span> cmp<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">if</span> sgn <span class="keyword">&lt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+        <span class="dynexp"><span class="keyword">val</span> <span class="keyword">[</span><span class="staexp">cl</span><span class="keyword">,</span><span class="staexp">v<span class="keyword">:</span>int</span><span class="keyword">]</span> tl <span class="keyword">=</span> ins <span class="keyword">(</span>tl<span class="keyword">,</span> x0<span class="keyword">)</span></span>
+      <span class="keyword">in</span>
+        <span class="keyword">if</span> c <span class="keyword">=</span> B <span class="keyword">then</span> insfix_l <span class="keyword">(</span>tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span>
+          <span class="keyword">else</span> cons<span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>cl<span class="keyword">}</span></span> <span class="keyword">(</span>R<span class="keyword">,</span> tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span>
+        <span class="comment">// end of [if]</span>
+      <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> sgn <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+        <span class="dynexp"><span class="keyword">val</span> <span class="keyword">[</span><span class="staexp">cr</span><span class="keyword">,</span><span class="staexp">v<span class="keyword">:</span>int</span><span class="keyword">]</span> tr <span class="keyword">=</span> ins <span class="keyword">(</span>tr<span class="keyword">,</span> x0<span class="keyword">)</span></span>
+      <span class="keyword">in</span>
+        <span class="keyword">if</span> c <span class="keyword">=</span> B <span class="keyword">then</span> insfix_r <span class="keyword">(</span>tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span>
+          <span class="keyword">else</span> cons<span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span><span class="keyword">..</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>cr<span class="keyword">}</span></span> <span class="keyword">(</span>R<span class="keyword">,</span> tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span>
+        <span class="comment">// end of [if]</span>
+      <span class="keyword">end</span> <span class="keyword">else</span> t <span class="comment">// end of [if]</span>
+    <span class="keyword">end</span> <span class="comment">// end of [cons]</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [ins] *)</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">val</span> t <span class="keyword">=</span> ins <span class="keyword">(</span>t<span class="keyword">,</span> x0<span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  <span class="keyword">case+</span> t <span class="keyword">of</span> cons <span class="keyword">(</span>R<span class="keyword">,</span> tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">=&gt;</span> cons <span class="keyword">(</span>B<span class="keyword">,</span> tl<span class="keyword">,</span> x<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">|</span> _ <span class="keyword">=&gt;&gt;</span> t
+<span class="keyword">end</span></span> <span class="comment">// end of [rbtree_insert]</span>
+</p></PRE
+><P
+></P
+></DIV
+><P
+>&#13;内部関数 <FONT
+COLOR="RED"
+>ins</FONT
+>
+に割り当てれらた型が、赤黒木にへの挿入方法について形式的な説明を事実上与えていることに注意してください。
+このアルゴリズムの内部構造についてほとんど理解していない疑似コードとして書かれたアルゴリズムを単に頼って、多くのプログラマは赤黒木を実装します。
+例えば、上記の内部関数 <FONT
+COLOR="RED"
+>ins</FONT
+> がC言語で実装されたとしたら、
+その関数が常に与えられた赤黒木の黒高さを管理できているか、判断できるプログラマはほとんどいないでしょう。
+そして木の値が赤になった場合、色違反のある木を作ってしまうかもしれません。
+一方、この不変条件は赤黒木の挿入アルゴリズムとしてよく知られたものと本質的に同じです。
+
+</P
+><P
+>&#13;もし既に与えられた赤黒木に要素が含まれていたら、上記で実装した挿入操作はその要素を挿入しません。
+もしそのような場合、呼び出し元に知らせた方が望ましいかもしれません。
+例えば、この目的のために例外を発生させることもできます。
+代案として、<FONT
+COLOR="RED"
+>rbtree_insert</FONT
+> に参照渡し (call-by-reference) 引数を与えて、挿入しようとした要素が実際に挿入されたのか示すフラグを返す方法があります。
+別の章で参照渡しの意味と、ATS でそれがどのようにサポートされているのか解説します。
+
+</P
+><P
+>&#13;しばしば2分探索木の要素の削除を実装するのは挿入よりもきわめて難しいことがあります。
+これは赤黒木において特に顕著です。
+興味のある読者には、型を使って返値の木が有効な赤黒木であることを保証する赤黒木の削除操作の実装コードとして、
+ATS の libats ライブラリをおすすめします。
+
+</P
+><P
+>&#13;この章のコード全体と追加のテストコードは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_DEPDTREF/rbtree.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2778.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c2850.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>パターンマッチの連続性</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2569.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>ATS/LF を使った定理証明</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

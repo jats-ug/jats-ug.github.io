@@ -1,0 +1,574 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>メモリの確保と解放</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="抽象観と観型 (viewtype)"
+HREF="c4166.html"><LINK
+REL="PREVIOUS"
+TITLE="抽象観と観型 (viewtype)"
+HREF="c4166.html"><LINK
+REL="NEXT"
+TITLE="例: 配列を用いたリングバッファ"
+HREF="x4282.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c4166.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. 抽象観と観型 (viewtype)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4282.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="memory-allocation-deallocation"
+>メモリの確保と解放</A
+></H1
+><P
+>&#13;メモリの確保と解放にまつわる問題は、実行時のガベージコレクション (GC)
+が許されないシステムプログラミングにおいて最重要です。
+メモリ管理を安全にかつ効率よく扱うことは、プログラミングの挑戦において長期にわたる未解決問題です。
+そして ATS におけるその新しい解決策は、定理証明によるプログラミング (PwTP) のパラダイムに堅く根差しています。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>malloc_gc</FONT
+> がメモリ確保のために ATS では用意されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4223"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> malloc_gc
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">n</span><span class="keyword">)</span>
+  <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>agz<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">b0ytes</span> <span class="staexp">n</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span></span>
+<span class="comment">// end of [malloc_gc]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+種 <FONT
+COLOR="RED"
+>agz</FONT
+> は NULL でないアドレスとして定義されたサブセット種です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4226"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">sortdef</span> agz <span class="keyword">=</span> <span class="keyword">{</span>a<span class="keyword">:</span>addr <span class="keyword">|</span> a <span class="keyword">&gt;</span> null<span class="keyword">}</span></span> <span class="comment">// [gz] for great-than-zero</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+整数 N が与えられた時、
+型 <FONT
+COLOR="RED"
+>b0ytes(N)</FONT
+> は N バイトの未初期化の配列を表わす <FONT
+COLOR="RED"
+>@[byte?][N]</FONT
+> の略記です
+従って、駐観 <FONT
+COLOR="RED"
+>b0ytes(N)@L</FONT
+> は L をメモリ位置とすると、配列観
+<FONT
+COLOR="RED"
+>array_v(byte?, L, N)</FONT
+> と同じです。
+観コンストラクタ <FONT
+COLOR="RED"
+>mfree_gc_v</FONT
+> は抽象的です。
+与えられた位置 L について、観 <FONT
+COLOR="RED"
+>mfree_gc_v(L)</FONT
+> は次の関数 <FONT
+COLOR="RED"
+>mfree_gc</FONT
+> によって解放されるべき位置 L に確保したメモリを許可する能力を表わします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4235"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> mfree_gc
+  <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span><span class="prfexp">pfat<span class="keyword">:</span> <span class="staexp">b0ytes</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span></span><span class="keyword">,</span> <span class="prfexp">pfgc<span class="keyword">:</span> <span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span></span> <span class="keyword">|</span> p<span class="keyword">:</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">// end of [free_gc]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+今まで紹介してきた中では、<FONT
+COLOR="RED"
+>mfree_gc_v(L)</FONT
+> はどのような駐観の上にも構築されていないはじめての観の形であることに注意してください。
+
+</P
+><P
+>&#13;実際には、バイト数を直接扱うのはいくぶん面倒です。
+(ある型の) 単一の値を保管するメモリを確保する関数 <FONT
+COLOR="RED"
+>ptr_alloc</FONT
+> と、そのようなメモリを解放する関数
+<FONT
+COLOR="RED"
+>ptr_free</FONT
+> が用意されています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4241"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+ptr_alloc <span class="keyword">(</span><span class="keyword">)</span>
+  <span class="keyword">:&lt;</span><span class="keyword">&gt;</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>agz<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span></span>
+<span class="comment">// end of [ptr_alloc]</span>
+
+<span class="dynexp"><span class="keyword">fun</span> ptr_free
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span>
+  <span class="keyword">(</span><span class="prfexp">pfgc<span class="keyword">:</span> <span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span></span><span class="keyword">,</span> <span class="prfexp">pfat<span class="keyword">:</span> <span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span></span> <span class="keyword">|</span> p<span class="keyword">:</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">=</span> "mac#%"</span>
+<span class="comment">// end of [ptr_free]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+さらに、(ある型の) 値の配列を格納するメモリを確保する関数 <FONT
+COLOR="RED"
+>array_ptr_alloc</FONT
+>
+と、そのようなメモリを解放する関数 <FONT
+COLOR="RED"
+>array_ptr_free</FONT
+> があります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4245"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span>
+array_ptr_alloc
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  asz<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">n</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>agz<span class="keyword">]</span></span>
+<span class="keyword">(</span>
+  <span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span>
+<span class="keyword">)</span></span> <span class="comment">// end of [array_ptr_alloc]</span>
+
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span><span class="keyword">}</span></span>
+array_ptr_free
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  <span class="prfexp"><span class="staexp">array_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span></span><span class="keyword">,</span> <span class="prfexp"><span class="staexp">mfree_gc_v</span> <span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span></span> <span class="comment">// end of [array_ptr_free]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+</P
+><P
+>&#13;ここで配列の確保と解放の両方を必要とする現実的で興味深い例を紹介します。
+次の2つの関数テンプレート <FONT
+COLOR="RED"
+>msort1</FONT
+> と <FONT
+COLOR="RED"
+>msort2</FONT
+> は与えられた配列をマージソートします:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4250"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">cmp <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="staexp">&amp;</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">&amp;</span><span class="staexp">a</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span></span>
+
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> msort1 <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="keyword">@[</span><span class="staexp">a</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">n</span><span class="keyword">,</span> B<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="keyword">@[</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">// end of [msort1]</span>
+
+<span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> msort2 <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="keyword">@[</span><span class="staexp">a</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">n</span><span class="keyword">,</span> B<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="keyword">@[</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="keyword">@[</span><span class="staexp">a</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">// end of [msort2]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+与えられた配列の2つのソート済み部分をマージするには追加領域が必要になることがよく知られています。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> が配列 A と B に対して呼び出された時、配列 A はソートされる対象で、配列 B
+は (ソート済みの配列の領域の) マージを行なうのに必要なスクラッチ領域の一種です。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> 呼び出しが返ると、A のソートされたバージョンはまだ A に保管されています。
+<FONT
+COLOR="RED"
+>msort2</FONT
+> が行なうことも同様ですが、<FONT
+COLOR="RED"
+>msort2</FONT
+> 呼び出しが返ると A のソートされたバージョンは
+B に保管されます。
+興味を持った読者には、良い練習問題として <FONT
+COLOR="RED"
+>msort1</FONT
+> と <FONT
+COLOR="RED"
+>msort2</FONT
+>
+の相互再帰的な実装をしてみることをおすすめします。
+<FONT
+COLOR="RED"
+>msort1</FONT
+> を用いたマージソートの実装は次のようにたやすく与えることができます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4259"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">extern</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> mergeSort<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="keyword">(</span><span class="keyword">@[</span><span class="staexp">a</span><span class="keyword">]</span><span class="keyword">[</span><span class="staexp">n</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">n</span><span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="comment">// end of [mergeSort]</span>
+
+<span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+mergeSort <span class="keyword">(</span>A<span class="keyword">,</span> n<span class="keyword">,</span> cmp<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="prfexp">pfat</span><span class="keyword">,</span> <span class="prfexp">pfgc</span> <span class="keyword">|</span> p<span class="keyword">)</span> <span class="keyword">=</span> array_ptr_alloc&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>n<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> msort1 <span class="keyword">(</span>A<span class="keyword">,</span> n<span class="keyword">,</span> <span class="keyword">!</span>p<span class="keyword">,</span> cmp<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> array_ptr_free <span class="keyword">(</span><span class="prfexp">pfat</span><span class="keyword">,</span> <span class="prfexp">pfgc</span> <span class="keyword">|</span> p<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [mergeSort]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+明確に、配列は (スクラッチ領域として使われるために) はじめに確保され、それからもはや使わなくなった後に解放されます。
+
+</P
+><P
+>&#13;また、特殊な関数 <FONT
+COLOR="RED"
+>alloca</FONT
+> を呼び出すことでコールスタックにメモリを確保する関数も作ることができます。それには ATS では次のような型が与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4263"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">(*
+staload "libc/SATS/alloa.sats"
+*)</span>
+<span class="dynexp"><span class="keyword">fun</span> alloca
+  <span class="staexp"><span class="keyword">{</span>dummy<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">(</span>
+  <span class="prfexp">pf<span class="keyword">:</span> <span class="staexp">void</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">dummy</span></span> <span class="keyword">|</span> n<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>addr<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">bytes</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">bytes</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">void</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">dummy</span> <span class="keyword">|</span> <span class="staexp">ptr</span><span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>alloca</FONT
+> に割り当てられた型は、型付けされた ATS コードが <FONT
+COLOR="RED"
+>alloca</FONT
+> 関数呼び出しが返った後に誤ってその関数呼び出しから得られたメモリにアクセスすることを防止します。
+
+</P
+><P
+>&#13;次の関数 <FONT
+COLOR="RED"
+>array_ptr_alloca_tsz</FONT
+> は動的には <FONT
+COLOR="RED"
+>alloca</FONT
+> と同じです。しかしより便利な型が付けられています:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4270"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+array_ptr_alloca_tsz
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span>vt0p<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>dummy<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  <span class="prfexp">pf<span class="keyword">:</span> <span class="staexp">void</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">dummy</span></span> <span class="keyword">|</span> asz<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> tsz<span class="keyword">:</span> <span class="staexp">sizeof_t</span><span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>addr<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">array</span><span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">,</span><span class="staexp">n</span><span class="keyword">)</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">array</span><span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span><span class="keyword">,</span><span class="staexp">n</span><span class="keyword">)</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">l</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">void</span><span class="staexp"><span class="keyword">@</span></span><span class="staexp">dummy</span> <span class="keyword">|</span> <span class="staexp">ptr</span><span class="keyword">(</span><span class="staexp">l</span><span class="keyword">)</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+例として、上記で実装された関数テンプレート <FONT
+COLOR="RED"
+>mergeSort</FONT
+> 次のように実装することもできます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4273"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+mergeSort <span class="keyword">(</span>A<span class="keyword">,</span> n<span class="keyword">,</span> cmp<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> tsz <span class="keyword">=</span> sizeof&lt;<span class="staexp">a</span><span class="keyword">&gt;</span></span>
+  <span class="keyword">var</span> dummy<span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="keyword">)</span>
+  <span class="prfexp"><span class="keyword">prval</span> pf <span class="keyword">=</span> <span class="dynexp"><span class="keyword">view@</span></span>dummy</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span>
+    <span class="prfexp">pfat</span><span class="keyword">,</span> <span class="prfexp">fpfat</span> <span class="keyword">|</span> p
+  <span class="keyword">)</span> <span class="keyword">=</span> array_ptr_alloca_tsz<span class="staexp"><span class="keyword">{</span>a<span class="keyword">}</span></span><span class="keyword">(</span><span class="prfexp">pf</span> <span class="keyword">|</span> n<span class="keyword">,</span> tsz<span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> msort1&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>A<span class="keyword">,</span> n<span class="keyword">,</span> <span class="keyword">!</span>p<span class="keyword">,</span> cmp<span class="keyword">)</span></span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp"><span class="keyword">view@</span></span>dummy := fpfat <span class="keyword">(</span>pfat<span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">in</span>
+  <span class="comment">// nothing</span>
+<span class="keyword">end</span></span></span> <span class="comment">// end of [mergeSort]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+ここではマージを行なうのに必要なスクラッチ領域として使われる配列を <FONT
+COLOR="RED"
+>mergeSort</FONT
+> のコールスタックに確保しています。この <FONT
+COLOR="RED"
+>mergeSort</FONT
+> の実装は興味深いものですが、実際には以前の実装より劣っています。大きなメモリチャンクを確保する <FONT
+COLOR="RED"
+>alloca</FONT
+> 呼び出しはクラッシュをたやすく引き起こし、その原因を見つけ出すのはしばしば困難です。一般に、<FONT
+COLOR="RED"
+>malloc</FONT
+> よりも <FONT
+COLOR="RED"
+>alloca</FONT
+> を使うことは正当化しずらく、後者に対する呼び出しは綿密に精査すべきです。
+
+</P
+><P
+>&#13;配列に対するマージソートの実装全体とテストコードは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_ABSVTYPE/mergeSort.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c4166.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4282.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>抽象観と観型 (viewtype)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c4166.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: 配列を用いたリングバッファ</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

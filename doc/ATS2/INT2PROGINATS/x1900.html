@@ -114,8 +114,8 @@ NAME="AEN1906"
 ></A
 ><PRE
 CLASS="programlisting"
->abstype intset // a boxed abstract type
-</PRE
+><p class="patsyntax"><span class="staexp"><span class="keyword">abstype</span> intset</span> <span class="comment">// a boxed abstract type</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -148,39 +148,39 @@ NAME="AEN1912"
 ></A
 ><PRE
 CLASS="programlisting"
->// empty set
-val intset_empty : intset
+><p class="patsyntax"><span class="comment">// empty set</span>
+<span class="dynexp"><span class="keyword">val</span> intset_empty <span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// singleton set of [x]
-fun intset_make_sing (x: int): intset
+<span class="comment">// singleton set of [x]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_make_sing <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// turning a list into a set
-fun intset_make_list (xs: list0 int): intset
+<span class="comment">// turning a list into a set</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_make_list <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">list0</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// turning a set into a list
-fun intset_listize (xs: intset): list0 (int)
+<span class="comment">// turning a set into a list</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_listize <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">list0</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span></span>
 
-// membership test
-fun intset_ismem (xs: intset, x: int): bool
+<span class="comment">// membership test</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_ismem <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span></span>
 
-// computing the size of [xs]
-fun intset_size (xs: intset): size_t
+<span class="comment">// computing the size of [xs]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_size <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">size_t</span></span>
 
-// adding [x] into [xs]
-fun intset_add (xs: intset, x: int): intset
+<span class="comment">// adding [x] into [xs]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_add <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// deleting [x] from [xs]
-fun intset_del (xs: intset, x: int): intset
+<span class="comment">// deleting [x] from [xs]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_del <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// union of [xs1] and [xs2]
-fun intset_union (xs1: intset, xs2: intset): intset
+<span class="comment">// union of [xs1] and [xs2]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_union <span class="keyword">(</span>xs1<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> xs2<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// intersection of [xs1] and [xs2]
-fun intset_inter (xs1: intset, xs2: intset): intset
+<span class="comment">// intersection of [xs1] and [xs2]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_inter <span class="keyword">(</span>xs1<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> xs2<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
 
-// difference between [xs1] and [xs2]
-fun intset_differ (xs1: intset, xs2: intset): intset
-</PRE
+<span class="comment">// difference between [xs1] and [xs2]</span>
+<span class="dynexp"><span class="keyword">fun</span> intset_differ <span class="keyword">(</span>xs1<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">,</span> xs2<span class="keyword">:</span> <span class="staexp">intset</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">intset</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -221,8 +221,8 @@ NAME="AEN1919"
 ></A
 ><PRE
 CLASS="programlisting"
->assume intset = list0 (int)
-</PRE
+><p class="patsyntax"><span class="staexp"><span class="keyword">assume</span> intset <span class="keyword">=</span> list0 <span class="keyword">(</span>int<span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -279,28 +279,28 @@ NAME="AEN1930"
 ></A
 ><PRE
 CLASS="programlisting"
->implement
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
 intset_union
-  (xs1, xs2) = (
-case+ (xs1, xs2) of
-| (list0_cons (x1, xs11),
-   list0_cons (x2, xs21)) =&#62;
-  let
-    val sgn = compare (x1, x2)
-  in
-    case+ 0 of
-    | _ when sgn &#60; 0 =&#62;
-        list0_cons{int}(x1, intset_union (xs11, xs2))
-    | _ when sgn &#62; 0 =&#62;
-        list0_cons{int}(x2, intset_union (xs1, xs21))
-    | _ (* sgn = 0 *) =&#62;
-        list0_cons{int}(x1, intset_union (xs11, xs21))
-    // end of [case]
-  end // end of [(cons, cons)]
-| (list0_nil (), _) =&#62; xs2
-| (_, list0_nil ()) =&#62; xs1
-) (* end of [intset_union] *)
-</PRE
+  <span class="keyword">(</span>xs1<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="keyword">case+</span> <span class="keyword">(</span>xs1<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">of</span>
+<span class="keyword">|</span> <span class="keyword">(</span>list0_cons <span class="keyword">(</span>x1<span class="keyword">,</span> xs11<span class="keyword">)</span><span class="keyword">,</span>
+   list0_cons <span class="keyword">(</span>x2<span class="keyword">,</span> xs21<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span>
+  <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> sgn <span class="keyword">=</span> compare <span class="keyword">(</span>x1<span class="keyword">,</span> x2<span class="keyword">)</span></span>
+  <span class="keyword">in</span>
+    <span class="keyword">case+</span> <span class="dynexp">0</span> <span class="keyword">of</span>
+    <span class="keyword">|</span> _ <span class="keyword">when</span> sgn <span class="keyword">&lt;</span> <span class="dynexp">0</span> <span class="keyword">=&gt;</span>
+        list0_cons<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>x1<span class="keyword">,</span> intset_union <span class="keyword">(</span>xs11<span class="keyword">,</span> xs2<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">|</span> _ <span class="keyword">when</span> sgn <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">=&gt;</span>
+        list0_cons<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>x2<span class="keyword">,</span> intset_union <span class="keyword">(</span>xs1<span class="keyword">,</span> xs21<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">|</span> _ <span class="comment">(* sgn = 0 *)</span> <span class="keyword">=&gt;</span>
+        list0_cons<span class="staexp"><span class="keyword">{</span>int<span class="keyword">}</span></span><span class="keyword">(</span>x1<span class="keyword">,</span> intset_union <span class="keyword">(</span>xs11<span class="keyword">,</span> xs21<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="comment">// end of [case]</span>
+  <span class="keyword">end</span> <span class="comment">// end of [(cons, cons)]</span>
+<span class="keyword">|</span> <span class="keyword">(</span>list0_nil <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">,</span> _<span class="keyword">)</span> <span class="keyword">=&gt;</span> xs2
+<span class="keyword">|</span> <span class="keyword">(</span>_<span class="keyword">,</span> list0_nil <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> xs1
+<span class="keyword">)</span></span> <span class="comment">(* end of [intset_union] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV

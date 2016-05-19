@@ -120,8 +120,8 @@ NAME="AEN2421"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef String = [n:nat] string (n)
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">String <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>n<span class="keyword">:</span>nat<span class="keyword">]</span></span> <span class="staexp">string</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -139,16 +139,18 @@ NAME="AEN2423"
 ></A
 ><PRE
 CLASS="programlisting"
->fun string_is_atend
-  {n:int}{i:nat | i &#60;= n}
-  (str: string (n), i: size_t (i)): bool (i==n)
-// end of [string_is_atend]
-
-fun string_isnot_atend
-  {n:int}{i:nat | i &#60;= n}
-  (str: string (n), i: size_t (i)): bool (i &#60; n)
-// end of [string_isnot_atend]
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> string_is_atend
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+  <span class="keyword">(</span>str<span class="keyword">:</span> <span class="staexp">string</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span><span class="staexp">==</span><span class="staexp">n</span><span class="keyword">)</span></span>
+<span class="comment">// end of [string_is_atend]</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> string_isnot_atend
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+  <span class="keyword">(</span>str<span class="keyword">:</span> <span class="staexp">string</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">(</span><span class="staexp">i</span> <span class="staexp"><span class="keyword">&lt;</span></span> <span class="staexp">n</span><span class="keyword">)</span></span>
+<span class="comment">// end of [string_isnot_atend]</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -167,19 +169,19 @@ NAME="AEN2425"
 ></A
 ><PRE
 CLASS="programlisting"
->fun
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
 string_length
-  {n:nat} (
-  str: string (n)
-) : size_t (n) = let
-  fun loop {i:nat | i &#60;= n} .&#60;n-i&#62;.
-    (str: string n, i: size_t i): size_t (n) =
-    if string_isnot_atend (str, i) then loop (str, succ(i)) else i
-  // end of [loop]
-in
-  loop (str, i2sz(0))
-end // end of [string_length]
-</PRE
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">(</span>
+  str<span class="keyword">:</span> <span class="staexp">string</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">fun</span> loop <span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">n</span><span class="staexp">-</span><span class="staexp">i</span><span class="keyword">&gt;.</span>
+    <span class="keyword">(</span>str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">i</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> string_isnot_atend <span class="keyword">(</span>str<span class="keyword">,</span> i<span class="keyword">)</span> <span class="keyword">then</span> loop <span class="keyword">(</span>str<span class="keyword">,</span> succ<span class="keyword">(</span>i<span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> i</span>
+  <span class="comment">// end of [loop]</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>str<span class="keyword">,</span> i2sz<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [string_length]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -211,18 +213,20 @@ NAME="AEN2431"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef charNZ = [c:char | c &#60;&#62; '\000'] char (c)
-
-fun
-string_get_at{n:int}
-  {i:nat | i &#60; n} (str: string n, i: size_t i): charNZ
-overload [] with string_get_at
-
-fun
-string_set_char_at{n:int}
-  {i:nat | i &#60; n} (str: string n, i: size_t i, c: charNZ): void
-overload [] with string_set_char_at
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span> <span class="staexp">charNZ <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>c<span class="keyword">:</span>int <span class="keyword">|</span> c != 0<span class="keyword">]</span></span> <span class="staexp">char</span><span class="keyword">(</span><span class="staexp">c</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+string_get_at
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i <span class="keyword">&lt;</span> n<span class="keyword">}</span></span><span class="keyword">(</span>str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">i</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">charNZ</span></span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">[</span><span class="keyword">]</span> <span class="keyword">with</span> string_get_at</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+string_set_char_at
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i <span class="keyword">&lt;</span> n<span class="keyword">}</span></span><span class="keyword">(</span>str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">i</span><span class="keyword">,</span> c<span class="keyword">:</span> <span class="staexp">charNZ</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span>
+<span class="dynexp"><span class="keyword">overload</span> <span class="keyword">[</span><span class="keyword">]</span> <span class="keyword">with</span> string_set_char_at</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -262,29 +266,29 @@ NAME="AEN2438"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-typedef
-sizeLt (n:int) = [i:nat | i &#60; n] size_t (i)
-//
-fun string_find{n:nat}
-(
-  str: string n, c0: char
-) : Option (sizeLt n) = let
-  typedef res = sizeLt (n)
-  fun loop{i:nat | i &#60;= n}
-  (
-    str: string n, c0: char, i: size_t i
-  ) : Option (res) =
-  (
-    if string_isnot_atend (str, i) then
-      if (c0 = str[i]) then Some{res}(i) else loop (str, c0, succ(i))
-    else None () // end of [if]
-  ) (* end of [loop] *)
-in
-  loop (str, c0, i2sz(0))
-end // end of [string_find]
-//
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">typedef</span>
+<span class="staexp">sizeLt <span class="keyword">(</span><span class="staexp">n<span class="keyword">:</span>int</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="staexp"><span class="keyword">[</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i <span class="keyword">&lt;</span> n<span class="keyword">]</span></span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> string_find<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> c0<span class="keyword">:</span> <span class="staexp">char</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">Option</span> <span class="keyword">(</span><span class="staexp">sizeLt</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="keyword">typedef</span> <span class="staexp">res <span class="keyword">=</span> <span class="staexp">sizeLt</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">fun</span> loop<span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+  <span class="keyword">(</span>
+    str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> c0<span class="keyword">:</span> <span class="staexp">char</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">i</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">Option</span> <span class="keyword">(</span><span class="staexp">res</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">(</span>
+    <span class="keyword">if</span> string_isnot_atend <span class="keyword">(</span>str<span class="keyword">,</span> i<span class="keyword">)</span> <span class="keyword">then</span>
+      <span class="keyword">if</span> <span class="keyword">(</span>c0 <span class="keyword">=</span> <span class="dynexp">str[i<span class="keyword">]</span></span><span class="keyword">)</span> <span class="keyword">then</span> Some<span class="staexp"><span class="keyword">{</span>res<span class="keyword">}</span></span><span class="keyword">(</span>i<span class="keyword">)</span> <span class="keyword">else</span> loop <span class="keyword">(</span>str<span class="keyword">,</span> c0<span class="keyword">,</span> succ<span class="keyword">(</span>i<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="keyword">else</span> None <span class="keyword">(</span><span class="keyword">)</span> <span class="comment">// end of [if]</span>
+  <span class="keyword">)</span></span> <span class="comment">(* end of [loop] *)</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>str<span class="keyword">,</span> c0<span class="keyword">,</span> i2sz<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [string_find]</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -342,35 +346,37 @@ NAME="AEN2451"
 ></A
 ><PRE
 CLASS="programlisting"
->//
-// This implementation does the same as [string_find]
-// but should be more efficient.
-//
-fun
-string_find2{n:nat}
-(
-  str: string n, c0: char
-) : Option (sizeLt n) = let
-//
-fun
-loop{i:nat | i &#60;= n}
-(
-  str: string n
-, c0: char, i: size_t i
-) : Option (sizeLt n) = let
-  typedef res = sizeLt (n)
-  val c = string_test_at (str, i)
-in
-  if c != '\000' then
-  (
-    if (c0 = c) then Some{res}(i) else loop (str, c0, succ(i))
-  ) else None ((*void*)) // end of [if]
-end // end of [loop]
-//
-in
-  loop (str, c0, i2sz(0))
-end // end of [string_find2]
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="comment">// This implementation does the same as [string_find]</span>
+<span class="comment">// but should be more efficient.</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+string_find2<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span><span class="keyword">,</span> c0<span class="keyword">:</span> <span class="staexp">char</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">Option</span> <span class="keyword">(</span><span class="staexp">sizeLt</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+loop<span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  str<span class="keyword">:</span> <span class="staexp">string</span> <span class="staexp">n</span>
+<span class="keyword">,</span> c0<span class="keyword">:</span> <span class="staexp">char</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="staexp">i</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">Option</span> <span class="keyword">(</span><span class="staexp">sizeLt</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="keyword">typedef</span> <span class="staexp">res <span class="keyword">=</span> <span class="staexp">sizeLt</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> c <span class="keyword">=</span> string_test_at <span class="keyword">(</span>str<span class="keyword">,</span> i<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> c != <span class="dynexp">'\000'</span> <span class="keyword">then</span>
+  <span class="keyword">(</span>
+    <span class="keyword">if</span> <span class="keyword">(</span>c0 <span class="keyword">=</span> c<span class="keyword">)</span>
+      <span class="keyword">then</span> Some<span class="staexp"><span class="keyword">{</span>res<span class="keyword">}</span></span><span class="keyword">(</span>i<span class="keyword">)</span> <span class="keyword">else</span> loop<span class="keyword">(</span>str<span class="keyword">,</span> c0<span class="keyword">,</span> succ<span class="keyword">(</span>i<span class="keyword">)</span><span class="keyword">)</span>
+    <span class="comment">// end of [if]</span>
+  <span class="keyword">)</span> <span class="keyword">else</span> None<span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="comment">// end of [if]</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [loop]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>str<span class="keyword">,</span> c0<span class="keyword">,</span> i2sz<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [string_find2]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -391,14 +397,14 @@ NAME="AEN2454"
 ></A
 ><PRE
 CLASS="programlisting"
->fun
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
 string_test_at
-  {n:int}{i:nat | i &#60;= n}
-(
-  str: string (n), i: size_t (i)
-) : [c:char | (c != NUL &#38;&#38; i &#60; n) || (c == NUL &#38;&#38; i &#62;= n)] char c
-// end of [string_test_at]
-</PRE
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>i<span class="keyword">:</span>nat <span class="keyword">|</span> i &lt;= n<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  str<span class="keyword">:</span> <span class="staexp">string</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span> <span class="keyword">(</span><span class="staexp">i</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>c<span class="keyword">:</span>char <span class="keyword">|</span> <span class="keyword">(</span>c != NUL &amp;&amp; i <span class="keyword">&lt;</span> n<span class="keyword">)</span> || <span class="keyword">(</span>c == NUL &amp;&amp; i &gt;= n<span class="keyword">)</span><span class="keyword">]</span></span> <span class="staexp">char</span> <span class="staexp">c</span></span>
+<span class="comment">// end of [string_test_at]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

@@ -98,12 +98,14 @@ NAME="AEN327"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;typedef point2D = @{ x= double, y= double }
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span>
+<span class="staexp">point2D <span class="keyword">=</span> <span class="keyword">@{</span> <span class="stalab">x</span><span class="keyword">=</span> <span class="staexp">double</span><span class="keyword">,</span> <span class="stalab">y</span><span class="keyword">=</span> <span class="staexp">double</span> <span class="keyword">}</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
+
 
 <FONT
 COLOR="RED"
@@ -136,12 +138,13 @@ NAME="AEN334"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;val theOrigin = @{ x= 0.0, y= 0.0 } : point2D
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> theOrigin <span class="keyword">=</span> <span class="keyword">@{</span> <span class="dynlab">x</span><span class="keyword">=</span> <span class="dynexp">0.0</span><span class="keyword">,</span> <span class="dynlab">y</span><span class="keyword">=</span> <span class="dynexp">0.0</span> <span class="keyword">}</span> <span class="keyword">:</span> <span class="staexp">point2D</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
+
 </P
 ><P
 >レコードから要素を選択するために一般的なドット表記を使うことができます。
@@ -156,12 +159,13 @@ NAME="AEN337"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;val theOrigin_x = theOrigin.x and theOrigin_y = theOrigin.y
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> theOrigin_x <span class="keyword">=</span> theOrigin<span class="dynexp"><span class="keyword">.</span>x</span> <span class="keyword">and</span> theOrigin_y <span class="keyword">=</span> theOrigin<span class="dynexp"><span class="keyword">.</span>y</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
+
 
 あるいは要素の選択にパターンマッチを使うこともできます。
 これは次のようなコードになります。
@@ -175,12 +179,13 @@ NAME="AEN339"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;val @{ x= theOrigin_x, y= theOrigin_y } = theOrigin
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> <span class="keyword">@{</span> <span class="dynlab">x</span><span class="keyword">=</span> theOrigin_x<span class="keyword">,</span> <span class="dynlab">y</span><span class="keyword">=</span> theOrigin_y <span class="keyword">}</span> <span class="keyword">=</span> theOrigin</span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
+
 
 この例では <FONT
 COLOR="RED"
@@ -211,13 +216,14 @@ NAME="AEN346"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;val @{ x= theOrigin_x, ... } = theOrigin // x要素のみ
-val @{ y= theOrigin_y, ... } = theOrigin // y要素のみ
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> <span class="keyword">@{</span> <span class="dynlab">x</span><span class="keyword">=</span> theOrigin_x<span class="keyword">,</span> <span class="keyword">...</span> <span class="keyword">}</span> <span class="keyword">=</span> theOrigin</span> <span class="comment">// the x-component only </span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">@{</span> <span class="dynlab">y</span><span class="keyword">=</span> theOrigin_y<span class="keyword">,</span> <span class="keyword">...</span> <span class="keyword">}</span> <span class="keyword">=</span> theOrigin</span> <span class="comment">// the y-component only </span>
+</p></PRE
 ><P
 ></P
 ></DIV
 >
+
 
 もしもこの文法に混乱するようであれば、ドット表記を使うことをおすすめします。
 レコード値のパターンマッチは私自身あまり使いません。

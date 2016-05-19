@@ -99,8 +99,8 @@ NAME="AEN631"
 ></A
 ><PRE
 CLASS="programlisting"
->#define N 8
-</PRE
+><p class="patsyntax"><span class="neuexp"><span class="keyword">#define</span> N 8</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -125,11 +125,11 @@ NAME="AEN635"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef int8 =
-(
-  int, int, int, int, int, int, int, int
-) // end of [int8]
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">int8 <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span>
+<span class="keyword">)</span></span> <span class="comment">// end of [int8]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -155,22 +155,22 @@ NAME="AEN639"
 ></A
 ><PRE
 CLASS="programlisting"
->fun print_dots (i: int): void =
-  if i &#62; 0 then (print ". "; print_dots (i-1)) else ()
-// end of [print_dots]
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> print_dots <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">(</span>print <span class="dynstr">". "</span><span class="keyword">;</span> print_dots <span class="keyword">(</span>i-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+<span class="comment">// end of [print_dots]</span>
 
-fun print_row (i: int): void =
-(
-  print_dots (i); print "Q "; print_dots (N-i-1); print "\n";
-) // end of [print_row]
+<span class="dynexp"><span class="keyword">fun</span> print_row <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  print_dots <span class="keyword">(</span>i<span class="keyword">)</span><span class="keyword">;</span> print <span class="dynstr">"Q "</span><span class="keyword">;</span> print_dots <span class="keyword">(</span>N-i-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">;</span> print <span class="dynstr">"n"</span><span class="keyword">;</span>
+<span class="keyword">)</span></span> <span class="comment">// end of [print_row]</span>
 
-fun print_board (bd: int8): void =
-(
-  print_row (bd.0); print_row (bd.1); print_row (bd.2); print_row (bd.3);
-  print_row (bd.4); print_row (bd.5); print_row (bd.6); print_row (bd.7);
-  print_newline ()
-) // end of [print_board]
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> print_board <span class="keyword">(</span>bd<span class="keyword">:</span> <span class="staexp">int8</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.0</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.1</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.2</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.3</span></span><span class="keyword">)</span><span class="keyword">;</span>
+  print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.4</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.5</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.6</span></span><span class="keyword">)</span><span class="keyword">;</span> print_row <span class="keyword">(</span>bd<span class="dynexp"><span class="keyword">.7</span></span><span class="keyword">)</span><span class="keyword">;</span>
+  print_newline <span class="keyword">(</span><span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">// end of [print_board]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -235,19 +235,19 @@ NAME="AEN649"
 ></A
 ><PRE
 CLASS="programlisting"
->fun board_get
-  (bd: int8, i: int): int =
-  if i = 0 then bd.0
-  else if i = 1 then bd.1
-  else if i = 2 then bd.2
-  else if i = 3 then bd.3
-  else if i = 4 then bd.4
-  else if i = 5 then bd.5
-  else if i = 6 then bd.6
-  else if i = 7 then bd.7
-  else ~1 // end of [if]
-// end of [board_get]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> board_get
+  <span class="keyword">(</span>bd<span class="keyword">:</span> <span class="staexp">int8</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.0</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">1</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.1</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">2</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.2</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">3</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.3</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">4</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.4</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">5</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.5</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">6</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.6</span></span>
+  <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">7</span> <span class="keyword">then</span> bd<span class="dynexp"><span class="keyword">.7</span></span>
+  <span class="keyword">else</span> <span class="keyword">~</span><span class="dynexp">1</span></span> <span class="comment">// end of [if]</span>
+<span class="comment">// end of [board_get]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -271,29 +271,29 @@ NAME="AEN653"
 ></A
 ><PRE
 CLASS="programlisting"
->fun board_set
-  (bd: int8, i: int, j:int): int8 = let
-  val (x0, x1, x2, x3, x4, x5, x6, x7) = bd
-in
-  if i = 0 then let
-    val x0 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 1 then let
-    val x1 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 2 then let
-    val x2 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 3 then let
-    val x3 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 4 then let
-    val x4 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 5 then let
-    val x5 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 6 then let
-    val x6 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else if i = 7 then let
-    val x7 = j in (x0, x1, x2, x3, x4, x5, x6, x7)
-  end else bd // end of [if]
-end // end of [board_set]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> board_set
+  <span class="keyword">(</span>bd<span class="keyword">:</span> <span class="staexp">int8</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int8</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span> <span class="keyword">=</span> bd</span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x0 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">1</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x1 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">2</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x2 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">3</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x3 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">4</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x4 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">5</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x5 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">6</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x6 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">if</span> i <span class="keyword">=</span> <span class="dynexp">7</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> x7 <span class="keyword">=</span> j</span> <span class="keyword">in</span> <span class="keyword">(</span>x0<span class="keyword">,</span> x1<span class="keyword">,</span> x2<span class="keyword">,</span> x3<span class="keyword">,</span> x4<span class="keyword">,</span> x5<span class="keyword">,</span> x6<span class="keyword">,</span> x7<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> bd <span class="comment">// end of [if]</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [board_set]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -329,27 +329,27 @@ NAME="AEN660"
 ></A
 ><PRE
 CLASS="programlisting"
->fun safety_test1
-(
-  i0: int, j0: int, i1: int, j1: int
-) : bool =
-(*
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> safety_test1
+<span class="keyword">(</span>
+  i0<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j0<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> i1<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j1<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span>
+<span class="comment">(*
 ** [abs]: the absolute value function
-*)
-  j0 != j1 andalso abs (i0 - i1) != abs (j0 - j1)
-// end of [safety_test1]
+*)</span>
+  j0 != j1 andalso abs <span class="keyword">(</span>i0 - i1<span class="keyword">)</span> != abs <span class="keyword">(</span>j0 - j1<span class="keyword">)</span></span>
+<span class="comment">// end of [safety_test1]</span>
 
-fun safety_test2
-(
-  i0: int, j0: int, bd: int8, i: int
-) : bool =
-  if i &#62;= 0 then
-    if safety_test1 (i0, j0, i, board_get (bd, i))
-      then safety_test2 (i0, j0, bd, i-1) else false
-    // end of [if]
-  else true // end of [if]
-// end of [safety_test2]
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> safety_test2
+<span class="keyword">(</span>
+  i0<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j0<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> bd<span class="keyword">:</span> <span class="staexp">int8</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">bool</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i &gt;= <span class="dynexp">0</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> safety_test1 <span class="keyword">(</span>i0<span class="keyword">,</span> j0<span class="keyword">,</span> i<span class="keyword">,</span> board_get <span class="keyword">(</span>bd<span class="keyword">,</span> i<span class="keyword">)</span><span class="keyword">)</span>
+      <span class="keyword">then</span> safety_test2 <span class="keyword">(</span>i0<span class="keyword">,</span> j0<span class="keyword">,</span> bd<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> false
+    <span class="comment">// end of [if]</span>
+  <span class="keyword">else</span> true</span> <span class="comment">// end of [if]</span>
+<span class="comment">// end of [safety_test2]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -417,34 +417,43 @@ NAME="AEN678"
 ></A
 ><PRE
 CLASS="programlisting"
->fun search
-(
-  bd: int8, i: int, j: int, nsol: int
-) : int =
-  if j &#60; N then let
-    val test = safety_test2 (i, j, bd, i-1)
-  in
-    if test then let
-      val bd1 = board_set (bd, i, j)
-    in
-      if i+1 = N then let
-        val () = print! ("Solution #", nsol+1, ":\n\n")
-        val () = print_board (bd1)
-      in
-        search (bd, i, j+1, nsol+1)
-      end else
-        search (bd1, i+1, 0(*j*), nsol) // positioning next piece
-      // end of [if]
-    end else
-      search (bd, i, j+1, nsol)
-  end else
-  (
-    if i &#62; 0 then
-      search (bd, i-1, board_get (bd, i-1) + 1, nsol)
-    else nsol // end of [if]
-  )
-// end of [search]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> search
+<span class="keyword">(</span>
+  bd<span class="keyword">:</span> <span class="staexp">int8</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> nsol<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">if</span>
+<span class="keyword">(</span>j <span class="keyword">&lt;</span> N<span class="keyword">)</span>
+<span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> test <span class="keyword">=</span> safety_test2 <span class="keyword">(</span>i<span class="keyword">,</span> j<span class="keyword">,</span> bd<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> test
+    <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> bd1 <span class="keyword">=</span> board_set <span class="keyword">(</span>bd<span class="keyword">,</span> i<span class="keyword">,</span> j<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">if</span> i+<span class="dynexp">1</span> <span class="keyword">=</span> N
+        <span class="keyword">then</span> <span class="keyword">let</span>
+          <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">print!</span> <span class="keyword">(</span><span class="dynstr">"Solution #"</span><span class="keyword">,</span> nsol+<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynstr">":nn"</span><span class="keyword">)</span></span>
+          <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> print_board <span class="keyword">(</span>bd1<span class="keyword">)</span></span>
+        <span class="keyword">in</span>
+          search <span class="keyword">(</span>bd<span class="keyword">,</span> i<span class="keyword">,</span> j+<span class="dynexp">1</span><span class="keyword">,</span> nsol+<span class="dynexp">1</span><span class="keyword">)</span>
+        <span class="keyword">end</span> <span class="comment">// end of [then]</span>
+        <span class="keyword">else</span> <span class="keyword">(</span>
+          search <span class="keyword">(</span>bd1<span class="keyword">,</span> i+<span class="dynexp">1</span><span class="keyword">,</span> <span class="dynexp">0</span><span class="comment">(*j*)</span><span class="keyword">,</span> nsol<span class="keyword">)</span> <span class="comment">// positioning next piece</span>
+        <span class="keyword">)</span> <span class="comment">(* end of [else] *)</span>
+      <span class="comment">// end of [if]</span>
+    <span class="keyword">end</span> <span class="comment">// end of [then]</span>
+    <span class="keyword">else</span> search <span class="keyword">(</span>bd<span class="keyword">,</span> i<span class="keyword">,</span> j+<span class="dynexp">1</span><span class="keyword">,</span> nsol<span class="keyword">)</span>
+  <span class="comment">// end of [if]</span>
+<span class="keyword">end</span> <span class="comment">// end of [then]</span>
+<span class="keyword">else</span> <span class="keyword">(</span>
+  <span class="keyword">if</span> i <span class="keyword">&gt;</span> <span class="dynexp">0</span>
+    <span class="keyword">then</span> search <span class="keyword">(</span>bd<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">,</span> board_get <span class="keyword">(</span>bd<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">)</span> + <span class="dynexp">1</span><span class="keyword">,</span> nsol<span class="keyword">)</span> <span class="keyword">else</span> nsol
+  <span class="comment">// end of [if]</span>
+<span class="keyword">)</span> <span class="comment">(* end of [else] *)</span>
+<span class="comment">//</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [search] *)</span>
+</p></PRE
 ><P
 ></P
 ></DIV

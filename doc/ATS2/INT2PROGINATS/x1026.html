@@ -102,15 +102,16 @@ NAME="AEN1032"
 ></A
 ><PRE
 CLASS="programlisting"
->fun charlst_last
-  (cs: charlst): char =
-(
-  case cs of
-  | charlst_cons (c, charlst_nil ()) =&#62; c
-  | charlst_cons (_, cs1) =&#62; charlst_last (cs1)
-)
-// end of [charlst_last]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+charlst_last
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">char</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case</span> cs <span class="keyword">of</span>
+  <span class="keyword">|</span> charlst_cons <span class="keyword">(</span>c<span class="keyword">,</span> charlst_nil <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> c
+  <span class="keyword">|</span> charlst_cons <span class="keyword">(</span>_<span class="keyword">,</span> cs1<span class="keyword">)</span> <span class="keyword">=&gt;</span> charlst_last <span class="keyword">(</span>cs1<span class="keyword">)</span>
+<span class="keyword">)</span></span>
+<span class="comment">// end of [charlst_last]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -164,17 +165,18 @@ NAME="AEN1044"
 ></A
 ><PRE
 CLASS="programlisting"
->fun charlst_last
-  (cs: charlst): char =
-(
-  case cs of
-  | charlst_cons (c, cs1) =&#62;
-    (
-      case+ cs1 of
-      | charlst_nil () =&#62; c | charlst_cons _ =&#62; charlst_last (cs1)
-    ) // end of [charlst_cons]
-) // end of [charlst_last]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+charlst_last
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">char</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case</span> cs <span class="keyword">of</span>
+  <span class="keyword">|</span> charlst_cons <span class="keyword">(</span>c<span class="keyword">,</span> cs1<span class="keyword">)</span> <span class="keyword">=&gt;</span>
+    <span class="keyword">(</span>
+      <span class="keyword">case+</span> cs1 <span class="keyword">of</span>
+      <span class="keyword">|</span> charlst_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> c <span class="keyword">|</span> charlst_cons _ <span class="keyword">=&gt;</span> charlst_last <span class="keyword">(</span>cs1<span class="keyword">)</span>
+    <span class="keyword">)</span> <span class="comment">// end of [charlst_cons]</span>
+<span class="keyword">)</span></span> <span class="comment">// end of [charlst_last]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -245,12 +247,13 @@ NAME="AEN1061"
 ></A
 ><PRE
 CLASS="programlisting"
->fun charlst_last
-  (cs: charlst): char = let
-  val charlst_cons (c, cs1) = cs in case+ cs1 of
-  | charlst_nil () =&#62; c | charlst_cons _ =&#62; charlst_last (cs1)
-end // end of [charlst_last]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+charlst_last
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">char</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> charlst_cons <span class="keyword">(</span>c<span class="keyword">,</span> cs1<span class="keyword">)</span> <span class="keyword">=</span> cs</span> <span class="keyword">in</span> <span class="keyword">case+</span> cs1 <span class="keyword">of</span>
+  <span class="keyword">|</span> charlst_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> c <span class="keyword">|</span> charlst_cons _ <span class="keyword">=&gt;</span> charlst_last <span class="keyword">(</span>cs1<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [charlst_last]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

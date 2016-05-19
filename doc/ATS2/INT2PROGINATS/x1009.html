@@ -96,10 +96,10 @@ NAME="AEN1013"
 ></A
 ><PRE
 CLASS="programlisting"
->datatype charlst =
-  | charlst_nil of () | charlst_cons of (char, charlst)
-// end of [charlst]
-</PRE
+><p class="patsyntax"><span class="keyword">datatype</span> <span class="staexp">charlst <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="dynexp">charlst_nil <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="dynexp">charlst_cons <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">char</span><span class="keyword">,</span> <span class="staexp">charlst</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [charlst]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -150,12 +150,13 @@ NAME="AEN1021"
 ></A
 ><PRE
 CLASS="programlisting"
->fun charlst_length
-  (cs: charlst): int = case cs of
-  | charlst_cons (_, cs) =&#62; 1 + charlst_length (cs)
-  | charlst_nil () =&#62; 0
-// end of [charlst_length]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+charlst_length
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">case</span> cs <span class="keyword">of</span>
+  <span class="keyword">|</span> charlst_cons <span class="keyword">(</span>_<span class="keyword">,</span> cs<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">1</span> + charlst_length <span class="keyword">(</span>cs<span class="keyword">)</span>
+  <span class="keyword">|</span> charlst_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="dynexp">0</span></span>
+<span class="comment">// end of [charlst_length]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -178,18 +179,19 @@ NAME="AEN1024"
 ></A
 ><PRE
 CLASS="programlisting"
->fun charlst_length
-  (cs: charlst): int = let
-//
-fun loop
-  (cs: charlst, n: int): int = case cs of
-  | charlst_cons (_, cs) =&#62; loop (cs, n+1) | charlst_nil () =&#62; n
-// end of [loop]
-//
-in
-  loop (cs, 0)
-end // end of [charlst_length]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+charlst_length
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> loop
+  <span class="keyword">(</span>cs<span class="keyword">:</span> <span class="staexp">charlst</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">case</span> cs <span class="keyword">of</span>
+  <span class="keyword">|</span> charlst_cons <span class="keyword">(</span>_<span class="keyword">,</span> cs<span class="keyword">)</span> <span class="keyword">=&gt;</span> loop <span class="keyword">(</span>cs<span class="keyword">,</span> n+<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">|</span> charlst_nil <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> n</span>
+<span class="comment">// end of [loop]</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>cs<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [charlst_length]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

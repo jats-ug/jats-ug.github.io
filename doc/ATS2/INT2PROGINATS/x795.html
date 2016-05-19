@@ -96,17 +96,17 @@ NAME="AEN799"
 ></A
 ><PRE
 CLASS="programlisting"
->fun rtfind
-  (f: int -&#62; int): int = let
-  fun loop (
-    f: int -&#62; int, n: int
-  ) : int =
-    if f(n) = 0 then n else loop (f, n+1)
-  // end of [loop]
-in
-  loop (f, 0)
-end // end of [rtfind]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> rtfind
+  <span class="keyword">(</span>f<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span>
+    f<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> f<span class="keyword">(</span>n<span class="keyword">)</span> <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> n <span class="keyword">else</span> loop <span class="keyword">(</span>f<span class="keyword">,</span> n+<span class="dynexp">1</span><span class="keyword">)</span></span>
+  <span class="comment">// end of [loop]</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span>f<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [rtfind]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -153,9 +153,9 @@ NAME="AEN809"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sum (n: int): int = if n &#62; 0 then sum (n-1) + n else 0
-fun prod (n: int): int = if n &#62; 0 then prod (n-1) * n else 1
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sum <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> sum <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> + n <span class="keyword">else</span> <span class="dynexp">0</span></span>
+<span class="dynexp"><span class="keyword">fun</span> prod <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> prod <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">)</span> * n <span class="keyword">else</span> <span class="dynexp">1</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -193,14 +193,15 @@ NAME="AEN817"
 ></A
 ><PRE
 CLASS="programlisting"
->fun ifold
-  (n: int, f: (int, int) -&#62; int, ini: int): int =
-  if n &#62; 0 then f (ifold (n-1, f, ini), n) else ini
-// end of [ifold]
-
-fun sum (n: int): int = ifold (n, lam (res, x) =&#62; res + x, 0)
-fun prod (n: int): int = ifold (n, lam (res, x) =&#62; res * x, 1)
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> ifold
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> f<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span><span class="keyword">,</span> ini<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> f <span class="keyword">(</span>ifold <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">,</span> f<span class="keyword">,</span> ini<span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">else</span> ini</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> sum <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> ifold <span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>res<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=&gt;</span> res + x<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="dynexp"><span class="keyword">fun</span> prod <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> ifold <span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>res<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=&gt;</span> res * x<span class="keyword">,</span> <span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -222,8 +223,8 @@ NAME="AEN820"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sqrsum (n: int): int = ifold (n, lam (res, x) =&#62; res + x * x, 0)
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sqrsum <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> ifold <span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>res<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=&gt;</span> res + x * x<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -248,10 +249,11 @@ NAME="AEN824"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sqrmodsum (n: int, d: int): int =
-  ifold (n, lam (res, x) =&#62; if x mod d then res + x * x else res, 0)
-// end of [sqrmodsum]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sqrmodsum
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> d<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  ifold <span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>res<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">if</span> x mod d <span class="keyword">=</span> <span class="dynexp">0</span> <span class="keyword">then</span> res + x * x <span class="keyword">else</span> res<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="comment">// end of [sqrmodsum]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -293,17 +295,21 @@ NAME="AEN832"
 ></A
 ><PRE
 CLASS="programlisting"
->fun ifold2
-(
-  n: int, f: (int, int) -&#60;cloref1&#62; int, ini: int
-) : int =
-  if n &#62; 0 then f (ifold2 (n-1, f, ini), n) else ini
-// end of [ifold2]
-
-fun sqrmodsum (n: int, d: int): int =
-  ifold2 (n, lam (res, x) =&#62; if x mod d then res + x * x else res, 0)
-// end of [sqrmodsum]
-</PRE
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+ifold2
+<span class="keyword">(</span>
+  n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> f<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">,</span> <span class="staexp">int</span><span class="keyword">)</span> <span class="keyword">-&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">int</span><span class="keyword">,</span> ini<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> f <span class="keyword">(</span>ifold2 <span class="keyword">(</span>n-<span class="dynexp">1</span><span class="keyword">,</span> f<span class="keyword">,</span> ini<span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">)</span> <span class="keyword">else</span> ini</span>
+<span class="comment">// end of [ifold2]</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span>
+sqrmodsum <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> d<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span>
+  ifold2 <span class="keyword">(</span>n<span class="keyword">,</span> <span class="keyword">lam</span> <span class="keyword">(</span>res<span class="keyword">,</span> x<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">if</span> x mod d <span class="keyword">then</span> res + x * x <span class="keyword">else</span> res<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="comment">// end of [sqrmodsum]</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV

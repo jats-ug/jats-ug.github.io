@@ -105,11 +105,11 @@ NAME="AEN2072"
 ></A
 ><PRE
 CLASS="programlisting"
->typedef Cint = $extype"int"
-typedef Clint = $extype"long int"
-typedef Cllint = $extype"long long int"
-typedef Cint2 = $extype"struct{ int x; int y; }"
-</PRE
+><p class="patsyntax"><span class="keyword">typedef</span> <span class="staexp">Cint <span class="keyword">=</span> <span class="staexp"><span class="keyword">$extype</span>"int"</span></span>
+<span class="keyword">typedef</span> <span class="staexp">Clint <span class="keyword">=</span> <span class="staexp"><span class="keyword">$extype</span>"long int"</span></span>
+<span class="keyword">typedef</span> <span class="staexp">Cllint <span class="keyword">=</span> <span class="staexp"><span class="keyword">$extype</span>"long long int"</span></span>
+<span class="keyword">typedef</span> <span class="staexp">Cint2 <span class="keyword">=</span> <span class="staexp"><span class="keyword">$extype</span>"struct{ int x; int y; }"</span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -139,10 +139,10 @@ NAME="AEN2077"
 ></A
 ><PRE
 CLASS="programlisting"
->macdef NULL = $extype(ptr, "0")
-macdef stdin_ref = $extype(FILEref, "stdin")
-macdef stdout_ref = $extype(FILEref, "stdout")
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">macdef</span> NULL <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>ptr<span class="keyword">,</span> "0"<span class="keyword">)</span></span></span>
+<span class="dynexp"><span class="keyword">macdef</span> stdin_ref <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>FILEref<span class="keyword">,</span> "stdin"<span class="keyword">)</span></span></span>
+<span class="dynexp"><span class="keyword">macdef</span> stdout_ref <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>FILEref<span class="keyword">,</span> "stdout"<span class="keyword">)</span></span></span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -160,10 +160,10 @@ NAME="AEN2079"
 ></A
 ><PRE
 CLASS="programlisting"
->macdef atoi = $extype(string -&#62; int, "atoi")
-macdef atol = $extype(string -&#62; lint, "atol")
-macdef atof = $extype(string -&#62; double, "atof")
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">macdef</span> atoi <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>string <span class="keyword">-&gt;</span> int<span class="keyword">,</span> "atoi"<span class="keyword">)</span></span></span>
+<span class="dynexp"><span class="keyword">macdef</span> atol <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>string <span class="keyword">-&gt;</span> lint<span class="keyword">,</span> "atol"<span class="keyword">)</span></span></span>
+<span class="dynexp"><span class="keyword">macdef</span> atof <span class="keyword">=</span> <span class="dynexp"><span class="keyword">$extval</span><span class="keyword">(</span>string <span class="keyword">-&gt;</span> double<span class="keyword">,</span> "atof"<span class="keyword">)</span></span></span>
+</p></PRE
 ><P
 ></P
 ></DIV

@@ -94,9 +94,9 @@ NAME="AEN1486"
 ></A
 ><PRE
 CLASS="programlisting"
->val intr = ref&#60;int&#62; (0) // create a ref and init. it with 0
-val () = !intr := !intr + 1 // increase the integer at [intr] by 1
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">val</span> intr <span class="keyword">=</span> ref&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span></span> <span class="comment">// create a ref and init. it with 0</span>
+<span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">!</span>intr := <span class="keyword">!</span>intr + <span class="dynexp">1</span></span> <span class="comment">// increase the integer at [intr] by 1</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -151,9 +151,9 @@ NAME="AEN1496"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t@ype} ref_get_elt (r: ref a): a // !r
-fun{a:t@ype} ref_set_elt (r: ref a, x: a): void // !r := x
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> ref_get_elt <span class="keyword">(</span>r<span class="keyword">:</span> <span class="staexp">ref</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">a</span></span> <span class="comment">// !r</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> ref_set_elt <span class="keyword">(</span>r<span class="keyword">:</span> <span class="staexp">ref</span> <span class="staexp">a</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span> <span class="comment">// !r := x</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -181,17 +181,17 @@ NAME="AEN1500"
 ></A
 ><PRE
 CLASS="programlisting"
->fun sumup
-  (n: int): int = let
-  val i = ref&#60;int&#62; (1)
-  val res = ref&#60;int&#62; (0)
-  fun loop ():&#60;cloref1&#62; void =
-    if !i &#60;= n then (!res := !res + !i; !i := !i + 1; loop ())
-  // end of [loop]
-in
-  loop (); !res
-end // end of [sumup]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> sumup
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">int</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> i <span class="keyword">=</span> ref&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> res <span class="keyword">=</span> ref&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> <span class="keyword">!</span>i &lt;= n <span class="keyword">then</span> <span class="keyword">(</span><span class="keyword">!</span>res := <span class="keyword">!</span>res + <span class="keyword">!</span>i<span class="keyword">;</span> <span class="keyword">!</span>i := <span class="keyword">!</span>i + <span class="dynexp">1</span><span class="keyword">;</span> loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="comment">// end of [loop]</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">;</span> <span class="keyword">!</span>res
+<span class="keyword">end</span></span> <span class="comment">// end of [sumup]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

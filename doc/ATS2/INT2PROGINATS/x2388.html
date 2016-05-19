@@ -93,11 +93,14 @@ NAME="AEN2391"
 ></A
 ><PRE
 CLASS="programlisting"
->fun
-fact{n:nat}
-  (x: int n): [r:nat] int r = if x &#62; 0 then x * fact (x-1) else 1
-// end of [fact]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span>
+fact<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  x<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>r<span class="keyword">:</span>nat<span class="keyword">]</span></span> <span class="staexp">int</span> <span class="staexp">r</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> x <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> x * fact <span class="keyword">(</span>x-<span class="dynexp">1</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">1</span></span>
+<span class="comment">// end of [fact]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

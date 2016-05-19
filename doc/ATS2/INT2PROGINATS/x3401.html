@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>観と型を組み合わせた観型</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="観 (view) と観型入門"
+HREF="c3304.html"><LINK
+REL="PREVIOUS"
+TITLE="観 (view) と観型入門"
+HREF="c3304.html"><LINK
+REL="NEXT"
+TITLE="左辺値と参照渡し"
+HREF="x3431.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c3304.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 13. 観 (view) と観型入門</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3431.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="viewtypes_as_combination"
+>観と型を組み合わせた観型</A
+></H1
+><P
+>&#13;ATS の線形型は <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>観型 (viewtype)</I
+></SPAN
+> という名前です。
+これは線形型は2つの部分から構成されることを示しています: 一つは観 (view)でもう一つが型 (type) です。
+例えば、観 V と型 T が与えられた時、タプル (V | T) は観型で、バー記号 (|) は観と型を
+(コンマのように) 分離しています。
+少し意外かもしれませんが、反対に:
+それぞれの観型 VT について、VT が (V | T) と等しいような 観 V と型 T の存在を仮定できます。
+形式上、ATS ではこの T は VT?! として参照されます。
+この幾分意外な線形型の解釈は ATS の目立った新規性です。
+それは観型の線形性は <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>完全に</I
+></SPAN
+> その中に存在する観部分に由来することを強調しています。
+
+</P
+><P
+>&#13;ビルトインの種 <FONT
+COLOR="RED"
+>viewtype</FONT
+> と <FONT
+COLOR="RED"
+>viewt@ype</FONT
+> は、型部分がそれぞれ種
+<FONT
+COLOR="RED"
+>type</FONT
+> と <FONT
+COLOR="RED"
+>t@ype</FONT
+> であるような観型を表わす静的な項です。
+別の言い方をすると、前者にはポインタのサイズに等しいサイズの線形値の観型が割り当てられ、そして後者には詳細不明のサイズの線形値の観型が割り当てられます。
+例えば、型と、種 <FONT
+COLOR="RED"
+>viewtype</FONT
+> の観型を作るアドレスを取るような、<FONT
+COLOR="RED"
+>tptr</FONT
+>
+は次のように定義されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3413"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">vtypedef</span> <span class="staexp">tptr <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">,</span> <span class="staexp">l<span class="keyword">:</span>addr</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span><span class="staexp">a</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+型 T とアドレス L が与えられた時、観型 <FONT
+COLOR="RED"
+>tptr(T, L)</FONT
+> は
+L に格納された型 T の値を示す線形の証明とペアになった L のポインタです。
+カウントを表わす整数を指すポインタを示す証明とペアになったポインタとしてのカウンタのことを考えるなら、
+次に定義する関数 <FONT
+COLOR="RED"
+>getinc</FONT
+> は与えられたカウンタを1増やした後、現時点でのカウントを返します:
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3417"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fn</span> getinc
+  <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  cnt<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">tptr</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">tptr</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span> n <span class="keyword">where</span> <span class="keyword">{</span>
+  <span class="dynexp"><span class="keyword">val</span> n <span class="keyword">=</span> ptr_get1&lt;<span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="prfexp">cnt<span class="dynexp"><span class="keyword">.0</span></span></span> <span class="keyword">|</span> cnt<span class="dynexp"><span class="keyword">.1</span></span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> ptr_set1&lt;<span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">)</span><span class="keyword">&gt;</span> <span class="keyword">(</span><span class="prfexp">cnt<span class="dynexp"><span class="keyword">.0</span></span></span> <span class="keyword">|</span> cnt<span class="dynexp"><span class="keyword">.1</span></span><span class="keyword">,</span> n+<span class="dynexp">1</span><span class="keyword">)</span></span>
+<span class="keyword">}</span></span> <span class="comment">(* end of [getinc] *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+</P
+><P
+>&#13;次は観型の特に興味深い例です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3420"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">vtypedef</span> <span class="staexp">cloptr
+  <span class="keyword">(</span><span class="staexp">a<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">,</span> <span class="staexp">b<span class="keyword">:</span><span class="keyword">t@ype</span></span><span class="keyword">,</span> <span class="staexp">l<span class="keyword">:</span>addr</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="staexp"><span class="keyword">[</span>env<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">]</span></span> <span class="keyword">(</span><span class="keyword">(</span><span class="keyword">(</span><span class="staexp">&amp;</span><span class="staexp">env</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">b</span><span class="keyword">,</span> <span class="staexp">env</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span></span>
+<span class="comment">// end of [cloptr_app]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2つの型 A と B が与えられた時、型 A の値を取り型 B の値を返すようなクロージャ関数が保管されたアドレス L
+を指すポインタには観型 <FONT
+COLOR="RED"
+>cloptr(A, B, L)</FONT
+> を与えることができます。
+クロージャ関数は、外から導入されたクロージャ関数本体内の値の束縛を含む環境とペアになった単なる無環境関数であることに注意してください。
+関数型 <FONT
+COLOR="RED"
+>(&#38;env, a) -&#62; b</FONT
+> において、記号 <FONT
+COLOR="RED"
+>&#38;</FONT
+>
+は対応する関数の引数が参照で渡されていることを示しています。
+つまり、この引数は左辺値であることが要求されていて、実行時に実際に渡されるものは左辺値のアドレスです。
+参照渡し (call-by-reference) については別の章でより詳細に解説します。
+次のコードは与えられた引数で呼び出されるクロージャ関数へのポインタを説明しています:
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3425"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>b<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> cloptr_app <span class="staexp"><span class="keyword">{</span>l<span class="keyword">:</span>addr<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pclo<span class="keyword">:</span> <span class="staexp"><span class="keyword">!</span></span><span class="staexp">cloptr</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">b</span><span class="keyword">,</span> <span class="staexp">l</span><span class="keyword">)</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">b</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> p <span class="keyword">=</span> pclo<span class="dynexp"><span class="keyword">.1</span></span></span>
+<span class="comment">(*
+//
+// taking out pf: ((&amp;env, a) -&gt; b, env) @ l
+//
+  prval pf = pclo.0
+//
+*)</span>
+  <span class="dynexp"><span class="keyword">val</span> res <span class="keyword">=</span> <span class="keyword">!</span>p<span class="dynexp"><span class="keyword">.0</span></span> <span class="keyword">(</span><span class="keyword">!</span>p<span class="dynexp"><span class="keyword">.1</span></span><span class="keyword">,</span> x<span class="keyword">)</span></span>
+<span class="comment">(*
+  prval () = pclo.0 := pf // putting the proof pf back
+*)</span>
+<span class="keyword">in</span>
+  res
+<span class="keyword">end</span></span> <span class="comment">// end of [cloptr]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+(構文 <FONT
+COLOR="RED"
+>!p</FONT
+> で表わされた) p のデリファレンスが型検査を通すために、<FONT
+COLOR="RED"
+>pclo</FONT
+>
+内の線形の証明がはじめに取り出されることに注意してください。
+そして <FONT
+COLOR="RED"
+>pclo</FONT
+> の型が元の位置に復帰されて返ります。
+このレコードからの線形証明の取り出しとレコードへの復帰は ATS の型検査器によって自動的に行なわれます。
+
+</P
+><P
+>&#13;クロージャ関数のような ATS プログラミングの機能を説明する能力は、ATS の型システムの表現力の説得力ある証拠です。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c3304.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3431.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>観 (view) と観型入門</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3304.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>左辺値と参照渡し</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

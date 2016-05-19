@@ -119,20 +119,21 @@ NAME="AEN1563"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;fun print_intarray
-  (A: arrszref (int)): void = let
-  val asz = g0uint2int_size_int (A.size)
-//
-// The integers are to be separated by the string [sep]
-//
-  fun loop (i: int, sep: string):&#60;cloref1&#62; void =
-    if i &#60; asz then
-      (if i &#62; 0 then print sep; print A[i]; loop (i+1, sep))
-    // end of [if]
-in
-  loop (0, ", ")
-end // end of [print_intarray]
-</PRE
+><p class="patsyntax">
+<span class="dynexp"><span class="keyword">fun</span> print_intarray
+  <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> asz <span class="keyword">=</span> g0uint2int_size_int <span class="keyword">(</span>A<span class="dynexp"><span class="keyword">.</span>size</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">// The integers are to be separated by the string [sep]</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> sep<span class="keyword">:</span> <span class="staexp">string</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> i <span class="keyword">&lt;</span> asz <span class="keyword">then</span>
+      <span class="keyword">(</span><span class="keyword">if</span> i <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> print sep<span class="keyword">;</span> print <span class="dynexp">A[i<span class="keyword">]</span></span><span class="keyword">;</span> loop <span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">,</span> sep<span class="keyword">)</span><span class="keyword">)</span></span>
+    <span class="comment">// end of [if]</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">,</span> <span class="dynstr">", "</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [print_intarray]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -158,32 +159,32 @@ NAME="AEN1568"
 ></A
 ><PRE
 CLASS="programlisting"
->fun lrotate (
-  A: arrszref int, i: int, j: int
-) : void = let
-  fun lshift (
-    A: arrszref int, i: int, j: int
-  ) : void =
-  if i &#60; j then (A[i] := A[i+1]; lshift (A, i+1, j))
-in
-  if i &#60; j then let
-    val tmp = A[i] in lshift (A, i, j); A[j] := tmp
-  end // end of [if]
-end // end of [lrotate]
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> lrotate <span class="keyword">(</span>
+  A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">int</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">fun</span> lshift <span class="keyword">(</span>
+    A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">int</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> j <span class="keyword">then</span> <span class="keyword">(</span><span class="dynexp">A[i<span class="keyword">]</span></span> := <span class="dynexp">A[i+1<span class="keyword">]</span></span><span class="keyword">;</span> lshift <span class="keyword">(</span>A<span class="keyword">,</span> i+<span class="dynexp">1</span><span class="keyword">,</span> j<span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> j <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> tmp <span class="keyword">=</span> <span class="dynexp">A[i<span class="keyword">]</span></span></span> <span class="keyword">in</span> lshift <span class="keyword">(</span>A<span class="keyword">,</span> i<span class="keyword">,</span> j<span class="keyword">)</span><span class="keyword">;</span> <span class="dynexp">A[j<span class="keyword">]</span></span> := tmp
+  <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [lrotate]</span>
 
-fun rrotate (
-  A: arrszref int, i: int, j: int
-) : void = let
-  fun rshift (
-    A: arrszref int, i: int, j: int
-  ) : void =
-  if i &#60; j then (A[j] := A[j-1]; rshift (A, i, j-1))
-in
-  if i &#60; j then let
-    val tmp = A[j] in rshift (A, i, j); A[i] := tmp
-  end // end of [if]
-end // end of [rrotate]
-</PRE
+<span class="dynexp"><span class="keyword">fun</span> rrotate <span class="keyword">(</span>
+  A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">int</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">fun</span> rshift <span class="keyword">(</span>
+    A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">int</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span>
+  <span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> j <span class="keyword">then</span> <span class="keyword">(</span><span class="dynexp">A[j<span class="keyword">]</span></span> := <span class="dynexp">A[j-1<span class="keyword">]</span></span><span class="keyword">;</span> rshift <span class="keyword">(</span>A<span class="keyword">,</span> i<span class="keyword">,</span> j-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  <span class="keyword">if</span> i <span class="keyword">&lt;</span> j <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> tmp <span class="keyword">=</span> <span class="dynexp">A[j<span class="keyword">]</span></span></span> <span class="keyword">in</span> rshift <span class="keyword">(</span>A<span class="keyword">,</span> i<span class="keyword">,</span> j<span class="keyword">)</span><span class="keyword">;</span> <span class="dynexp">A[i<span class="keyword">]</span></span> := tmp
+  <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [rrotate]</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -221,50 +222,49 @@ NAME="AEN1575"
 ></A
 ><PRE
 CLASS="programlisting"
->&#13;fun permute
-  (n: int): void = let
-//
-  #define i2sz g0int2uint_int_size
-//
-// Creating array A of size n
-//
-  val A = arrszref_make_elt&#60;int&#62; (i2sz(n), 0)
-//
-// Initializing A with integers from 1 to n, inclusive
-//
-  val () = init (0) where
-  {
-    fun init (i: int):&#60;cloref1&#62; void =
-      if i &#60; n then (A[i] := i+1; init (i+1))
-  } // end of [where] // end of [val]
-//
-  fun aux
-    (i: int):&#60;cloref1&#62; void =
-  (
-    if i &#60;= n
-      then aux2 (i, i) else (
-      print_intarray (A); print_newline ()
-    ) // end of [if]
-  ) (* end of [aux] *)
-//
-  and aux2
-    (
-      i: int, j: int
-    ) :&#60;cloref1&#62; void =
-  (
-    if j &#60;= n then let
-      val () = (
-        rrotate (A, i-1, j-1); aux (i+1); lrotate (A, i-1, j-1)
-      ) // end of [val]
-    in
-      aux2 (i, j+1)
-    end // end of [if]
-  ) (* end of [aux2] *)
-//
-in
-  aux (1)
-end // end of [permute]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span> permute
+  <span class="keyword">(</span>n<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+  <span class="neuexp"><span class="keyword">#define</span> i2sz g0int2uint_int_size</span>
+<span class="comment">//</span>
+<span class="comment">// Creating array A of size n</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> A <span class="keyword">=</span> arrszref_make_elt&lt;<span class="staexp">int</span><span class="keyword">&gt;</span> <span class="keyword">(</span>i2sz<span class="keyword">(</span>n<span class="keyword">)</span><span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+<span class="comment">// Initializing A with integers from 1 to n, inclusive</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> init<span class="keyword">(</span><span class="dynexp">0</span><span class="keyword">)</span> <span class="keyword">where</span>
+  <span class="keyword">{</span>
+    <span class="dynexp"><span class="keyword">fun</span> init <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+      <span class="keyword">if</span> i <span class="keyword">&lt;</span> n <span class="keyword">then</span> <span class="keyword">(</span><span class="dynexp">A[i<span class="keyword">]</span></span> := i+<span class="dynexp">1</span><span class="keyword">;</span> init <span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="keyword">}</span></span> <span class="comment">// end of [where] // end of [val]</span>
+<span class="comment">//</span>
+  <span class="dynexp"><span class="keyword">fun</span> aux
+    <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">(</span>
+    <span class="keyword">if</span> i &lt;= n
+      <span class="keyword">then</span> aux2 <span class="keyword">(</span>i<span class="keyword">,</span> i<span class="keyword">)</span>
+      <span class="keyword">else</span> <span class="keyword">(</span>
+        print_intarray <span class="keyword">(</span>A<span class="keyword">)</span><span class="keyword">;</span> print_newline <span class="keyword">(</span><span class="keyword">)</span>
+      <span class="keyword">)</span> <span class="comment">(* end of [else] *)</span>
+  <span class="keyword">)</span> <span class="comment">(* end of [aux] *)</span>
+<span class="comment">//</span>
+  <span class="keyword">and</span> aux2
+    <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">,</span> j<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">(</span>
+    <span class="keyword">if</span> j &lt;= n <span class="keyword">then</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">(</span>
+        rrotate <span class="keyword">(</span>A<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">,</span> j-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">;</span> aux <span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">;</span> lrotate <span class="keyword">(</span>A<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">,</span> j-<span class="dynexp">1</span><span class="keyword">)</span>
+      <span class="keyword">)</span></span> <span class="comment">// end of [val]</span>
+    <span class="keyword">in</span>
+      aux2 <span class="keyword">(</span>i<span class="keyword">,</span> j+<span class="dynexp">1</span><span class="keyword">)</span>
+    <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+  <span class="keyword">)</span></span> <span class="comment">(* end of [aux2] *)</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  aux <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [permute]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

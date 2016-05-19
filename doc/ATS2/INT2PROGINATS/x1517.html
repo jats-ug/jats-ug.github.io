@@ -136,20 +136,23 @@ NAME="AEN1528"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{a:t@ype} // a template
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> <span class="comment">// template</span>
 arrszref_make_elt
-  (asz: size_t, x: a): arrszref a // array creation
-
-// a polymorphic function
-fun arrszref_get_size
-  {a:t@ype} (A: arrszref a): size_t // size of an array
-
-fun{a:t@ype} // a template
-arrszref_get_elt_at (A: arrszref a, i: size_t): a // A[i]
-
-fun{a:t@ype} // a template
-arrszref_set_elt_at (A: arrszref a, i: size_t, x: a): void // A[i] := x
-</PRE
+  <span class="keyword">(</span>asz<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">a</span></span> <span class="comment">// array creation</span>
+<span class="comment">//</span>
+<span class="comment">// polymorphic fun:</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> arrszref_get_size
+  <span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">size_t</span></span> <span class="comment">// size of an array</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> <span class="comment">// template</span>
+arrszref_get_elt_at <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">a</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">a</span></span> <span class="comment">// A[i]</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span> <span class="comment">// template</span>
+arrszref_set_elt_at <span class="keyword">(</span>A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="staexp">a</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">size_t</span><span class="keyword">,</span> x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">void</span></span> <span class="comment">// A[i] := x</span>
+<span class="comment">//</span>
+</p></PRE
 ><P
 ></P
 ></DIV
@@ -248,29 +251,29 @@ NAME="AEN1552"
 ></A
 ><PRE
 CLASS="programlisting"
->fun{
-a:t@ype
-} insertion_sort
-(
-  A: arrszref (a)
-, cmp: (a, a) -&#62; int
-) : void = let
-  val n = g0uint2int_size_int (A.size)
-  fun ins (x: a, i: int):&#60;cloref1&#62; void =
-    if i &#62;= 0 then
-    (
-      if cmp (x, A[i]) &#60; 0
-        then (A[i+1] := A[i]; ins (x, i-1)) else A[i+1] := x
-      // end of [if]
-    ) else A[0] := x // end of [if]
-  // end of [ins]
-  fun loop (i: int):&#60;cloref1&#62; void =
-    if i &#60; n then (ins (A[i], i-1); loop (i+1)) else ()
-  // end of [loop]
-in
-  loop (1)
-end // end of [insertion_sort]
-</PRE
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> insertion_sort
+<span class="keyword">(</span>
+  A<span class="keyword">:</span> <span class="staexp">arrszref</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+<span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">a</span><span class="keyword">)</span> <span class="staexp"><span class="keyword">-&gt;</span></span> <span class="staexp">int</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">void</span> <span class="keyword">=</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val</span> n <span class="keyword">=</span> g0uint2int_size_int <span class="keyword">(</span>A<span class="dynexp"><span class="keyword">.</span>size</span><span class="keyword">)</span></span>
+  <span class="dynexp"><span class="keyword">fun</span> ins <span class="keyword">(</span>x<span class="keyword">:</span> <span class="staexp">a</span><span class="keyword">,</span> i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> i &gt;= <span class="dynexp">0</span> <span class="keyword">then</span>
+    <span class="keyword">(</span>
+      <span class="keyword">if</span> cmp <span class="keyword">(</span>x<span class="keyword">,</span> <span class="dynexp">A[i<span class="keyword">]</span></span><span class="keyword">)</span> <span class="keyword">&lt;</span> <span class="dynexp">0</span>
+        <span class="keyword">then</span> <span class="keyword">(</span><span class="dynexp">A[i+1<span class="keyword">]</span></span> := <span class="dynexp">A[i<span class="keyword">]</span></span><span class="keyword">;</span> ins <span class="keyword">(</span>x<span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">A[i+1<span class="keyword">]</span></span> := x
+      <span class="comment">// end of [if]</span>
+    <span class="keyword">)</span> <span class="keyword">else</span> <span class="dynexp">A[0<span class="keyword">]</span></span> := x</span> <span class="comment">// end of [if]</span>
+  <span class="comment">// end of [ins]</span>
+  <span class="dynexp"><span class="keyword">fun</span> loop <span class="keyword">(</span>i<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">)</span><span class="keyword">:&lt;</span><span class="staexp">cloref1</span><span class="keyword">&gt;</span> <span class="staexp">void</span> <span class="keyword">=</span>
+    <span class="keyword">if</span> i <span class="keyword">&lt;</span> n <span class="keyword">then</span> <span class="keyword">(</span>ins <span class="keyword">(</span><span class="dynexp">A[i<span class="keyword">]</span></span><span class="keyword">,</span> i-<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">;</span> loop <span class="keyword">(</span>i+<span class="dynexp">1</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">else</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="comment">// end of [loop]</span>
+<span class="keyword">in</span>
+  loop <span class="keyword">(</span><span class="dynexp">1</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [insertion_sort]</span>
+</p></PRE
 ><P
 ></P
 ></DIV

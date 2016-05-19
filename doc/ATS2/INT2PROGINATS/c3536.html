@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>線形なデータ命題としてのデータ観 (dataview)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形観と線形型を使ったプログラミング"
+HREF="p3302.html"><LINK
+REL="PREVIOUS"
+TITLE="ヒープに確保された線形クロージャ関数"
+HREF="x3516.html"><LINK
+REL="NEXT"
+TITLE="選言的な観"
+HREF="x3559.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3516.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3559.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="dataviews"
+></A
+>Chapter 14. 線形なデータ命題としてのデータ観 (dataview)</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="c3536.html#optional_views"
+>オプショナル観</A
+></DT
+><DT
+><A
+HREF="x3559.html"
+>選言的な観</A
+></DT
+><DT
+><A
+HREF="x3600.html"
+>線形配列のデータ観</A
+></DT
+><DT
+><A
+HREF="x3660.html"
+>線形文字列のデータ観</A
+></DT
+><DT
+><A
+HREF="x3684.html"
+>片方向リストのデータ観</A
+></DT
+><DT
+><A
+HREF="x3738.html"
+>観変化のための証明関数</A
+></DT
+></DL
+></DIV
+><P
+>&#13;型 T とアドレス L について <FONT
+COLOR="RED"
+>T@L</FONT
+> をなす駐観 (at-view) は他の形の観をコンストラクトするブロックを形成します。
+そのような形成されたブロックを一緒に配置するメカニズムはデータ観 (dataview) として宣言されます。
+大部分においてそれはデータ命題 (dataprop) の宣言と同じです。
+この章ではいくつかの一般なデータ観とその使い方を紹介します。
+
+</P
+><P
+>&#13;この章で解説するコードは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVIEW/"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="optional_views"
+>オプショナル観</A
+></H1
+><P
+>&#13;データ観 <FONT
+COLOR="RED"
+>option_v</FONT
+> は次のように宣言されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3546"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">dataview</span> <span class="staexp">option_v <span class="keyword">(</span>v<span class="keyword">:</span><span class="keyword">view+</span><span class="keyword">,</span> bool<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="prfexp">Some_v <span class="keyword">(</span><span class="staexp">v</span><span class="keyword">,</span> <span class="staexp">true</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">v</span><span class="keyword">)</span></span> <span class="keyword">|</span> <span class="prfexp">None_v <span class="keyword">(</span><span class="staexp">v</span><span class="keyword">,</span> <span class="staexp">false</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この宣言はデータ観 <FONT
+COLOR="RED"
+>option_v</FONT
+> が1番目の引数に対して共変で、
+関連する2つの証明コンストラクタ <FONT
+COLOR="RED"
+>Some_v</FONT
+> と <FONT
+COLOR="RED"
+>None_v</FONT
+> があることを示しています。
+観 V が与えられ、b がブールの時、<FONT
+COLOR="RED"
+>option_v(V, b)</FONT
+> はしばしばオプショナル観 (optional view)
+と呼ばれます。
+明確に観 <FONT
+COLOR="RED"
+>option_v(V, true)</FONT
+> の証明は観 V の証明を含んでいますが、観 <FONT
+COLOR="RED"
+>option_v(V, false)</FONT
+> の証明は何も含んでいません。
+
+</P
+><P
+>&#13;例として、次の関数インターフェイスはオプショナル観の典型的な使用例です:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3555"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+ptr_alloc_opt <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>l<span class="keyword">:</span>addr<span class="keyword">]</span></span> <span class="keyword">(</span><span class="staexp">option_v</span> <span class="keyword">(</span><span class="staexp">a</span><span class="staexp">?</span> <span class="staexp"><span class="keyword">@</span></span> <span class="staexp">l</span><span class="keyword">,</span> <span class="staexp">l</span> <span class="staexp"><span class="keyword">&gt;</span></span> <span class="staexp">null</span><span class="keyword">)</span> <span class="keyword">|</span> <span class="staexp">ptr</span> <span class="staexp">l</span><span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+型 T が与えられた時、
+関数 <FONT
+COLOR="RED"
+>ptr_alloc_opt&#60;T&#62;</FONT
+> はオプショナル観の証明とポインタのペアを返します;
+もし返されたポインタが NULL でなければ、
+ポインタが指す場所 L についてその証明は観 <FONT
+COLOR="RED"
+>T?@L</FONT
+> の証明に成ることができます;
+そうでなければ、返されたポインタに関連する駐観は含まれません。
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3516.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3559.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ヒープに確保された線形クロージャ関数</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="p3302.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>選言的な観</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

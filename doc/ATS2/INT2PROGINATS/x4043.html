@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>例: 線形リストのクイックソート</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="線形データ型としてのデータ観型 (dataviewtype)"
+HREF="c3791.html"><LINK
+REL="PREVIOUS"
+TITLE="例: 線形リストの挿入ソート"
+HREF="x4010.html"><LINK
+REL="NEXT"
+TITLE="線形2分探索木"
+HREF="x4080.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4010.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. 線形データ型としてのデータ観型 (dataviewtype)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4080.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="example_quickSort_lin"
+>例: 線形リストのクイックソート</A
+></H1
+><P
+>&#13;この章では、線形リストのクイックソートの実装を紹介します。
+リストを用いたクイックソートは実際には望ましいソート方法ではありませんが、にもかかわらずその実装は興味深いものです。
+クイックソートのインターフェイスは次のように与えられます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4046"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+quickSort<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+  <span class="keyword">(</span>xs<span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span> <span class="staexp">a</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span></span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>mergeSort</FONT
+> と <FONT
+COLOR="RED"
+>insertionSort</FONT
+> の実装のように、
+次のように与えられた <FONT
+COLOR="RED"
+>quickSort</FONT
+> の実装はメモリの確保/解放を行ないません。
+
+</P
+><P
+>&#13;次のコードは関数 <FONT
+COLOR="RED"
+>takeout_node_at</FONT
+> を実装しています。
+この関数は線形リストから与えられた位置のノードを取り出します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4053"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>a<span class="keyword">:</span><span class="keyword">t@ype</span><span class="keyword">}</span></span>
+takeout_node_at
+  <span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>int<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>k<span class="keyword">:</span>nat <span class="keyword">|</span> k <span class="keyword">&lt;</span> n<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="staexp">&gt;&gt;</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="staexp">-</span><span class="staexp">1</span><span class="keyword">)</span><span class="keyword">,</span> k<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">k</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">list_vt_cons_pstruct</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">ptr</span><span class="staexp">?</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+<span class="comment">//</span>
+<span class="keyword">if</span> k <span class="keyword">&gt;</span> <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>list_vt_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs1<span class="keyword">)</span> <span class="keyword">=</span> xs</span>
+  <span class="dynexp"><span class="keyword">val</span> res <span class="keyword">=</span> takeout_node_at&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs1<span class="keyword">,</span> k-<span class="dynexp">1</span><span class="keyword">)</span></span>
+  <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span> <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+<span class="keyword">in</span>
+  res
+<span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+  <span class="dynexp"><span class="keyword">val+</span><span class="keyword">@</span>list_vt_cons <span class="keyword">(</span>x<span class="keyword">,</span> xs1<span class="keyword">)</span> <span class="keyword">=</span> xs</span>
+  <span class="dynexp"><span class="keyword">val</span> nx <span class="keyword">=</span> xs</span>
+  <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> xs := xs1</span>
+<span class="keyword">in</span>
+  $UNSAFE<span class="keyword">.</span>castvwtp0 <span class="keyword">(</span><span class="keyword">(</span><span class="prfexp"><span class="dynexp"><span class="keyword">view@</span></span>x</span><span class="keyword">,</span> <span class="prfexp"><span class="dynexp"><span class="keyword">view@</span></span>xs1</span> <span class="keyword">|</span> nx<span class="keyword">)</span><span class="keyword">)</span> <span class="comment">// HX: this is a safe cast</span>
+<span class="keyword">end</span> <span class="comment">// end of [if]</span>
+<span class="comment">//</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [takeout_node_at] *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+データ観型に関連する <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+> という名前のデータコンストラクタを仮定します。
+すると n が <SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo</I
+></SPAN
+> のアリティの時、n 個の型を取って観型を作るような対応する
+<SPAN
+CLASS="emphasis"
+><I
+CLASS="emphasis"
+>foo_pstruct</I
+></SPAN
+> という名前の観型コンストラクタが存在します。
+例えば、2つの型 T1 と T2 を取って観型 <FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+> を作るような観型コンストラクタ <FONT
+COLOR="RED"
+>list_vt_cons_pstruct</FONT
+> が存在することになります。
+この観型は、<FONT
+COLOR="RED"
+>list_vt_cons</FONT
+> の2つの引数の型が T1 と T2 であるような、<FONT
+COLOR="RED"
+>list_vt_cons</FONT
+>
+呼び出しによって生成されるリストノードを表わします。
+アドレス L0, L1, L2 と2つの観 <FONT
+COLOR="RED"
+>T1@L1</FONT
+>, <FONT
+COLOR="RED"
+>T2@L2</FONT
+>
+について、<FONT
+COLOR="RED"
+>list_vt_cons_pstruct(T1, T2)</FONT
+> は <FONT
+COLOR="RED"
+>list_vt_cons_unfold(L0, L1, L2)</FONT
+>
+を本質的に表わしています。
+
+</P
+><P
+>&#13;クイックソートの鍵となるステップは、与えられたピボットを元に線形リストを分割することです。
+このステップは、<FONT
+COLOR="RED"
+>partition</FONT
+> という名前の関数テンプレートを実装している次のコードで実行されます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4068"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">fun</span><span class="staexp"><span class="keyword">{</span>
+a<span class="keyword">:</span><span class="keyword">t@ype</span>
+<span class="keyword">}</span></span> partition<span class="staexp"><span class="keyword">{</span>n<span class="keyword">,</span>r1<span class="keyword">,</span>r2<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> pvt<span class="keyword">:</span> <span class="staexp">&amp;</span><span class="staexp">a</span>
+<span class="keyword">,</span> r1<span class="keyword">:</span> <span class="staexp">int</span><span class="keyword">(</span><span class="staexp">r1</span><span class="keyword">)</span><span class="keyword">,</span> res1<span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">r1</span><span class="keyword">)</span><span class="keyword">,</span> res2<span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">r2</span><span class="keyword">)</span>
+<span class="keyword">,</span> cmp<span class="keyword">:</span> <span class="staexp">cmp</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>n1<span class="keyword">,</span>n2<span class="keyword">:</span>nat <span class="keyword">|</span> n1+n2==n+r1+r2<span class="keyword">]</span></span>
+  <span class="keyword">(</span><span class="staexp">int</span><span class="keyword">(</span><span class="staexp">n1</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n1</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n2</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">case+</span> xs <span class="keyword">of</span>
+  <span class="keyword">|</span> <span class="keyword">@</span>list_vt_cons
+      <span class="keyword">(</span>x<span class="keyword">,</span> xs_tail<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="dynexp"><span class="keyword">val</span> xs_tail_ <span class="keyword">=</span> xs_tail</span>
+      <span class="dynexp"><span class="keyword">val</span> sgn <span class="keyword">=</span> compare&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>x<span class="keyword">,</span> pvt<span class="keyword">,</span> cmp<span class="keyword">)</span></span>
+    <span class="keyword">in</span>
+      <span class="keyword">if</span> sgn &lt;= <span class="dynexp">0</span> <span class="keyword">then</span> <span class="keyword">let</span>
+        <span class="dynexp"><span class="keyword">val</span> r1 <span class="keyword">=</span> r1 + <span class="dynexp">1</span></span>
+        <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> xs_tail := res1</span>
+        <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span> <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+      <span class="keyword">in</span>
+        partition&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs_tail_<span class="keyword">,</span> pvt<span class="keyword">,</span> r1<span class="keyword">,</span> xs<span class="keyword">,</span> res2<span class="keyword">,</span> cmp<span class="keyword">)</span>
+      <span class="keyword">end</span> <span class="keyword">else</span> <span class="keyword">let</span>
+        <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> xs_tail := res2</span>
+        <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span> <span class="keyword">(</span>xs<span class="keyword">)</span></span>
+      <span class="keyword">in</span>
+        partition&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs_tail_<span class="keyword">,</span> pvt<span class="keyword">,</span> r1<span class="keyword">,</span> res1<span class="keyword">,</span> xs<span class="keyword">,</span> cmp<span class="keyword">)</span>
+      <span class="keyword">end</span> <span class="comment">// end of [if]</span>
+    <span class="keyword">end</span> <span class="comment">(* end of [list_vt_cons] *)</span>
+  <span class="keyword">|</span> <span class="keyword">~</span>list_vt_nil <span class="keyword">(</span><span class="comment">(*void*)</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span>r1<span class="keyword">,</span> res1<span class="keyword">,</span> res2<span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [partition] *)</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+<FONT
+COLOR="RED"
+>partition</FONT
+> の実装は末尾再帰です。
+線形リストとピボットが与えられた時、<FONT
+COLOR="RED"
+>partition</FONT
+> はタプル (r1, res1, res2) を返します。
+このとき res1 はリスト中でピボット以下の全ての要素を含み、res2 はその残りを含み、r1 は res1 の長さになります。
+与えらえた線形リストのノードを res1 と res2 に移動させる方法は、この実装の大変興味深い側面です。
+
+</P
+><P
+>&#13;<FONT
+COLOR="RED"
+>takeout_node_at</FONT
+> と <FONT
+COLOR="RED"
+>partition</FONT
+> を使って、次のような <FONT
+COLOR="RED"
+>quickSort</FONT
+> をすぐに実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN4076"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="dynexp"><span class="keyword">implement</span>
+<span class="keyword">{</span><span class="staexp">a</span><span class="keyword">}</span><span class="comment">(*tmp*)</span>
+quickSort
+  <span class="keyword">(</span>xs<span class="keyword">,</span> cmp<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="dynexp"><span class="keyword">fun</span> sort<span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  xs<span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span><span class="keyword">,</span> n<span class="keyword">:</span> <span class="staexp">int</span> <span class="staexp">n</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp">list_vt</span> <span class="keyword">(</span><span class="staexp">a</span><span class="keyword">,</span> <span class="staexp">n</span><span class="keyword">)</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="keyword">if</span> n <span class="keyword">&gt;</span> <span class="dynexp">10</span> <span class="keyword">then</span> <span class="keyword">let</span>
+    <span class="dynexp"><span class="keyword">val</span> n2 <span class="keyword">=</span> half <span class="keyword">(</span>n<span class="keyword">)</span></span>
+    <span class="keyword">var</span> xs <span class="keyword">=</span> xs
+    <span class="dynexp"><span class="keyword">val</span> nx <span class="keyword">=</span> takeout_node_at&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">,</span> n2<span class="keyword">)</span></span>
+    <span class="dynexp"><span class="keyword">val+</span>list_vt_cons <span class="keyword">(</span>pvt<span class="keyword">,</span> nx_next<span class="keyword">)</span> <span class="keyword">=</span> nx</span>
+    <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span>n1<span class="keyword">,</span> xs1<span class="keyword">,</span> xs2<span class="keyword">)</span> <span class="keyword">=</span>
+    partition&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">,</span> pvt<span class="keyword">,</span> <span class="dynexp">0</span><span class="keyword">,</span> list_vt_nil<span class="keyword">,</span> list_vt_nil<span class="keyword">,</span> cmp<span class="keyword">)</span></span>
+    <span class="dynexp"><span class="keyword">val</span> xs1 <span class="keyword">=</span> sort <span class="keyword">(</span>xs1<span class="keyword">,</span> n1<span class="keyword">)</span></span>
+    <span class="dynexp"><span class="keyword">val</span> xs2 <span class="keyword">=</span> sort <span class="keyword">(</span>xs2<span class="keyword">,</span> n - <span class="dynexp">1</span> - n1<span class="keyword">)</span></span>
+    <span class="dynexp"><span class="keyword">val</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> nx_next := xs2</span>
+    <span class="prfexp"><span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">fold@</span> <span class="keyword">(</span>nx<span class="keyword">)</span></span>
+  <span class="keyword">in</span>
+    list_vt_append <span class="keyword">(</span>xs1<span class="keyword">,</span> nx<span class="keyword">)</span>
+  <span class="keyword">end</span> <span class="keyword">else</span> insertionSort&lt;<span class="staexp">a</span><span class="keyword">&gt;</span> <span class="keyword">(</span>xs<span class="keyword">,</span> cmp<span class="keyword">)</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [sort] *)</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  sort <span class="keyword">(</span>xs<span class="keyword">,</span> list_vt_length <span class="keyword">(</span>xs<span class="keyword">)</span><span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [quickSort]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+それぞれの分割におけるピボットはソートされるリストの真ん中に取っていることに注意してください。
+リストの真ん中からノードを取り出す時間的計算量は O(n) です。
+この問題は最初の要素をピボットとしていつも選ぶことによって解決できます。
+けれどもそうすると、実際のクイックソートの効率は結果としてしばしば O(n^2) に悪化してしまいます。
+
+</P
+><P
+>&#13;この章のコード全体と追加のテストコードは
+<A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_DATAVTYPE/quickSort.dats"
+TARGET="_top"
+>オンライン</A
+>
+から入手できます。
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4010.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4080.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: 線形リストの挿入ソート</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3791.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>線形2分探索木</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

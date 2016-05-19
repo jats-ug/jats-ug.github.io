@@ -1,0 +1,457 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>代数的なデータ種 (datasort)</TITLE
+><META
+CHARSET="UTF-8"><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="ATSプログラミング入門"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="ATS/LF を使った定理証明"
+HREF="c2850.html"><LINK
+REL="PREVIOUS"
+TITLE="例: 乗法の交換法則"
+HREF="x2981.html"><LINK
+REL="NEXT"
+TITLE="例: ブラウンツリーの性質を確立する"
+HREF="x3041.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="./assets/INT2PROGINATS-BOOK.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>ATSプログラミング入門: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2981.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 11. ATS/LF を使った定理証明</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3041.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="datasorts"
+>代数的なデータ種 (datasort)</A
+></H1
+><P
+>データ種 (datasort) はデータ型 (datatype) に少し似ています。
+けれども、後者は ATS の動的な宣言ですが、前者は ATS の静的な宣言です。
+データ種の典型的な用途を見るために、
+s と h がそれぞれ与えられた二分木のサイズと高さであるなら、s がきっちり 2<SUP
+>h</SUP
+>
+より小さくなることを示す定理を ATS でエンコードしてみましょう。
+二分木を静的に表わすために、まず次のデータ種を宣言しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3002"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="staexp"><span class="keyword">datasort</span> tree <span class="keyword">=</span> E <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">|</span> B <span class="keyword">of</span> <span class="keyword">(</span>tree<span class="keyword">,</span> tree<span class="keyword">)</span></span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+宣言した データ種 の名前は <FONT
+COLOR="RED"
+>tree</FONT
+> で、関連する2つのコンストラクタがあります:
+それは <FONT
+COLOR="RED"
+>E</FONT
+> と <FONT
+COLOR="RED"
+>B</FONT
+> で、E は空の木を作り、B は与えられた2つの木を結合した木を作ります。
+例えば、<FONT
+COLOR="RED"
+>B(E(), E())</FONT
+> は種 <FONT
+COLOR="RED"
+>tree</FONT
+> の静的な項で、シングルトン木を表わしています。
+つまりノードが1つしかない木です。
+E と B で作った木は全くデータを保持しない骨だけの木であることに注意してください。
+</P
+><P
+>次のように木のサイズと高さの概念を捕捉するために2つのデータ命題を宣言しましょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3010"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="comment">//</span>
+<span class="keyword">dataprop</span>
+<span class="staexp">SZ <span class="keyword">(</span>tree<span class="keyword">,</span> int<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="prfexp">SZE <span class="keyword">(</span><span class="staexp">E</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="prfexp"><span class="staexp"><span class="keyword">{</span>tl<span class="keyword">,</span>tr<span class="keyword">:</span>tree<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>sl<span class="keyword">,</span>sr<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+    SZB <span class="keyword">(</span><span class="staexp">B</span> <span class="keyword">(</span><span class="staexp">tl</span><span class="keyword">,</span> <span class="staexp">tr</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">1</span><span class="staexp">+</span><span class="staexp">sl</span><span class="staexp">+</span><span class="staexp">sr</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">SZ</span> <span class="keyword">(</span><span class="staexp">tl</span><span class="keyword">,</span> <span class="staexp">sl</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">SZ</span> <span class="keyword">(</span><span class="staexp">tr</span><span class="keyword">,</span> <span class="staexp">sr</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [SZ]</span>
+<span class="comment">//</span>
+<span class="keyword">dataprop</span>
+<span class="staexp">HT <span class="keyword">(</span>tree<span class="keyword">,</span> int<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="prfexp">HTE <span class="keyword">(</span><span class="staexp">E</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">0</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="prfexp"><span class="staexp"><span class="keyword">{</span>tl<span class="keyword">,</span>tr<span class="keyword">:</span>tree<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>hl<span class="keyword">,</span>hr<span class="keyword">:</span>nat<span class="keyword">}</span></span>
+    HTB <span class="keyword">(</span><span class="staexp">B</span> <span class="keyword">(</span><span class="staexp">tl</span><span class="keyword">,</span> <span class="staexp">tr</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">1</span><span class="staexp">+</span><span class="staexp">max</span><span class="keyword">(</span><span class="staexp">hl</span><span class="keyword">,</span><span class="staexp">hr</span><span class="keyword">)</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="keyword">(</span><span class="staexp">HT</span> <span class="keyword">(</span><span class="staexp">tl</span><span class="keyword">,</span> <span class="staexp">hl</span><span class="keyword">)</span><span class="keyword">,</span> <span class="staexp">HT</span> <span class="keyword">(</span><span class="staexp">tr</span><span class="keyword">,</span> <span class="staexp">hr</span><span class="keyword">)</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [HT]</span>
+<span class="comment">//</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+木 t と整数 s が与えられた時、SZ(t, s) は t のサイズが s に等しいという関係をエンコードします。
+同様に、木 t と整数 h が与えられた時、HZ(t, h) は t の高さが h に等しいという関係をエンコードします。
+</P
+><P
+>2を底にした累乗関数は ATS の静的な部分にはないので、それを捕捉する次のデータ命題を宣言します:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3013"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="keyword">dataprop</span>
+<span class="staexp">POW2 <span class="keyword">(</span>int<span class="keyword">,</span> int<span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">|</span> <span class="prfexp">POW2bas <span class="keyword">(</span><span class="staexp">0</span><span class="keyword">,</span> <span class="staexp">1</span><span class="keyword">)</span></span>
+  <span class="keyword">|</span> <span class="prfexp"><span class="staexp"><span class="keyword">{</span>n<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p<span class="keyword">:</span>int<span class="keyword">}</span></span> POW2ind <span class="keyword">(</span><span class="staexp">n</span><span class="staexp">+</span><span class="staexp">1</span><span class="keyword">,</span> <span class="staexp">p</span><span class="staexp">+</span><span class="staexp">p</span><span class="keyword">)</span> <span class="keyword">of</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">n</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span></span></span>
+<span class="comment">// end of [POW2]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+2つの整数 h と p が与えられた時、POW2 (h, p) は 2<SUP
+>h</SUP
+> が p
+に等しいという関係をエンコードします。
+</P
+><P
+>s と h が与えられた二分木のサイズと高さである時、
+s がきっちり 2<SUP
+>h</SUP
+> より小さくなることを表わす定理を、
+次の証明関数のインターフェイスがエンコードしていることは明確でしょう:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3018"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">prfun</span>
+lemma_tree_size_height
+  <span class="staexp"><span class="keyword">{</span>t<span class="keyword">:</span>tree<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>s<span class="keyword">,</span>h<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p<span class="keyword">:</span>int<span class="keyword">}</span></span>
+<span class="keyword">(</span>
+  pf1<span class="keyword">:</span> <span class="staexp">SZ</span> <span class="keyword">(</span><span class="staexp">t</span><span class="keyword">,</span> <span class="staexp">s</span><span class="keyword">)</span><span class="keyword">,</span> pf2<span class="keyword">:</span> <span class="staexp">HT</span> <span class="keyword">(</span><span class="staexp">t</span><span class="keyword">,</span> <span class="staexp">h</span><span class="keyword">)</span><span class="keyword">,</span> pf3<span class="keyword">:</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>s <span class="keyword">&lt;</span> p<span class="keyword">]</span></span> <span class="staexp">void</span></span> <span class="comment">// end of [prfun]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+この証明関数の実装を次のようにコンストラクトしてみましょう。
+</P
+><P
+>はじめに、2を底にした累乗関数のいくつかの基本的な性質を作ります:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3021"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">prfun</span>
+pow2_istot
+  <span class="staexp"><span class="keyword">{</span>h<span class="keyword">:</span>nat<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">h</span><span class="keyword">&gt;.</span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>p<span class="keyword">:</span>int<span class="keyword">]</span></span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span> <span class="keyword">=</span>
+  <span class="keyword">sif</span> <span class="staexp">h</span><span class="staexp">==</span><span class="staexp">0</span>
+    <span class="keyword">then</span> POW2bas <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">else</span> POW2ind <span class="keyword">(</span>pow2_istot <span class="staexp"><span class="keyword">{</span>h-1<span class="keyword">}</span></span> <span class="keyword">(</span><span class="keyword">)</span><span class="keyword">)</span></span>
+  <span class="comment">// end of [sif]</span>
+<span class="comment">// end of [pow2_istot]</span>
+
+<span class="prfexp"><span class="keyword">prfun</span>
+pow2_pos
+  <span class="staexp"><span class="keyword">{</span>h<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">h</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>pf<span class="keyword">:</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>p <span class="keyword">&gt;</span> 0<span class="keyword">]</span></span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">case+</span> pf <span class="keyword">of</span>
+  <span class="keyword">|</span> POW2bas <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">|</span> POW2ind <span class="keyword">(</span>pf1<span class="keyword">)</span> <span class="keyword">=&gt;</span> pow2_pos <span class="keyword">(</span>pf1<span class="keyword">)</span></span>
+<span class="comment">// end of [pow2_pos]</span>
+
+<span class="prfexp"><span class="keyword">prfun</span>
+pow2_inc
+  <span class="staexp"><span class="keyword">{</span>h1<span class="keyword">,</span>h2<span class="keyword">:</span>nat <span class="keyword">|</span> h1 &lt;= h2<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p1<span class="keyword">,</span>p2<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">h2</span><span class="keyword">&gt;.</span>
+  <span class="keyword">(</span>pf1<span class="keyword">:</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h1</span><span class="keyword">,</span> <span class="staexp">p1</span><span class="keyword">)</span><span class="keyword">,</span> pf2<span class="keyword">:</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h2</span><span class="keyword">,</span> <span class="staexp">p2</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>p1 &lt;= p2<span class="keyword">]</span></span> <span class="staexp">void</span> <span class="keyword">=</span>
+  <span class="keyword">case+</span> pf1 <span class="keyword">of</span>
+  <span class="keyword">|</span> POW2bas <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> pow2_pos <span class="keyword">(</span>pf2<span class="keyword">)</span>
+  <span class="keyword">|</span> POW2ind <span class="keyword">(</span>pf11<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="prfexp"><span class="keyword">prval</span> POW2ind <span class="keyword">(</span>pf21<span class="keyword">)</span> <span class="keyword">=</span> pf2</span> <span class="keyword">in</span> pow2_inc <span class="keyword">(</span>pf11<span class="keyword">,</span> pf21<span class="keyword">)</span>
+    <span class="keyword">end</span></span> <span class="comment">// end of [POW2ind]</span>
+<span class="comment">// end of [pow2_inc]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+明確に、<FONT
+COLOR="RED"
+>pow2_istot</FONT
+> はデータ命題 <FONT
+COLOR="RED"
+>POW2</FONT
+>
+にエンコードされた関係が全域な関係であることを表わしています;
+<FONT
+COLOR="RED"
+>pow2_pos</FONT
+> は自然数の累乗が正の数になることを証明しています;
+<FONT
+COLOR="RED"
+>pow2_inc</FONT
+> は累乗関数が単調増加であることを証明しています。
+</P
+><P
+>&#13;関数 <FONT
+COLOR="RED"
+>lemma_tree_size_height</FONT
+> は次のように実装できます:
+
+<DIV
+CLASS="informalexample"
+><P
+></P
+><A
+NAME="AEN3029"
+></A
+><PRE
+CLASS="programlisting"
+><p class="patsyntax"><span class="prfexp"><span class="keyword">primplement</span>
+lemma_tree_size_height
+  <span class="keyword">(</span>pf1<span class="keyword">,</span> pf2<span class="keyword">,</span> pf3<span class="keyword">)</span> <span class="keyword">=</span> <span class="keyword">let</span>
+<span class="comment">//</span>
+<span class="prfexp"><span class="keyword">prfun</span>
+lemma<span class="staexp"><span class="keyword">{</span>t<span class="keyword">:</span>tree<span class="keyword">}</span></span>
+  <span class="staexp"><span class="keyword">{</span>s<span class="keyword">,</span>h<span class="keyword">:</span>nat<span class="keyword">}</span></span><span class="staexp"><span class="keyword">{</span>p<span class="keyword">:</span>int<span class="keyword">}</span></span> <span class="keyword">.&lt;</span><span class="staexp">t</span><span class="keyword">&gt;.</span>
+<span class="keyword">(</span>
+  pf1<span class="keyword">:</span> <span class="staexp">SZ</span> <span class="keyword">(</span><span class="staexp">t</span><span class="keyword">,</span> <span class="staexp">s</span><span class="keyword">)</span>
+<span class="keyword">,</span> pf2<span class="keyword">:</span> <span class="staexp">HT</span> <span class="keyword">(</span><span class="staexp">t</span><span class="keyword">,</span> <span class="staexp">h</span><span class="keyword">)</span>
+<span class="keyword">,</span> pf3<span class="keyword">:</span> <span class="staexp">POW2</span> <span class="keyword">(</span><span class="staexp">h</span><span class="keyword">,</span> <span class="staexp">p</span><span class="keyword">)</span>
+<span class="keyword">)</span> <span class="keyword">:</span> <span class="staexp"><span class="keyword">[</span>p <span class="keyword">&gt;</span> s<span class="keyword">]</span></span> <span class="staexp">void</span> <span class="keyword">=</span>
+<span class="keyword">(</span>
+  <span class="dynexp"><span class="keyword">scase</span> t <span class="keyword">of</span>
+  <span class="keyword">|</span> E <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="keyword">prval</span> SZE <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf1
+      <span class="keyword">prval</span> HTE <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf2
+      <span class="keyword">prval</span> POW2bas <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pf3
+   <span class="keyword">in</span>
+     <span class="comment">// nothing</span>
+   <span class="keyword">end</span> <span class="comment">// end of [E]</span>
+  <span class="keyword">|</span> B <span class="keyword">(</span>tl<span class="keyword">,</span> tr<span class="keyword">)</span> <span class="keyword">=&gt;</span> <span class="keyword">let</span>
+      <span class="keyword">prval</span> SZB <span class="keyword">(</span>pf1l<span class="keyword">,</span> pf1r<span class="keyword">)</span> <span class="keyword">=</span> pf1
+      <span class="keyword">prval</span> HTB <span class="keyword">{</span>tl<span class="keyword">,</span>tr<span class="keyword">}</span><span class="keyword">{</span>hl<span class="keyword">,</span>hr<span class="keyword">}</span> <span class="keyword">(</span>pf2l<span class="keyword">,</span> pf2r<span class="keyword">)</span> <span class="keyword">=</span> pf2
+      <span class="keyword">prval</span> POW2ind <span class="keyword">(</span>pf31<span class="keyword">)</span> <span class="keyword">=</span> pf3
+      <span class="keyword">prval</span> pf3l <span class="keyword">=</span> pow2_istot <span class="keyword">{</span>hl<span class="keyword">}</span> <span class="keyword">(</span><span class="keyword">)</span>
+      <span class="keyword">prval</span> pf3r <span class="keyword">=</span> pow2_istot <span class="keyword">{</span>hr<span class="keyword">}</span> <span class="keyword">(</span><span class="keyword">)</span>
+      <span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> lemma <span class="keyword">(</span>pf1l<span class="keyword">,</span> pf2l<span class="keyword">,</span> pf3l<span class="keyword">)</span>
+      <span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> lemma <span class="keyword">(</span>pf1r<span class="keyword">,</span> pf2r<span class="keyword">,</span> pf3r<span class="keyword">)</span>
+      <span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pow2_inc <span class="keyword">(</span>pf3l<span class="keyword">,</span> pf31<span class="keyword">)</span>
+      <span class="keyword">prval</span> <span class="keyword">(</span><span class="keyword">)</span> <span class="keyword">=</span> pow2_inc <span class="keyword">(</span>pf3r<span class="keyword">,</span> pf31<span class="keyword">)</span>
+    <span class="keyword">in</span>
+      <span class="comment">// nothing</span>
+    <span class="keyword">end</span></span> <span class="comment">// end of [B]</span>
+<span class="keyword">)</span></span> <span class="comment">(* end of [lemma] *)</span>
+<span class="comment">//</span>
+<span class="keyword">in</span>
+  lemma <span class="keyword">(</span>pf1<span class="keyword">,</span> pf2<span class="keyword">,</span> pf3<span class="keyword">)</span>
+<span class="keyword">end</span></span> <span class="comment">// end of [lemma_tree_size_height]</span>
+</p></PRE
+><P
+></P
+></DIV
+>
+
+
+内部の関数 <FONT
+COLOR="RED"
+>lemma</FONT
+> は、種 <FONT
+COLOR="RED"
+>tree</FONT
+> の静的な項で構成されている停止性メトリクスを持ちます。
+またこの関数は二分木 <FONT
+COLOR="RED"
+>t</FONT
+> に関連する構造的な帰納法の証明に対応しています。
+2つの項 t1 と t2 が種 <FONT
+COLOR="RED"
+>tree</FONT
+> として与えられ、t1 が t2 より小さい構造であるなら、t1 は きっちり t2
+より小さくなります。
+明らかに、これは根拠の確かな順序です。
+キーワード <FONT
+COLOR="RED"
+>scase</FONT
+> は (宣言された データ種 に関連するコンストラクタで構築される)
+静的な項のcase判定をする動的な式を作るのに使われます。
+そのため、<FONT
+COLOR="RED"
+>sif</FONT
+> と <FONT
+COLOR="RED"
+>scase</FONT
+> の関係は <FONT
+COLOR="RED"
+>if</FONT
+> と <FONT
+COLOR="RED"
+>case</FONT
+> の関係と同じです。
+上記のコード全体は <A
+HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/INT2PROGINATS/CODE/CHAP_THMPRVING/tree.dats"
+TARGET="_top"
+>オンライン</A
+> から入手できます。
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2981.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3041.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>例: 乗法の交換法則</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c2850.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>例: ブラウンツリーの性質を確立する</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
