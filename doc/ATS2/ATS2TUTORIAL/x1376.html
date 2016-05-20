@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Generating a datcontag-function</TITLE
+>datcontag 関数の生成</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,13 +11,13 @@ REL="HOME"
 TITLE="ATSプログラミングチュートリアル"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="Automatic Code Generation"
+TITLE="コード自動生成"
 HREF="c1339.html"><LINK
 REL="PREVIOUS"
-TITLE="Automatic Code Generation"
+TITLE="コード自動生成"
 HREF="c1339.html"><LINK
 REL="NEXT"
-TITLE="Generating a fprint-function"
+TITLE="fprint 関数の自動生成"
 HREF="x1395.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -57,7 +57,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 29. Automatic Code Generation</TD
+>Chapter 29. コード自動生成</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -78,18 +78,15 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="codegen2_datcontag"
->Generating a datcontag-function</A
+>datcontag 関数の生成</A
 ></H1
 ><P
->&#13;A datcontag-function is very similar to a datcon-function.  Given a
-datatype, its datcontag-function is the one that takes a value of the
-datatype and then returns the tag (which is a small integer) assigned to
-the (outmost) constructor in the construction of the value.  We can use the
-following directive to indicate (to the ATS compiler) that the
-datcontag-function for the datatype <FONT
+>&#13;datcontag 関数は datcon 関数とよく似ています。
+あるデータ型が与えられたとき、その datcontag 関数はそのデータ型の値を取り、その値をコンストラクトした (最外の) コンストラクタに割り当てられた (小さな整数である) タグを返します。
+データ型 <FONT
 COLOR="RED"
 >expr</FONT
-> needs to be generated:
+> の datcontag 関数の生成を (ATS コンパイラに) 指示するのに次の命令が使えます:
 
 <DIV
 CLASS="informalexample"
@@ -108,20 +105,18 @@ CLASS="programlisting"
 >
 
 
-By default, the name of the generated function is
-<FONT
+デフォルトでは、生成された関数の名前は <FONT
 COLOR="RED"
 >datcontag_expr</FONT
->.  If a different name is needed, it can be
-supplied as the third argument of the <FONT
+> になります。
+もし異なる名前にしたければ、<FONT
 COLOR="RED"
 >#codegen2</FONT
->-directive. For
-instance, the following directive indicates that the generated function is
-of the given name <FONT
+> 命令の第三引数にその名前を渡します。
+例えば、次の命令は <FONT
 COLOR="RED"
 >my_datcontag_expr</FONT
->:
+> の名前で関数を生成することを示しています: 
 
 <DIV
 CLASS="informalexample"
@@ -140,11 +135,10 @@ CLASS="programlisting"
 >
 
 
-The following ATS code is expected to be generated that implements
 <FONT
 COLOR="RED"
 >datcontag_expr</FONT
->:
+> を実装する次の ATS コードが生成されます:
 
 <DIV
 CLASS="informalexample"
@@ -181,11 +175,10 @@ datcontag_expr
 >
 
 
-Note that the funtion template <FONT
+生成されたコードを正しくコンパイルするために、関数テンプレート <FONT
 COLOR="RED"
 >datcontag_expr</FONT
-> is required to be
-declared somewhere in order for the generated code to be compiled properly:
+> がどこかで宣言される必要があることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -206,13 +199,13 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で示した例の全体と (コード生成のプロセスを説明する) Makefile は
+<A
 HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_codegen2"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entirety of this presented example plus a Makefile (for illustrating
-the code generation process).
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -259,7 +252,7 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Automatic Code Generation</TD
+>コード自動生成</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
@@ -273,7 +266,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Generating a fprint-function</TD
+>fprint 関数の自動生成</TD
 ></TR
 ></TABLE
 ></DIV

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Generating a fprint-function</TITLE
+>fprint 関数の自動生成</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -11,10 +11,10 @@ REL="HOME"
 TITLE="ATSプログラミングチュートリアル"
 HREF="book1.html"><LINK
 REL="UP"
-TITLE="Automatic Code Generation"
+TITLE="コード自動生成"
 HREF="c1339.html"><LINK
 REL="PREVIOUS"
-TITLE="Generating a datcontag-function"
+TITLE="datcontag 関数の生成"
 HREF="x1376.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -54,7 +54,7 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
->Chapter 29. Automatic Code Generation</TD
+>Chapter 29. コード自動生成</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
@@ -71,25 +71,22 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="codegen2_fprint"
->Generating a fprint-function</A
+>fprint 関数の自動生成</A
 ></H1
 ><P
->&#13;A fprint-function takes a file-handle (of the type <FONT
+>&#13;fprint 関数は (型 <FONT
 COLOR="RED"
 >FILEref</FONT
->) and
-a value and then outputs a text representation of the value to the
-file-handle.  Given a datatype, one is often in need of a function that can
-output certain kind of text representation for values of this datatype. For
-instance, such a function can be of great use in debugging.
+> の) ファイルハンドルと値を取り、そのファイルハンドルにその値のテキスト表現を出力します。
+あるデータ型が与えられたとき、そのデータ型の値を表わすテキスト表現を出力する関数がしばしば必要になります。
+例えば、そのような関数はデバッグに威力を発揮します。
 
 </P
 ><P
->&#13;Let us first declare a function template <FONT
+>&#13;はじめに次のような関数テンプレート <FONT
 COLOR="RED"
 >fprint_expr</FONT
-> as
-follows:
+> を宣言しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -108,11 +105,10 @@ CLASS="programlisting"
 >
 
 
-We can then use the directive below to indicate (to the ATS compiler) that
-the fprint-function for the datatype <FONT
+データ型 <FONT
 COLOR="RED"
 >expr</FONT
-> needs to be generated:
+> に対する fprint 関数の自動生成を (ATS コンパイラに) 指示する以下の命令を使うことができます:
 
 <DIV
 CLASS="informalexample"
@@ -131,15 +127,14 @@ CLASS="programlisting"
 >
 
 
-The third argument of the <FONT
+この場合、デフォルトと一致するので、<FONT
 COLOR="RED"
 >codegen2</FONT
->-directive can be omitted
-in this case as it coincides with the default. The generated code that
-implements <FONT
+> 命令の第三引数は省略できます。
+<FONT
 COLOR="RED"
 >fprint_expr</FONT
-> is listed as follows:
+> を実装する生成されたコードは次のようになります:
 
 <DIV
 CLASS="informalexample"
@@ -598,19 +593,18 @@ fprint_expr$Ifgtez$arg3<span class="keyword">(</span>out<span class="keyword">,<
 >
 
 
-The code for <FONT
+<FONT
 COLOR="RED"
 >fprint_expr</FONT
-> is entirely template-based. This style
-makes the code extremely flexible for adaption through template re-mplementation.
-As the datatype <FONT
+> に対するコードは全般的にテンプレートに基づいています。
+このスタイルはテンプレートの再実装によってコードを柔軟にします。
+データ型 <FONT
 COLOR="RED"
 >expr</FONT
-> is recursively defined, the following template
-implementation needs to be added in order to make <FONT
+> は再帰的に定義されているので、<FONT
 COLOR="RED"
 >fprint_expr</FONT
-> work:
+> を動作させるために次のテンプレート実装を追加する必要があります:
 
 <DIV
 CLASS="informalexample"
@@ -629,18 +623,15 @@ CLASS="programlisting"
 >
 
 
-For instance,
-applying <FONT
-COLOR="RED"
->fprint_expr</FONT
->
-to the expression <FONT
+例えば、式 <FONT
 COLOR="RED"
 >Add(Int(10),Mul(Int(1),Int(2)))</FONT
->
-outputs the same text representation.
+> に <FONT
+COLOR="RED"
+>fprint_expr</FONT
+> を適用すると、同じテキスト表現が出力されます。
 
-As an example of adaptation, let us add the following template implementations:
+適応例として、次のテンプレート実装を追加してみましょう:
 
 <DIV
 CLASS="informalexample"
@@ -662,23 +653,20 @@ fprint_expr$Add$sep1&lt;<span class="keyword">&gt;</span> <span class="keyword">
 >
 
 
-When <FONT
-COLOR="RED"
->fprint_expr</FONT
-> is applied to the expression
-<FONT
+このとき式 <FONT
 COLOR="RED"
 >Add(Int(10),Mul(Int(1),Int(2)))</FONT
-> this time, the output is
-expected to read <FONT
+> に <FONT
+COLOR="RED"
+>fprint_expr</FONT
+> を適用すると、その出力は <FONT
 COLOR="RED"
 >(Int(10)+Mul(Int(1),Int(2)))</FONT
->.
+> になるはずです。
 
 </P
 ><P
->&#13;After proper adaptation is done, one can introduce a (non-template)
-function as follows:
+>&#13;適切な適応が行なわれたら、次のような (テンプレートではない) 関数を導入できます:
 
 <DIV
 CLASS="informalexample"
@@ -703,24 +691,23 @@ my_fprint_expr <span class="keyword">(</span>out<span class="keyword">,</span> x
 >
 
 
-In this way, only one instance of <FONT
-COLOR="RED"
->fprint_expr</FONT
-> is compiled even
-if repeated calls to <FONT
+この方法で、<FONT
 COLOR="RED"
 >my_fprint_expr</FONT
-> are made.
+> を繰り返し呼び出したとしても、<FONT
+COLOR="RED"
+>fprint_expr</FONT
+> の唯一のインスタンスがコンパイルされます。
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で示した例の全体と (コード生成のプロセスを説明する) Makefile は
+<A
 HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_codegen2"
 TARGET="_top"
->on-line</A
+>オンライン</A
 >
-the entirety of this presented example plus a Makefile (for illustrating
-the code generation process).
+から入手できます。
 </P
 ></DIV
 ><DIV
@@ -763,7 +750,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Generating a datcontag-function</TD
+>datcontag 関数の生成</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"

@@ -2,7 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->Automatic Code Generation</TITLE
+>コード自動生成</TITLE
 ><META
 CHARSET="UTF-8"><META
 NAME="GENERATOR"
@@ -17,7 +17,7 @@ REL="PREVIOUS"
 TITLE="線形遅延ストリーム"
 HREF="c1287.html"><LINK
 REL="NEXT"
-TITLE="Generating a datcontag-function"
+TITLE="datcontag 関数の生成"
 HREF="x1376.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
@@ -78,7 +78,7 @@ CLASS="chapter"
 ><A
 NAME="codegen2"
 ></A
->Chapter 29. Automatic Code Generation</H1
+>Chapter 29. コード自動生成</H1
 ><DIV
 CLASS="TOC"
 ><DL
@@ -89,33 +89,29 @@ CLASS="TOC"
 ><DT
 ><A
 HREF="c1339.html#codegen2_datcon"
->Generating a datcon-function</A
+>datcon 関数の生成</A
 ></DT
 ><DT
 ><A
 HREF="x1376.html"
->Generating a datcontag-function</A
+>datcontag 関数の生成</A
 ></DT
 ><DT
 ><A
 HREF="x1395.html"
->Generating a fprint-function</A
+>fprint 関数の自動生成</A
 ></DT
 ></DL
 ></DIV
 ><P
->&#13;In practice, one often encounters a need to write boilerplate code or code
-that tends to follow certain clearly recognizable patterns. It is commonly
-seen that meta-programming (of various forms) is employed to automatically
-generate such code, thus not only increasing programming productivity but
-also potentially eliminating bugs that would otherwise be introduced due to
-manual code construction.
+>&#13;実際に、ボイラープレートコードやパターン傾向にあるコードを書く必要性にしばしば出会います。
+一般には (ある種の) メタプログラミングを使ってそのようなコードを生成します。
+そのため、プログラミングの生産性を向上させるだけでなく、手動によるコード作成によって生れるバグを防止できます。
 
 </P
 ><P
->&#13;In the following presentation, I am to show that the ATS compiler can be
-directed to generate the code for certain functions on values of a declared
-datatype. Following is the datatype used for illustration:
+>&#13;ATS コンパイラが宣言したデータ型の値に対する関数のコードを生成できることを次に示します。
+次は説明に使うデータ型です:
 
 <DIV
 CLASS="informalexample"
@@ -144,8 +140,7 @@ CLASS="programlisting"
 >
 
 
-which is for some kind of abstract syntax trees representing arithmetic
-expressions.
+これは演算式を表わす抽象構文木です。
 
 </P
 ><DIV
@@ -154,17 +149,14 @@ CLASS="sect1"
 CLASS="sect1"
 ><A
 NAME="codegen2_datcon"
->Generating a datcon-function</A
+>datcon 関数の生成</A
 ></H1
 ><P
->&#13;Given a datatype, its datcon-function is the one that takes a value of the
-datatype and then returns a string representing the name of the (outmost)
-constructor in the construction of the value.  We can use the following
-directive to indicate (to the ATS compiler) that the datcon-function for
-the datatype <FONT
+>&#13;あるデータ型が与えられたとき、datcon 関数はそのデータ型の値を取り、その値をコンストラクトした (最外の) コンストラクタの名前を表わす文字列を返します。
+データ型 <FONT
 COLOR="RED"
 >expr</FONT
-> needs to be generated:
+> の datcon 関数の生成を (ATS コンパイラに) 指示するのに次の命令を使えます:
 
 <DIV
 CLASS="informalexample"
@@ -183,20 +175,18 @@ CLASS="programlisting"
 >
 
 
-By default, the name of the generated function is <FONT
+デフォルトでは、生成された関数の名前は <FONT
 COLOR="RED"
 >datcon_expr</FONT
->.
-If a different name is needed, it can be supplied as the third argument of
-the <FONT
+> になります。
+もし異なる名前にしたければ、<FONT
 COLOR="RED"
 >#codegen2</FONT
->-directive. For instance, the following directive
-indicates that the generated function is of the given name
-<FONT
+> 命令の第三引数にその名前を渡します。
+例えば、次の命令は <FONT
 COLOR="RED"
 >my_datcon_expr</FONT
->:
+> の名前で関数を生成することを示しています:
 
 <DIV
 CLASS="informalexample"
@@ -215,11 +205,10 @@ CLASS="programlisting"
 >
 
 
-Assume that a file of the name <TT
+名前 <TT
 CLASS="filename"
 >expr.dats</TT
-> contains the
-following directive (as a toplevel declaration):
+> のファイルが (トップレベルの宣言として) 次の命令を含むと仮定しましょう:
 
 <DIV
 CLASS="informalexample"
@@ -238,15 +227,14 @@ CLASS="programlisting"
 >
 
 
-and the definition for <FONT
+また <FONT
 COLOR="RED"
 >expr</FONT
-> is accessible at the point where
-the <FONT
+> の定義が <FONT
 COLOR="RED"
 >codegen2</FONT
->-directive is declared. By executing the
-following command-line:
+> 命令が宣言された位置でアクセス可能でなければなりません。
+次のコマンドラインを実行すると:
 
 <DIV
 CLASS="informalexample"
@@ -267,10 +255,10 @@ CLASS="command"
 ></DIV
 >
 
-we can see some output of ATS code that implements <FONT
+<FONT
 COLOR="RED"
 >datcon_expr</FONT
->:
+> を実装した ATS コードの出力が得られます:
 
 <DIV
 CLASS="informalexample"
@@ -307,11 +295,10 @@ datcon_expr
 >
 
 
-If the output needs to be stored in a file of the name
-<FONT
+この出力を <FONT
 COLOR="RED"
 >fprint_expr.hats</FONT
->, we can issue the following command-line:
+> ファイルに保存したければ、次のコマンドラインを使えます:
 
 <DIV
 CLASS="informalexample"
@@ -332,11 +319,10 @@ CLASS="command"
 ></DIV
 >
 
-Note that the funtion template <FONT
+生成されたコードを正しくコンパイルするために、関数テンプレート <FONT
 COLOR="RED"
 >datcon_expr</FONT
-> is required to be
-declared somewhere in order for the generated code to be compiled properly:
+> がどこかで宣言される必要があることに注意してください:
 
 <DIV
 CLASS="informalexample"
@@ -357,13 +343,13 @@ CLASS="programlisting"
 
 </P
 ><P
->&#13;Please find <A
+>&#13;この章で示した例の全体と (コード生成のプロセスを説明する) Makefile は
+<A
 HREF="https://github.com/ats-lang/ats-lang.github.io/blob/master/DOCUMENT/ATS2TUTORIAL/CODE/chap_codegen2"
 TARGET="_top"
->on-line</A
-> the entirety of this
-presented example plus a Makefile (for illustrating the code generation
-process).
+>オンライン</A
+>
+から入手できます。
 </P
 ></DIV
 ></DIV
@@ -425,7 +411,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Generating a datcontag-function</TD
+>datcontag 関数の生成</TD
 ></TR
 ></TABLE
 ></DIV
